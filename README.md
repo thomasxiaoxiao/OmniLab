@@ -2,9 +2,10 @@
 
 Reproducible research and validation workspace with a Streamlit decision tracker,
 seeded experiments, saved evidence and a health endpoint at `/_stcore/health`.
-The current research scope follows `docs/overall-design.md`; the original housing
-challenge brief is preserved in `hackthon-instruction.pdf`.
-Not legal advice.
+The current research scope follows `docs/overall-design.md` and `AGENTS.md`.
+`hackthon-instruction.pdf` is the corrected Agentic Scientific Discovery challenge
+brief. Omnigent must orchestrate the live discovery workflow; the earlier housing
+challenge requirements are superseded.
 
 The default frontend is now the **Exploration decision control room**, following
 the research workflow in `docs/overall-design.md`. It records bounded choices,
