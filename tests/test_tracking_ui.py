@@ -32,11 +32,12 @@ def test_main_entry_shows_empty_control_room(monkeypatch, tmp_path):
 def test_run_button_journal_filter_and_reload(monkeypatch, tmp_path):
     from fixture_roles import DecisionWorkerFixture
 
-    from hacknation_databricks.research import decision_roles, decision_runtime
+    from hacknation_databricks import tracking_ui
+    from hacknation_databricks.research import decision_roles
     from hacknation_databricks.research.cli import fixture_source
 
     monkeypatch.setattr(decision_roles, "DecisionProcess", DecisionWorkerFixture)
-    monkeypatch.setattr(decision_runtime, "runtime_status", lambda: {"ready": True})
+    monkeypatch.setattr(tracking_ui, "runtime_status", lambda: {"ready": True})
     monkeypatch.setenv("RESEARCH_PAPER_PATH", str(fixture_source()))
     monkeypatch.setenv("RESEARCH_RUNS_DIR", str(tmp_path))
     monkeypatch.delenv("OMNIGENT_SERVER_URL", raising=False)

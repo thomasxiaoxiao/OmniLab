@@ -57,10 +57,11 @@ def test_import_error_is_actionable_and_does_not_create_source(tmp_path, monkeyp
 def test_uploaded_sources_launch_with_original_identity_and_literature(tmp_path, monkeypatch):
     from fixture_roles import DecisionWorkerFixture
 
-    from hacknation_databricks.research import decision_roles, decision_runtime
+    from hacknation_databricks import tracking_ui
+    from hacknation_databricks.research import decision_roles
 
     monkeypatch.setattr(decision_roles, "DecisionProcess", DecisionWorkerFixture)
-    monkeypatch.setattr(decision_runtime, "runtime_status", lambda: {"ready": True})
+    monkeypatch.setattr(tracking_ui, "runtime_status", lambda: {"ready": True})
     monkeypatch.setenv("RESEARCH_SOURCES_DIR", str(tmp_path / "sources"))
     monkeypatch.setenv("RESEARCH_RUNS_DIR", str(tmp_path / "runs"))
     seed = register_upload("seed.md", fixture_source().read_bytes(), tmp_path / "sources")

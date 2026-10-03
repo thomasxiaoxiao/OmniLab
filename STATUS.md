@@ -10,6 +10,9 @@ original hard stop and 6 hours 51 minutes to feature freeze.
   archives passed `research verify`; the challenge PDF hash remains unchanged.
 - Existing local Omnigent server and Codex-ready host are online. This readiness
   check did not launch a new scientific run or validate the new context role live.
+- Initial Linux CI found two UI tests mocking the defining module instead of the
+  imported UI reference. Corrected the test mocks so they do not depend on a local
+  MLX installation or downloaded model. Production runtime gating is unchanged.
 - Active task: commit, push, merge through GitHub CI, and launch the merged app.
   Next step: confirm main CI and the running revision/health endpoint. No conflict
   with origin/main was present at initial fetch; no integration blocker found.
