@@ -123,3 +123,32 @@ def test_success_records_release_after_health(monkeypatch, tmp_path):
     monkeypatch.setattr(deploy, "run", lambda *args: "")
     deploy.promote(candidate, None, "http://localhost/healthz")
     assert json.loads((tmp_path / "current.json").read_text()) == candidate
+
+
+@pytest.mark.parametrize("require_ci", [False, True])
+def test_ci_gate_is_optional_and_default_promotion_skips_github(monkeypatch, tmp_path, require_ci):
+    monkeypatch.setattr(deploy, "RUNTIME", tmp_path)
+    if require_ci:
+        monkeypatch.setenv("DEPLOY_REQUIRE_CI", "1")
+    else:
+        monkeypatch.delenv("DEPLOY_REQUIRE_CI", raising=False)
+    calls = []
+    promoted = []
+
+    def run(*args, **kwargs):
+        calls.append(args)
+        if args[:2] == ("git", "rev-parse"):
+            return "candidate"
+        if args[0] == "gh":
+            return "[]"
+        if args[:2] == ("git", "archive"):
+            Path(args[4]).touch()
+        return ""
+
+    monkeypatch.setattr(deploy, "run", run)
+    monkeypatch.setattr(deploy, "promote", lambda *args: promoted.append(args))
+    deploy.deploy("http://localhost/health")
+    assert any(call[0] == "gh" for call in calls) is require_ci
+    assert bool(promoted) is not require_ci
+    if promoted:
+        assert promoted[0][0]["revision"] == "candidate"

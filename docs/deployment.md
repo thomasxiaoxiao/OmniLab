@@ -7,10 +7,11 @@ It is not a public demo link, and cannot serve while the machine is asleep or of
 
 Run `uv sync --locked`, `npm ci`, and copy `.env.example` to `.env` on a new host.
 Authenticate `gh auth login`, then configure Git HTTPS authentication with
-`gh auth setup-git` if needed. Push the repository to GitHub, wait for CI to pass,
+`gh auth setup-git` if needed. Push the repository to GitHub,
 and run `npm run deploy` followed by `npm run cd:start` and `npm run save`.
 
-The worker needs Git read access and GitHub Actions read access. Existing GitHub
+The worker needs Git read access. GitHub Actions read access is needed only when
+the optional CI gate is enabled. Existing GitHub
 CLI credentials stay in the OS credential store and are not written to the repo.
 No inbound webhook, self-hosted Actions runner, or GitHub deployment secret is
 needed for this pull-based deployment.
@@ -23,7 +24,7 @@ After edits, use `npm start`. If the port changes, set `DEPLOY_HEALTH_URL` to it
 then run `npm run cd:start` to refresh the worker environment.
 
 The deployment controller and npm/PM2 tools run from the host checkout. Application
-code and each release's app process declaration run from the approved release.
+code and each release's app process declaration run from the selected release.
 After changing deployment scripts or npm dependencies, update the host checkout
 with a normal fast-forward pull, run `npm ci`, and restart the deployment worker.
 Do not overwrite a checkout with uncommitted work.
@@ -48,13 +49,18 @@ app separately with the npm commands if desired.
 
 ## Failures and rollback
 
-Read `npm run cd:logs` and `npm run logs`. A missing/pending/failed CI run leaves
-the existing application running. Dependency installation failure also leaves
-it running. If a newly started app fails its health check, the controller restarts
+Read `npm run cd:logs` and `npm run logs`. The temporary project policy promotes
+main regardless of GitHub CI status. Set `DEPLOY_REQUIRE_CI=1` in the worker
+environment with `DEPLOY_REQUIRE_CI=1 npm run cd:start` to restore exact-commit CI
+gating; use `DEPLOY_REQUIRE_CI=1 npm run deploy` for a gated one-off deployment.
+Use `DEPLOY_REQUIRE_CI=0 npm run cd:start` to disable it again. The controller does
+not read this setting from the app’s `.env`. With the gate enabled, missing, pending
+or failed CI leaves the existing app running. Dependency installation failure leaves
+it running in either mode. If a newly started app fails its health check, the controller restarts
 the last recorded healthy release and reports the deployment failure.
 
 For an intentional rollback, revert the faulty commit through Git and push the
-revert to `main`; the normal CI and deployment path applies. Pause the worker
+revert to `main`; the normal deployment path applies. Pause the worker
 with `npm run cd:stop` while investigating if necessary.
 
 Releases and logs are retained in `.runtime/` for diagnosis. Remove older inactive

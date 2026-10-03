@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Deploy CI-approved main commits into isolated releases; leave the checkout alone."""
+"""Auto-promote main into isolated releases with health checks and optional CI gating."""
 
 import argparse
 import fcntl
@@ -117,28 +117,29 @@ def deploy(health_url: str) -> None:
     if previous and previous["revision"] == revision and health_matches(health_url, revision):
         return
 
-    runs = json.loads(
-        run(
-            "gh",
-            "run",
-            "list",
-            "--workflow",
-            "ci.yml",
-            "--commit",
-            revision,
-            "--branch",
-            "main",
-            "--event",
-            "push",
-            "--limit",
-            "1",
-            "--json",
-            "headSha,headBranch,event,status,conclusion",
+    if os.environ.get("DEPLOY_REQUIRE_CI", "0").lower() in {"1", "true", "yes"}:
+        runs = json.loads(
+            run(
+                "gh",
+                "run",
+                "list",
+                "--workflow",
+                "ci.yml",
+                "--commit",
+                revision,
+                "--branch",
+                "main",
+                "--event",
+                "push",
+                "--limit",
+                "1",
+                "--json",
+                "headSha,headBranch,event,status,conclusion",
+            )
         )
-    )
-    if not ci_passed(runs, revision):
-        print(f"Waiting for successful CI on main at {revision[:12]}", flush=True)
-        return
+        if not ci_passed(runs, revision):
+            print(f"Waiting for successful CI on main at {revision[:12]}", flush=True)
+            return
 
     releases = RUNTIME / "releases"
     releases.mkdir(parents=True, exist_ok=True)
