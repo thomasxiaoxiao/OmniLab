@@ -1,0 +1,27 @@
+{
+  "name": "hacknation-databricks-ops",
+  "version": "0.1.0",
+  "private": true,
+  "description": "PM2 process management for the uv-managed Python application",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "setup": "uv sync --locked",
+    "dev": "uv run --locked streamlit run src/hacknation_databricks/ui.py --server.address 127.0.0.1 --server.port 8000 --browser.gatherUsageStats false",
+    "check": "uv run --locked ruff check . && uv run --locked ruff format --check . && uv run --locked pytest && node --check ecosystem.config.js",
+    "start": "bash scripts/pm2.sh startOrRestart ecosystem.config.js --only hacknation-app --update-env",
+    "stop": "bash scripts/pm2.sh stop hacknation-app",
+    "status": "bash scripts/pm2.sh status",
+    "logs": "bash scripts/pm2.sh logs hacknation-app",
+    "deploy": "uv run --no-sync python scripts/deploy.py --once",
+    "cd:start": "bash scripts/pm2.sh startOrRestart ecosystem.config.js --only hacknation-cd --update-env",
+    "cd:stop": "bash scripts/pm2.sh stop hacknation-cd",
+    "cd:logs": "bash scripts/pm2.sh logs hacknation-cd",
+    "save": "bash scripts/pm2.sh save",
+    "startup": "python3 scripts/install_launchagent.py"
+  },
+  "devDependencies": {
+    "pm2": "7.0.4"
+  }
+}

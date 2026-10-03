@@ -1,0 +1,17 @@
+name: Project task
+description: Define a scoped implementation task.
+body:
+  - type: textarea
+    id: outcome
+    attributes:
+      label: Outcome
+      description: What should the user be able to do when this is complete?
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      description: Include relevant test cases and required evidence.
+    validations:
+      required: true
