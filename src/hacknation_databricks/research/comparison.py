@@ -225,10 +225,14 @@ def save_comparisons(store, report, config, sources):
     for dataset in [*report.get("rounds", []), None]:
         prefix = f"comparisons/{dataset['round']:03d}" if dataset else "comparison"
         bundle = comparison_bundle(report, config, sources, read_json, dataset)
+        from .highlights import research_highlights
+
+        store.write(f"{prefix}/highlights.json", research_highlights(bundle))
         store.write(f"{prefix}/comparison.json", bundle)
         store.write_text(f"{prefix}/simulation.svg", comparison_svg(bundle))
         store.write_text(f"{prefix}/summary.txt", bundle["summary"] + "\n")
         outputs[prefix] = {
+            "highlight": f"{prefix}/highlights.json",
             "visualization": f"{prefix}/simulation.svg",
             "summary": f"{prefix}/summary.txt",
             "measurements": f"{prefix}/comparison.json",

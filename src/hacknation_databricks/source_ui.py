@@ -1,28 +1,63 @@
 """Source intake controls and a persistent, inspectable library."""
 
+import hashlib
 import json
 from pathlib import Path
 
 import streamlit as st
 
 from hacknation_databricks.research.intake import (
-    library_sources,
     register_arxiv,
     register_upload,
     source_root,
 )
+from hacknation_databricks.source_cache import source_library
+from hacknation_databricks.tracking import load_journal
+
+
+def render_source_progress() -> None:
+    """Show progress only when the run's seed bytes match the prepared source."""
+    from hacknation_databricks.activity_ui import render_activity
+    from hacknation_databricks.run_feedback_ui import render_run_outcome
+    from hacknation_databricks.tracking_ui import run_root
+
+    selected = st.session_state.get("run_selection")
+    source_path = st.session_state.get("selected_seed_path")
+    if not selected or not source_path:
+        return
+    journal = load_journal(run_root() / selected)
+    seed = next((s for s in journal.sources if s.get("source_id") == "seed"), {})
+    try:
+        digest = hashlib.sha256(Path(source_path).read_bytes()).hexdigest()
+    except OSError:
+        st.info("Choose an available source to see its run progress.")
+        return
+    if not seed.get("sha256") or seed["sha256"] != digest:
+        st.caption(
+            f"The selected exploration run belongs to {seed.get('title', 'another paper')}. "
+            "Its progress is available in Agents & loops. "
+            "Choose a matching run or start a new run for the paper above."
+        )
+        return
+    st.subheader("Run for this paper")
+    st.text(seed.get("title", "Seed paper"))
+    st.caption(f"Run {journal.run_id} · {'Saved run' if journal.sealed else 'Live snapshot'}")
+    if journal.issues:
+        st.error("Evidence verification failed. Inspect this run in Generated artifacts.")
+        return
+    render_run_outcome(journal)
+    with st.expander("Exploration progress", expanded=not journal.sealed):
+        render_activity(journal)
 
 
 def render_sources() -> None:
-    st.subheader("Source intake")
     st.caption(
         "Add a seed paper or related literature. Originals and provenance stay with every run."
     )
     for level, message in st.session_state.pop("intake_messages", []):
         getattr(st, level)(message)
-    upload, arxiv = st.columns([1.15, 1])
-    with upload, st.container(border=True):
-        st.markdown("**Upload documents**")
+    upload, arxiv = st.tabs(["Upload documents", "Import from arXiv"])
+    with upload:
         with st.form("source_upload", clear_on_submit=True):
             files = st.file_uploader(
                 "PDF or Markdown",
@@ -55,8 +90,7 @@ def render_sources() -> None:
                 ("warning", "Choose files to add first.")
             ]
             st.rerun()
-    with arxiv, st.container(border=True):
-        st.markdown("**Import from arXiv**")
+    with arxiv:
         with st.form("arxiv_intake", clear_on_submit=True):
             link = st.text_input(
                 "arXiv link or identifier", placeholder="https://arxiv.org/abs/2607.24975v1"
@@ -86,37 +120,22 @@ def render_sources() -> None:
         "Intake uses no model calls. Scans require OCR before upload; "
         "oversized sources are rejected, never truncated."
     )
-    sources, issues = library_sources(source_root())
-    for issue in issues:
-        st.warning(issue)
-    st.markdown(f"**Source library · {len(sources)} ready**")
-    if not sources:
-        st.info(
-            "Add a source above, then choose it as the seed or related literature on this page."
-        )
+
+
+def render_source_details(path: Path) -> None:
+    """Inspect the same source selected for the run, without a second picker."""
+    sources, _ = source_library(source_root())
+    source = next((item for item in sources if Path(item.path).resolve() == path.resolve()), None)
+    if source is None:
         return
-    st.dataframe(
-        [
-            {
-                "Title": s.title,
-                "Format": Path(s.path).suffix[1:].upper(),
-                "Text pages": len(s.pages),
-                "Characters": sum(map(len, s.pages)),
-                "Imported (UTC)": s.retrieved_at,
-                "Source": s.url or "Local upload",
-                "SHA-256": s.sha256,
-            }
-            for s in sources
-        ],
-        hide_index=True,
-        width="stretch",
-    )
-    selected = st.selectbox(
-        "Inspect source", range(len(sources)), format_func=lambda i: sources[i].title
-    )
-    source = sources[selected]
     with st.expander("Extracted text & provenance", expanded=False):
-        page = st.number_input("Text page", min_value=1, max_value=len(source.pages), value=1)
+        page = st.number_input(
+            "Text page",
+            min_value=1,
+            max_value=len(source.pages),
+            value=1,
+            key=f"source_page_{source.sha256}",
+        )
         st.text(source.pages[page - 1])
         if Path(source.path).suffix == ".md":
             st.caption(

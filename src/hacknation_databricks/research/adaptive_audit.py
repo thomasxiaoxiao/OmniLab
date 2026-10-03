@@ -89,6 +89,7 @@ def load_adaptive_journal(directory):
         report = journal.report
         for count, limit in (
             ("role_calls", config.max_agent_calls),
+            ("decision_calls", config.max_decision_calls),
             ("computed_simulations", config.max_simulations),
         ):
             if not isinstance(report.get(count, 0), int) or not 0 <= report.get(count, 0) <= limit:
@@ -156,6 +157,13 @@ def load_adaptive_journal(directory):
             ):
                 raise ValueError("Decision changed after execution")
             payload = read(f"{prefix}/input.json")
+            if config.decision_backend == "anyjev" and report["backend"] == "omnigent":
+                from .hybrid_roles import verify_investment_handoff
+
+                handoff = read(f"{prefix}/anyjev-handoff.json")
+                verify_investment_handoff(
+                    payload, decision.model_dump(), handoff, read(handoff["decision_artifact"])
+                )
             expected = {
                 "branch_id": item["branch_id"],
                 **recomputed[(item["branch_id"], item["batch"])],

@@ -10,9 +10,16 @@ from hacknation_databricks.tracking import Journal, read_artifact
 
 def render_discovery(journal: Journal) -> None:
     report = journal.report
+    if report.get("status") == "unsupported_source":
+        st.caption("No experiment or result-driven follow-up was executed in this run.")
+        return
     if report.get("workflow_version") == "4":
         render_portfolio(journal)
         return
+    from hacknation_databricks.synthesis_ui import render_comparison_outputs
+
+    st.subheader("What changed our next move?")
+    render_comparison_outputs(journal, None)
     st.subheader("Question → evidence → experiment → next decision")
     proposal = report.get("selected_proposal", {})
     st.markdown(

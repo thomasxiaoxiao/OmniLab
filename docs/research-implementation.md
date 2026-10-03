@@ -2,6 +2,25 @@
 
 ## Current adaptive execution
 
+The UI now fixes Codex + Omnigent for research and AnyJev + Omnigent for decisions.
+`HybridOmnigentRoles` keeps the existing Omnigent Sessions API for scientific
+assessments, then hands each investment checkpoint to the pinned local AnyJev
+scorer. Its finite option catalog permits investing in an existing branch,
+requesting independent validation of an eligible branch, or stopping for review.
+AnyJev runs as a local supervisor tool, not a native Omnigent harness. The request,
+weights, ambiguity check, original assessment and applied action are retained;
+the auditor checks the selected action against the saved options. No fallback
+occurs on runtime failure or ambiguous scores. The UI requires the Codex harness;
+old CLI configurations retain their existing decision route.
+
+`Start bounded run` navigates immediately to the live execution page. A preallocated
+run ID prevents another run from stealing progress. The page refreshes every five
+seconds and displays an explicit terminal outcome plus current artifact downloads.
+Discovery overview and Final synthesis share the cited-paper/proposed-simulation
+comparison and checkpoint-scoped file inspector. Highlight JSON files are sealed
+for future runs; existing sealed runs are projected without mutation.
+
+
 The default Omnigent launcher and `examples/percolation/discovery.json` now use
 workflow v4. Parallel source/citation researchers feed a consolidator; multiple
 research branches run simulations and the decision agent evaluates every partial
@@ -38,6 +57,16 @@ The Python supervisor enforces this sequence:
    literature review or stop and the proposed next experiment. Repeat only while
    scientific gates and finite budgets permit it. A missing literature review
    cannot be repaired by more simulations.
+
+New adaptive handoffs include explicit measurement definitions for every specialist.
+For Astrosat, missed-transit rates use true crossings as their denominator, while
+false-alert rates use nontransits. False alerts divided by all alerts is a different
+quantity. The contract also states that guard branches have independent candidate
+samples and that the numerical goal tests each guard against its own control.
+Checkpoint scoring distinguishes sampling uncertainty that additional batches can
+resolve from source or implementation defects that require stopping for review.
+Stop, review and ambiguity abstention remain available; scientific thresholds stay
+fixed. Historical handoffs without these contracts retain their original semantics.
 
 The optional `anyjev` backend uses local Qwen3 4B logits via MLX. AnyJev scores
 closed options across cyclic order rotations, with no generated text or executable

@@ -9,7 +9,7 @@ from hacknation_databricks.tracking_ui import (
 
 st.title("Generated artifacts")
 st.caption("Inspect model outputs, simulation data, decisions and the source material behind them.")
-journal = selected_journal()
+journal = selected_journal("Evidence")
 if journal:
     view = st.segmented_control(
         "Evidence view", ["Artifacts", "Decisions", "Environment"], default="Artifacts"

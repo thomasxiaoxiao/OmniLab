@@ -1,3 +1,355 @@
+# Latest platform consolidation: local validation complete
+
+Updated October 3, 2026, 16:56 PDT; about 7 hours 11 minutes to hard stop
+and 5 hours 11 minutes to feature freeze.
+
+- Consolidated the current source-intake, hybrid decision handoff, measurement
+  contracts, execution inspector, highlights and policy UI work on
+  `codex/consolidate-latest-platform`. Both older remote feature branches were
+  already ancestors of `origin/main`; there were no outstanding remote commits.
+- Full `npm run check`: 201 tests passed in 30.05 seconds, Ruff lint and formatting
+  passed (95 files), and PM2 JavaScript syntax passed. `git diff --check` passed.
+- Streamlit AppTest rendered all six registered pages for each of the two current
+  saved runs: 12 page/run combinations, zero exceptions. Local development HTTP
+  health at `http://127.0.0.1:8000/_stcore/health` returned `ok`.
+- Reverified both fresh run manifests and independently recalculated raw counts
+  and interval endpoints using the preserved campaign audit. Their recorded
+  Omnigent completions remain 19/19 and 18/18. The current Omnigent host reports
+  online and Codex-ready; this checkpoint did not initiate new model inference.
+- Challenge PDF hash remains the required `ce9276222cae08bd4e088b90c11876e53caaf60ecf5fe87fc35b801a27b96b7d`.
+- Active task: publish the tested consolidation through a PR and verify remote CI
+  before merging to main. GitHub records the subsequent integration outcome.
+  No local validation blocker. Next scientific work and real-world limitations
+  remain as recorded below; this software check establishes no additional novelty,
+  observational reliability, native sandbox attestation or acceleration multiplier.
+
+---
+
+# Fresh percolation and Astrosat runs completed and verified
+
+Updated October 03, 2026, 16:49 PDT; 7 hours 17 minutes to hard stop
+and 5 hours 17 minutes to feature freeze. Active task: complete.
+
+- Cleared the active list by archiving all 27 previous runs. It now contains exactly
+  `20261003T232809Z-percolation` and `20261003T232809Z-astrosat-final`, both with
+  `goal_achieved`. Three diagnostic Astrosat attempts remain separately archived.
+- Percolation: 19/19 completed Omnigent requests, six AnyJev decisions, 20,230
+  simulation units including replays, 404.535 seconds. Its accepted diode branch
+  raised wrapping from 501/640 to 639/640 at L=8 and 495/640 to 640/640 at L=16.
+  Effect intervals are [0.140398, 0.282049] and [0.151666, 0.292210]. Initial uncertain
+  screens triggered larger site/diode batches, followed by independent review.
+- Astrosat: 18/18 completed Omnigent requests, six AnyJev decisions, 26,624 simulation
+  units including replays, 362.933 seconds. The three-sigma guard reduced fresh
+  misses from 114/840 to 0/840 and stale misses from 136/883 to 7/883. Effect intervals
+  are [-0.184598, -0.082589] and [-0.201310, -0.086529]. False-alert rates among
+  nontransits rose from 16.0% to 57.5% and 15.0% to 58.0%; this is a substantial cost.
+- Intervened on two observed agent problems: incorrect false-alert denominators,
+  and a premature review stop despite resolvable sampling uncertainty. Explicit
+  metric contracts and a numerical decision policy now reach all relevant roles
+  and local scoring. Stop/review/ambiguity remain available; thresholds and seeds
+  were not loosened. The final live output uses the right denominators and continues
+  sampling until numerical eligibility, then requests independent validation.
+- Recovered a local Omnigent server/host outage without changing backend. The cause
+  is unknown. The failed cleanup request was acknowledged after recovery. All final
+  sessions have recorded stop requests; historical failures remain visible in the
+  campaign record rather than being counted as successful explorations.
+- Independently counted raw CSV events and recalculated interval endpoints and
+  baseline checks. Both final manifests, source/evidence contracts, raw summaries,
+  and handoff audits pass. Prior diagnostic archives also verify. Latest 24 targeted
+  regression tests, lint, formatting and whitespace checks pass; the initial 36
+  scientific/lifecycle tests passed. Challenge PDF hash is unchanged.
+- Detailed counts, uncertainty, bottleneck timings, interventions, all diagnostic
+  attempts and the offline audit command are in `docs/fresh-exploration-validation.json`.
+  Total reported campaign compute, including diagnostic attempts: 73,478
+  simulation units. No comparable manual baseline exists, so no speedup is claimed.
+- Scientific limits: percolation is a small-lattice fixed-probability check; Astrosat
+  uses assumed Gaussian errors and simplified geometry. Alert nesting predicts the
+  direction of its tradeoff. Neither proves novelty, an optimal guard, observational
+  reliability, full-paper reproduction, or native Omnigent sandbox/policy attestation.
+- Next scientific work: predeclared percolation parameter/size sweeps and matched
+  guard comparisons with an operational loss function. Real-world use requires
+  independent scientific replication, calibrated TLE errors and observational ground
+  truth. No current task blocker, publication, submission, or human approval pending.
+
+---
+
+# Fresh runs: percolation verified, Astrosat recovery in progress
+
+Updated October 03, 2026, 16:39 PDT; 7 hours 27 minutes to hard stop
+and 5 hours 27 minutes to feature freeze.
+
+- Percolation completed 19/19 Omnigent requests and six AnyJev decisions in
+  404.535 seconds; 20,230 simulation units including replays. Baseline and follow-up
+  passed. Independent raw-count/interval audit, handoff audit and hashes pass.
+- Accepted diode result: L=8 control 501/640 versus treatment 639/640, difference
+  0.215625, simultaneous interval [0.140398, 0.282049]; L=16 495/640 versus 640/640,
+  difference 0.226563, interval [0.151666, 0.292210]. This is a finite-size mechanism
+  check, not a universality or novelty result.
+- Stopped the first Astrosat attempt after repeated confusion between false-alert
+  rate and false discovery proportion. Added explicit measurement contracts to all
+  scientific handoffs and local scoring context. Same seed, thresholds and numerical
+  implementation retained; 24 targeted regression tests and lint/format checks pass.
+- Corrected live agent output now uses the exact denominators and restricts primary
+  hypotheses to executed contrasts. That attempt stopped when both Omnigent services
+  disappeared. Its artifacts and original interrupted attempt are preserved under
+  `output/archived-research/20261003T232809Z/` and both pass integrity/handoff audits.
+- Restarted the local server/host, retried the unconfirmed session cleanup, and
+  launched `20261003T232809Z-astrosat-recovered`. The active list contains only the
+  percolation result and current Astrosat attempt. No alternate backend fallback.
+- Active task: monitor recovered Astrosat through completed numerical validation,
+  independently audit raw counts and tradeoffs, then write the final measured record.
+  Recovery cause is unknown; no scientific success is yet claimed for Astrosat.
+
+---
+
+# Source input highlights
+
+Updated October 3, 2026, 16:36 PDT; about 7 hours 31 minutes to hard stop
+and 5 hours 31 minutes to feature freeze.
+
+- Completed: Discovery overview leads with the artifact-backed explored idea,
+  hypothesis, origin and source passages, followed by the pinned paper and
+  repository URLs extracted from its saved text. The research path is visible
+  without opening an expander. Accepted branches take precedence over the latest
+  measured branch; missing selections remain explicitly pending.
+- Astrosat links to the repository cited on page 1. No repository URL was found
+  in the saved percolation paper text; the UI reports this rather than inventing one.
+- Verified: 16 frontend/tracking/highlight tests passed; scoped lint and formatting
+  passed. Streamlit AppTest rendered both current saved runs without exceptions,
+  confirming branch titles and source links. No new research/model calls.
+- Next step: review in the running development UI on port 8504. No blocker for
+  this UI task. Scientific validation status and original run artifacts unchanged.
+
+---
+
+# Consolidated source setup
+
+Updated October 3, 2026, 16:30 PDT; about 7 hours 37 minutes to hard stop
+and 5 hours 37 minutes to feature freeze.
+
+- Completed this UI task: one seed picker, related literature, optional upload/arXiv
+  tabs, selected-seed provenance and the existing budget/launch controls in one flow.
+- Removed the duplicate Source intake subheading, Prepare a discovery run heading
+  and independent inspection selector. Original source files and run archives retained.
+- Verified 26 intake/navigation/tracking/run-experience tests; the strengthened
+  full-page import regression also passed after updating it. Scoped lint and format
+  checks passed. No model calls or new research runs were made for this UI task.
+- Next step: review the consolidated page in the development UI. No blocker for
+  this change; previously recorded live research work remains a separate checkpoint.
+
+---
+
+# Fresh percolation and Astrosat explorations
+
+Updated October 03, 2026, 16:28 PDT; about 7 hours 38 minutes to hard stop
+and 5 hours 38 minutes to feature freeze.
+
+- Active task: clear prior active explorations, launch two fresh Omnigent runs,
+  inspect raw results and change agent behavior if progress is unproductive.
+- Moved all 27 prior run directories to
+  `output/archived-research/20261003T232809Z/`; preserved immutable evidence.
+- Started `20261003T232809Z-percolation` and `20261003T232809Z-astrosat`
+  under `output/research/`, with fresh seeds and simulation cache disabled.
+- Both use Codex specialists through Omnigent and the configured local AnyJev
+  checkpoint selector; three concurrent specialists per run, eight batches per
+  branch, 96 requests, 32 decisions, 100,000 simulation units, one hour per run.
+- Next step: inspect live source reviews, baseline controls, result-to-decision
+  handoffs, uncertainty and false-alert tradeoffs. No scientific result claimed yet.
+- Runtime readiness confirmed against the existing local server and online host.
+  No current blocker. Original papers, historical checkpoints and concurrent
+  working-tree edits retained; no publication or submission.
+
+---
+
+# Live run navigation and discovery comparison
+
+Updated October 3, 2026, 16:25 PDT; about 7 hours 41 minutes to hard stop
+and 5 hours 41 minutes to feature freeze.
+
+- Completed the requested UI flow: Start bounded run redirects immediately to
+  Agents & execution loops, follows its preallocated run ID, refreshes produced
+  artifacts and steps, and distinguishes preparation, running, completion and
+  runtime failure. A failed preflight cannot display an older run as its result.
+- Fixed UI researcher to Codex + Omnigent and decision agent to AnyJev + Omnigent.
+  Omnigent provides the Codex assessment session; local AnyJev chooses a bounded
+  investment/finalization/stop action. It is a supervisor tool, not a native hosted
+  Omnigent harness. Both outputs, weights, usage and their handoff are retained;
+  ambiguous choices stop for review. Historical CLI defaults remain documented.
+- Discovery overview now compares a cited original-paper finding with the proposed
+  simulation and exposes its checkpoint-scoped recipe, data and checks. Local
+  controls and uncertainty stay distinct from published reference values. New
+  runs seal highlights.json outputs; existing archives remain unchanged.
+- Removed Original → follow-up from navigation and its page file. Final synthesis
+  expands the same comparison into measurements, validation, retained branch
+  outcomes and next work; Paper exploration was removed from that page.
+- Verification: 199 tests passed in 31.71 seconds; lint, formatting, PM2 syntax and
+  diff checks passed. Browser verified fixed controls, navigation and the saved
+  percolation comparison. The challenge PDF hash remains unchanged.
+- Live integration check: output/validation/ui-hybrid-20261003T232103 contains one
+  completed Omnigent session and response, one actual AnyJev decision (5 prefills),
+  an invest action, and 10 checksum-verified artifacts. Its semantic handoff audit
+  passed. This used historical measurements: no new scientific simulation or
+  complete hybrid discovery loop was run in this UI change.
+- Active task: complete in the working tree and development frontend on port 8504.
+  Next step: refresh the frontend to review or start the next bounded research run.
+  No UI blockers, deployment or publication. Existing findings remain finite-size
+  or synthetic checks; novelty is unverified and independent scientific validation
+  is required before real-world use. Concurrent repository work was preserved.
+
+---
+
+# Source inspection simplification
+
+Updated October 3, 2026, 16:02 PDT; about 8 hours 5 minutes to hard stop
+and 6 hours 5 minutes to feature freeze.
+
+- Removed the source-library count heading and canvas-rendered table from input
+  sources. The remaining selector reads “Inspect sources”; extracted text,
+  provenance and original downloads remain available.
+- Verification: all 10 intake UI tests passed. Active task: complete; refresh the
+  running development frontend on port 8504 to review. No blockers or new research
+  runs; scientific validation requirements are unchanged.
+
+---
+
+# Clickable execution inspector
+
+Updated October 3, 2026, 16:05 PDT; about 8 hours 2 minutes to hard stop
+and 6 hours 2 minutes to feature freeze.
+
+- Completed the requested Agents & execution loops cleanup: removed the introductory
+  paragraph, repeated run banner, execution-step dropdown, duplicate completion
+  heading and isolated worker system-instruction block. The complete archived
+  prompt, inputs and constraints now lead the selected specialist's details.
+- Timeline boxes support mouse and Enter/Space selection. Selection is scoped to
+  the run, survives refreshes, and pauses follow-newest mode. Artifact and archived
+  code selection use visible click controls. Session counts, identities, the role
+  summary graph and exports remain available under Run details and exports.
+- Verification: 193 tests passed in 33.32 seconds; lint, formatting, PM2 syntax and
+  diff checks passed. Ran checks through the existing virtual environment after
+  the npm wrapper's uv invocation hit a sandbox cache error and a macOS panic.
+  Browser verified specialist clicks, keyboard selection of the baseline, CSV
+  preview and selection persistence in the running development frontend.
+- Active task: complete in the working tree and http://127.0.0.1:8504/agents.
+  Next step: refresh the user's existing session to review. No UI blockers, new
+  scientific run, archive rewrite, deployment or publication. Scientific limitations
+  and independent validation requirements before real-world use remain unchanged.
+
+---
+
+# Source/run feedback cleanup
+
+Updated October 3, 2026, 15:57 PDT; about 8 hours 10 minutes to hard stop
+and 6 hours 10 minutes to feature freeze.
+
+- Traced the reported paragraph to the saved Covasim context assessment in
+  `20261003T224648-d862c734`. The source page printed the full report reason as a
+  warning and did not check whether that run matched the prepared paper.
+- Replaced the paragraph with a concise stopped-before-simulation status, a
+  paper/run label and expandable original assessment. Source progress now checks
+  seed content hashes; changing papers cannot inherit another paper's diagnostic.
+  Run views identify their paper, distinguish runtime failures from incompatible
+  tools, and omit misleading open-goal/waiting-for-results content for unsupported runs.
+- Verification: 36 targeted intake, navigation, execution-inspector and adaptive
+  tests passed. Lint, formatting and diff checks passed. The Covasim archive still
+  passes `research verify`. Browser checked the concise outcome and switching to
+  percolation in the running development frontend at http://127.0.0.1:8504/.
+- Active task: complete in the working tree and development frontend. Next step:
+  refresh an existing browser session to review the cleanup. No new scientific run,
+  archive rewrite or deployment. Covasim still needs an appropriate implemented
+  and validated experiment tool; no epidemiological result is claimed. Existing
+  scientific validation requirements remain unchanged. No UI blocker.
+
+---
+
+# Scientific comparison highlights
+
+Updated October 3, 2026, 15:52 PDT; about 8 hours 15 minutes to hard stop
+and 6 hours 15 minutes to feature freeze.
+
+- Completed: checkpoint, synthesis and original/follow-up views now lead with
+  paper-grounded research context, a defined endpoint, the archived experimental
+  change, and readable comparison cards. Each scenario states the difference per
+  100 simulations, uncertainty and sample counts; Astrosat retains false alerts.
+- Sources checked locally: percolation v1 pp. 2 and 9 (Tables I–II), and Astrosat
+  v1 p. 2 (section 2.1, Eq. 1). Context is shown only for matching pinned source
+  URLs and endpoints. Other sources receive an explicit unmapped-benchmark message.
+- Scientific interpretation distinguishes greater wrapping from improvement,
+  fixed-p effects from universality, unresolved direction from negligible effects,
+  and zero observed misses from zero risk. Published values remain distinct from
+  local simulated controls. Recorded next experiments are labeled recommendations.
+- Verification: full regression passed 187 tests; the final targeted highlight and
+  checkpoint suite passed 11 tests. Lint, formatting and diff checks passed.
+  Streamlit AppTest rendered both saved research examples and checkpoint changes.
+  No new live model calls, simulations, archive rewrites or deployment were performed.
+- Active task: complete in the working tree. Next step: review the updated UI in
+  the development app. Existing finite-size and synthetic-model limitations remain;
+  independent scientific/observational validation is still required before real-world
+  use, and scientific novelty remains unverified.
+
+---
+
+# Upload-run diagnosis and execution inspector
+
+Updated October 3, 2026, 15:49 PDT; about 8 hours 18 minutes to hard stop
+and 6 hours 18 minutes to feature freeze.
+
+- Latest user run `20261003T223656-33429234` preserved: Covasim PDF imported
+  successfully (32 pages), but both runtime requests failed with ConnectError.
+  Restored the local Omnigent server and host. A retry exposed a startup race:
+  the runner tunnel was online before initialization completed; duplicate turn
+  delivery returned HTTP 204. Added a bounded two-second settling delay inside
+  the existing request deadline. This is a mitigation, not a readiness guarantee.
+- Live verification `20261003T224648-d862c734`: one real Omnigent context response,
+  16.426 seconds, source-grounded unsupported_source outcome; manifest audit passed.
+  The failed intermediate retry `20261003T224515-5b129504` remains saved.
+  No Covasim simulation or scientific result is claimed. Existing tools cover
+  percolation and synthetic transit uncertainty; epidemiology needs a new adapter.
+- Timeline is the default view. Selected worker instructions are visible, optional
+  follow mode tracks the newest step, and IDs/validation/events live in technical
+  details. Simulation steps show archived code, actual artifact previews/downloads,
+  and a labeled derived Parquet export of complete CSV data.
+- Intake stays visible, caches extracted source text with file-change invalidation,
+  checks the runtime before reference retrieval, retains actionable launch errors,
+  and shows automatically refreshed exploration progress on the source page.
+- Validation: full suite passed 181 tests; after the final launch-error persistence
+  fix, all four inspector/regression tests passed. Lint, formatting and diff checks
+  passed. Existing saved percolation prompt and simulation views were inspected.
+- Active task: complete in development preview at http://127.0.0.1:8504/agents.
+  No deployment, commit or publication. Next scientific step for Covasim requires
+  implementing and validating an appropriate experiment adapter. Existing scientific
+  limitations and independent validation requirements remain unchanged.
+
+---
+
+# Contextual Omnigent policy UI complete
+
+Updated October 3, 2026, 15:31 PDT; about 8 hours 36 minutes to hard stop
+and 6 hours 36 minutes to feature freeze.
+
+- Added Omnigent & policies with archived specialist instructions, session identities,
+  reported usage, immutable run limits and checkpoint enforcement evidence.
+- Added contextual framework explanations across research pages. The UI distinguishes
+  Omnigent session orchestration, prompt instructions and Python supervisor enforcement;
+  native policy configuration and sandbox attestation are not inferred.
+- Next-run controls save per-profile limits in app session state and feed the existing
+  Omnigent launch configuration. Existing runs and the auxiliary backend keep their
+  own settings. Drafts are not persisted across app sessions.
+- Verified the running development preview at http://127.0.0.1:8504/policies against
+  the saved percolation archive: 22 recorded sessions, 21 validated responses and
+  9 experiment stages. No new live scientific run or model calls were made.
+- Validation: lint, formatting, diff and PM2 syntax checks passed; the focused existing
+  UI/checkpoint suite passed 15 tests. Full regression finished with 177 passing tests
+  and one timeout in the new launch test's AppTest rerun. Fixed the test to inspect
+  dispatch without replaying the launch rerun; both new policy tests then passed.
+- Active task: complete in the working tree and development preview. No deployment or
+  publication performed. Next step: review the policy page; deployment remains separate.
+- Scientific limits remain finite-size/synthetic checks, unverified global novelty and
+  no measured acceleration multiplier. Independent validation is required before real-world
+  use. No UI blocker; prior live validation gap for the paper-context role remains.
+
+---
+
 # Automatic promotion policy
 
 Updated October 3, 2026, 15:22 PDT; approximately 8 hours 45 minutes to hard stop.

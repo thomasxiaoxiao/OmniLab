@@ -1,13 +1,16 @@
 """Visible sessions, real loop iterations, and their inspectable outputs."""
 
+import io
 import json
 from collections import Counter
 from dataclasses import asdict
 from pathlib import Path
 
+import pandas as pd
 import streamlit as st
 
-from hacknation_databricks.research.activity import activity_export, activity_svg, load_activity
+from hacknation_databricks.execution_graph_ui import render_execution_graph
+from hacknation_databricks.research.activity import activity_export, load_activity
 from hacknation_databricks.research_views import (
     downstream_steps,
     label,
@@ -19,7 +22,7 @@ from hacknation_databricks.tracking import Journal, read_artifact
 
 
 def render_prompt_actions(journal, nodes, node, prompts):
-    st.subheader("Prompt → response → next action")
+    st.subheader("Complete prompt, inputs and constraints")
     prompt = prompts.get(node.key)
     if not prompt:
         if node.kind == "simulation":
@@ -30,12 +33,14 @@ def render_prompt_actions(journal, nodes, node, prompts):
         else:
             st.info("No saved Omnigent prompt is available for this invocation.")
         return
-    st.caption(
-        f"{label(node.role)} · {prompt['input_scope']} · "
-        f"{node.agent_name or 'Omnigent agent'} · session {node.session_id or 'not recorded'}"
+    st.caption(f"{label(node.role)} · {prompt['input_scope']}")
+    st.code(prompt["exact_prompt"], language="json", wrap_lines=True, height=360)
+    st.download_button(
+        "Download exact agent prompt",
+        prompt["exact_prompt"],
+        file_name=Path(prompt["artifact"]).name,
+        mime="application/json",
     )
-    st.markdown("**Exact specialist instructions sent to Omnigent**")
-    st.code(prompt["instructions"], language=None, wrap_lines=True)
     left, right = st.columns(2)
     with left, st.container(border=True):
         st.markdown("**Requested output → recorded response**")
@@ -61,6 +66,12 @@ def render_prompt_actions(journal, nodes, node, prompts):
             st.json(value, expanded=False)
         else:
             st.caption("No completed response recorded yet.")
+    handoff = saved_json(journal, node.stage.rsplit("/", 1)[0] + "/anyjev-handoff.json")
+    if handoff and node.role == "decision_agent":
+        st.markdown("**AnyJev decision · bounded selection after the Omnigent assessment**")
+        st.json(handoff["selected_action"], expanded=False)
+        with st.expander("AnyJev options, weights and handoff"):
+            st.json(saved_json(journal, handoff["decision_artifact"]), expanded=False)
     with right, st.container(border=True):
         st.markdown("**Recorded downstream actions**")
         following = downstream_steps(nodes, node)
@@ -85,163 +96,170 @@ def render_prompt_actions(journal, nodes, node, prompts):
                     st.json({"event": event["event"], **event["data"]}, expanded=False)
         if not following:
             st.caption("No downstream step has been recorded.")
-    with st.expander("Complete prompt, inputs and constraints"):
-        st.caption(f"{prompt['artifact']} · {prompt['prompt_version']}")
-        st.code(prompt["exact_prompt"], language="json", wrap_lines=True, height=360)
-    st.download_button(
-        "Download exact agent prompt",
-        prompt["exact_prompt"],
-        file_name=Path(prompt["artifact"]).name,
-        mime="application/json",
+
+
+def render_artifacts(journal, artifacts):
+    st.markdown("**Saved artifacts**")
+    if not artifacts:
+        st.caption("No files saved for this step yet.")
+        return
+    artifact = st.pills(
+        "Step artifact", artifacts, default=artifacts[0], label_visibility="collapsed"
     )
+    if artifact is None:
+        return
+    try:
+        raw = read_artifact(journal.directory, artifact)
+        if artifact.endswith(".json"):
+            st.json(json.loads(raw), expanded=False)
+        elif artifact.endswith((".csv", ".parquet")):
+            frame = (
+                pd.read_parquet(io.BytesIO(raw))
+                if artifact.endswith(".parquet")
+                else pd.read_csv(io.BytesIO(raw))
+            )
+            st.caption(
+                f"{len(frame):,} rows · {len(frame.columns)} columns · {Path(artifact).suffix}"
+            )
+            st.dataframe(frame.head(100), hide_index=True, alt="First 100 saved simulation rows")
+            if artifact.endswith(".csv"):
+                st.download_button(
+                    "Download as Parquet",
+                    frame.to_parquet(index=False),
+                    file_name=Path(artifact).with_suffix(".parquet").name,
+                    mime="application/octet-stream",
+                )
+                st.caption("Parquet is a derived export of the complete saved CSV.")
+        else:
+            st.code(raw[:20000].decode("utf-8", errors="replace"), language=None)
+            if len(raw) > 20000:
+                st.caption("Preview limited to 20 KB; download includes the complete file.")
+        st.download_button(
+            "Download step artifact", raw, file_name=Path(artifact).name, key="activity_artifact"
+        )
+    except (OSError, ValueError):
+        st.warning("Artifact is not yet readable. Refresh the run.")
+
+
+def render_simulation(journal, node):
+    st.caption("Python executed the approved test. Code below is archived with this run.")
+    names = set(journal.artifacts)
+    # A live run has no manifest yet; only look within its archived code directory.
+    names.update(f"code/{p.name}" for p in (journal.directory / "code").glob("*.py"))
+    relevant = {"simulation.py", "experiments.py", "adaptive_experiments.py"}
+    code = sorted(n for n in names if n.startswith("code/") and Path(n).name in relevant)
+    with st.expander("Simulation code used", expanded=True):
+        if code:
+            selected = st.segmented_control("Archived implementation", code, default=code[0])
+            if selected is None:
+                selected = code[0]
+            raw = read_artifact(journal.directory, selected)
+            st.code(raw.decode("utf-8"), language="python", height=360)
+            st.download_button("Download simulation code", raw, file_name=Path(selected).name)
+        else:
+            st.info("This run did not archive simulation code.")
+    render_artifacts(journal, node.artifacts)
+
+
+def render_artifact_feed(journal: Journal) -> None:
+    """Show files produced by this run, including files written before sealing."""
+    paths = [
+        p
+        for p in journal.directory.rglob("*")
+        if p.is_file()
+        and not p.is_symlink()
+        and p.suffix in {".json", ".csv", ".svg", ".txt"}
+        and p.relative_to(journal.directory).parts[0] not in {"inputs", "code"}
+        and not any(part.startswith(".") for part in p.relative_to(journal.directory).parts)
+    ]
+    paths.sort(key=lambda p: p.stat().st_mtime_ns, reverse=True)
+    st.caption(f"{len(paths)} produced artifacts · refreshed every five seconds")
+    with st.expander("Latest artifacts", expanded=not journal.sealed):
+        if paths:
+            names = [p.relative_to(journal.directory).as_posix() for p in paths]
+            st.dataframe(
+                [
+                    {"Artifact": n, "Bytes": p.stat().st_size}
+                    for n, p in zip(names[:8], paths[:8], strict=True)
+                ],
+                hide_index=True,
+                width="stretch",
+                alt="Most recently produced run artifacts",
+            )
+            name = st.selectbox(
+                "Inspect produced artifact", names, key=f"live-file-{journal.run_id}"
+            )
+            st.download_button(
+                "Download produced artifact",
+                read_artifact(journal.directory, name),
+                file_name=name.replace("/", "-"),
+                key=f"live-download-{journal.run_id}",
+            )
+        else:
+            st.caption("Waiting for the first artifact from this run.")
 
 
 def render_activity(journal: Journal) -> None:
-    st.subheader("Execution state machine")
-    st.caption(
-        "Only recorded work appears here. Select a step to inspect its session, inputs and outputs."
-    )
     nodes = load_activity(journal)
     if not nodes:
         st.info("No stage has started yet. Agent sessions appear after Omnigent creates them.")
         return
+    st.caption("Click a box to view its prompt, inputs and results.")
+    node, graph = render_execution_graph(nodes, journal)
+    prompts = {node.key: recorded_prompt(journal, node)}
+    if node.error_type == "ConnectError":
+        st.error(
+            "Could not connect to Omnigent. The paper remains saved, but this attempt "
+            "could not reach the worker runtime. Restore the server and host, then start "
+            "a new run from Source intake. This attempt is preserved."
+        )
+    elif node.error_type:
+        st.error(
+            f"This step stopped ({node.error_type}). See Technical details for recorded events."
+        )
+    if node.stage_status == "failed" and node.status == "completed":
+        st.warning("The worker responded, but a later evidence check in this stage failed.")
+    if node.kind == "simulation":
+        render_simulation(journal, node)
+    else:
+        render_prompt_actions(journal, nodes, node, prompts)
+        with st.expander("Saved step artifacts"):
+            render_artifacts(journal, node.artifacts)
+    with st.expander("Technical details · session, validation and events"):
+        st.json({k: v for k, v in asdict(node).items() if k not in {"artifacts", "events"}})
+        if prompt := prompts.get(node.key):
+            st.caption(f"{prompt['artifact']} · {prompt['prompt_version']}")
+        st.json(node.events, expanded=False)
+    with st.expander("Run details and exports"):
+        render_execution_audit(journal, nodes, node, graph)
+
+
+def render_execution_audit(journal, nodes, node, graph):
+    st.text(f"Run: {journal.run_id}")
+    st.caption(
+        f"{journal.report.get('backend', 'unknown').upper()} · "
+        f"{journal.report.get('status', 'running').replace('_', ' ')} · "
+        f"{'Artifacts verified' if journal.verified else 'Unsealed live snapshot'}"
+    )
     sessions = {n.session_id for n in nodes if n.session_id}
     metrics = st.columns(4)
     metrics[0].metric("Omnigent sessions", len(sessions))
     metrics[1].metric("Specialist roles", len({n.role for n in nodes if n.kind != "simulation"}))
     metrics[2].metric("Local tool executions", sum(n.kind == "simulation" for n in nodes))
     metrics[3].metric("Produced artifacts", len({a for n in nodes for a in n.artifacts}))
-    if not sessions:
-        st.info(
-            "No Omnigent sessions were recorded in this run. "
-            "The graph shows the actual backend's steps."
-        )
-    prompts = {n.key: recorded_prompt(journal, n) for n in nodes}
-    st.markdown("**How the agents differ**")
-    st.caption(
-        "A shared research-worker configuration receives different task prompts and inputs in "
-        "each session. The table quotes the opening instruction; select a step for the full prompt."
-    )
+    st.caption("Session IDs identify actual invocations; shared agent IDs identify configuration.")
+    counts = Counter(n.role for n in nodes)
     st.dataframe(
         [
             {
                 "Step": n.stage,
-                "Specialist": label(n.role),
-                "Prompt opening (verbatim)": p["instructions"].split(". ")[0],
-                "Assigned inputs": p["input_scope"],
-                "Output contract": p.get("output_schema", {}).get("title", "Unrecorded"),
-            }
-            for n in nodes
-            if (p := prompts[n.key])
-        ],
-        hide_index=True,
-        width="stretch",
-        alt="Differences between the actual recorded specialist prompts, inputs and outputs",
-    )
-    st.caption(
-        "Solid arrows are recorded handoffs. Dashed self-loops count repeated uses of a role, "
-        "which may be separate sessions or parallel invocations. Diamonds are decision roles."
-    )
-    selected = st.selectbox(
-        "Inspect execution step",
-        range(len(nodes)),
-        format_func=lambda i: (
-            f"{i + 1:02d} · {nodes[i].stage} · {nodes[i].role} · {nodes[i].status}"
-        ),
-    )
-    node = nodes[selected]
-    graph = activity_svg(nodes, node.key)
-    view = st.segmented_control(
-        "Workflow view", ["State machine", "Execution timeline"], default="State machine"
-    )
-    if view == "Execution timeline":
-        with st.container(height=540, border=True):
-            st.image(
-                graph, width="stretch", alt="Each recorded execution and its actual dependencies"
-            )
-    else:
-        st.graphviz_chart(
-            workflow_dot(nodes, node.role),
-            width="stretch",
-            height="content",
-            alt="Recorded agent roles and handoffs with self-loops for repeated invocations",
-        )
-    render_prompt_actions(journal, nodes, node, prompts)
-    with st.expander("Created agents and sessions", expanded=False):
-        st.caption(
-            "Roles are specialist assignments. Shared agent IDs identify "
-            "a reused configuration; session IDs identify actual invocations."
-        )
-        counts = Counter(n.role for n in nodes)
-        st.dataframe(
-            [
-                {
-                    "Role": label(n.role),
-                    "Uses of role": counts[n.role],
-                    "Agent": n.agent_name or n.kind,
-                    "Agent ID": n.agent_id or "Not recorded",
-                    "Session": n.session_id or "No session",
-                    "Call": n.call_id or "Python tool",
-                    "Status": n.status,
-                }
-                for n in nodes
-            ],
-            hide_index=True,
-            width="stretch",
-            alt="Created agent identities, specialist assignments and recorded sessions",
-        )
-    left, right = st.columns([1, 1.4])
-    with left, st.container(border=True):
-        st.markdown(f"**{node.role.capitalize()} · {node.status}**")
-        st.text(f"Session: {node.session_id or 'No Omnigent session recorded'}")
-        st.text(f"Agent: {node.agent_name or node.kind}")
-        if node.runner_id:
-            st.text(f"Runner: {node.runner_id}")
-        st.caption(f"Started: {node.started_at}")
-        if node.seconds is not None:
-            st.caption(f"Duration: {node.seconds:.2f}s")
-        if node.error_type:
-            st.error(f"Step stopped: {node.error_type}. Inspect the saved response and events.")
-        if node.schema_valid:
-            st.caption(
-                "Response passed its schema. Stage status also includes downstream evidence checks."
-            )
-        if node.stage_status == "failed" and node.status == "completed":
-            st.warning("This agent returned a valid response, but its workflow stage later failed.")
-        if node.usage is not None:
-            st.json(node.usage, expanded=False)
-        with st.expander("Session metadata & lifecycle"):
-            st.json({k: v for k, v in asdict(node).items() if k not in {"artifacts", "events"}})
-            st.json(node.events, expanded=False)
-    with right, st.container(border=True):
-        st.markdown("**Inputs & produced artifacts**")
-        if node.artifacts:
-            artifact = st.selectbox("Step artifact", node.artifacts)
-            try:
-                raw = read_artifact(journal.directory, artifact)
-                if artifact.endswith(".json"):
-                    st.json(json.loads(raw), expanded=False)
-                else:
-                    st.code(raw[:20000].decode("utf-8", errors="replace"), language=None)
-                    if len(raw) > 20000:
-                        st.caption("Preview limited to 20 KB; download includes the complete file.")
-                st.download_button(
-                    "Download step artifact",
-                    raw,
-                    file_name=Path(artifact).name,
-                    key="activity_artifact",
-                )
-            except (OSError, ValueError):
-                st.warning("Artifact is not yet readable. Refresh the run.")
-        else:
-            st.info("This step has not saved an artifact yet.")
-    st.dataframe(
-        [
-            {
-                "Step": n.stage,
-                "Role": n.role,
+                "Role": label(n.role),
+                "Uses of role": counts[n.role],
+                "Agent": n.agent_name or n.kind,
+                "Agent ID": n.agent_id or "Not recorded",
                 "Backend": n.kind,
                 "Session": n.session_id or "—",
+                "Call": n.call_id or "Python tool",
                 "Status": n.status,
                 "Seconds": n.seconds,
                 "Artifacts": len(n.artifacts),
@@ -250,6 +268,17 @@ def render_activity(journal: Journal) -> None:
         ],
         hide_index=True,
         width="stretch",
+        alt="Recorded execution steps, agent sessions, timing and artifact counts",
+    )
+    st.caption(
+        "Solid arrows are recorded handoffs. Dashed self-loops count repeated uses of a role; "
+        "diamonds are decision roles."
+    )
+    st.graphviz_chart(
+        workflow_dot(nodes, node.role),
+        width="stretch",
+        height="content",
+        alt="Recorded agent roles and handoffs with self-loops for repeated invocations",
     )
     st.download_button(
         "Export execution trace",

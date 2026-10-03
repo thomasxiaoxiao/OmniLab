@@ -1,4 +1,10 @@
-# Exploration decision control room
+# Historical sequential decision control room
+
+This guide records the earlier sequential interface. For the current adaptive
+UI, fixed Codex + Omnigent / AnyJev + Omnigent roles, live execution page and
+research highlights, see [source intake](source-intake.md) and
+[research implementation](research-implementation.md).
+
 
 Run `npm run dev` and open http://127.0.0.1:8000. The default page is the
 **Decision control room**; **Research results** preserves the numerical results

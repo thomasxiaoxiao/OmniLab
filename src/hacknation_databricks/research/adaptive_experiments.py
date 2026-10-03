@@ -11,6 +11,32 @@ import numpy as np
 
 from .simulation import simulate, wilson
 
+MEASUREMENT_CONTRACTS = {
+    "astrosat": {
+        "primary_endpoint": "Missed-transit rate: missed true crossings / positive_transits.",
+        "false_alert_rate": "Treatment alerts among nontransits / negative_candidates.",
+        "control_false_alert_rate": "Control alerts among nontransits / negative_candidates.",
+        "denominator_warning": "False-alert rate is NOT false alerts / all alerts. The latter "
+        "is false discovery proportion and is not the reported endpoint.",
+        "comparison": "Treatment minus nominal control within each fresh/stale scenario. "
+        "Control and treatment share candidates within a branch; different guard branches "
+        "use independent candidate samples, not matched samples.",
+        "hypothesis_scope": "The goal resolves each guard versus its nominal control. "
+        "Guard-to-guard superiority and stale-versus-fresh differences are secondary "
+        "questions not evaluated by this goal. Do not make either the primary hypothesis.",
+        "interpretation": "Widening the guard nests the alert sets, so fewer misses and "
+        "more false alerts are expected structurally. The measured magnitude and tradeoff "
+        "are the useful result; no optimal margin or operational benefit is established.",
+    },
+    "percolation": {
+        "primary_endpoint": "Horizontal strongly connected wrapping: wrapping trials / "
+        "all trials, separately for each lattice size and arm.",
+        "comparison": "Treatment minus fresh independent control at the recipe's fixed p.",
+        "hypothesis_scope": "A finite-size, fixed-probability mechanism comparison. "
+        "It does not estimate a critical probability or test a universality class.",
+    },
+}
+
 ASTROSAT_RECIPES = {
     f"transit_margin_{k}": {
         "question": f"Does a {k}-sigma cross-track guard reduce missed field crossings?",

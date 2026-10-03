@@ -13,6 +13,7 @@ from pathlib import Path
 
 from .adaptive_experiments import (
     ASTROSAT_RECIPES,
+    MEASUREMENT_CONTRACTS,
     astrosat_baseline,
     audit_statistics,
     batch_cost,
@@ -23,6 +24,8 @@ from .adaptive_experiments import (
 from .agents import AgentBudgetExceeded, AgentUnavailable, OmnigentRoles
 from .artifacts import RunStore, environment
 from .comparison import save_comparisons
+from .decision_roles import DecisionAbstained
+from .hybrid_roles import NUMERICAL_DECISION_POLICY, HybridOmnigentRoles
 from .models import (
     BranchPlan,
     InvestmentDecision,
@@ -130,6 +133,13 @@ def run_adaptive(
         report["elapsed_seconds"] = round(time.monotonic() - budget.started, 3)
         report["computed_simulations"] = budget.simulations
         report["role_calls"] = roles.calls if roles else 0
+        report["decision_calls"] = getattr(roles, "decision_calls", 0)
+        if isinstance(roles, HybridOmnigentRoles):
+            report["decision_usage"] = {
+                "prefills": roles.scorer.prefills,
+                "input_tokens": roles.scorer.input_tokens,
+                "generated_tokens": 0,
+            }
         report["acceleration"] = {
             "bottleneck": "Partial simulation result to next investment decision",
             "observed_decision_seconds": [c["decision_seconds"] for c in report["checkpoints"]],
@@ -148,6 +158,8 @@ def run_adaptive(
             progress(message)
 
     def ask(stage, role, payload, contract, parents):
+        if config.domain in MEASUREMENT_CONTRACTS:
+            payload["measurement_contract"] = MEASUREMENT_CONTRACTS[config.domain]
         with store.stage(stage, parents=parents):
             result = roles.ask(role, payload, contract)
             store.write(f"{stage}.json", result.model_dump())
@@ -231,7 +243,22 @@ def run_adaptive(
             shutil.copyfile(lockfile, output / "uv.lock")
         save()
         budget.check()
-        roles = (roles_factory or OmnigentRoles)(sources, store, config)
+        factory = HybridOmnigentRoles if config.decision_backend == "anyjev" else OmnigentRoles
+        roles = (roles_factory or factory)(sources, store, config)
+        store.write(
+            "agent-configuration.json",
+            {
+                "researcher": "Codex + Omnigent" if backend == "omnigent" else backend,
+                "decision": "AnyJev + Omnigent"
+                if isinstance(roles, HybridOmnigentRoles)
+                else "Omnigent"
+                if backend == "omnigent"
+                else backend,
+                "decision_integration": "Local bounded scoring tool after Omnigent assessment"
+                if isinstance(roles, HybridOmnigentRoles)
+                else "Session response",
+            },
+        )
         roles.deadline = min(
             budget.started + config.max_seconds, time.monotonic() + project_deadline - time.time()
         )
@@ -511,6 +538,9 @@ def run_adaptive(
                     "agent_calls": config.max_agent_calls - roles.calls,
                 }
                 payload = {
+                    "checkpoint": checkpoint,
+                    "measurement_contract": MEASUREMENT_CONTRACTS[config.domain],
+                    "decision_policy": NUMERICAL_DECISION_POLICY,
                     "goal": report["goal"],
                     "latest_result": {"branch_id": key, **summary},
                     "branches": snapshot,
@@ -671,6 +701,9 @@ def run_adaptive(
     except AgentUnavailable as exc:
         cancelled.set()
         report["status"], report["reason"] = "blocked_live_backend", str(exc)
+    except DecisionAbstained as exc:
+        cancelled.set()
+        report["status"], report["reason"] = "needs_decision_review", str(exc)
     except KeyboardInterrupt:
         cancelled.set()
         report["status"] = "interrupted"

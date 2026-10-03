@@ -4,14 +4,15 @@ import streamlit as st
 
 from hacknation_databricks.checkpoint_views import checkpoint_story
 from hacknation_databricks.research_views import measurement_rows
+from hacknation_databricks.synthesis_ui import render_comparison_outputs
 from hacknation_databricks.tracking import Journal, read_artifact
 
 
 def render_checkpoint_story(journal: Journal) -> None:
     st.subheader("What changed our next move?")
     st.write(
-        "Experimental evidence controls the next investment. Follow the previous plan, "
-        "the measured result, the specialist's decision, and the action the workflow executed."
+        "Compare the original paper’s finding with the proposed simulation, then see "
+        "how the new evidence changed the next experiment."
     )
     checkpoints = journal.report.get("checkpoints", [])
     if not checkpoints:
@@ -41,28 +42,19 @@ def render_checkpoint_story(journal: Journal) -> None:
         return
     checkpoint, payload, decision = story["checkpoint"], story["input"], story["decision"]
     node = story["decision_node"]
-    if journal.report.get("backend") == "omnigent":
-        st.markdown("**One Omnigent runtime · multiple specialists · shared execution gates**")
-        session_count = len({s["Session"] for s in story["sessions"]})
-        role_count = len({s["Role"] for s in story["sessions"]})
-        identity = (
-            "one recorded agent identity"
-            if story["shared_agent"]
-            else "agent identity not uniform or incomplete"
-        )
-        st.caption(
-            f"Across this run: {session_count} sessions · {role_count} specialist roles · "
-            f"{identity}. "
-            + (
-                "Saved live run; inspecting it makes no model calls."
-                if journal.sealed
-                else "Unsealed run snapshot; recorded events only."
-            )
-        )
-    else:
-        st.caption("Auxiliary backend: this view does not establish live Omnigent execution.")
-
     previous = story["previous"]
+    dataset = {
+        "round": selected,
+        "branch_id": checkpoint["branch_id"],
+        "batch": checkpoint["batch"],
+        "effect": payload["latest_result"],
+    }
+    render_comparison_outputs(journal, dataset)
+    st.markdown("**Next move · recorded agent recommendation**")
+    st.write(decision["next_experiment"])
+    st.caption(
+        "The execution record below distinguishes this recommendation from work actually run."
+    )
     cells = st.columns(4)
     with cells[0], st.container(border=True, height="stretch"):
         st.markdown("**1 · Previous plan**")
@@ -87,7 +79,11 @@ def render_checkpoint_story(journal: Journal) -> None:
         )
         st.caption(target)
         st.caption(
-            "Omnigent response recorded"
+            (
+                "AnyJev selection · Omnigent assessment recorded"
+                if journal.config.get("decision_backend") == "anyjev"
+                else "Omnigent response recorded"
+            )
             if node and node.session_id
             else "No validated Omnigent session recorded"
         )
@@ -110,7 +106,7 @@ def render_checkpoint_story(journal: Journal) -> None:
         st.warning(checkpoint["finalization_blocked"])
     st.markdown("**Why the decision changed · agent interpretation**")
     interpretation = decision["result_interpretation"]
-    st.write(interpretation.split(". ", 1)[0].rstrip(".") + ".")
+    st.write(decision["rationale"])
     st.dataframe(
         story["allocation"],
         hide_index=True,
