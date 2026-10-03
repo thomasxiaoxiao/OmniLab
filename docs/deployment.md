@@ -17,7 +17,7 @@ needed for this pull-based deployment.
 
 ## Configuration
 
-The API loads the host checkout's `.env`, including `APP_HOST` and `APP_PORT`.
+The app loads the host checkout's `.env`, including `APP_HOST` and `APP_PORT`.
 After edits, use `npm start`. If the port changes, set `DEPLOY_HEALTH_URL` to its
 `/_stcore/health` URL when starting the worker (or in its login service environment),
 then run `npm run cd:start` to refresh the worker environment.
