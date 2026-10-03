@@ -49,7 +49,13 @@ def test_health_requires_http_success_and_matching_pm2_revision(
     processes = [
         {
             "name": deploy.APP_NAME,
-            "pm2_env": {"status": "online", "APP_REVISION": running_revision},
+            "pm2_env": {
+                "status": "online",
+                "APP_REVISION": running_revision,
+                "APP_DIR": "/releases/candidate",
+                "pm_cwd": "/releases/candidate",
+                "pm_exec_path": "/releases/candidate/.venv/bin/python",
+            },
         }
     ]
     monkeypatch.setattr(deploy, "run", lambda *args: json.dumps(processes))
@@ -57,6 +63,36 @@ def test_health_requires_http_success_and_matching_pm2_revision(
     response.status = 200
     monkeypatch.setattr(deploy.urllib.request, "urlopen", lambda *args, **kwargs: response)
     assert deploy.health_matches("http://localhost/_stcore/health", "candidate") is expected
+
+
+def test_health_rejects_stale_executable_despite_updated_revision(monkeypatch):
+    processes = [
+        {
+            "name": deploy.APP_NAME,
+            "pm2_env": {
+                "status": "online",
+                "APP_REVISION": "candidate",
+                "APP_DIR": "/releases/new",
+                "pm_cwd": "/releases/old",
+                "pm_exec_path": "/releases/old/.venv/bin/python",
+            },
+        }
+    ]
+    monkeypatch.setattr(deploy, "run", lambda *args: json.dumps(processes))
+    assert not deploy.health_matches("http://localhost/_stcore/health", "candidate")
+
+
+def test_activate_replaces_existing_pm2_process(monkeypatch):
+    calls = []
+
+    def run(*args, **kwargs):
+        calls.append(args)
+        return json.dumps([{"name": deploy.APP_NAME}]) if args[-1] == "jlist" else ""
+
+    monkeypatch.setattr(deploy, "run", run)
+    deploy.activate({"revision": "candidate", "path": "/releases/new"})
+    assert calls[1][-2:] == ("delete", deploy.APP_NAME)
+    assert calls[2][2:4] == ("start", "/releases/new/ecosystem.config.js")
 
 
 def test_failed_health_restores_previous_release(monkeypatch, tmp_path):

@@ -42,6 +42,10 @@ def health_matches(url: str, revision: str) -> bool:
             process["name"] == APP_NAME
             and process["pm2_env"]["status"] == "online"
             and process["pm2_env"].get("APP_REVISION") == revision
+            and process["pm2_env"].get("APP_DIR") is not None
+            and process["pm2_env"].get("pm_cwd") == process["pm2_env"]["APP_DIR"]
+            and process["pm2_env"].get("pm_exec_path")
+            == str(Path(process["pm2_env"]["APP_DIR"]) / ".venv/bin/python")
             for process in processes
         )
         if not running:
@@ -68,11 +72,15 @@ def activate(release: dict) -> None:
         "APP_DIR": release["path"],
         "APP_REVISION": release["revision"],
     }
+    # PM2 restart preserves the previous executable and cwd across release paths.
+    processes = json.loads(run("bash", str(ROOT / "scripts/pm2.sh"), "jlist"))
+    if any(process["name"] == APP_NAME for process in processes):
+        run("bash", str(ROOT / "scripts/pm2.sh"), "delete", APP_NAME)
     print(
         run(
             "bash",
             str(ROOT / "scripts/pm2.sh"),
-            "startOrRestart",
+            "start",
             str(Path(release["path"]) / "ecosystem.config.js"),
             "--only",
             APP_NAME,

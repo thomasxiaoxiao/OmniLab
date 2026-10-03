@@ -1,16 +1,26 @@
-# Repository consolidation
+# Repository consolidation and local deployment
 
-Last update: October 3, 2026, 13:26 PDT. Approximately 10 hours 41 minutes
-remain before the original hard stop; this task is consolidation and deployment.
+Last update: October 3, 2026, 13:31 PDT. Approximately 10 hours 36 minutes
+remain before the original hard stop. Consolidation is complete.
 
-- Consolidated the existing research implementation, tests, examples and documentation.
-- Validation: lint, formatting, 132 tests, PM2 syntax and saved Codex run hashes pass.
-- Remote feature branches were already deleted; stale tracking refs were pruned.
-- One primary checkout exists; no secondary worktrees require removal.
-- Stable source, model, output and Omnigent paths are configured in ignored `.env`.
-- Current task: commit to main, push, verify CI, and deploy the resulting revision.
-- Local endpoint: `http://127.0.0.1:8010` (deployment verification pending).
-- Private runtime data stays local; portable results are in `examples/percolation/`.
+- All research implementation, tests, examples and documentation merged into main
+  and pushed. Merged feature branch removed; stale remote refs pruned.
+- Only the primary checkout remains; no secondary worktrees exist.
+- Validation: lint, formatting, 135 tests, PM2 syntax and saved-run hashes pass.
+- Linux CI exposed an optional-MLX metadata bug; fixed with regression coverage.
+- Browser verification exposed PM2 retaining the previous executable on restart;
+  activation now recreates the process and health checks verify executable and cwd.
+- Local deployment at `http://127.0.0.1:8010` visibly loads `codex-full-paper`,
+  the source library and 54 verified artifacts. No new inference run was needed.
+- Stable model, source, output and Omnigent paths are configured in ignored `.env`.
+- Runtime: deterministic Python supervisor; Omnigent 0.16.0 Codex harness,
+  configured `gpt-6-astra` with medium reasoning. AnyJev/Qwen3 remains optional.
+- Artifacts: full runs in `output/research/`, sources/models in `data/`, service
+  state/releases in `.runtime/`; portable snapshots in `examples/percolation/`.
+- Handoff: final deployment-fix commit is subject to the same main CI gate.
+  `npm run deploy` promotes only a successful CI revision and saves PM2 state.
+- Limits remain those recorded in the live-run report: no global novelty claim,
+  public deployment, official score, or completed hackathon submission.
 
 ---
 

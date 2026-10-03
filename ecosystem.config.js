@@ -35,6 +35,7 @@ module.exports = {
         PYTHONUNBUFFERED: "1",
         APP_ENV_FILE: path.join(root, ".env"),
         APP_REVISION: revision,
+        APP_DIR: appDir,
       },
     },
     {
