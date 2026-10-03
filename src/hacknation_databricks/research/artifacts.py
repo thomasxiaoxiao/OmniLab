@@ -7,7 +7,7 @@ import subprocess
 import time
 from contextlib import contextmanager
 from datetime import UTC, datetime
-from importlib.metadata import version
+from importlib.metadata import PackageNotFoundError, version
 from pathlib import Path
 
 
@@ -87,6 +87,11 @@ class RunStore:
 
 
 def environment() -> dict:
+    packages = {name: version(name) for name in ["numpy", "scipy", "pypdf", "omnigent", "anyjev"]}
+    try:
+        packages["mlx-lm"] = version("mlx-lm")
+    except PackageNotFoundError:
+        packages["mlx-lm"] = None
     try:
         revision = subprocess.run(
             ["git", "rev-parse", "HEAD"],
@@ -102,10 +107,7 @@ def environment() -> dict:
         "platform": platform.platform(),
         "git_revision": revision,
         "code_sha256": code_digest(),
-        "packages": {
-            name: version(name)
-            for name in ["numpy", "scipy", "pypdf", "omnigent", "anyjev", "mlx-lm"]
-        },
+        "packages": packages,
     }
 
 
