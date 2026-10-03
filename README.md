@@ -232,13 +232,16 @@ npm run stop
 npm run cd:start       # Start the deployment worker
 npm run cd:logs
 npm run cd:stop        # Pause automatic deployment; keep app running
-npm run deploy         # Check for and deploy an approved main commit once
+npm run deploy         # Check for and deploy the latest main commit once
 npm run save           # Save this project's PM2 process list
 npm run startup        # Install macOS login service after saving
 ```
 
-The worker checks `origin/main` every 60 seconds. It waits for the latest GitHub
-`CI` push run on the exact commit to succeed, exports that commit into a new
+The worker checks `origin/main` every 60 seconds and automatically promotes its
+latest commit without waiting for GitHub CI, per the temporary project policy.
+CI still runs for visibility. To restore the gate, run
+`DEPLOY_REQUIRE_CI=1 npm run cd:start` (and set it for one-off deploys).
+The worker exports that commit into a new
 `.runtime/releases/` directory, installs its locked production dependencies,
 and restarts the app. PM2 must report the expected revision online and Streamlit's
 HTTP health check must pass before recording

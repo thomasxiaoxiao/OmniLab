@@ -1,3 +1,18 @@
+# Automatic promotion policy
+
+Updated October 3, 2026, 15:22 PDT; approximately 8 hours 45 minutes to hard stop.
+
+- Consolidation PR #3 merged into main at ca1d65f; 174 tests and both PR/main CI passed.
+- User requested automatic promotion without waiting for GitHub CI for now.
+  Deployment now defaults to skipping CI gating; DEPLOY_REQUIRE_CI=1 restores it.
+  Locked dependency installation, exact running revision checks and health rollback remain.
+- Active task: publish the policy and activate the latest managed app/worker.
+  Next step: confirm release identity, health and browser rendering. No merge conflicts.
+- Scientific limits and the outstanding live validation of the paper-context role
+  remain unchanged. No new scientific run is claimed by this integration task.
+
+---
+
 # Main consolidation and launch validation
 
 Updated October 3, 2026, 15:16 PDT. About 8 hours 51 minutes remain to the
