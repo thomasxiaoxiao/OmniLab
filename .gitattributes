@@ -1,0 +1,2 @@
+# Preserve measured CSV bytes and their recorded SHA-256 checksums.
+*.csv -text whitespace=cr-at-eol

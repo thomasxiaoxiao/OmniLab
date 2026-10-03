@@ -1,0 +1,48 @@
+{
+  "effect": {
+    "checks": [
+      {
+        "absolute_effect_lower_bound": 0.02571609023844501,
+        "control": 0.755859375,
+        "control_interval": [
+          0.700508961321407,
+          0.8038446763937743
+        ],
+        "difference": 0.119140625,
+        "passed": false,
+        "size": 16,
+        "treatment": 0.875,
+        "treatment_interval": [
+          0.8295607666322193,
+          0.9096445649808709
+        ]
+      },
+      {
+        "absolute_effect_lower_bound": 0.07969198806931865,
+        "control": 0.7578125,
+        "control_interval": [
+          0.7025718856754342,
+          0.8056317798085653
+        ],
+        "difference": 0.166015625,
+        "passed": true,
+        "size": 32,
+        "treatment": 0.923828125,
+        "treatment_interval": [
+          0.8853237678778839,
+          0.9501322579556607
+        ]
+      }
+    ],
+    "interpretation": "Finite-size difference in one-axis wrapping; not proof of universality.",
+    "interval_method": "Wilson with Bonferroni correction across sizes and planned rounds",
+    "minimum_effect": 0.05,
+    "passed": false
+  },
+  "numerical": {
+    "passed": true,
+    "seed_replays": 2,
+    "violations": []
+  },
+  "passed": true
+}

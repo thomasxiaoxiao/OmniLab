@@ -1,0 +1,7 @@
+{
+  "control": "manhattan",
+  "mode": "bond",
+  "model": "random_manhattan",
+  "p": 0.69716,
+  "question": "Change one-axis wrapping by randomizing each row and column direction."
+}

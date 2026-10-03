@@ -1,0 +1,100 @@
+{
+  "comparisons": [
+    {
+      "added_value": "This supplies numerical observations for an explicitly suggested extension. Neither the model name nor the observable is new; whether the exact comparison was previously studied remains unverified.",
+      "evidence": [
+        {
+          "page": 13,
+          "quote": "One could look at other arrange- ments of the directed bonds on the square lattice, such as the two-neighbor model [38], the biased directed per- colation model [39], the randomly-oriented Manhattan lattice [40], or the biased Janus-particle directed model [67, 68].",
+          "source_id": "seed"
+        },
+        {
+          "page": 7,
+          "quote": "(b) the first point at which wrapping occurs in a specified direction (e.g., horizontally)",
+          "source_id": "seed"
+        },
+        {
+          "page": 15,
+          "quote": "[40] S. Ledger, B. T\u00b4 oth, and B. Valk\u00b4 o, Random walk on the randomly-oriented Manhattan lattice.Electron. Com- mun. Probab.23, 1\u201311 (2018).",
+          "source_id": "seed"
+        }
+      ],
+      "followup_work": "The run compares randomized row/column orientations with the alternating Manhattan control using specified-axis strongly connected wrapping at fixed p = 0.69716.",
+      "original_work": "The seed explicitly proposes studying the randomly-oriented Manhattan lattice and already defines wrapping in a specified direction. Its bibliography identifies prior work on that lattice."
+    },
+    {
+      "added_value": "The summaries support a positive finite-size diagnostic under the reported interval assumptions. They do not satisfy the overall 0.05 minimum-effect criterion. Comparing both models at the Manhattan threshold cannot separate threshold displacement from differences in critical scaling.",
+      "evidence": [
+        {
+          "page": 9,
+          "quote": "TABLE II: Scaling estimates of the wrapping probability at the percolation threshold",
+          "source_id": "seed"
+        },
+        {
+          "page": 9,
+          "quote": "Manhattan 0.697193(15) 0.697187(12) 0.697181(09) 0.697158(4) 0.697160(2) 0.697162(4) 0.697160(2)",
+          "source_id": "seed"
+        },
+        {
+          "page": 14,
+          "quote": "Final es- timates ofp c are error-weighted straight-line extrapola- tions to the intercept atL=\u221eand quoted errors are standard errors on the intercept.",
+          "source_id": "seed"
+        }
+      ],
+      "followup_work": "At L = 16, wrapping rises from 0.755859375 to 0.875; at L = 32, it rises from 0.7578125 to 0.923828125. The supplied adjusted effect lower bounds are 0.02571609023844501 and 0.07969198806931865, respectively.",
+      "original_work": "The seed estimates critical thresholds and extrapolated critical wrapping probabilities using finite-size scaling. Table II's combined specified-direction reference is 0.75001; Table I places the Manhattan threshold near the run's fixed p."
+    },
+    {
+      "added_value": "The reference provides related SCC context but does not establish the run's exact comparison or result. The run does not independently test its fractal dimensions, upper critical dimension, or complete-graph conclusions.",
+      "evidence": [
+        {
+          "page": 2,
+          "quote": "Each nearest- neighbor pair of sites is connected by two antiparallel directed bonds, as sketched in Fig. 2.",
+          "source_id": "ref_2605_16987"
+        },
+        {
+          "page": 3,
+          "quote": "Percolation configurations are gen- erated by occupying each directed bond independently with probabilityp.",
+          "source_id": "ref_2605_16987"
+        }
+      ],
+      "followup_work": "The run tests wrapping under randomized Manhattan orientations on two small square lattices, rather than the antiparallel-bond ensemble or its dimensional scaling.",
+      "original_work": "Wang and Li study SCC percolation on hypercubic lattices and complete graphs with two antiparallel directed bonds per neighboring pair, each occupied independently. This differs from assigning a single direction consistently along each row or column."
+    },
+    {
+      "added_value": "This tangential reference establishes related work on directional constraints and SCC connectivity, not the proposed comparison. The run adds no direct evidence about Janus reentrance or mixed critical scaling.",
+      "evidence": [
+        {
+          "page": 2,
+          "quote": "Following a classical Boolean model, we placeN nodes uniformly at random in a square domain of sizeL\u00d7Lusing a Poisson point process with open boundary conditions [22].",
+          "source_id": "ref_2512_10566"
+        },
+        {
+          "page": 2,
+          "quote": "Here, we introduce a model of spatially embedded di- rected networks in which each node can establish at most q outgoing links to neighbors within a given distance, preferentially oriented along a fixed direction.",
+          "source_id": "ref_2512_10566"
+        }
+      ],
+      "followup_work": "The run changes row/column orientations at one bond occupation probability and records finite-size wrapping. It does not vary spatial node density or test degree-limited link selection.",
+      "original_work": "The Janus paper studies spatial Poisson networks with open boundaries, limited outgoing degree, and directional preference. Its density-dependent construction differs from bond occupation on a periodic Manhattan lattice."
+    }
+  ],
+  "limitations": [
+    "Only L = 16 and L = 32, with 512 treatment trials per size, are supplied. These cannot establish asymptotic scaling or universality.",
+    "The overall effect criterion fails because the L = 16 adjusted lower bound is below 0.05. Thresholds must remain unchanged.",
+    "The baseline tolerance of 0.12 is an engineering allowance, not a fitted finite-size correction or high-precision reproduction.",
+    "Raw outcomes, implementation details, seeds, orientation-resampling records, and independence evidence are absent. Reported replay checks were not independently reproduced.",
+    "The full planned-round count and stopping history are unavailable, so the claimed simultaneous coverage cannot be independently assessed.",
+    "The randomized Manhattan critical threshold is unknown here; fixed-p differences can reflect unequal distances from criticality.",
+    "Ledger, T\u00f3th, and Valk\u00f3 (2018) is supplied only as a bibliography entry. The retrieved 2412.20781v1 has no supplied page text and was not reviewed. The bounded literature coverage cannot establish global priority.",
+    "No simulations, browsing, or artifact validation were performed in this review. The earlier literature statement that no measurements were supplied is stale. The validation narrative mentions an enclosing success flag that is not present in the supplied top-level results; it cannot override effect.passed = false."
+  ],
+  "next_experiment": "Have the deterministic supervisor first audit the orientation ensemble, wrapping detector, trial independence, and multiplicity/stopping records. Complete any already planned rounds without changing the 0.05 criterion or selectively discarding L = 16. For a separately specified study, measure wrapping across a p grid and additional larger sizes for both ensembles, averaging over independently sampled orientations and occupations. Estimate each model's threshold and finite-size corrections before comparing behavior at their respective critical points. Review the full 2018 randomly-oriented Manhattan reference and the unavailable retrieved text before reassessing added scientific value. These steps could distinguish a threshold shift from critical scaling differences; the present run does not.",
+  "rationale": "The run implements an extension explicitly suggested by the seed paper and measures an observable already defined there. Its added value is a limited finite-size comparison: at p = 0.69716, randomized row/column directions produce reported treatment-minus-control wrapping differences of 0.119140625 at L = 16 and 0.166015625 at L = 32. Both supplied multiplicity-adjusted lower bounds are positive, but only the L = 32 bound exceeds the unchanged minimum effect of 0.05. The overall effect check therefore fails; this does not establish absence of an effect. Baseline and numerical checks pass as reported, supporting a limited diagnostic rather than independently verified implementation correctness. The reviewed texts do not report this exact comparison, but absence from this restricted review cannot establish novelty. The directly relevant 2018 randomly-oriented Manhattan reference is unavailable in full. There is insufficient evidence for validated new scientific knowledge, global priority, a randomized-model critical threshold, or universality.",
+  "reviewed_source_ids": [
+    "seed",
+    "ref_2605_16987",
+    "ref_2512_10566"
+  ],
+  "verdict": "incremental_extension"
+}

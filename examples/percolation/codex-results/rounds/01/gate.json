@@ -1,0 +1,14 @@
+{
+  "criteria": {
+    "baseline_consistent": true,
+    "detectable_effect": false,
+    "independent_review_supports": false,
+    "literature_candidate_gap": false,
+    "multiple_sources_reviewed": true,
+    "numerical_validation": true,
+    "reference_evaluator_supports": false
+  },
+  "meaning": "Automated evidence gate within reviewed literature; no global discovery claim.",
+  "met": false,
+  "scientific_novelty": "unverified"
+}

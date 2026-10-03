@@ -1,0 +1,13 @@
+{
+  "criteria": {
+    "baseline_consistent": true,
+    "detectable_effect": false,
+    "independent_review_supports": false,
+    "literature_candidate_gap": false,
+    "multiple_sources_reviewed": false,
+    "numerical_validation": true
+  },
+  "meaning": "Candidate for human review within supplied literature; no discovery claim.",
+  "met": false,
+  "scientific_novelty": "unverified"
+}

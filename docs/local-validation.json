@@ -1,0 +1,45 @@
+{
+  "artifact_hash_verification": "passed",
+  "baseline_batches": 6,
+  "baseline_checks_passed": true,
+  "command": "npm run check",
+  "databricks_workspace_export": "not_run",
+  "environment": {
+    "code_sha256": "442ee32434b9b529680e21c2d55469c457ad7b6a8d536c3f9d2e811c38dfdb45",
+    "git_revision": "d32154fb007a31796489fd5489a880021b4e0758",
+    "packages": {
+      "numpy": "2.4.3",
+      "omnigent": "0.16.0",
+      "pypdf": "6.12.2",
+      "scipy": "1.17.1"
+    },
+    "platform": "macOS-27.0.1-arm64-arm-64bit",
+    "python": "3.12.8"
+  },
+  "followup": "random_manhattan",
+  "format": "passed",
+  "fresh_noneditable_production_install": "passed",
+  "kind": "local_validation_not_official_score",
+  "lint": "passed",
+  "live_omnigent": "not_run_no_configured_credentials_or_runner",
+  "local_mlflow_export": "passed",
+  "local_mlflow_run_id": "f3237afbc60d4d5d8fd55211c9bffecf",
+  "monte_carlo_trials": 2048,
+  "notes": [
+    "Reduced-scale baseline consistency only; no high-precision reproduction.",
+    "Scripted roles are explicitly separate from live model extraction.",
+    "Novelty is unverified; prior-art review remains necessary."
+  ],
+  "novelty_gate_met": false,
+  "pm2_config_syntax": "passed",
+  "seed_replays": 8,
+  "source": {
+    "kind": "full_text",
+    "retrieved_at": "2026-10-03T19:34:50.682800+00:00",
+    "sha256": "ec1c1fbd4d1a05ed60875020ea2f103def25cc012bf100ebfe82991a147bd8bb",
+    "url": "https://arxiv.org/abs/2607.24975v1"
+  },
+  "status": "needs_literature_review",
+  "tests_passed": 84,
+  "verified_on": "2026-10-03"
+}

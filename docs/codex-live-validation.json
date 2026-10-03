@@ -1,0 +1,24 @@
+{
+  "kind": "local validation; not an organizer score",
+  "live_run": "output/research/codex-full-paper",
+  "backend": "omnigent",
+  "authentication": "Codex ChatGPT subscription",
+  "configured_model": "gpt-6-astra",
+  "cli_version": "0.160.0",
+  "omnigent_version": "0.16.0",
+  "completed_live_role_calls": 6,
+  "provider_usage": null,
+  "trials": 4096,
+  "seed_replays": 8,
+  "verdict": "incremental_extension",
+  "effect_criterion_passed": false,
+  "full_paper_reproduction": false,
+  "npm_run_check": {
+    "passed": true,
+    "tests_passed": 132
+  },
+  "artifact_hashes_passed": true,
+  "decision_ledger_issues": [],
+  "ui_browser_verified": true,
+  "screenshot": "docs/images/codex-comparison.jpg"
+}

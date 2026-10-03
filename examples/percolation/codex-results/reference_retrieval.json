@@ -1,0 +1,37 @@
+{
+  "max_downloads": 3,
+  "method": "Explicit arXiv citations in seed text; immutable version resolution and full PDF retrieval",
+  "records": [
+    {
+      "arxiv_id": "2605.16987",
+      "page": 15,
+      "pages": 11,
+      "path": "data/literature/2605.16987v1.pdf",
+      "quote": "arxiv:2605.16987",
+      "sha256": "9cf8cdfa011e458c11234c50a1c9c98dd65a122b8be147705aa6aa150242b79b",
+      "status": "retrieved_for_review",
+      "url": "https://arxiv.org/abs/2605.16987v1"
+    },
+    {
+      "arxiv_id": "2412.20781",
+      "page": 15,
+      "pages": 45,
+      "path": "data/literature/2412.20781v1.pdf",
+      "quote": "arxiv:2412.20781",
+      "sha256": "1574bbb48775cd36e4ed8dfcbcd31fc636cafa1ee7f59fa0c4c50562544c695d",
+      "status": "not_reviewed_context_budget",
+      "url": "https://arxiv.org/abs/2412.20781v1"
+    },
+    {
+      "arxiv_id": "2512.10566",
+      "page": 16,
+      "pages": 5,
+      "path": "data/literature/2512.10566v1.pdf",
+      "quote": "arxiv:2512.10566",
+      "sha256": "46fb842b67df192a71563bfcfa7bff125e83edd17e9ba50cf23756677b1b2792",
+      "status": "retrieved_for_review",
+      "url": "https://arxiv.org/abs/2512.10566v1"
+    }
+  ],
+  "scope": "Bounded cited-reference review; non-arXiv references and uncited literature are not searched. Omitted sources are not evidence of novelty."
+}

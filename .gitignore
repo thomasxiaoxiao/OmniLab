@@ -19,3 +19,8 @@ build/
 data/
 output/
 tmp/
+agents/local/
+mlruns/
+# Locally installed editor skill links
+.agents/skills/
+.claude/skills/

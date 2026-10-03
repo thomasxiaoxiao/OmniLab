@@ -1,0 +1,3 @@
+randomly-oriented Manhattan lattice
+site (rather than bond) percolation
+resistor-diode lattices

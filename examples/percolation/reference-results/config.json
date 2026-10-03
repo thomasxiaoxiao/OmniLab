@@ -1,0 +1,17 @@
+{
+  "agent_timeout_seconds": 120,
+  "finite_size_tolerance": 0.12,
+  "max_agent_calls": 16,
+  "max_rounds": 2,
+  "max_seconds": 300,
+  "max_simulations": 12000,
+  "max_workers": 2,
+  "minimum_effect": 0.05,
+  "preferred_experiment": null,
+  "seed": 20261003,
+  "sizes": [
+    16,
+    32
+  ],
+  "trials": 256
+}

@@ -1,0 +1,50 @@
+[
+  {
+    "role": "01-reader-response",
+    "session_id": "162185ebdfff4289a7d02b61eed874d1",
+    "item_types": {
+      "message": 2
+    },
+    "usage_reported": null
+  },
+  {
+    "role": "02-critic-response",
+    "session_id": "66c825d187054808a7601eb63b50a0cd",
+    "item_types": {
+      "message": 2
+    },
+    "usage_reported": null
+  },
+  {
+    "role": "03-literature-response",
+    "session_id": "ff9cd7fc8ac44ac8b2e15599e1b388d2",
+    "item_types": {
+      "message": 2
+    },
+    "usage_reported": null
+  },
+  {
+    "role": "04-planner-response",
+    "session_id": "4a4b52949b2f44db8a33265ec70f9f98",
+    "item_types": {
+      "message": 2
+    },
+    "usage_reported": null
+  },
+  {
+    "role": "05-validator-response",
+    "session_id": "74716bb4bf2745d6ac98381a73b747e0",
+    "item_types": {
+      "message": 2
+    },
+    "usage_reported": null
+  },
+  {
+    "role": "06-novelty_evaluator-response",
+    "session_id": "49dd447d70ba4dfbaf6f346ce34da082",
+    "item_types": {
+      "message": 2
+    },
+    "usage_reported": null
+  }
+]

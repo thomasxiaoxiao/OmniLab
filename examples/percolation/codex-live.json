@@ -1,0 +1,12 @@
+{
+  "seed": 20261003,
+  "sizes": [16, 32],
+  "trials": 512,
+  "max_rounds": 2,
+  "max_workers": 2,
+  "max_seconds": 1800,
+  "agent_timeout_seconds": 300,
+  "max_agent_calls": 12,
+  "max_simulations": 16000,
+  "preferred_experiment": "random_manhattan"
+}

@@ -1,0 +1,80 @@
+{
+  "checks": [
+    {
+      "ci95": [
+        0.6566785852737663,
+        0.7666562464083045
+      ],
+      "model": "l_lattice",
+      "observed": 0.71484375,
+      "passed": true,
+      "reference": 0.75001,
+      "size": 16
+    },
+    {
+      "ci95": [
+        0.673001975362034,
+        0.781120844078733
+      ],
+      "model": "l_lattice",
+      "observed": 0.73046875,
+      "passed": true,
+      "reference": 0.75001,
+      "size": 32
+    },
+    {
+      "ci95": [
+        0.7017711387942602,
+        0.806230659224225
+      ],
+      "model": "manhattan",
+      "observed": 0.7578125,
+      "passed": true,
+      "reference": 0.75001,
+      "size": 16
+    },
+    {
+      "ci95": [
+        0.6894086206103858,
+        0.7955021865890772
+      ],
+      "model": "manhattan",
+      "observed": 0.74609375,
+      "passed": true,
+      "reference": 0.75001,
+      "size": 32
+    },
+    {
+      "ci95": [
+        0.673001975362034,
+        0.781120844078733
+      ],
+      "model": "random_diode",
+      "observed": 0.73046875,
+      "passed": true,
+      "reference": 0.75001,
+      "size": 16
+    },
+    {
+      "ci95": [
+        0.6976446537147682,
+        0.8026601473640429
+      ],
+      "model": "random_diode",
+      "observed": 0.75390625,
+      "passed": true,
+      "reference": 0.75001,
+      "size": 32
+    }
+  ],
+  "claim": "Small-lattice simulation consistency check, not high-precision reproduction.",
+  "finite_size_tolerance": 0.12,
+  "limitation": "Tolerance is an engineering allowance, not a fitted scaling correction.",
+  "numerical": {
+    "passed": true,
+    "seed_replays": 6,
+    "violations": []
+  },
+  "passed": true,
+  "reference": "arXiv:2607.24975v1, Tables I-II; one-axis wrapping"
+}

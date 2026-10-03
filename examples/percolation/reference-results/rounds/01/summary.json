@@ -1,0 +1,30 @@
+[
+  {
+    "largest_fraction": 0.548492431640625,
+    "mode": "bond",
+    "model": "random_manhattan",
+    "p": 0.69716,
+    "size": 16,
+    "trials": 256,
+    "wrap_x": 0.88671875,
+    "wrap_x_ci95": [
+      0.8420429058573817,
+      0.9199597911703461
+    ],
+    "wrap_y": 0.90234375
+  },
+  {
+    "largest_fraction": 0.5186080932617188,
+    "mode": "bond",
+    "model": "random_manhattan",
+    "p": 0.69716,
+    "size": 32,
+    "trials": 256,
+    "wrap_x": 0.9453125,
+    "wrap_x_ci95": [
+      0.9103096388011672,
+      0.9671480123216708
+    ],
+    "wrap_y": 0.91796875
+  }
+]

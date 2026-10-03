@@ -1,12 +1,31 @@
 [project]
 name = "hacknation-databricks"
 version = "0.1.0"
-description = "Rental Housing Law Navigator development and deployment foundation"
+description = "Bounded model decisions and reproducible research with AnyJev"
 readme = "README.md"
 requires-python = ">=3.12,<3.13"
 dependencies = [
+    "anyjev==0.2.0",
+    "mlx-lm==0.32.0; sys_platform == 'darwin' and platform_machine == 'arm64'",
+    "httpx==0.28.1",
+    "numpy==2.4.3",
+    "omnigent==0.16.0",
+    "omnigent-client==0.16.0",
+    "pypdf==6.12.2",
+    "pydantic==2.13.5",
     "python-dotenv>=1,<2",
+    "pyyaml==6.0.3",
+    "scipy==1.17.1",
     "streamlit>=1.41,<2",
+]
+
+[project.scripts]
+research = "hacknation_databricks.research.cli:main"
+
+[project.optional-dependencies]
+databricks = ["omnigent[databricks]==0.16.0"]
+tracking = [
+    "mlflow-skinny==3.14.0",
 ]
 
 [dependency-groups]

@@ -1,12 +1,16 @@
-"""Thin demo entry point; domain functionality will be added independently."""
-
-import os
+"""App navigation; keep research results alongside the decision control room."""
 
 import streamlit as st
 
-st.set_page_config(page_title="Rental Housing Law Navigator", page_icon="🏠")
-st.title("Rental Housing Law Navigator")
-st.caption("Not legal advice.")
-st.info("The work environment is ready. The housing-law pipeline is not implemented yet.")
-st.markdown("Automated extraction → address lookup → change tracking")
-st.caption(f"Deployed revision: {os.environ.get('APP_REVISION', 'development')}")
+st.navigation(
+    [
+        st.Page(
+            "tracking_ui.py",
+            title="Decision control room",
+            icon=":material/account_tree:",
+            default=True,
+        ),
+        st.Page("research_ui.py", title="Research results", icon=":material/science:"),
+    ],
+    position="top",
+).run()

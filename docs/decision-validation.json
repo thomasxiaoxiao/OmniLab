@@ -1,0 +1,166 @@
+{
+  "run_directory": "output/research/anyjev-final-validation-20261003",
+  "workflow_version": "2",
+  "prompt_version": "bounded-decisions-v4",
+  "model": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+  "revision": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b",
+  "backend": "anyjev",
+  "status": "needs_literature_review",
+  "selected_experiment": "site_percolation",
+  "acceptance": {
+    "baseline_simulations": true,
+    "followup_implemented": true,
+    "full_paper_reproduction": false,
+    "live_agents_executed": true
+  },
+  "decision_calls": 11,
+  "usage": {
+    "generated_tokens": 0,
+    "input_tokens": 37673,
+    "prefills": 43
+  },
+  "computed_simulations": 264,
+  "gate": {
+    "criteria": {
+      "baseline_consistent": true,
+      "detectable_effect": false,
+      "independent_review_supports": false,
+      "literature_candidate_gap": true,
+      "multiple_sources_reviewed": false,
+      "numerical_validation": true
+    },
+    "meaning": "Candidate for human review within supplied literature; no discovery claim.",
+    "met": false,
+    "scientific_novelty": "unverified"
+  },
+  "wall_seconds": 64.864945,
+  "decisions": [
+    {
+      "question": "source-random_manhattan",
+      "answer": "passage_0",
+      "weights": {
+        "passage_0": 0.9240437105839598,
+        "passage_1": 0.00011201776922153134,
+        "passage_2": 0.02173142514535719,
+        "passage_3": 1.0053725142376789e-05,
+        "passage_4": 7.034315380438907e-06,
+        "uncertain": 0.001025507844333692,
+        "unsupported": 0.053070250616604905
+      },
+      "seconds": 13.281162832980044
+    },
+    {
+      "question": "source-site_percolation",
+      "answer": "passage_3",
+      "weights": {
+        "passage_0": 2.4594671950277793e-06,
+        "passage_1": 2.0572565235987275e-06,
+        "passage_2": 0.08618319235718318,
+        "passage_3": 0.9101578368377912,
+        "passage_4": 1.9154349774260657e-06,
+        "uncertain": 6.343049497495167e-05,
+        "unsupported": 0.003589108151354719
+      },
+      "seconds": 12.858868750015972
+    },
+    {
+      "question": "source-resistor_diode",
+      "answer": "passage_2",
+      "weights": {
+        "passage_0": 0.00018510897330482678,
+        "passage_1": 0.039264950443059075,
+        "passage_2": 0.9428467001341619,
+        "passage_3": 9.225127695190139e-05,
+        "passage_4": 0.0007321201915216469,
+        "uncertain": 0.0008004950996737044,
+        "unsupported": 0.016078373881326984
+      },
+      "seconds": 13.220240208000178
+    },
+    {
+      "question": "grounding-random_manhattan",
+      "answer": "topic_only",
+      "weights": {
+        "supported": 0.0022753719126320984,
+        "topic_only": 0.997724165121156,
+        "unclear": 4.629662119558826e-07
+      },
+      "seconds": 1.9581559590005782
+    },
+    {
+      "question": "grounding-site_percolation",
+      "answer": "supported",
+      "weights": {
+        "supported": 0.5415701950994518,
+        "topic_only": 0.45842927289713054,
+        "unclear": 5.320034176684813e-07
+      },
+      "seconds": 1.9523691249778494
+    },
+    {
+      "question": "critique-site_percolation",
+      "answer": "accept",
+      "weights": {
+        "accept": 0.9998797626990968,
+        "defer": 7.484282990570724e-05,
+        "reject": 4.539447099746902e-05
+      },
+      "seconds": 2.5770681250141934
+    },
+    {
+      "question": "grounding-resistor_diode",
+      "answer": "topic_only",
+      "weights": {
+        "supported": 4.691163730317904e-08,
+        "topic_only": 0.999999937858384,
+        "unclear": 1.5229978798297078e-08
+      },
+      "seconds": 1.9569973750039935
+    },
+    {
+      "question": "select-direction",
+      "answer": "site_percolation",
+      "weights": {
+        "site_percolation": 0.999999998394772,
+        "stop": 1.6052280526088547e-09
+      },
+      "seconds": 1.703238332993351
+    },
+    {
+      "question": "literature-assessment",
+      "answer": "candidate_gap",
+      "weights": {
+        "candidate_gap": 0.9999660211618691,
+        "known_overlap": 2.9928461338777603e-05,
+        "unverified": 4.050376792119487e-06
+      },
+      "seconds": 3.793295708979713
+    },
+    {
+      "question": "authorize-experiment",
+      "answer": "execute",
+      "weights": {
+        "execute": 0.9999756997592568,
+        "stop": 2.4300240743279598e-05
+      },
+      "seconds": 2.6232622080133297
+    },
+    {
+      "question": "validate-measurements",
+      "answer": "inconclusive",
+      "weights": {
+        "inconclusive": 0.9999838526463682,
+        "reject": 1.6019836631650762e-05,
+        "supported": 1.2751700005339086e-07
+      },
+      "seconds": 5.34635779200471
+    }
+  ],
+  "source_spot_check": "Accepted site-percolation direction traces to the explicit future-work passage on PDF page 13.",
+  "limits": [
+    "L0 weights are uncalibrated.",
+    "One local model, not independent expert reviewers.",
+    "No global literature search or established novelty.",
+    "Scope is three implemented experiment recipes."
+  ]
+}
