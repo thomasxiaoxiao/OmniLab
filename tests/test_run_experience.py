@@ -22,7 +22,7 @@ from hacknation_databricks.research.models import InvestmentDecision, RunConfig
 UI = Path(__file__).resolve().parents[1] / "src/hacknation_databricks/ui.py"
 
 
-def test_launch_follows_exact_run_then_reports_completion(monkeypatch, tmp_path):
+def test_launch_follows_exact_run_then_reports_completion(monkeypatch, tmp_path, launch_source):
     from test_adaptive import make_run
 
     from hacknation_databricks import tracking_ui
@@ -58,7 +58,7 @@ def test_launch_follows_exact_run_then_reports_completion(monkeypatch, tmp_path)
     assert not app.exception
 
 
-def test_preflight_failure_never_displays_previous_experiment(monkeypatch, tmp_path):
+def test_preflight_failure_never_displays_previous_experiment(monkeypatch, tmp_path, launch_source):
     from test_adaptive import make_run
 
     from hacknation_databricks import tracking_ui

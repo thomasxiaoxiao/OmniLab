@@ -1,7 +1,7 @@
-# Latest platform consolidation: local validation complete
+# Latest platform consolidation: clean-checkout test repair
 
-Updated October 3, 2026, 16:56 PDT; about 7 hours 11 minutes to hard stop
-and 5 hours 11 minutes to feature freeze.
+Updated October 3, 2026, 16:59 PDT; about 7 hours 8 minutes to hard stop
+and 5 hours 8 minutes to feature freeze.
 
 - Consolidated the current source-intake, hybrid decision handoff, measurement
   contracts, execution inspector, highlights and policy UI work on
@@ -17,8 +17,13 @@ and 5 hours 11 minutes to feature freeze.
   Omnigent completions remain 19/19 and 18/18. The current Omnigent host reports
   online and Codex-ready; this checkpoint did not initiate new model inference.
 - Challenge PDF hash remains the required `ce9276222cae08bd4e088b90c11876e53caaf60ecf5fe87fc35b801a27b96b7d`.
-- Active task: publish the tested consolidation through a PR and verify remote CI
-  before merging to main. GitHub records the subsequent integration outcome.
+- Initial Linux CI exposed three launch tests relying on ignored local seed papers.
+  Added an explicit temporary-source fixture; all eight affected-file tests pass
+  when run from `/private/tmp`, without the checkout's data directory. Application
+  launch gates remain unchanged. The initial failed CI is preserved in PR #5.
+- Active task: finish remote CI verification and main integration through
+  https://github.com/thomasxiaoxiao/hacknation-databricks/pull/5. GitHub records the
+  subsequent integration outcome.
   No local validation blocker. Next scientific work and real-world limitations
   remain as recorded below; this software check establishes no additional novelty,
   observational reliability, native sandbox attestation or acceleration multiplier.

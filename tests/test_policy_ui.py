@@ -7,7 +7,7 @@ ROOT = Path(__file__).resolve().parents[1]
 UI = ROOT / "src/hacknation_databricks/ui.py"
 
 
-def test_next_run_policy_reaches_fixed_launch_and_redirects(monkeypatch, tmp_path):
+def test_next_run_policy_reaches_fixed_launch_and_redirects(monkeypatch, tmp_path, launch_source):
     from hacknation_databricks import tracking_ui
 
     monkeypatch.setenv("RESEARCH_RUNS_DIR", str(tmp_path))
