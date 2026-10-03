@@ -1,0 +1,48 @@
+{
+  "batches": 3,
+  "checks": [
+    {
+      "conclusion": "unresolved",
+      "control": 0.12456140350877193,
+      "control_false_alert_rate": 0.16551326412918108,
+      "control_samples": 570,
+      "difference": -0.10526315789473684,
+      "difference_interval": [
+        -0.17704292036468272,
+        -0.02867057109068817
+      ],
+      "false_alert_rate": 0.2808535178777393,
+      "interval_width": 0.14837234927399456,
+      "negative_candidates": 1734,
+      "positive_transits": 570,
+      "resolved": false,
+      "scenario": "fresh",
+      "treatment": 0.01929824561403509,
+      "treatment_samples": 570
+    },
+    {
+      "conclusion": "unresolved",
+      "control": 0.14516129032258066,
+      "control_false_alert_rate": 0.15807560137457044,
+      "control_samples": 558,
+      "difference": -0.11290322580645162,
+      "difference_interval": [
+        -0.1938373124252837,
+        -0.026698574328386113
+      ],
+      "false_alert_rate": 0.2800687285223368,
+      "interval_width": 0.1671387380968976,
+      "negative_candidates": 1746,
+      "positive_transits": 558,
+      "resolved": false,
+      "scenario": "stale",
+      "treatment": 0.03225806451612903,
+      "treatment_samples": 558
+    }
+  ],
+  "goal_eligible": false,
+  "interval_method": "Conservative Wilson endpoint bounds; Bonferroni across 3 branches, all planned batch looks, groups and endpoints. Paired covariance not exploited.",
+  "metric": "missed-transit rate",
+  "samples": 4608,
+  "scientific_novelty": "unverified"
+}

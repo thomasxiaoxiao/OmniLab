@@ -1,0 +1,33 @@
+{
+  "batch": 2,
+  "branch_id": "b1_2",
+  "checkpoint": 5,
+  "decision": {
+    "action": "invest",
+    "goal_branch_id": null,
+    "invest": [
+      "b1_2"
+    ],
+    "missing_evidence": [
+      "A third independent b1_2 batch and aggregated simultaneous intervals resolving the size-8 effect criterion.",
+      "Completed results from the in-flight b1_1 and b1_3 batches.",
+      "Supervisor verification of fresh controls, independent seeds and the wrapping implementation.",
+      "Verification that the b1_3 intervention preserves every original directed edge.",
+      "Supervisor confirmation of goal eligibility under unchanged criteria.",
+      "Independent validation of any selected eligible branch.",
+      "Evidence separating fixed-probability finite-size responses from critical-threshold effects.",
+      "Relevant literature sufficient to assess novelty; scientific novelty remains unverified."
+    ],
+    "next_experiment": "Have the supervisor run a third independent b1_2 batch with fresh matched Manhattan bond controls and Manhattan site treatments at p=0.69716, sizes 8 and 16. Preserve the approved allocation, wrapping definition, simultaneous interval method and all thresholds. Aggregate every completed batch and reassess both sizes, particularly whether the size-8 interval establishes a decrease exceeding 0.05 while retaining width at most 0.25. Consolidate the pending b1_1 and b1_3 results immediately upon completion without duplicating their jobs. Prioritize an eligible b1_3 result for selection and required independent validation; otherwise reallocate using the returned evidence. Stay within remaining budgets and eight batches per branch. Finalize only a supervisor-confirmed goal_eligible branch.",
+    "rationale": "Allocate the next batch to b1_2 while b1_1 and b1_3 continue their existing jobs. The new measurements narrow the outstanding b1_2 question to whether the size-8 decrease exceeds the unchanged minimum effect. Another independent batch can improve that decision, although resolution is not guaranteed. Source seed, page 13 states: \"One could also look at strongly-connected clusters under site (rather than bond) percolation on square lat- tices, or at either bond or site percolation on non-square lattices such as triangular or hexagonal lattices, or on cubic or hypercubic lattices in higher dimensions.\" This supports the extension; the fixed-probability comparison is an agent-generated consistency check. Equal occupation probability does not match distance from the respective critical thresholds. There is insufficient evidence for mechanism resolution, novelty or universality. Remaining budgets permit further allowed testing.",
+    "result_interpretation": "The second b1_2 batch brings both interval widths below 0.25, superseding the previous assessment that they were too wide. At size 16, the difference is -0.34766 with simultaneous interval [-0.46070, -0.22275], supporting a decrease exceeding 0.05. At size 8, the difference is -0.15495 with interval [-0.27381, -0.03079]: it excludes zero but does not establish a decrease exceeding 0.05, so the declared criterion remains unresolved. Both minimum batch count and width requirements are satisfied, but b1_2 remains goal_eligible=false. Available b1_1 results remain unresolved. Available b1_3 results satisfy the numerical effect and width criteria at both sizes but include only one completed batch. Its pending repetition and the pending b1_1 batch are not evidence yet. No branch is eligible for finalization."
+  },
+  "decision_seconds": 19.44,
+  "goal_accepted": false,
+  "input": "checkpoints/005/input.json",
+  "pending_branches": [
+    "b1_3",
+    "b1_1"
+  ],
+  "result_to_decision_seconds": 45.348
+}

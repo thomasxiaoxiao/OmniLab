@@ -26,14 +26,14 @@ def default_source() -> Path:
 
 
 def parser() -> argparse.ArgumentParser:
-    root = argparse.ArgumentParser(description="Bounded percolation research workflow")
+    root = argparse.ArgumentParser(description="Adaptive Omnigent scientific research workflow")
     commands = root.add_subparsers(dest="command", required=True)
     commands.add_parser("prepare-model", help="Download and hash the pinned local decision model")
     fetch = commands.add_parser("fetch", help="Fetch a version-pinned public arXiv PDF")
     fetch.add_argument("--arxiv-id", default="2607.24975v1")
     fetch.add_argument("--destination", type=Path, default=Path("data/papers"))
     run = commands.add_parser("run", help="Execute the strict research workflow")
-    run.add_argument("--backend", choices=["anyjev", "omnigent"], default="anyjev")
+    run.add_argument("--backend", choices=["omnigent", "anyjev"], default="omnigent")
     run.add_argument("--paper", type=Path, default=default_source())
     run.add_argument("--literature", type=Path, action="append", default=[])
     run.add_argument("--config", type=Path)
@@ -138,7 +138,9 @@ def main(argv: list[str] | None = None) -> int:
             )
             return 0
         config = (
-            RunConfig.model_validate_json(args.config.read_text()) if args.config else RunConfig()
+            RunConfig.model_validate_json(args.config.read_text())
+            if args.config
+            else RunConfig(workflow="adaptive" if args.backend == "omnigent" else "sequential")
         )
         output = args.output or Path("output/research") / datetime.now(UTC).strftime(
             "%Y%m%dT%H%M%S%fZ"
@@ -170,6 +172,7 @@ def main(argv: list[str] | None = None) -> int:
         print(json.dumps({"output": str(output), **report}, indent=2))
         # A successful base simulation is distinct from achieving the novelty gate.
         successful = {
+            "goal_achieved",
             "needs_literature_review",
             "candidate_for_human_review",
             "automated_candidate",

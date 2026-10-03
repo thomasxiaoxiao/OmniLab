@@ -7,7 +7,7 @@ from streamlit.testing.v1 import AppTest
 from hacknation_databricks.research.cli import fixture_source
 from hacknation_databricks.research.intake import register_upload
 
-TRACKING = Path(__file__).resolve().parents[1] / "src/hacknation_databricks/tracking_ui.py"
+TRACKING = Path(__file__).resolve().parents[1] / "src/hacknation_databricks/ui.py"
 
 
 def intake_page():
@@ -68,6 +68,7 @@ def test_uploaded_sources_launch_with_original_identity_and_literature(tmp_path,
         "related.md", b"Independent notes on a percolation experiment.", tmp_path / "sources"
     )
     app = AppTest.from_file(str(TRACKING)).run()
+    app.switch_page("app_pages/sources.py").run()
     backend = next(s for s in app.selectbox if s.label == "Decision backend")
     backend.select(next(s for s in backend.options if "AnyJev" in s)).run()
     picker = next(s for s in app.selectbox if s.label == "Registered source")
@@ -85,7 +86,7 @@ def test_uploaded_sources_launch_with_original_identity_and_literature(tmp_path,
     assert all(not s["url"] for s in source_data)  # No unrelated seed-paper URL injected.
     assert (directory / "inputs/seed.md").read_bytes() == fixture_source().read_bytes()
     assert (directory / "inputs/seed.md.json").exists()
-    assert any(t.label == "Agents & loops" for t in app.tabs)
+    app.switch_page("app_pages/agents.py").run()
     assert next(m for m in app.metric if m.label == "Omnigent sessions").value == "0"
     next(s for s in app.selectbox if s.label == "Inspect execution step").select_index(2).run()
     assert not app.exception
@@ -136,3 +137,43 @@ def test_running_validation_without_gate_does_not_crash():
         render_gate(journal)
 
     assert not AppTest.from_function(page).run().exception
+
+
+def test_library_only_includes_two_builtins_and_explicit_imports(tmp_path, monkeypatch):
+    from hacknation_databricks.research.intake import library_sources
+    from hacknation_databricks.research.sources import Source
+
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.delenv("RESEARCH_PAPER_PATH", raising=False)
+    papers = tmp_path / "data/papers"
+    papers.mkdir(parents=True)
+    for name in ("2607.24975v1", "2111.11268v1", "ghost"):
+        (papers / f"{name}.pdf").write_bytes(name.encode())
+    imported = register_upload(
+        "my-paper.md", b"My explicitly imported paper.", tmp_path / "sources"
+    )
+
+    def fake_read(path):
+        return Source(
+            source_id="seed",
+            url="",
+            title=path.stem,
+            path=str(path),
+            sha256=path.stem,
+            pages=["Full text"],
+            kind="full_text",
+        )
+
+    monkeypatch.setattr("hacknation_databricks.research.intake.read_source", fake_read)
+    monkeypatch.setattr(
+        "hacknation_databricks.research.intake.list_sources", lambda _: ([imported], [])
+    )
+    sources, issues = library_sources(tmp_path / "sources")
+    assert not issues
+    assert [Path(s.path).name for s in sources] == [
+        "source.md",
+        "2607.24975v1.pdf",
+        "2111.11268v1.pdf",
+    ]
+    monkeypatch.setenv("RESEARCH_PAPER_PATH", str(papers / "2607.24975v1.pdf"))
+    assert len(library_sources(tmp_path / "sources")[0]) == 3

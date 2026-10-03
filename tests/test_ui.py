@@ -10,7 +10,10 @@ def test_demo_renders_notice_and_revision(monkeypatch, tmp_path):
     result = AppTest.from_file(str(ui)).run(timeout=15)
     assert not result.exception
     assert result.title[0].value == "Research & Validation Lab"
-    assert result.caption[0].value == "Not legal advice."
+    assert (
+        result.caption[0].value
+        == "Research prototype · scientific conclusions require further validation."
+    )
     assert result.caption[1].value == "Deployed revision: abc123"
 
 

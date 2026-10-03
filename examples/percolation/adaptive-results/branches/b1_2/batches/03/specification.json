@@ -1,0 +1,13 @@
+{
+  "batch": 3,
+  "branch_id": "b1_2",
+  "recipe": {
+    "control": "manhattan",
+    "mode": "site",
+    "model": "manhattan",
+    "p": 0.69716,
+    "question": "Test whether occupying sites instead of bonds changes wrapping at fixed p."
+  },
+  "seed": 2292256972,
+  "trials_per_group": 1024
+}

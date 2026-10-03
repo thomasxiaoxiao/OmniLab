@@ -6,6 +6,10 @@ from pathlib import Path
 import pandas as pd
 import streamlit as st
 
+from hacknation_databricks.research.comparison import synthesis_dataset
+from hacknation_databricks.synthesis_ui import render_comparison_outputs
+from hacknation_databricks.tracking import load_journal
+
 
 def render_comparison(directory: Path, report: dict) -> None:
     st.subheader("Original → follow-up")
@@ -13,6 +17,7 @@ def render_comparison(directory: Path, report: dict) -> None:
         "Same observable, recorded seeds, fixed parameters. "
         "Agent review is scoped to the saved references."
     )
+    render_comparison_outputs(load_journal(directory), synthesis_dataset(report))
     selected = report.get("selected_proposal", {})
     if selected:
         st.markdown(f"**{selected['title']}**")

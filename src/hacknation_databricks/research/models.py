@@ -10,16 +10,21 @@ class Contract(BaseModel):
 
 
 class RunConfig(Contract):
+    workflow: Literal["sequential", "adaptive"] = "sequential"
+    domain: Literal["auto", "percolation", "astrosat"] = "percolation"
     seed: int = Field(default=20261003, ge=0, le=2**32 - 1)
     sizes: list[int] = Field(default_factory=lambda: [16, 32], min_length=2, max_length=4)
     trials: int = Field(default=128, ge=8, le=4096)
-    max_rounds: int = Field(default=2, ge=1, le=4)
-    max_workers: int = Field(default=2, ge=1, le=4)
-    max_agent_calls: int = Field(default=16, ge=1, le=32)
+    max_rounds: int = Field(default=8, ge=1, le=32)
+    max_workers: int = Field(default=6, ge=1, le=16)
+    max_agent_calls: int = Field(default=96, ge=1, le=512)
+    max_agent_retries: int = Field(default=1, ge=0, le=2)
     max_decision_calls: int = Field(default=32, ge=1, le=64)
     agent_timeout_seconds: int = Field(default=120, ge=1, le=600)
-    max_seconds: int = Field(default=300, ge=1, le=3600)
-    max_simulations: int = Field(default=20000, ge=16, le=200000)
+    max_seconds: int = Field(default=3600, ge=1, le=21600)
+    max_simulations: int = Field(default=100000, ge=16, le=1000000)
+    goal_min_batches: int = Field(default=2, ge=2, le=32)
+    goal_max_interval_width: float = Field(default=0.25, gt=0, le=0.5)
     finite_size_tolerance: float = Field(default=0.12, gt=0, le=0.2)
     minimum_effect: float = Field(default=0.05, gt=0, le=0.5)
     preferred_experiment: (
@@ -38,6 +43,14 @@ class Evidence(Contract):
     source_id: str = "seed"
     page: int = Field(ge=1)
     quote: str = Field(min_length=8, max_length=600)
+
+
+class ResearchContext(Contract):
+    research_question: str = Field(min_length=10, max_length=1500)
+    summary: str = Field(min_length=10, max_length=3000)
+    domain: Literal["percolation", "astrosat", "unsupported"]
+    rationale: str = Field(min_length=10, max_length=1500)
+    evidence: list[Evidence] = Field(min_length=1, max_length=3)
 
 
 class Proposal(Contract):
@@ -109,3 +122,79 @@ class NoveltyReview(Contract):
     reviewed_source_ids: list[str] = Field(min_length=1, max_length=8)
     limitations: list[str] = Field(min_length=1, max_length=8)
     next_experiment: str = Field(min_length=10, max_length=1500)
+
+
+class TestAssessment(Contract):
+    test_id: Literal["screen", "precision"]
+    expected_learning: str = Field(min_length=10, max_length=600)
+    feasibility: str = Field(min_length=10, max_length=600)
+
+
+class DiscoveryPlan(ExperimentPlan):
+    tests: list[TestAssessment] = Field(min_length=2, max_length=2)
+    selected_test_id: Literal["screen", "precision"]
+
+    @field_validator("tests")
+    @classmethod
+    def compare_both_tests(cls, tests: list[TestAssessment]) -> list[TestAssessment]:
+        if {test.test_id for test in tests} != {"screen", "precision"}:
+            raise ValueError("Compare both screen and precision tests exactly once")
+        return tests
+
+
+class NextDecision(Contract):
+    action: Literal["repeat", "literature", "stop"]
+    result_interpretation: str = Field(min_length=10, max_length=1500)
+    rationale: str = Field(min_length=10, max_length=1500)
+    next_experiment: str = Field(min_length=10, max_length=1500)
+
+
+class ResearchDirection(Contract):
+    id: str = Field(pattern=r"^[a-z][a-z0-9_]{0,39}$")
+    title: str = Field(min_length=5, max_length=200)
+    hypothesis: str = Field(min_length=10, max_length=1200)
+    experiment: Literal[
+        "random_manhattan",
+        "site_percolation",
+        "resistor_diode",
+        "transit_margin_1",
+        "transit_margin_2",
+        "transit_margin_3",
+    ]
+    origin: Literal["paper_suggestion", "agent_hypothesis"]
+    evidence: list[Evidence] = Field(min_length=1, max_length=4)
+
+
+class ResearchBrief(Contract):
+    directions: list[ResearchDirection] = Field(max_length=3)
+    search_scope: str = Field(min_length=10, max_length=1200)
+    missing_evidence: list[str] = Field(max_length=8)
+
+
+class PortfolioSelection(Contract):
+    critiques: list[Critique] = Field(min_length=1, max_length=24)
+    invest: list[str] = Field(max_length=3)
+    rationale: str = Field(min_length=10, max_length=2000)
+
+
+class BranchPlan(Contract):
+    branch_id: str
+    experiment: str
+    tests: list[TestAssessment] = Field(min_length=2, max_length=2)
+    selected_test_id: Literal["screen", "precision"]
+    rationale: str = Field(min_length=10, max_length=1500)
+
+    @field_validator("tests")
+    @classmethod
+    def compare_tests(cls, tests):
+        return DiscoveryPlan.compare_both_tests(tests)
+
+
+class InvestmentDecision(Contract):
+    action: Literal["invest", "finalize", "stop"]
+    invest: list[str] = Field(max_length=3)
+    goal_branch_id: str | None = None
+    result_interpretation: str = Field(min_length=10, max_length=2000)
+    rationale: str = Field(min_length=10, max_length=2000)
+    next_experiment: str = Field(min_length=10, max_length=1500)
+    missing_evidence: list[str] = Field(max_length=8)

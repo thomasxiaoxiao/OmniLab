@@ -6,7 +6,7 @@ from pathlib import Path
 import streamlit as st
 
 from hacknation_databricks.research.intake import (
-    list_sources,
+    library_sources,
     register_arxiv,
     register_upload,
     source_root,
@@ -31,7 +31,7 @@ def render_sources() -> None:
                 max_upload_size=10,
             )
             st.caption("10 MiB per file · up to 100 PDF pages · text-based PDFs and UTF-8 Markdown")
-            submitted = st.form_submit_button("Add files to library", use_container_width=True)
+            submitted = st.form_submit_button("Add files to library", width="stretch")
         if submitted:
             messages = []
             for file in files or []:
@@ -64,7 +64,7 @@ def render_sources() -> None:
             st.caption(
                 "Abstract and PDF links accepted. Unversioned links resolve to a pinned version."
             )
-            submitted = st.form_submit_button("Import arXiv paper", use_container_width=True)
+            submitted = st.form_submit_button("Import arXiv paper", width="stretch")
         if submitted:
             with st.spinner("Resolving paper version and validating PDF…"):
                 try:
@@ -86,13 +86,13 @@ def render_sources() -> None:
         "Intake uses no model calls. Scans require OCR before upload; "
         "oversized sources are rejected, never truncated."
     )
-    sources, issues = list_sources(source_root())
+    sources, issues = library_sources(source_root())
     for issue in issues:
         st.warning(issue)
     st.markdown(f"**Source library · {len(sources)} ready**")
     if not sources:
         st.info(
-            "Add a source above, then choose it as the seed or related literature in the sidebar."
+            "Add a source above, then choose it as the seed or related literature on this page."
         )
         return
     st.dataframe(
@@ -109,7 +109,7 @@ def render_sources() -> None:
             for s in sources
         ],
         hide_index=True,
-        use_container_width=True,
+        width="stretch",
     )
     selected = st.selectbox(
         "Inspect source", range(len(sources)), format_func=lambda i: sources[i].title
@@ -123,11 +123,8 @@ def render_sources() -> None:
                 "Markdown text pages are separated by form feeds; "
                 "ordinary documents have one text page."
             )
-        st.json(
-            json.loads(
-                Path(source.path).with_suffix(Path(source.path).suffix + ".json").read_text()
-            )
-        )
+        sidecar = Path(source.path).with_suffix(Path(source.path).suffix + ".json")
+        st.json(json.loads(sidecar.read_text()) if sidecar.is_file() else source.payload())
         st.download_button(
             "Download original source",
             Path(source.path).read_bytes(),

@@ -1,9 +1,11 @@
-"""Exploration control room: bounded controls and an inspectable decision journal."""
+"""Omnigent scientific discovery lab: bounded controls and an inspectable decision journal."""
 
 import fcntl
 import html
 import json
 import os
+import secrets
+from concurrent.futures import ThreadPoolExecutor
 from datetime import UTC, datetime
 from pathlib import Path
 from urllib.parse import urlsplit
@@ -11,13 +13,12 @@ from uuid import uuid4
 
 import streamlit as st
 
-from hacknation_databricks.activity_ui import render_activity
+from hacknation_databricks.discovery_ui import render_discovery
 from hacknation_databricks.research.decision_runtime import runtime_status
-from hacknation_databricks.research.intake import list_sources, source_root
+from hacknation_databricks.research.intake import library_sources, source_root
 from hacknation_databricks.research.models import RunConfig
 from hacknation_databricks.research.sources import read_source
 from hacknation_databricks.research.workflow import run_research
-from hacknation_databricks.source_ui import render_sources
 from hacknation_databricks.tracking import (
     POLICY_VERSION,
     STEP_BY_KEY,
@@ -120,18 +121,48 @@ def run_root() -> Path:
 
 
 def available_sources() -> dict[str, Path]:
-    sources = {}
-    registered, _ = list_sources(source_root())
-    for source in registered:
-        sources[f"{source.title} · {source.sha256[:8]}"] = Path(source.path)
-    configured = os.environ.get("RESEARCH_PAPER_PATH")
-    if configured and Path(configured).is_file():
-        sources["Registered project source"] = Path(configured)
-    for path in (Path("data/papers/2607.24975v1.pdf"), Path(".cache/research/paper.pdf")):
-        if path.is_file():
-            sources["Full paper · arXiv v1"] = path
-            break
-    return sources
+    registered, _ = library_sources(source_root())
+    return {f"{source.title} · {source.sha256[:8]}": Path(source.path) for source in registered}
+
+
+def run_profiles(backend="omnigent"):
+    shared = {
+        "workflow": "adaptive" if backend == "omnigent" else "sequential",
+        "domain": "auto" if backend == "omnigent" else "percolation",
+        "agent_timeout_seconds": 240,
+    }
+    return {
+        "Quick verification": RunConfig(
+            **shared,
+            sizes=[8, 16],
+            trials=32,
+            max_rounds=4,
+            max_workers=4,
+            max_seconds=1200,
+            max_agent_calls=48,
+            max_simulations=20000,
+        ),
+        "Standard exploration": RunConfig(
+            **shared,
+            sizes=[8, 16],
+            trials=128,
+            max_rounds=8,
+            max_workers=6,
+            max_seconds=3600,
+            max_agent_calls=96,
+            max_simulations=100000,
+        ),
+        "Extended exploration": RunConfig(
+            **shared,
+            sizes=[16, 32],
+            trials=256,
+            max_rounds=16,
+            max_workers=12,
+            max_seconds=7200,
+            max_agent_calls=192,
+            max_simulations=300000,
+        ),
+    }
 
 
 def launch_run(
@@ -140,21 +171,33 @@ def launch_run(
     backend: str,
     progress,
     literature_paths: list[Path] | None = None,
+    overrides: dict | None = None,
 ) -> Path:
     """Closed launch boundary: controls choose profiles, never executable instructions."""
     registered = {p.resolve() for p in available_sources().values()}
     if any(p.resolve() not in registered for p in [source_path, *(literature_paths or [])]):
         raise ValueError("Source is not registered")
-    profiles = {
-        "Quick verification": RunConfig(
-            sizes=[8, 16], trials=32, max_rounds=2, max_seconds=600, max_simulations=2000
-        ),
-        "Standard exploration": RunConfig(
-            sizes=[16, 32], trials=128, max_rounds=2, max_seconds=900, max_simulations=12000
-        ),
-    }
+    profiles = run_profiles(backend)
     if profile not in profiles or backend not in {"anyjev", "omnigent"}:
         raise ValueError("Unknown run profile or backend")
+    config_data = profiles[profile].model_dump()
+    if overrides:
+        allowed = {
+            "max_rounds",
+            "max_workers",
+            "trials",
+            "max_seconds",
+            "max_agent_calls",
+            "max_simulations",
+            "seed",
+            "goal_max_interval_width",
+        }
+        if not set(overrides) <= allowed:
+            raise ValueError("Unknown budget override")
+        config_data.update(overrides)
+    config = RunConfig.model_validate(config_data)
+    if backend == "anyjev" and config.domain != "percolation":
+        raise ValueError("Astrosat uses the Omnigent adaptive workflow")
     if len(literature_paths or []) > 3:
         raise ValueError("Select at most three related sources")
     source = read_source(source_path)
@@ -184,7 +227,7 @@ def launch_run(
         run_research(
             source,
             directory,
-            profiles[profile],
+            config,
             backend=backend,
             literature=literature,
             progress=progress,
@@ -194,27 +237,70 @@ def launch_run(
     return directory
 
 
+@st.cache_resource
+def background_executor():
+    return ThreadPoolExecutor(max_workers=1, thread_name_prefix="research-ui")
+
+
+@st.fragment(run_every=3)
+def render_launch_monitor():
+    future = st.session_state.get("research_future")
+    if future is None:
+        return
+    if future.done():
+        st.session_state.pop("research_future")
+        try:
+            directory = future.result()
+            st.session_state["new_run"] = directory.name
+        except Exception as exc:
+            st.error(f"Run stopped ({type(exc).__name__}); inspect retained artifacts.")
+        st.rerun()
+    else:
+        st.info("Omnigent research is running. Saved partial results refresh automatically.")
+        if not st.session_state.get("following_live_run"):
+            runs = discover_runs(run_root())
+            if runs and load_journal(runs[0]).report.get("status") == "running":
+                st.session_state["new_run"] = runs[0].name
+                st.session_state["following_live_run"] = True
+                st.rerun()
+
+
 def render_sidebar() -> Path | None:
+    """Run context only; intake and launch controls live on their own page."""
     with st.sidebar:
-        markup(
-            '<div class="brand"><b>◈</b> exploration</div>'
-            '<div class="brand-sub">RESEARCH CONTROL ROOM</div>'
-        )
-        markup('<div class="eyebrow">Workspace</div>')
+        markup('<div class="brand"><b>◈</b> Omnigent lab</div>')
+        st.caption("SCIENTIFIC DISCOVERY")
         runs = discover_runs(run_root())
         names = [path.name for path in runs]
-        chosen = st.session_state.get("new_run")
-        index = names.index(chosen) if chosen in names else 0
+        chosen = st.session_state.pop("new_run", None)
+        if chosen in names:
+            st.session_state["run_selection"] = chosen
+        if st.session_state.get("run_selection") not in names:
+            st.session_state.pop("run_selection", None)
         selected = st.selectbox(
             "Exploration run",
             names,
-            index=index if names else None,
+            key="run_selection",
             placeholder="No recorded runs yet",
         )
-        if st.button("Refresh artifacts", use_container_width=True, icon=":material/refresh:"):
+        if st.button("Refresh artifacts", width="stretch", icon=":material/refresh:"):
             st.rerun()
+        render_launch_monitor()
         st.divider()
-        markup('<div class="eyebrow">New bounded run</div>')
+        st.caption("Seed paper → grounded proposals → bounded tests → updated decision")
+        st.caption("Research prototype · scientific conclusions require further validation.")
+        st.caption(f"Deployed revision: {os.environ.get('APP_REVISION', 'development')}")
+    return run_root() / selected if selected else None
+
+
+def render_run_setup() -> None:
+    st.subheader("Prepare a discovery run")
+    st.caption(
+        "Explore parallel directions. Omnigent specialists revisit investments after each result."
+    )
+    source_column, budget_column = st.columns([1.15, 1], gap="large")
+    with source_column, st.container(border=True):
+        st.markdown("**01 · Seed and related papers**")
         sources = available_sources()
         imported = st.session_state.pop("intake_selected", None)
         if imported:
@@ -224,22 +310,43 @@ def render_sidebar() -> Path | None:
             )
         if st.session_state.get("seed_source") not in sources:
             st.session_state.pop("seed_source", None)
+        if "seed_source" not in st.session_state:
+            saved = st.session_state.get("selected_seed_path")
+            st.session_state["seed_source"] = next(
+                (label for label, path in sources.items() if str(path.resolve()) == saved),
+                next(iter(sources), None),
+            )
         source = st.selectbox("Registered source", list(sources), key="seed_source")
+        if source:
+            st.session_state["selected_seed_path"] = str(sources[source].resolve())
         literature = st.multiselect(
             "Related literature",
             [label for label in sources if label != source],
             max_selections=3,
+            default=[
+                label
+                for label, path in sources.items()
+                if label != source
+                and str(path.resolve()) in st.session_state.get("selected_literature_paths", [])
+            ],
         )
-        st.caption("Add PDF, Markdown or arXiv sources in Source intake below.")
+        st.session_state["selected_literature_paths"] = [
+            str(sources[label].resolve()) for label in literature
+        ]
+        st.caption("Choose a saved local paper, or import one above.")
+    with budget_column, st.container(border=True):
+        st.markdown("**02 · Runtime and local budget**")
         profile = st.selectbox(
-            "Environment profile", ["Quick verification", "Standard exploration"]
+            "Environment profile",
+            ["Quick verification", "Standard exploration", "Extended exploration"],
+            index=1,
         )
         runner = st.selectbox(
             "Decision backend",
             ["Codex subscription · Omnigent", "AnyJev · local Qwen · decision only"],
         )
         backend = "omnigent" if runner.startswith("Codex") else "anyjev"
-        runtime = runtime_status()
+        runtime = runtime_status() if backend == "anyjev" else {}
         ready = bool(sources) and (backend == "omnigent" or runtime["ready"])
         if backend == "omnigent":
             st.caption(
@@ -249,59 +356,92 @@ def render_sidebar() -> Path | None:
         elif not runtime["ready"]:
             st.info("Prepare the local model with `research prepare-model` after `uv sync`.")
         if not sources:
-            st.info("Add a seed in Source intake below.")
+            st.info("Import a paper above to prepare a run.")
         st.caption(
-            "2 rounds · 2 workers · fixed seed\n\n"
-            + (
-                "32 trials / size · 600s limit"
-                if profile == "Quick verification"
-                else "128 trials / size · 900s limit"
-            )
+            "The research agent reads the seed paper to establish its question and context. "
+            "Local experiment tools currently support percolation and transit uncertainty; "
+            "unsupported papers stop before simulation."
+            if backend == "omnigent"
+            else "The auxiliary AnyJev backend supports percolation decisions only."
         )
+        settings = run_profiles(backend)[profile]
+        st.caption(
+            f"Profile defaults: {settings.trials} trials/group · {settings.max_workers} workers · "
+            f"{settings.max_rounds} batches/direction · {settings.max_seconds // 60} minutes"
+        )
+        with st.expander("Adjust local simulation budget", expanded=False):
+            rounds = st.number_input("Maximum batches per direction", 2, 32, settings.max_rounds)
+            workers = st.number_input("Concurrent workers / agents", 1, 16, settings.max_workers)
+            trials = st.number_input("Initial trials per group", 8, 4096, settings.trials, step=8)
+            seconds = st.number_input(
+                "Wall-clock limit (seconds)", 60, 21600, settings.max_seconds, step=60
+            )
+            calls = st.number_input(
+                "Agent request budget", 8, 512, settings.max_agent_calls, step=8
+            )
+            simulations = st.number_input(
+                "Simulation budget including replays",
+                1000,
+                1000000,
+                settings.max_simulations,
+                step=1000,
+            )
+            interval_width = st.number_input(
+                "Goal: maximum interval width", 0.05, 0.5, 0.25, step=0.05
+            )
+            pinned = st.checkbox("Use a specific master seed", value=False)
+            seed = st.number_input("Master seed", 0, 2**32 - 1, 20261003) if pinned else None
+        st.caption(
+            "Independent seed streams for every branch and batch. The master seed is saved. "
+            "Decisions follow each result; the loop ends at its goal or declared limits."
+        )
+        overrides = {
+            "max_rounds": rounds,
+            "max_workers": workers,
+            "trials": trials,
+            "max_seconds": seconds,
+            "max_agent_calls": calls,
+            "max_simulations": simulations,
+            "goal_max_interval_width": interval_width,
+        }
         if st.button(
             "Start bounded run",
             type="primary",
-            use_container_width=True,
+            width="stretch",
             icon=":material/play_arrow:",
-            disabled=not ready,
+            disabled=not ready or st.session_state.get("research_future") is not None,
         ):
-            with st.status("Executing the fixed workflow…", expanded=True) as status:
-                try:
-                    directory = launch_run(
-                        sources[source],
-                        profile,
-                        backend,
-                        st.write,
-                        [sources[label] for label in literature],
-                    )
-                    st.session_state["new_run"] = directory.name
-                    status.update(label="Run artifacts saved", state="complete")
-                except ValueError as exc:
-                    status.update(label="Run stopped", state="error")
-                    st.error(str(exc))
-                except Exception as exc:
-                    status.update(label="Run stopped", state="error")
-                    st.error(
-                        f"Execution stopped ({type(exc).__name__}). "
-                        "Refresh to inspect any saved audit events."
-                    )
-                else:
-                    st.rerun()
-        st.caption(
-            "Every run starts at source intake. Decisions cannot jump stages or widen scope."
-        )
-        st.divider()
-        if backend == "anyjev":
-            st.caption("Jev-style contracts\n\nState → closed choice → code-enforced gate")
-            st.caption(
-                "AnyJev L0 · open weights · no generated text\n\nOption scores are uncalibrated."
+            arguments = (
+                sources[source],
+                profile,
+                backend,
+                lambda message: None,
+                [sources[label] for label in literature],
+                {**overrides, "seed": seed if seed is not None else secrets.randbits(32)},
             )
-        else:
-            st.caption("Omnigent sessions → validated JSON → source and numerical checks")
-            st.caption("Reference-grounded evaluation · bounded calls · no human approval gate")
-        st.caption("Not legal advice.")
-        st.caption(f"Deployed revision: {os.environ.get('APP_REVISION', 'development')}")
-    return run_root() / selected if selected else None
+            if backend == "omnigent":
+                st.session_state["following_live_run"] = False
+                st.session_state["research_future"] = background_executor().submit(
+                    launch_run, *arguments
+                )
+                st.rerun()
+            else:
+                with st.status("Executing local decisions…", expanded=True) as status:
+                    try:
+                        directory = launch_run(*arguments)
+                        st.session_state["new_run"] = directory.name
+                        status.update(label="Run artifacts saved", state="complete")
+                    except Exception as exc:
+                        status.update(label="Run stopped", state="error")
+                        st.error(
+                            f"Execution stopped ({type(exc).__name__}); inspect retained artifacts."
+                        )
+                    else:
+                        st.rerun()
+        st.caption(
+            "Source and citation researchers propose parallel work. A decision agent reallocates "
+            "simulation batches as partial evidence arrives."
+        )
 
 
 def render_path(journal: Journal | None) -> None:
@@ -319,6 +459,8 @@ def render_path(journal: Journal | None) -> None:
 
 def render_stats(journal: Journal) -> None:
     config = journal.config
+    adaptive = journal.report.get("workflow_version") == "4"
+    batch_limit = config.get("max_rounds", 0) * (len(journal.proposals) if adaptive else 1)
     stats = [
         ("Recorded decisions", str(len(journal.decisions)), "Every transition has a record"),
         ("Research directions", f"{len(journal.proposals)} / 3", "Only accepted proposals may run"),
@@ -328,8 +470,8 @@ def render_stats(journal: Journal) -> None:
             "SHA-256 checked" if journal.verified else "Verification incomplete",
         ),
         (
-            "Exploration rounds",
-            f"{len(journal.report.get('rounds', []))} / {config.get('max_rounds', '—')}",
+            "Evaluated batches" if adaptive else "Exploration rounds",
+            f"{len(journal.report.get('rounds', []))} / {batch_limit}",
             "Hard stop at the configured budget",
         ),
     ]
@@ -465,7 +607,7 @@ def render_journal(journal: Journal) -> None:
             journal.export(),
             file_name=f"{journal.run_id}-decisions.json",
             mime="application/json",
-            use_container_width=True,
+            width="stretch",
             icon=":material/download:",
         )
 
@@ -515,13 +657,36 @@ def render_artifacts(journal: Journal) -> None:
     if not names:
         st.info("The manifest is not sealed yet. Refresh after the run finishes.")
         return
+    from hacknation_databricks.research.activity import load_activity
+    from hacknation_databricks.research_views import artifact_origin, label
+
+    nodes = load_activity(journal)
+    producers = {name: label(node.role) for node in nodes for name in node.artifacts}
+    origins = {name: artifact_origin(name) for name in names}
+    counts = st.columns(3)
+    counts[0].metric(
+        "Agent responses", sum(value == "Agent response" for value in origins.values())
+    )
+    counts[1].metric(
+        "Simulation data files", sum(value == "Simulation data" for value in origins.values())
+    )
+    counts[2].metric("Sealed artifacts", len(names))
+    category = st.selectbox("Artifact origin", ["All origins", *sorted(set(origins.values()))])
+    names = [name for name in names if category == "All origins" or origins[name] == category]
     st.dataframe(
         [
-            {"Artifact": name, "Bytes": item["bytes"], "SHA-256": item["sha256"]}
-            for name, item in sorted(journal.artifacts.items())
+            {
+                "Artifact": name,
+                "Origin": origins[name],
+                "Recorded step": producers.get(name, "Supervisor / input"),
+                "Bytes": journal.artifacts[name]["bytes"],
+                "SHA-256": journal.artifacts[name]["sha256"],
+            }
+            for name in names
         ],
         hide_index=True,
-        use_container_width=True,
+        width="stretch",
+        alt="Generated artifacts with origin and recorded producing step",
     )
     selected = st.selectbox("Inspect artifact", names)
     try:
@@ -555,8 +720,8 @@ def render_environment(journal: Journal) -> None:
         )
         st.write(
             "This interface uses state, closed choices, evidence and code-controlled gates. "
-            "New runs use AnyJev with local Qwen logits. Decisions record every option weight "
-            "and zero generated tokens. L0 weights are not calibrated confidence."
+            "Omnigent runs parallel researchers and a decision agent. The optional AnyJev "
+            "backend records local option weights; these are not calibrated confidence."
         )
     st.markdown("**Registered source evidence**")
     for source in journal.sources:
@@ -573,49 +738,12 @@ def render_environment(journal: Journal) -> None:
                 )
 
 
-def main() -> None:
-    st.set_page_config(
-        page_title="Exploration · Decision control room", page_icon="◈", layout="wide"
-    )
-    markup(CSS)
-    selected = render_sidebar()
-    markup('<div class="eyebrow">Research operations &nbsp; / &nbsp; Decision tracking</div>')
-    title_col, badge_col = st.columns([5, 1])
-    with title_col:
-        st.title("Exploration control room")
-    with badge_col:
-        markup('<span class="pill">BOUNDED WORKFLOW</span>')
-    st.caption("Follow the evidence. Inspect every decision. Keep exploration inside its contract.")
-    if selected is None:
-        render_sources()
-        render_path(None)
-        st.subheader("Your first exploration starts with a fixed boundary.")
-        st.write(
-            "Select a registered source and environment profile in the sidebar, then start a "
-            "bounded run. The journal will fill from actual saved decisions and artifacts."
-        )
-        cols = st.columns(3)
-        for col, label, body in zip(
-            cols,
-            ["01 / Closed choices", "02 / Evidence gates", "03 / Reproducible runs"],
-            [
-                "Up to three directions, three experiment recipes, one ordered path.",
-                "Inspect quotations, critique, validation and every reason to stop.",
-                "Pinned seeds, code snapshots and hashed artifacts for every run.",
-            ],
-            strict=True,
-        ):
-            with col:
-                markup(
-                    f'<div class="proposal"><div class="small-label">{label}</div>'
-                    f"<p>{body}</p></div>"
-                )
-        st.info(
-            "No runs have been recorded in this workspace. AnyJev will select source-backed "
-            "directions with the local model, then execute only the approved experiment."
-        )
-        return
-    journal = load_journal(selected)
+def selected_journal() -> Journal | None:
+    selected = st.session_state.get("run_selection")
+    if not selected:
+        st.info("No runs have been recorded. Open Source intake to choose a seed and start a run.")
+        return None
+    journal = load_journal(run_root() / selected)
     if journal.issues:
         st.error("Evidence verification failed. This run is quarantined from the decision views.")
         for issue in journal.issues:
@@ -626,58 +754,39 @@ def main() -> None:
             file_name="decision-ledger-diagnostic.json",
             mime="application/json",
         )
-        return
+        return None
     backend = journal.report.get("backend", "unknown")
-    source_kind = journal.report.get("source_kind", "unknown")
-    markup(
-        f'<div class="context">{esc(journal.run_id)} &nbsp; / &nbsp; '
-        f"{esc(backend.upper())} &nbsp; / &nbsp; "
-        f"{esc(source_kind.replace('_', ' '))} &nbsp; / &nbsp; "
-        f"{'Artifacts verified' if journal.verified else 'Run not sealed'}</div>"
+    st.caption(
+        f"{journal.run_id} · {backend.upper()} · "
+        f"{journal.report.get('status', 'running').replace('_', ' ')} · "
+        f"{'Artifacts verified' if journal.verified else 'Unsealed live snapshot'}"
     )
-    if backend == "anyjev":
-        usage = journal.report.get("decision_usage", {})
-        st.info(
-            f"Model decisions · {journal.report.get('decision_calls', 0)} closed questions · "
-            f"{usage.get('prefills', 0)} model prefills · 0 generated tokens. "
-            "Inspect any step for competing options, scores and source evidence."
-        )
-    if backend == "scripted":
-        st.info(
-            "Scripted research run · numerical experiments are real; role decisions use fixed "
-            "responses. No live agents or verified novelty are claimed.",
-            icon=":material/info:",
-        )
-    render_stats(journal)
-    render_path(journal)
-    tabs = st.tabs(
-        [
-            "Agents & loops",
-            "Decision journal",
-            "Source intake",
-            "Implementations & path",
-            "Artifacts",
-            "Environment",
-            "Original vs follow-up",
-        ]
-    )
-    with tabs[0]:
-        render_activity(journal)
-    with tabs[1]:
-        render_journal(journal)
-    with tabs[2]:
-        render_sources()
-    with tabs[3]:
-        render_implementations(journal)
-    with tabs[4]:
-        render_artifacts(journal)
-    with tabs[5]:
-        render_environment(journal)
-    with tabs[6]:
-        from hacknation_databricks.comparison_ui import render_comparison
+    if backend != "omnigent":
+        st.info("Auxiliary run: no live Omnigent collaboration is claimed for this backend.")
+    return journal
 
-        render_comparison(journal.directory, journal.report)
+
+@st.fragment(run_every=5)
+def render_selected_run():
+    journal = selected_journal()
+    if journal is None:
+        return
+    from hacknation_databricks.synthesis_ui import render_research_path
+
+    with st.expander("Research question, seed paper and reviewed directions"):
+        render_research_path(journal)
+    render_discovery(journal)
+
+
+def main() -> None:
+    st.title("Discovery overview")
+    st.caption("Follow a seed paper from grounded directions to the next scientific decision.")
+    render_selected_run()
 
 
 if __name__ == "__main__":
+    # Supports direct developer previews as well as the multipage entrypoint.
+    st.set_page_config(page_title="Omnigent lab", layout="wide")
+    markup(CSS)
+    render_sidebar()
     main()

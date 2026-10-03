@@ -29,6 +29,7 @@ class Activity:
     schema_valid: bool | None = None
     artifacts: list[str] = field(default_factory=list)
     events: list[dict] = field(default_factory=list)
+    parents: list[str] | None = None
 
     @property
     def key(self) -> str:
@@ -43,6 +44,8 @@ def load_activity(journal: Journal) -> list[Activity]:
         for line in read_artifact(journal.directory, "events.jsonl").splitlines()
         if line.strip()
     ]
+    if journal.report.get("workflow_version") == "4":
+        return parallel_activity(journal, events)
     backend = journal.report.get("backend", "unknown")
     nodes: list[Activity] = []
     active = None
@@ -155,6 +158,18 @@ def activity_export(journal: Journal, nodes: list[Activity]) -> str:
 
 def activity_dot(nodes: list[Activity], selected_stage: str | None = None) -> str:
     """DOT labels are escaped, and edges exist only for stages that actually started."""
+    if any(node.parents is not None for node in nodes):
+        identifiers = {node.key: f"n{i}" for i, node in enumerate(nodes)}
+        aliases = {node.stage: node.key for node in nodes}
+        lines = ["digraph execution { rankdir=TB; node [shape=box];"]
+        for node in nodes:
+            label = f"{node.role}\n{node.stage}\n{node.status}"
+            lines.append(f"{identifiers[node.key]} [label={json.dumps(label)}];")
+            for parent in node.parents:
+                key = aliases.get(parent, parent)
+                if key in identifiers:
+                    lines.append(f"{identifiers[key]} -> {identifiers[node.key]};")
+        return "\n".join([*lines, "}"])
     lines = [
         "digraph execution {",
         "rankdir=TB;",
@@ -222,6 +237,8 @@ def activity_dot(nodes: list[Activity], selected_stage: str | None = None) -> st
 
 def activity_svg(nodes: list[Activity], selected_key: str | None = None) -> str:
     """Responsive rows keep every executed round legible, even on long traces."""
+    if any(n.parents is not None for n in nodes):
+        return parallel_svg(nodes, selected_key)
     groups = []
     for round_index in dict.fromkeys(n.round for n in nodes):
         members = [n for n in nodes if n.round == round_index]
@@ -309,3 +326,156 @@ def activity_svg(nodes: list[Activity], selected_key: str | None = None) -> str:
         prior = (first_x + (len(members) - 1) * 216 + 93, y + 121, round_index)
     svg.append("</svg>")
     return "".join(svg)
+
+
+def parallel_activity(journal, events):
+    """Index by immutable stage/session, including failed attempts and retries."""
+    nodes, active, sessions = [], {}, {}
+    for event in events:
+        kind, data = event["event"], event["data"]
+        stage = data.get("stage")
+        if kind == "stage_started":
+            role = stage.rsplit("/", 1)[-1]
+            parts = stage.split("/")
+            batch = int(parts[3]) if parts[0] == "branches" else 0
+            node = Activity(
+                stage,
+                role,
+                batch,
+                "simulation" if role in {"baseline", "experiment"} else journal.report["backend"],
+                event["time"],
+                parents=data.get("parents", []),
+            )
+            nodes.append(node)
+            active[stage] = node
+        node = sessions.get(data.get("session_id")) or active.get(stage)
+        if not node:
+            continue
+        if kind == "agent_call_started" and node.call_id:
+            previous = node
+            node = Activity(
+                stage,
+                data["role"],
+                previous.round,
+                previous.kind,
+                event["time"],
+                parents=[previous.key],
+            )
+            nodes.append(node)
+            active[stage] = node
+        node.events.append(event)
+        if kind == "artifact_written":
+            node.artifacts.append(data["path"])
+        if kind == "agent_call_started":
+            node.call_id, node.role, node.call_status = data["call_id"], data["role"], "running"
+        if kind in {"agent_session_created", "agent_session", "agent_call_completed"}:
+            for key in (
+                "session_id",
+                "agent_id",
+                "agent_name",
+                "runner_id",
+                "call_id",
+                "usage",
+                "schema_valid",
+            ):
+                if key in data:
+                    setattr(node, key, data[key])
+            if node.session_id:
+                sessions[node.session_id] = node
+        if kind in {"agent_call_completed", "agent_call_failed"}:
+            node.call_status = "completed" if kind == "agent_call_completed" else "failed"
+            node.status = node.call_status
+            node.finished_at, node.seconds = event["time"], data.get("seconds")
+            node.error_type = data.get("error_type")
+        if kind in {"stage_completed", "stage_failed"}:
+            for member in nodes:
+                if member.stage != stage:
+                    continue
+                member.stage_status = "completed" if kind == "stage_completed" else "failed"
+                if member.call_status in {None, "running"}:
+                    member.status = member.stage_status
+                    member.finished_at, member.seconds = event["time"], data.get("seconds")
+                    member.error_type = data.get("error_type")
+    recorded = {e["data"]["path"] for e in events if e["event"] == "artifact_written"}
+    for node in nodes:
+        if journal.sealed and node.status == "running":
+            node.status = "interrupted"
+        if node.call_id:
+            node.artifacts.extend(name for name in recorded if name.startswith(node.call_id + "-"))
+            node.artifacts = [
+                p
+                for p in node.artifacts
+                if not p.startswith("roles/") or p.startswith(node.call_id + "-")
+            ]
+        node.artifacts = sorted(set(node.artifacts))
+    return nodes
+
+
+def parallel_svg(nodes, selected_key=None):
+    """Draw actual dependencies as a DAG; parallel workers have no serial edges."""
+    depth, positions = {}, {}
+    aliases = {n.stage: n.key for n in nodes}
+    parents = {n.key: [aliases.get(p, p) for p in n.parents] for n in nodes}
+    for node in nodes:
+        depth[node.key] = 1 + max((depth[p] for p in parents[node.key] if p in depth), default=-1)
+    levels = sorted(set(depth.values()))
+    width = max(1120, 235 * max(sum(v == level for v in depth.values()) for level in levels))
+    height = 60 + len(levels) * 120
+    parts = [
+        f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {width} {height}" '
+        'role="img" aria-label="Parallel research branches and result-driven decision handoffs" '
+        'style="width:100%;height:auto;font-family:Arial,sans-serif">',
+        '<defs><marker id="handoff" markerWidth="7" markerHeight="7" refX="6" refY="3.5" '
+        'orient="auto"><path d="M0 0 L7 3.5 L0 7" fill="#6d929b"/></marker></defs>',
+        f'<text x="{width / 2}" y="23" text-anchor="middle" font-size="17" '
+        'fill="#183640">Parallel research → partial results → decision → next batch</text>',
+    ]
+    for level in levels:
+        row = [n for n in nodes if depth[n.key] == level]
+        for index, node in enumerate(row):
+            positions[node.key] = (
+                (width - len(row) * 235) / 2 + index * 235 + 10,
+                45 + level * 120,
+            )
+    for node in nodes:
+        x, y = positions[node.key]
+        for parent in parents[node.key]:
+            if parent in positions:
+                px, py = positions[parent]
+                parts.append(
+                    f'<path d="M{px + 105},{py + 76} C{px + 105},{py + 96} '
+                    f'{x + 105},{y - 20} {x + 105},{y}" fill="none" stroke="#8cabb2" '
+                    'stroke-width="1.4" marker-end="url(#handoff)"/>'
+                )
+    for node in nodes:
+        x, y = positions[node.key]
+        color = {
+            "completed": "#e1f3eb",
+            "running": "#e7edff",
+            "failed": "#ffe6de",
+            "interrupted": "#fff0d5",
+        }[node.status]
+        if node.role in {"decision_agent", "consolidator"}:
+            color = "#d9edf0"
+        label = node.role.replace("_", " ")
+        scope = node.stage.split("/")[1] if "/" in node.stage else "portfolio"
+        if node.round:
+            scope += f" · batch {node.round}"
+        identity = (
+            "Omnigent session"
+            if node.session_id
+            else ("Python simulation" if node.kind == "simulation" else node.kind)
+        )
+        parts += [
+            f'<rect x="{x}" y="{y}" width="210" height="76" rx="10" '
+            f'fill="{color}" stroke="#087e80" '
+            f'stroke-width="{3 if node.key == selected_key else 1}"/>',
+            f'<text x="{x + 12}" y="{y + 19}" font-size="12" font-weight="600" fill="#183640">'
+            f"{escape(label)}</text>",
+            f'<text x="{x + 12}" y="{y + 37}" font-size="11" fill="#516b76">{escape(scope)}</text>',
+            f'<text x="{x + 12}" y="{y + 54}" font-size="10" fill="#516b76">'
+            f"{escape(identity)}</text>",
+            f'<text x="{x + 12}" y="{y + 68}" font-size="10" fill="#516b76">'
+            f"{node.status} · {len(node.artifacts)} artifacts</text>",
+        ]
+    return "".join(parts) + "</svg>"

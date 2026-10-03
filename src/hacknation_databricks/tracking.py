@@ -13,14 +13,16 @@ from typing import Any
 
 from hacknation_databricks.research.models import (
     CritiqueBatch,
+    DiscoveryPlan,
     ExperimentPlan,
     LiteratureReview,
+    NextDecision,
     ProposalBatch,
     RunConfig,
     ValidationReview,
 )
 from hacknation_databricks.research.sources import Source, check_evidence
-from hacknation_databricks.research.workflow import novelty_gate
+from hacknation_databricks.research.workflow import discovery_transition, novelty_gate
 
 POLICY_VERSION = "decision-ledger-v1"
 MAX_ARTIFACT_BYTES = 20 * 1024 * 1024
@@ -52,7 +54,7 @@ STEPS = (
         "Critique",
         "Critic",
         ("Accept", "Reject"),
-        "Review each proposal once; select the configured or first accepted direction.",
+        "Review each proposal once; the live critic selects an accepted direction.",
         "No new proposal, skipped review, or unreviewed implementation.",
         "research.models.CritiqueBatch · research.workflow.run_research",
     ),
@@ -386,7 +388,9 @@ def _describe(journal: Journal, stage: str, status: str, timestamp: str) -> Deci
         record.evidence = [f"{prefix}/literature.json", "sources.json"]
         record.facts = result.model_dump()
     elif step == "planner":
-        result = ExperimentPlan.model_validate(_json(directory, f"{prefix}/plan.json"))
+        plan_data = _json(directory, f"{prefix}/plan.json")
+        contract = DiscoveryPlan if "tests" in plan_data else ExperimentPlan
+        result = contract.model_validate(plan_data)
         critique_record = _json(directory, "critiques.json")
         critiques = critique_record["critiques"]
         accepted = {c["proposal_id"] for c in critiques if c["decision"] == "accept"}
@@ -397,7 +401,13 @@ def _describe(journal: Journal, stage: str, status: str, timestamp: str) -> Deci
             if p["id"] in accepted
             and (preferred is None or p["experiment"] == preferred)
             and (
-                journal.report.get("backend") != "anyjev"
+                (
+                    journal.report.get("backend") != "anyjev"
+                    and not (
+                        journal.report.get("backend") == "omnigent"
+                        and journal.report.get("workflow_version") == "3"
+                    )
+                )
                 or p["id"] == critique_record.get("selected_proposal_id")
             )
         )
@@ -463,6 +473,30 @@ def _describe(journal: Journal, stage: str, status: str, timestamp: str) -> Deci
         record.rationale = result.reasoning
         record.evidence = [f"{prefix}/validation.json", f"{prefix}/gate.json"]
         record.facts = {"review": result.model_dump(), "gate": gate}
+        if (
+            journal.report.get("workflow_version") == "3"
+            and journal.report.get("backend") == "omnigent"
+        ):
+            path = f"{prefix}/next_decision.json"
+            decision = NextDecision.model_validate(_json(directory, path))
+            record.evidence.append(path)
+            record.facts["next_decision"] = decision.model_dump()
+            record.rationale += " Next action: " + decision.action + ". " + decision.rationale
+            recorded_round = next(r for r in journal.report["rounds"] if r["round"] == round_index)
+            if recorded_round.get("next_decision") != decision.model_dump():
+                raise ValueError("Report next decision disagrees with the specialist artifact")
+            transition_path = f"{prefix}/transition.json"
+            if (directory / transition_path).is_file():
+                transition = _json(directory, transition_path)
+                expected_transition = discovery_transition(
+                    decision, gate, result, literature, journal.config["max_rounds"] - round_index
+                )
+                if (
+                    transition != expected_transition
+                    or recorded_round.get("transition") != transition
+                ):
+                    raise ValueError("Supervisor transition disagrees with recorded evidence")
+                record.evidence.append(transition_path)
     return record
 
 
@@ -560,6 +594,14 @@ def _attach_model_decisions(journal: Journal, states: dict) -> None:
 
 
 def load_journal(directory: Path) -> Journal:
+    if (directory / "report.json").is_file():
+        try:
+            if _json(directory, "report.json").get("workflow_version") == "4":
+                from hacknation_databricks.research.adaptive_audit import load_adaptive_journal
+
+                return load_adaptive_journal(directory)
+        except (ValueError, OSError):
+            pass
     journal = Journal(directory.name, directory)
     try:
         journal.config = RunConfig.model_validate(_json(directory, "config.json")).model_dump()
@@ -600,12 +642,13 @@ def load_journal(directory: Path) -> Journal:
                     if d.step == "literature" and d.round == record.round
                 )
                 if (
-                    record.facts["gate"]["met"]
+                    record.facts.get("next_decision", {}).get("action", "repeat") != "repeat"
+                    or record.facts["gate"]["met"]
                     or record.facts["review"]["decision"] == "reject"
                     or literature.facts["assessment"] != "candidate_gap"
                     or journal.report.get("backend") not in {"anyjev", "omnigent"}
                     or (
-                        journal.report.get("workflow_version") == "2"
+                        journal.report.get("workflow_version") in {"2", "3"}
                         and len({e["source_id"] for e in literature.facts["sources"]}) < 2
                     )
                 ):

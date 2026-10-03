@@ -7,17 +7,76 @@ The current research scope follows `docs/overall-design.md` and `AGENTS.md`.
 brief. Omnigent must orchestrate the live discovery workflow; the earlier housing
 challenge requirements are superseded.
 
-The default frontend is now the **Exploration decision control room**, following
+The default frontend is now the **Omnigent scientific discovery lab**, following
 the research workflow in `docs/overall-design.md`. It records bounded choices,
 execution gates, evidence and implementations from saved research runs. See the
 [decision tracking guide](docs/decision-tracking.md) for controls, enforcement,
-Jev-style contracts and limitations. The numerical viewer remains available under
-**Research results**. Run locally with `npm run dev`.
+Jev-style contracts and limitations. Run locally with `npm run dev`.
+
+Discovery overview now leads with **What changed our next move?** Select a
+checkpoint to compare the prior plan, incoming measurements, Omnigent decision,
+and action actually executed. The shared-runtime evidence shows session identities,
+archived common request constraints, responses and supervisor-enforced gates.
+Explicit parent handoffs distinguish new work from batches already in flight.
+Saved runs are labeled; native Omnigent policy attestation is not inferred from
+a shared agent ID. See the [demo walkthrough](docs/adaptive-demo.md).
+
+## Scientific discovery workflow
+
+The current **adaptive Omnigent workflow (v4)** runs source and citation researchers
+in parallel, consolidates up to three experimental branches, and asks a decision
+agent to reallocate work after every completed simulation batch. Standard runs
+allow eight batches per direction and six workers; extended profiles and editable
+finite budgets support longer exploration. Independent seed streams, cumulative
+controls, goal gates and final validation replace a fixed two-round demo.
+
+Both the percolation example and an **Astrosat transit-uncertainty** example are
+implemented. See [adaptive workflow, science and reproduction commands](docs/adaptive-discovery.md).
+Run Astrosat with `--paper data/papers/2111.11268v1.pdf --config examples/astrosat/discovery.json`.
+The Astrosat experiment uses explicit synthetic error assumptions; it does not
+reproduce historical satellite forecasts. Scientific novelty remains unverified.
+
+Both examples completed live Omnigent runs with independent agent review and
+verified artifacts. See the [measured validation record](docs/adaptive-validation.json)
+and [two-minute walkthrough](docs/adaptive-demo.md). Compact results are saved in
+each example's `adaptive-results/` directory; full archives remain in `output/research/`.
+
+The following v3 description documents the retained sequential compatibility path.
+
+Every completed analysis now exports `comparison/simulation.svg` (original versus
+proposed simulated results), `comparison/summary.txt` (one numerical sentence),
+and `comparison/comparison.json` (measurements, uncertainty, saved inputs and source
+references). `comparisons/NNN/` retains the same outputs for each completed
+checkpoint. Runs without measurements export an explicit unavailable result.
+The **Final synthesis** and **Original → follow-up** pages display and download
+these outputs; older sealed runs derive the view without rewriting their archives.
+**Agents & loops** compares archived specialist prompts and assigned inputs, then
+shows the selected session's exact instructions, returned action/test and recorded
+downstream work. Shared `research-worker` names do not imply identical tasks.
+
+The primary **Discovery overview** page shows the hypothesis and source evidence,
+competing screening/precision tests, selected trial budget, measured effect and
+result-driven next action. **Agents & loops** retains the session and handoff audit.
+Older runs remain inspectable and explicitly lack the new decision records.
+See the [v3 refactor notes](docs/discovery-refactor.md) for contracts and verification.
+
+Workflow v3 uses the critic's accepted selection, then asks the planner to compare
+two bounded sampling tests. After validation and reference review, a separate
+Omnigent specialist chooses repeat, literature review or stop. The supervisor
+checks the chosen simulation budget and enforces scientific gates before another
+round. Python executes the allowlisted simulations; agents never execute generated
+code. Both tests study the same hypothesis at different sampling precision.
+Elapsed workflow time and simulation counts are recorded. A speedup multiplier
+remains unverified until a comparable baseline is measured.
+
+```bash
+.venv/bin/research run --config examples/percolation/discovery.json
+```
 
 ## Live Codex subscription workflow
 
-The Omnigent backend is verified with a real Codex subscription run. Six separate
-role sessions read the full seed paper, critique directions, review retrieved
+The earlier `codex-full-paper` run verified six Codex subscription role sessions.
+Those sessions read the full seed paper, critique directions, review retrieved
 references, plan and evaluate the experiment, then compare its contribution with
 prior work. API-key support remains available; no credential is written to a bundle.
 
@@ -42,7 +101,7 @@ current CLI bundled with ChatGPT on macOS; `OMNIGENT_CODEX_PATH` overrides it.
 Stop the two foreground services with Ctrl-C. Services bind to loopback only.
 `status` saves the server URL and host ID in ignored `.runtime/research.env`.
 
-In the UI select **codex-full-paper**, then **Original vs follow-up**. The saved run
+In the UI select **codex-full-paper**, then **Original → follow-up**. The saved run
 needs no model call. It contains 4,096 trials plus eight seed replays and an
 **incremental extension** verdict. Full results, boundaries and commands are in
 [the live-run report](docs/codex-live-run.md). The evaluator completes automatically;
@@ -51,7 +110,8 @@ of global scientific priority.
 
 ## Local decision-only alternative
 
-The CLI default remains **AnyJev 0.2.0 with a local Qwen3 4B model**. The model scores
+The CLI and frontend default to **Omnigent**. The optional `--backend anyjev`
+mode uses **AnyJev 0.2.0 with a local Qwen3 4B model**. The model scores
 closed choices; it generates no prose, tool calls, or executable code. It chooses
 source evidence, critiques proposals, selects the most realistic accepted direction,
 authorizes the experiment, and judges the measurements. Python enforces the allowed
@@ -206,13 +266,24 @@ Research source intake and all simulations can run independently of cloud setup.
 
 ## Source intake and agent visibility
 
-The control room's **Source intake** tab accepts `.pdf`, `.md`, and arXiv links.
-Validated originals, extracted text, checksums and provenance are retained in a
-persistent library. Select a seed and up to three related documents in the sidebar.
+**Source intake** is a dedicated page for saved local papers, PDF/Markdown uploads
+and versioned arXiv inputs. Select a seed and up to three related documents there,
+then launch with the small **Quick verification** local simulation profile by
+default. Omnigent remains the default orchestration backend; it uses the configured
+model. The sidebar keeps the selected run consistent across pages.
 
-**Agents & loops** shows recorded Omnigent sessions, local inference and Python
-simulations separately. Select a worker to inspect its request, response, runtime,
-status and produced artifacts. Multiple agents in one stage remain individually
-visible; only executed rounds appear. Download the execution trace as JSON or the
-graph as SVG. See [source intake and execution visibility](docs/source-intake.md)
-for limits, CLI commands and verification.
+**Agents & loops** shows a state machine with decision diamonds, actual handoffs
+and dashed self-loops for repeated role invocations. A separate execution timeline
+and session inspector retain every recorded instance. **Original → follow-up**
+compares measurements, uncertainty, source artifacts and generated datasets.
+
+**Final synthesis** presents a measurement paragraph, table and charts for the
+accepted checkpoint (or a labeled provisional snapshot), followed by the paper and
+concept map with exact evidence passages. The supervisor outcome, agent
+recommendation and final evaluator limitations remain distinct. **Generated
+artifacts** filters original inputs, agent responses, local simulation data and
+workflow records. Inspection makes no new model or simulation calls.
+
+See [source intake and execution visibility](docs/source-intake.md) for limits,
+commands and verification. The older numerical viewer remains directly runnable
+at `src/hacknation_databricks/research_ui.py` for developer inspection.

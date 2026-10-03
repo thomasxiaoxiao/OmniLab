@@ -1,0 +1,13 @@
+{
+  "batch": 1,
+  "branch_id": "b1_3",
+  "recipe": {
+    "control": "random_diode",
+    "mode": "bond",
+    "model": "resistor_diode",
+    "p": 1.0,
+    "question": "Test whether making 25% of occupied diodes bidirectional changes wrapping."
+  },
+  "seed": 3264189381,
+  "trials_per_group": 256
+}

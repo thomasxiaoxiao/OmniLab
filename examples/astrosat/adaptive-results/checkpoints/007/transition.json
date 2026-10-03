@@ -1,0 +1,30 @@
+{
+  "batch": 3,
+  "branch_id": "b1_3",
+  "checkpoint": 7,
+  "decision": {
+    "action": "finalize",
+    "goal_branch_id": "b1_3",
+    "invest": [],
+    "missing_evidence": [
+      "Independent validation results for b1_3 under the unchanged acceptance criteria.",
+      "Recorded seeds, sampling bounds and control provenance verifying independence and reproducibility.",
+      "Completed results from the b1_1 and b1_2 batches currently in flight.",
+      "Matched-candidate two- versus three-sigma comparisons with incremental recovery, added false alerts, denominators and uncertainty.",
+      "Raw miss-cause records supporting or contradicting the proposed temporal limitation.",
+      "Empirical support for simulation error distributions and an operational criterion for acceptable false-alert burden.",
+      "Literature evidence assessing novelty and external validation assessing real-world generalizability."
+    ],
+    "next_experiment": "Run the supervisor's independent validation of b1_3 using held-out independent seeds and fresh nominal-field controls. Preserve the three-sigma guard, +/-5-second temporal window, catalog assumptions, scenario separation, prescribed simultaneous interval method, minimum effect 0.05, maximum interval width 0.25, minimum two independent batches and applicable eight-batch cap. Record seeds, control provenance, raw outcomes and all failures. Report missed-transit differences and false-alert rates with denominators and uncertainty. Apply the unchanged validation criteria before declaring the goal achieved; revise the decision if validation fails. Preserve and incorporate b1_1 and b1_2 pending outcomes only when they actually complete. Where authorized raw records permit, examine spatial versus temporal miss causes and matched two- versus three-sigma outcomes without treating unmatched branch summaries as a causal comparison.",
+    "rationale": "Finalize b1_3 as the eligible candidate for the required independent validation, not as a declaration of validated success. Its simultaneous intervals now establish the prescribed minimum reduction in both scenarios within the reported simulation, superseding the previous near-threshold assessment. Source grounding: seed, page 2, \"The \ufb01eld of view could be expanded by this distance and the results interpreted probabilistically.\" The fixed temporal mitigation is grounded in seed, page 2, \"To mitigate this error we list satellites with an expected intersection at +/- 5 sec- onds of the observation time such that all objects are listed.\" These passages motivate the investigation but do not establish a three-sigma prescription, the assumed error distributions, or operational desirability. Further exploratory sampling of b1_3 is unnecessary before validation. Evidence remains insufficient for the proposed temporal mechanism, real-world coverage, scientific novelty or universality.",
+    "result_interpretation": "The third completed b1_3 batch changes the decision from further sampling to independent validation. Across three batches and 7168 simulated candidates, fresh missed-transit rates are 15.27% control versus 0% treatment, with treatment-minus-control interval [-0.20165, -0.09933]. Stale rates are 12.73% versus 0.23%, with interval [-0.17367, -0.07260]. Both upper bounds are below -0.05 and both widths are below 0.25; the supervisor marks b1_3 goal_eligible. False-alert rates increase from 15.11% to 55.75% fresh and from 14.72% to 58.21% stale. Thus the numerical reduction carries a substantial alert burden. The available two-batch b1_1 and b1_2 results remain unresolved against the minimum-effect criterion; their pending batches have not arrived. Independent validation remains outstanding, so the overall goal is not yet achieved. Aggregate results cannot establish timing-related causation or incremental benefit over the two-sigma guard."
+  },
+  "decision_seconds": 21.453,
+  "goal_accepted": true,
+  "input": "checkpoints/007/input.json",
+  "pending_branches": [
+    "b1_1",
+    "b1_2"
+  ],
+  "result_to_decision_seconds": 46.14
+}

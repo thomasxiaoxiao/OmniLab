@@ -1,0 +1,33 @@
+{
+  "batch": 2,
+  "branch_id": "b1_1",
+  "checkpoint": 4,
+  "decision": {
+    "action": "invest",
+    "goal_branch_id": null,
+    "invest": [
+      "b1_1"
+    ],
+    "missing_evidence": [
+      "A third independent b1_1 batch and its aggregated simultaneous intervals.",
+      "Completed results from the in-flight b1_2 and b1_3 batches.",
+      "Supervisor verification of fresh controls, seed independence and the wrapping implementation.",
+      "Verification that the b1_3 intervention preserves every original directed edge.",
+      "Supervisor confirmation of goal eligibility under unchanged criteria.",
+      "Independent validation of any selected eligible branch.",
+      "Evidence separating fixed-probability finite-size responses from threshold shifts or universality claims.",
+      "Literature evidence sufficient to assess novelty; novelty remains unverified."
+    ],
+    "next_experiment": "Have the supervisor run a third independent b1_1 batch with fresh matched alternating-Manhattan controls at p=0.69716 and sizes 8 and 16, averaging over orientation and occupation randomness. Preserve the approved sample allocation, wrapping definition, simultaneous interval method and all decision thresholds. Aggregate all three batches and reassess the minimum effect 0.05, maximum width 0.25 and predeclared finite-size criteria. Consolidate b1_2 and b1_3 immediately as their pending batches finish, without treating them as completed or duplicating them. Give an eligible b1_3 result priority for selection and independent validation; otherwise reassess allocation from the returned evidence. Stay within remaining budgets and eight batches per branch. Finalize only after the supervisor reports goal_eligible=true.",
+    "rationale": "Allocate a third batch to the available b1_1 branch while the existing b1_2 and b1_3 jobs finish. Its improved precision makes another permitted batch informative, although resolution is not guaranteed. Source seed, page 13 explicitly proposes: \"One could look at other arrange- ments of the directed bonds on the square lattice, such as the two-neighbor model [38], the biased directed per- colation model [39], the randomly-oriented Manhattan lattice [40], or the biased Janus-particle directed model [67, 68].\" This grounds the model extension; the fixed-probability comparison is an agent-generated test. The strongest completed numerical evidence remains b1_3, whose pending independent repetition should be assessed promptly when it arrives. Do not duplicate that job. Remaining resources and the eight-batch cap permit further investigation. There is insufficient evidence for finalization, mechanism resolution, scientific novelty or universality.",
+    "result_interpretation": "The second completed b1_1 batch improves precision: interval widths are now 0.21283 at size 8 and 0.20647 at size 16, both below 0.25. This supersedes the previous assessment that its widths exceeded the limit. However, differences of 0.06641 and 0.10417 have simultaneous intervals [-0.04114, 0.17169] and [-0.00085, 0.20562]; neither establishes an increase exceeding 0.05 or practical equivalence. Two batches alone therefore do not resolve this branch. For b1_2, only size 16 supports a decrease exceeding 0.05, and both interval widths remain too large. For b1_3, both completed comparisons exceed the effect threshold with acceptable widths, but only one batch is complete. The additional b1_2 and b1_3 work is still in flight and supplies no new evidence yet. Every branch remains goal_eligible=false."
+  },
+  "decision_seconds": 22.83,
+  "goal_accepted": false,
+  "input": "checkpoints/004/input.json",
+  "pending_branches": [
+    "b1_2",
+    "b1_3"
+  ],
+  "result_to_decision_seconds": 46.682
+}

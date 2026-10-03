@@ -1,0 +1,28 @@
+{
+  "run_id": "omnigent-adaptive-percolation-validated",
+  "domain": "percolation",
+  "status": "goal_achieved",
+  "agent_requests": 22,
+  "sessions_created": 22,
+  "completed_responses": 21,
+  "runner_stop_requests_recorded": 22,
+  "cleanup_unconfirmed": 0,
+  "peak_concurrent_requests": 3,
+  "decision_checkpoints": 8,
+  "computed_simulations_including_replay": 33542,
+  "elapsed_seconds": 269.57,
+  "goal_achieved": true,
+  "validation_verdict": "supported",
+  "hash_verification_passed": true,
+  "journal_verification_passed": true,
+  "journal_issues": [],
+  "result_to_decision_latency_seconds": {
+    "count": 8,
+    "median": 46.015,
+    "minimum": 23.443,
+    "maximum": 60.601
+  },
+  "goal_checkpoint": 6,
+  "full_archive": "output/research/omnigent-adaptive-percolation-validated",
+  "manifest_sha256": "126c39fa9cb549be61640d6102446efa21a148ee64f34cf90f6e691cb383a88e"
+}

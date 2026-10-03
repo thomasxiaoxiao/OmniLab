@@ -1,0 +1,63 @@
+{
+  "critiques": [
+    {
+      "decision": "reject",
+      "proposal_id": "b2_1",
+      "rationale": "Consolidate into b1_1, which has direct seed support for field expansion. ref_2108_12335, page 14: \"However, the accuracy of ephemerides, both in position and in timing, must be of the order of the \ufb01eld-of-view.\" This motivates uncertainty-aware mitigation but does not establish a one-sigma rule. The catalog test is computationally feasible, subject to supervisor budget validation, and its quantitative recovery and false-positive burden are measurable. Running this separately would duplicate b1_1 rather than test another mechanism.",
+      "risks": [
+        "Duplicate experiment would consume budget without independent scientific coverage.",
+        "Gaussian errors and their interpretation as standard deviations lack supplied empirical validation.",
+        "Recall improvement from expanding a nested selection region is largely mechanical; operational value remains unestablished."
+      ]
+    },
+    {
+      "decision": "reject",
+      "proposal_id": "b2_2",
+      "rationale": "Consolidate into b1_3, retaining this source as supporting motivation. ref_2108_12335, page 14: \"The challenge is to send the signal to the shutter at the right time.\" The catalog can feasibly measure residual misses with a fixed timing window, but practical shutter performance is outside its scope. The stale-versus-fresh residual-miss prediction is falsifiable; attributing a difference specifically to timing requires separable miss causes or a suitable control. This is the same proposed experiment as b1_3.",
+      "risks": [
+        "Fresh and stale scenarios may differ in spatial as well as temporal uncertainty, confounding mechanism attribution.",
+        "Aggregate miss rates alone cannot identify timing-related failures.",
+        "The supplied source does not establish the catalog's Gaussian error model or shutter latency."
+      ]
+    },
+    {
+      "decision": "accept",
+      "proposal_id": "b1_1",
+      "rationale": "Highest priority: establish the common nominal-field control and quantify the initial recovery-cost tradeoff. seed, page 2: \"The \ufb01eld of view could be expanded by this distance and the results interpreted probabilistically.\" This directly supports investigating field expansion, while the one-sigma prescription remains an agent hypothesis. The existing catalog makes a bounded computational test feasible, subject to supervisor validation. Measure paired missed-crossing reduction and false-positive burden separately for fresh and stale scenarios. Whether recovery clears the fixed minimum effect is testable; mere nondecreasing recall under nested selection is not a substantive mechanism discovery.",
+      "risks": [
+        "The paper does not establish independent Gaussian standard deviations.",
+        "Unspecified candidate sampling bounds and metric denominators prevent reliable interpretation until recorded.",
+        "Insufficient evidence establishes an acceptable operational false-positive burden.",
+        "Simulation outcomes cannot establish real-world forecasting performance."
+      ]
+    },
+    {
+      "decision": "accept",
+      "proposal_id": "b1_2",
+      "rationale": "Third priority: retain as the intermediate comparison needed to distinguish diminishing recovery from increasing alert burden across guard widths. seed, page 2: \"This is di\ufb03cult to mitigate and will have a larger real e\ufb00ect on smaller \ufb01elds.\" This motivates sensitivity to spatial uncertainty but does not endorse two sigma. A matched-candidate comparison against one sigma and the common nominal control is computationally feasible within a supervisor-validated allocation. Incremental recovery, false-positive counts and uncertainty are measurable; a claim that the incremental benefit is practically meaningful can fail even when recall increases mechanically.",
+      "risks": [
+        "This is a complementary dose comparison, not an independent mechanism or discovery.",
+        "Separate unmatched candidate populations could obscure incremental guard effects.",
+        "No supplied cost function justifies calling two sigma optimal.",
+        "Additional comparisons require the prescribed simultaneous uncertainty treatment."
+      ]
+    },
+    {
+      "decision": "accept",
+      "proposal_id": "b1_3",
+      "rationale": "Second priority: investigate whether temporal uncertainty limits gains from spatial guarding. seed, page 2: \"To mitigate this error we list satellites with an expected intersection at +/- 5 sec- onds of the observation time such that all objects are listed.\" This supports the fixed window's provenance, not guaranteed coverage under the simulated error model. The catalog test is computationally feasible, subject to budget validation. Compare residual misses between scenarios and incremental recovery against two sigma. The predicted excess of timing-related misses in the stale scenario can be contradicted, but timing attribution requires raw spatial and temporal failure indicators; otherwise report only a scenario association.",
+      "risks": [
+        "A finite timing window does not guarantee coverage under an unbounded assumed error distribution.",
+        "Simultaneous spatial and temporal errors require explicit handling of overlapping failure causes.",
+        "Fresh-versus-stale differences alone may not isolate temporal causation.",
+        "Insufficient evidence establishes actual ephemeris tails, correlations or maneuver effects."
+      ]
+    }
+  ],
+  "invest": [
+    "b1_1",
+    "b1_3",
+    "b1_2"
+  ],
+  "rationale": "Invest in three linked tests covering initial spatial recovery, residual temporal limitations and marginal guard-width tradeoffs; consolidate both related-source duplicates into the seed-grounded candidates. These are complementary comparisons within one simulation family, not three independent discoveries. Priority reflects expected learning, not a required execution order: use matched candidates across guard widths and a common nominal control within each scenario and independent batch. The supervisor must record sampling bounds, denominators, controls and compute accounting before execution, preserve the supplied thresholds, and enforce the 100000-simulation and 3600-second limits. Decisions require at least two independent seed batches, independent validation and the prescribed simultaneous interval width of at most 0.25, assessed against the unchanged minimum effect of 0.05. Reject assumptions that quoted positional errors establish Gaussian distributions, expanded recall proves operational utility, or scenario differences alone prove timing causation. No results were supplied, so feasibility is provisional and the goal remains unachieved. The bounded literature evidence is insufficient to establish scientific novelty, universality or operational forecasting performance."
+}

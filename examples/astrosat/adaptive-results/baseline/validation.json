@@ -1,0 +1,32 @@
+{
+  "checks": [
+    {
+      "measured": 0.25941368464558606,
+      "passed": true,
+      "quantity": "2 km timing error (s)",
+      "reference": 0.27,
+      "tolerance": 0.015
+    },
+    {
+      "measured": 3.2426710580698255,
+      "passed": true,
+      "quantity": "25 km timing error (s)",
+      "reference": 3.26,
+      "tolerance": 0.03
+    },
+    {
+      "measured": 0.08551602532510652,
+      "passed": true,
+      "quantity": "500 m angular error (deg)",
+      "reference": 0.09,
+      "tolerance": 0.01
+    }
+  ],
+  "claim": "Equation-1 geometry consistency check against rounded published examples.",
+  "limitation": "Does not reproduce the paper's historical satellite population or TLEs.",
+  "numerical": {
+    "passed": true,
+    "seed_replays": 0
+  },
+  "passed": true
+}

@@ -1,0 +1,3976 @@
+{
+  "run_id": "omnigent-adaptive-percolation-validated",
+  "backend": "omnigent",
+  "verified": true,
+  "activities": [
+    {
+      "stage": "sources/seed/researcher",
+      "role": "researcher",
+      "round": 0,
+      "kind": "omnigent",
+      "started_at": "2026-10-03T21:11:20.243232+00:00",
+      "status": "completed",
+      "stage_status": "completed",
+      "call_status": "completed",
+      "finished_at": "2026-10-03T21:11:54.005581+00:00",
+      "seconds": 33.75942333298735,
+      "session_id": "4bfb23b8aa514174b7f685fa8aaedf63",
+      "agent_id": "89e779ff411d4c22a8036dd0de39c691",
+      "agent_name": "research-worker",
+      "runner_id": "runner_token_fad14a0628340299f0fc2d7a27e9e086",
+      "call_id": "roles/01-researcher",
+      "error_type": null,
+      "usage": null,
+      "schema_valid": true,
+      "artifacts": [
+        "roles/01-researcher-request.json",
+        "roles/01-researcher-response.json",
+        "sources/seed/researcher.json"
+      ],
+      "events": [
+        {
+          "data": {
+            "parents": [],
+            "stage": "sources/seed/researcher"
+          },
+          "event": "stage_started",
+          "time": "2026-10-03T21:11:20.243232+00:00"
+        },
+        {
+          "data": {
+            "path": "roles/01-researcher-request.json",
+            "stage": "sources/seed/researcher"
+          },
+          "event": "artifact_written",
+          "time": "2026-10-03T21:11:20.248249+00:00"
+        },
+        {
+          "data": {
+            "agent_name": "research-worker",
+            "backend": "omnigent",
+            "call_id": "roles/01-researcher",
+            "request": "roles/01-researcher-request.json",
+            "role": "researcher",
+            "stage": "sources/seed/researcher"
+          },
+          "event": "agent_call_started",
+          "time": "2026-10-03T21:11:20.248313+00:00"
+        },
+        {
+          "data": {
+            "agent_id": "89e779ff411d4c22a8036dd0de39c691",
+            "agent_name": "research-worker",
+            "call_id": "roles/01-researcher",
+            "role": "researcher",
+            "session_id": "4bfb23b8aa514174b7f685fa8aaedf63",
+            "stage": "sources/seed/researcher"
+          },
+          "event": "agent_session_created",
+          "time": "2026-10-03T21:11:20.496307+00:00"
+        },
+        {
+          "data": {
+            "agent_id": "89e779ff411d4c22a8036dd0de39c691",
+            "agent_name": "research-worker",
+            "call_id": "roles/01-researcher",
+            "role": "researcher",
+            "runner_id": "runner_token_fad14a0628340299f0fc2d7a27e9e086",
+            "session_id": "4bfb23b8aa514174b7f685fa8aaedf63",
+            "stage": "sources/seed/researcher"
+          },
+          "event": "agent_session",
+          "time": "2026-10-03T21:11:21.796442+00:00"
+        },
+        {
+          "data": {
+            "output_characters": 6159,
+            "session_id": "4bfb23b8aa514174b7f685fa8aaedf63",
+            "stage": "sources/seed/researcher",
+            "usage": null
+          },
+          "event": "agent_response_completed",
+          "time": "2026-10-03T21:11:53.516182+00:00"
+        },
+        {
+          "data": {
+            "session_id": "4bfb23b8aa514174b7f685fa8aaedf63",
+            "stage": "sources/seed/researcher"
+          },
+          "event": "agent_runner_stopped",
+          "time": "2026-10-03T21:11:54.004749+00:00"
+        },
+        {
+          "data": {
+            "path": "roles/01-researcher-response.json",
+            "stage": "sources/seed/researcher"
+          },
+          "event": "artifact_written",
+          "time": "2026-10-03T21:11:54.005306+00:00"
+        },
+        {
+          "data": {
+            "agent_name": "research-worker",
+            "backend": "omnigent",
+            "call_id": "roles/01-researcher",
+            "request": "roles/01-researcher-request.json",
+            "response": "roles/01-researcher-response.json",
+            "role": "researcher",
+            "schema_valid": true,
+            "seconds": 33.75942333298735,
+            "session_id": "4bfb23b8aa514174b7f685fa8aaedf63",
+            "stage": "sources/seed/researcher",
+            "usage": null
+          },
+          "event": "agent_call_completed",
+          "time": "2026-10-03T21:11:54.005581+00:00"
+        },
+        {
+          "data": {
+            "path": "sources/seed/researcher.json",
+            "stage": "sources/seed/researcher"
+          },
+          "event": "artifact_written",
+          "time": "2026-10-03T21:11:54.005876+00:00"
+        },
+        {
+          "data": {
+            "seconds": 33.76279000000795,
+            "stage": "sources/seed/researcher"
+          },
+          "event": "stage_completed",
+          "time": "2026-10-03T21:11:54.005928+00:00"
+        }
+      ],
+      "parents": []
+    },
+    {
+      "stage": "sources/ref_2605_16987/researcher",
+      "role": "researcher",
+      "round": 0,
+      "kind": "omnigent",
+      "started_at": "2026-10-03T21:11:20.243908+00:00",
+      "status": "completed",
+      "stage_status": "completed",
+      "call_status": "completed",
+      "finished_at": "2026-10-03T21:11:49.417165+00:00",
+      "seconds": 29.17047229097807,
+      "session_id": "d4891df980a54af0af837bc808de5264",
+      "agent_id": "89e779ff411d4c22a8036dd0de39c691",
+      "agent_name": "research-worker",
+      "runner_id": "runner_token_4f12696fe68e4c5f054a7da5dbcbe3e8",
+      "call_id": "roles/02-researcher",
+      "error_type": null,
+      "usage": null,
+      "schema_valid": true,
+      "artifacts": [
+        "roles/02-researcher-request.json",
+        "roles/02-researcher-response.json",
+        "sources/ref_2605_16987/researcher.json"
+      ],
+      "events": [
+        {
+          "data": {
+            "parents": [],
+            "stage": "sources/ref_2605_16987/researcher"
+          },
+          "event": "stage_started",
+          "time": "2026-10-03T21:11:20.243908+00:00"
+        },
+        {
+          "data": {
+            "path": "roles/02-researcher-request.json",
+            "stage": "sources/ref_2605_16987/researcher"
+          },
+          "event": "artifact_written",
+          "time": "2026-10-03T21:11:20.247647+00:00"
+        },
+        {
+          "data": {
+            "agent_name": "research-worker",
+            "backend": "omnigent",
+            "call_id": "roles/02-researcher",
+            "request": "roles/02-researcher-request.json",
+            "role": "researcher",
+            "stage": "sources/ref_2605_16987/researcher"
+          },
+          "event": "agent_call_started",
+          "time": "2026-10-03T21:11:20.247734+00:00"
+        },
+        {
+          "data": {
+            "agent_id": "89e779ff411d4c22a8036dd0de39c691",
+            "agent_name": "research-worker",
+            "call_id": "roles/02-researcher",
+            "role": "researcher",
+            "session_id": "d4891df980a54af0af837bc808de5264",
+            "stage": "sources/ref_2605_16987/researcher"
+          },
+          "event": "agent_session_created",
+          "time": "2026-10-03T21:11:20.494283+00:00"
+        },
+        {
+          "data": {
+            "agent_id": "89e779ff411d4c22a8036dd0de39c691",
+            "agent_name": "research-worker",
+            "call_id": "roles/02-researcher",
+            "role": "researcher",
+            "runner_id": "runner_token_4f12696fe68e4c5f054a7da5dbcbe3e8",
+            "session_id": "d4891df980a54af0af837bc808de5264",
+            "stage": "sources/ref_2605_16987/researcher"
+          },
+          "event": "agent_session",
+          "time": "2026-10-03T21:11:21.797564+00:00"
+        },
+        {
+          "data": {
+            "output_characters": 4487,
+            "session_id": "d4891df980a54af0af837bc808de5264",
+            "stage": "sources/ref_2605_16987/researcher",
+            "usage": null
+          },
+          "event": "agent_response_completed",
+          "time": "2026-10-03T21:11:48.699969+00:00"
+        },
+        {
+          "data": {
+            "session_id": "d4891df980a54af0af837bc808de5264",
+            "stage": "sources/ref_2605_16987/researcher"
+          },
+          "event": "agent_runner_stopped",
+          "time": "2026-10-03T21:11:49.416373+00:00"
+        },
+        {
+          "data": {
+            "path": "roles/02-researcher-response.json",
+            "stage": "sources/ref_2605_16987/researcher"
+          },
+          "event": "artifact_written",
+          "time": "2026-10-03T21:11:49.416931+00:00"
+        },
+        {
+          "data": {
+            "agent_name": "research-worker",
+            "backend": "omnigent",
+            "call_id": "roles/02-researcher",
+            "request": "roles/02-researcher-request.json",
+            "response": "roles/02-researcher-response.json",
+            "role": "researcher",
+            "schema_valid": true,
+            "seconds": 29.17047229097807,
+            "session_id": "d4891df980a54af0af837bc808de5264",
+            "stage": "sources/ref_2605_16987/researcher",
+            "usage": null
+          },
+          "event": "agent_call_completed",
+          "time": "2026-10-03T21:11:49.417165+00:00"
+        },
+        {
+          "data": {
+            "path": "sources/ref_2605_16987/researcher.json",
+            "stage": "sources/ref_2605_16987/researcher"
+          },
+          "event": "artifact_written",
+          "time": "2026-10-03T21:11:49.417449+00:00"
+        },
+        {
+          "data": {
+            "seconds": 29.17423262502416,
+            "stage": "sources/ref_2605_16987/researcher"
+          },
+          "event": "stage_completed",
+          "time": "2026-10-03T21:11:49.417493+00:00"
+        }
+      ],
+      "parents": []
+    },
+    {
+      "stage": "sources/ref_2512_10566/researcher",
+      "role": "researcher",
+      "round": 0,
+      "kind": "omnigent",
+      "started_at": "2026-10-03T21:11:20.244669+00:00",
+      "status": "completed",
+      "stage_status": "completed",
+      "call_status": "completed",
+      "finished_at": "2026-10-03T21:11:47.600471+00:00",
+      "seconds": 27.35317733400734,
+      "session_id": "271bc86959b3431e8fa68692c80b97f0",
+      "agent_id": "89e779ff411d4c22a8036dd0de39c691",
+      "agent_name": "research-worker",
+      "runner_id": "runner_token_14e32157a06f62c79033f676b9e1222b",
+      "call_id": "roles/03-researcher",
+      "error_type": null,
+      "usage": null,
+      "schema_valid": true,
+      "artifacts": [
+        "roles/03-researcher-request.json",
+        "roles/03-researcher-response.json",
+        "sources/ref_2512_10566/researcher.json"
+      ],
+      "events": [
+        {
+          "data": {
+            "parents": [],
+            "stage": "sources/ref_2512_10566/researcher"
+          },
+          "event": "stage_started",
+          "time": "2026-10-03T21:11:20.244669+00:00"
+        },
+        {
+          "data": {
+            "path": "roles/03-researcher-request.json",
+            "stage": "sources/ref_2512_10566/researcher"
+          },
+          "event": "artifact_written",
+          "time": "2026-10-03T21:11:20.247992+00:00"
+        },
+        {
+          "data": {
+            "agent_name": "research-worker",
+            "backend": "omnigent",
+            "call_id": "roles/03-researcher",
+            "request": "roles/03-researcher-request.json",
+            "role": "researcher",
+            "stage": "sources/ref_2512_10566/researcher"
+          },
+          "event": "agent_call_started",
+          "time": "2026-10-03T21:11:20.248103+00:00"
+        },
+        {
+          "data": {
+            "agent_id": "89e779ff411d4c22a8036dd0de39c691",
+            "agent_name": "research-worker",
+            "call_id": "roles/03-researcher",
+            "role": "researcher",
+            "session_id": "271bc86959b3431e8fa68692c80b97f0",
+            "stage": "sources/ref_2512_10566/researcher"
+          },
+          "event": "agent_session_created",
+          "time": "2026-10-03T21:11:20.495615+00:00"
+        },
+        {
+          "data": {
+            "agent_id": "89e779ff411d4c22a8036dd0de39c691",
+            "agent_name": "research-worker",
+            "call_id": "roles/03-researcher",
+            "role": "researcher",
+            "runner_id": "runner_token_14e32157a06f62c79033f676b9e1222b",
+            "session_id": "271bc86959b3431e8fa68692c80b97f0",
+            "stage": "sources/ref_2512_10566/researcher"
+          },
+          "event": "agent_session",
+          "time": "2026-10-03T21:11:21.797143+00:00"
+        },
+        {
+          "data": {
+            "output_characters": 4003,
+            "session_id": "271bc86959b3431e8fa68692c80b97f0",
+            "stage": "sources/ref_2512_10566/researcher",
+            "usage": null
+          },
+          "event": "agent_response_completed",
+          "time": "2026-10-03T21:11:47.220742+00:00"
+        },
+        {
+          "data": {
+            "session_id": "271bc86959b3431e8fa68692c80b97f0",
+            "stage": "sources/ref_2512_10566/researcher"
+          },
+          "event": "agent_runner_stopped",
+          "time": "2026-10-03T21:11:47.599367+00:00"
+        },
+        {
+          "data": {
+            "path": "roles/03-researcher-response.json",
+            "stage": "sources/ref_2512_10566/researcher"
+          },
+          "event": "artifact_written",
+          "time": "2026-10-03T21:11:47.600032+00:00"
+        },
+        {
+          "data": {
+            "agent_name": "research-worker",
+            "backend": "omnigent",
+            "call_id": "roles/03-researcher",
+            "request": "roles/03-researcher-request.json",
+            "response": "roles/03-researcher-response.json",
+            "role": "researcher",
+            "schema_valid": true,
+            "seconds": 27.35317733400734,
+            "session_id": "271bc86959b3431e8fa68692c80b97f0",
+            "stage": "sources/ref_2512_10566/researcher",
+            "usage": null
+          },
+          "event": "agent_call_completed",
+          "time": "2026-10-03T21:11:47.600471+00:00"
+        },
+        {
+          "data": {
+            "path": "sources/ref_2512_10566/researcher.json",
+            "stage": "sources/ref_2512_10566/researcher"
+          },
+          "event": "artifact_written",
+          "time": "2026-10-03T21:11:47.600976+00:00"
+        },
+        {
+          "data": {
+            "seconds": 27.357673209015047,
+            "stage": "sources/ref_2512_10566/researcher"
+          },
+          "event": "stage_completed",
+          "time": "2026-10-03T21:11:47.601043+00:00"
+        }
+      ],
+      "parents": []
+    },
+    {
+      "stage": "consolidation",
+      "role": "consolidator",
+      "round": 0,
+      "kind": "omnigent",
+      "started_at": "2026-10-03T21:11:54.007093+00:00",
+      "status": "completed",
+      "stage_status": "completed",
+      "call_status": "completed",
+      "finished_at": "2026-10-03T21:12:29.681840+00:00",
+      "seconds": 35.674086332990555,
+      "session_id": "432e09e4e9fc4e6a9cd34b11e3c6a93d",
+      "agent_id": "89e779ff411d4c22a8036dd0de39c691",
+      "agent_name": "research-worker",
+      "runner_id": "runner_token_49f99be703e9d024e18c170470c58aee",
+      "call_id": "roles/04-consolidator",
+      "error_type": null,
+      "usage": null,
+      "schema_valid": true,
+      "artifacts": [
+        "consolidation.json",
+        "roles/04-consolidator-request.json",
+        "roles/04-consolidator-response.json"
+      ],
+      "events": [
+        {
+          "data": {
+            "parents": [
+              "sources/ref_2512_10566/researcher",
+              "sources/ref_2605_16987/researcher",
+              "sources/seed/researcher"
+            ],
+            "stage": "consolidation"
+          },
+          "event": "stage_started",
+          "time": "2026-10-03T21:11:54.007093+00:00"
+        },
+        {
+          "data": {
+            "path": "roles/04-consolidator-request.json",
+            "stage": "consolidation"
+          },
+          "event": "artifact_written",
+          "time": "2026-10-03T21:11:54.007933+00:00"
+        },
+        {
+          "data": {
+            "agent_name": "research-worker",
+            "backend": "omnigent",
+            "call_id": "roles/04-consolidator",
+            "request": "roles/04-consolidator-request.json",
+            "role": "consolidator",
+            "stage": "consolidation"
+          },
+          "event": "agent_call_started",
+          "time": "2026-10-03T21:11:54.007986+00:00"
+        },
+        {
+          "data": {
+            "agent_id": "89e779ff411d4c22a8036dd0de39c691",
+            "agent_name": "research-worker",
+            "call_id": "roles/04-consolidator",
+            "role": "consolidator",
+            "session_id": "432e09e4e9fc4e6a9cd34b11e3c6a93d",
+            "stage": "consolidation"
+          },
+          "event": "agent_session_created",
+          "time": "2026-10-03T21:11:54.031272+00:00"
+        },
+        {
+          "data": {
+            "agent_id": "89e779ff411d4c22a8036dd0de39c691",
+            "agent_name": "research-worker",
+            "call_id": "roles/04-consolidator",
+            "role": "consolidator",
+            "runner_id": "runner_token_49f99be703e9d024e18c170470c58aee",
+            "session_id": "432e09e4e9fc4e6a9cd34b11e3c6a93d",
+            "stage": "consolidation"
+          },
+          "event": "agent_session",
+          "time": "2026-10-03T21:11:55.082250+00:00"
+        },
+        {
+          "data": {
+            "output_characters": 8136,
+            "session_id": "432e09e4e9fc4e6a9cd34b11e3c6a93d",
+            "stage": "consolidation",
+            "usage": null
+          },
+          "event": "agent_response_completed",
+          "time": "2026-10-03T21:12:29.236347+00:00"
+        },
+        {
+          "data": {
+            "session_id": "432e09e4e9fc4e6a9cd34b11e3c6a93d",
+            "stage": "consolidation"
+          },
+          "event": "agent_runner_stopped",
+          "time": "2026-10-03T21:12:29.680859+00:00"
+        },
+        {
+          "data": {
+            "path": "roles/04-consolidator-response.json",
+            "stage": "consolidation"
+          },
+          "event": "artifact_written",
+          "time": "2026-10-03T21:12:29.681511+00:00"
+        },
+        {
+          "data": {
+            "agent_name": "research-worker",
+            "backend": "omnigent",
+            "call_id": "roles/04-consolidator",
+            "request": "roles/04-consolidator-request.json",
+            "response": "roles/04-consolidator-response.json",
+            "role": "consolidator",
+            "schema_valid": true,
+            "seconds": 35.674086332990555,
+            "session_id": "432e09e4e9fc4e6a9cd34b11e3c6a93d",
+            "stage": "consolidation",
+            "usage": null
+          },
+          "event": "agent_call_completed",
+          "time": "2026-10-03T21:12:29.681840+00:00"
+        },
+        {
+          "data": {
+            "path": "consolidation.json",
+            "stage": "consolidation"
+          },
+          "event": "artifact_written",
+          "time": "2026-10-03T21:12:29.682172+00:00"
+        },
+        {
+          "data": {
+            "seconds": 35.67509833298391,
+            "stage": "consolidation"
+          },
+          "event": "stage_completed",
+          "time": "2026-10-03T21:12:29.682232+00:00"
+        }
+      ],
+      "parents": [
+        "sources/ref_2512_10566/researcher",
+        "sources/ref_2605_16987/researcher",
+        "sources/seed/researcher"
+      ]
+    },
+    {
+      "stage": "baseline",
+      "role": "baseline",
+      "round": 0,
+      "kind": "simulation",
+      "started_at": "2026-10-03T21:12:29.682608+00:00",
+      "status": "completed",
+      "stage_status": "completed",
+      "call_status": null,
+      "finished_at": "2026-10-03T21:12:29.914483+00:00",
+      "seconds": 0.23188170802313834,
+      "session_id": null,
+      "agent_id": null,
+      "agent_name": null,
+      "runner_id": null,
+      "call_id": null,
+      "error_type": null,
+      "usage": null,
+      "schema_valid": null,
+      "artifacts": [
+        "baseline/summary.json",
+        "baseline/trials.csv",
+        "baseline/validation.json"
+      ],
+      "events": [
+        {
+          "data": {
+            "parents": [
+              "consolidation"
+            ],
+            "stage": "baseline"
+          },
+          "event": "stage_started",
+          "time": "2026-10-03T21:12:29.682608+00:00"
+        },
+        {
+          "data": {
+            "path": "baseline/trials.csv",
+            "stage": "baseline"
+          },
+          "event": "artifact_written",
+          "time": "2026-10-03T21:12:29.912071+00:00"
+        },
+        {
+          "data": {
+            "path": "baseline/summary.json",
+            "stage": "baseline"
+          },
+          "event": "artifact_written",
+          "time": "2026-10-03T21:12:29.912505+00:00"
+        },
+        {
+          "data": {
+            "path": "baseline/validation.json",
+            "stage": "baseline"
+          },
+          "event": "artifact_written",
+          "time": "2026-10-03T21:12:29.914434+00:00"
+        },
+        {
+          "data": {
+            "seconds": 0.23188170802313834,
+            "stage": "baseline"
+          },
+          "event": "stage_completed",
+          "time": "2026-10-03T21:12:29.914483+00:00"
+        }
+      ],
+      "parents": [
+        "consolidation"
+      ]
+    },
+    {
+      "stage": "branches/b1_1/batches/01/planner",
+      "role": "branch_planner",
+      "round": 1,
+      "kind": "omnigent",
+      "started_at": "2026-10-03T21:12:29.915109+00:00",
+      "status": "completed",
+      "stage_status": "completed",
+      "call_status": "completed",
+      "finished_at": "2026-10-03T21:12:45.891444+00:00",
+      "seconds": 15.975828249996994,
+      "session_id": "6c5e13f1068a48198f2cd3998605c60b",
+      "agent_id": "89e779ff411d4c22a8036dd0de39c691",
+      "agent_name": "research-worker",
+      "runner_id": "runner_token_fc9292c11985a3f16a991d31dbae3c7c",
+      "call_id": "roles/05-branch_planner",
+      "error_type": null,
+      "usage": null,
+      "schema_valid": true,
+      "artifacts": [
+        "branches/b1_1/batches/01/planner.json",
+        "roles/05-branch_planner-request.json",
+        "roles/05-branch_planner-response.json"
+      ],
+      "events": [
+        {
+          "data": {
+            "parents": [
+              "baseline"
+            ],
+            "stage": "branches/b1_1/batches/01/planner"
+          },
+          "event": "stage_started",
+          "time": "2026-10-03T21:12:29.915109+00:00"
+        },
+        {
+          "data": {
+            "path": "roles/05-branch_planner-request.json",
+            "stage": "branches/b1_1/batches/01/planner"
+          },
+          "event": "artifact_written",
+          "time": "2026-10-03T21:12:29.916835+00:00"
+        },
+        {
+          "data": {
+            "agent_name": "research-worker",
+            "backend": "omnigent",
+            "call_id": "roles/05-branch_planner",
+            "request": "roles/05-branch_planner-request.json",
+            "role": "branch_planner",
+            "stage": "branches/b1_1/batches/01/planner"
+          },
+          "event": "agent_call_started",
+          "time": "2026-10-03T21:12:29.916889+00:00"
+        },
+        {
+          "data": {
+            "agent_id": "89e779ff411d4c22a8036dd0de39c691",
+            "agent_name": "research-worker",
+            "call_id": "roles/05-branch_planner",
+            "role": "branch_planner",
+            "session_id": "6c5e13f1068a48198f2cd3998605c60b",
+            "stage": "branches/b1_1/batches/01/planner"
+          },
+          "event": "agent_session_created",
+          "time": "2026-10-03T21:12:29.985856+00:00"
+        },
+        {
+          "data": {
+            "agent_id": "89e779ff411d4c22a8036dd0de39c691",
+            "agent_name": "research-worker",
+            "call_id": "roles/05-branch_planner",
+            "role": "branch_planner",
+            "runner_id": "runner_token_fc9292c11985a3f16a991d31dbae3c7c",
+            "session_id": "6c5e13f1068a48198f2cd3998605c60b",
+            "stage": "branches/b1_1/batches/01/planner"
+          },
+          "event": "agent_session",
+          "time": "2026-10-03T21:12:31.210101+00:00"
+        },
+        {
+          "data": {
+            "output_characters": 2561,
+            "session_id": "6c5e13f1068a48198f2cd3998605c60b",
+            "stage": "branches/b1_1/batches/01/planner",
+            "usage": null
+          },
+          "event": "agent_response_completed",
+          "time": "2026-10-03T21:12:45.455116+00:00"
+        },
+        {
+          "data": {
+            "session_id": "6c5e13f1068a48198f2cd3998605c60b",
+            "stage": "branches/b1_1/batches/01/planner"
+          },
+          "event": "agent_runner_stopped",
+          "time": "2026-10-03T21:12:45.890737+00:00"
+        },
+        {
+          "data": {
+            "path": "roles/05-branch_planner-response.json",
+            "stage": "branches/b1_1/batches/01/planner"
+          },
+          "event": "artifact_written",
+          "time": "2026-10-03T21:12:45.891296+00:00"
+        },
+        {
+          "data": {
+            "agent_name": "research-worker",
+            "backend": "omnigent",
+            "call_id": "roles/05-branch_planner",
+            "request": "roles/05-branch_planner-request.json",
+            "response": "roles/05-branch_planner-response.json",
+            "role": "branch_planner",
+            "schema_valid": true,
+            "seconds": 15.975828249996994,
+            "session_id": "6c5e13f1068a48198f2cd3998605c60b",
+            "stage": "branches/b1_1/batches/01/planner",
+            "usage": null
+          },
+          "event": "agent_call_completed",
+          "time": "2026-10-03T21:12:45.891444+00:00"
+        },
+        {
+          "data": {
+            "path": "branches/b1_1/batches/01/planner.json",
+            "stage": "branches/b1_1/batches/01/planner"
+          },
+          "event": "artifact_written",
+          "time": "2026-10-03T21:12:45.891818+00:00"
+        },
+        {
+          "data": {
+            "seconds": 15.976797459006775,
+            "stage": "branches/b1_1/batches/01/planner"
+          },
+          "event": "stage_completed",
+          "time": "2026-10-03T21:12:45.891863+00:00"
+        }
+      ],
+      "parents": [
+        "baseline"
+      ]
+    },
+    {
+      "stage": "branches/b1_3/batches/01/planner",
+      "role": "branch_planner",
+      "round": 1,
+      "kind": "omnigent",
+      "started_at": "2026-10-03T21:12:29.915792+00:00",
+      "status": "failed",
+      "stage_status": "completed",
+      "call_status": "failed",
+      "finished_at": "2026-10-03T21:12:33.245612+00:00",
+      "seconds": 3.329346665996127,
+      "session_id": "9d0944a5e0d34703832273ee39ae88bb",
+      "agent_id": "89e779ff411d4c22a8036dd0de39c691",
+      "agent_name": "research-worker",
+      "runner_id": "runner_token_aec2eebbc2182312742f00dc6b680595",
+      "call_id": "roles/06-branch_planner",
+      "error_type": "AgentUnavailable",
+      "usage": null,
+      "schema_valid": null,
+      "artifacts": [
+        "roles/06-branch_planner-request.json"
+      ],
+      "events": [
+        {
+          "data": {
+            "parents": [
+              "baseline"
+            ],
+            "stage": "branches/b1_3/batches/01/planner"
+          },
+          "event": "stage_started",
+          "time": "2026-10-03T21:12:29.915792+00:00"
+        },
+        {
+          "data": {
+            "path": "roles/06-branch_planner-request.json",
+            "stage": "branches/b1_3/batches/01/planner"
+          },
+          "event": "artifact_written",
+          "time": "2026-10-03T21:12:29.917112+00:00"
+        },
+        {
+          "data": {
+            "agent_name": "research-worker",
+            "backend": "omnigent",
+            "call_id": "roles/06-branch_planner",
+            "request": "roles/06-branch_planner-request.json",
+            "role": "branch_planner",
+            "stage": "branches/b1_3/batches/01/planner"
+          },
+          "event": "agent_call_started",
+          "time": "2026-10-03T21:12:29.917195+00:00"
+        },
+        {
+          "data": {
+            "agent_id": "89e779ff411d4c22a8036dd0de39c691",
+            "agent_name": "research-worker",
+            "call_id": "roles/06-branch_planner",
+            "role": "branch_planner",
+            "session_id": "9d0944a5e0d34703832273ee39ae88bb",
+            "stage": "branches/b1_3/batches/01/planner"
+          },
+          "event": "agent_session_created",
+          "time": "2026-10-03T21:12:29.985135+00:00"
+        },
+        {
+          "data": {
+            "agent_id": "89e779ff411d4c22a8036dd0de39c691",
+            "agent_name": "research-worker",
+            "call_id": "roles/06-branch_planner",
+            "role": "branch_planner",
+            "runner_id": "runner_token_aec2eebbc2182312742f00dc6b680595",
+            "session_id": "9d0944a5e0d34703832273ee39ae88bb",
+            "stage": "branches/b1_3/batches/01/planner"
+          },
+          "event": "agent_session",
+          "time": "2026-10-03T21:12:31.208138+00:00"
+        },
+        {
+          "data": {
+            "session_id": "9d0944a5e0d34703832273ee39ae88bb",
+            "stage": "branches/b1_3/batches/01/planner"
+          },
+          "event": "cancellation_requested",
+          "time": "2026-10-03T21:12:31.337642+00:00"
+        },
+        {
+          "data": {
+            "session_id": "9d0944a5e0d34703832273ee39ae88bb",
+            "stage": "branches/b1_3/batches/01/planner"
+          },
+          "event": "agent_runner_stopped",
+          "time": "2026-10-03T21:12:33.245218+00:00"
+        },
+        {
+          "data": {
+            "agent_name": "research-worker",
+            "backend": "omnigent",
+            "call_id": "roles/06-branch_planner",
+            "error_type": "AgentUnavailable",
+            "request": "roles/06-branch_planner-request.json",
+            "role": "branch_planner",
+            "seconds": 3.329346665996127,
+            "stage": "branches/b1_3/batches/01/planner"
+          },
+          "event": "agent_call_failed",
+          "time": "2026-10-03T21:12:33.245612+00:00"
+        },
+        {
+          "data": {
+            "attempt": 1,
+            "reason": "Omnigent runtime unavailable",
+            "role": "branch_planner",
+            "stage": "branches/b1_3/batches/01/planner"
+          },
+          "event": "agent_retry",
+          "time": "2026-10-03T21:12:33.245721+00:00"
+        },
+        {
+          "data": {
+            "path": "roles/08-branch_planner-request.json",
+            "stage": "branches/b1_3/batches/01/planner"
+          },
+          "event": "artifact_written",
+          "time": "2026-10-03T21:12:34.248666+00:00"
+        }
+      ],
+      "parents": [
+        "baseline"
+      ]
+    },
+    {
+      "stage": "branches/b1_2/batches/01/planner",
+      "role": "branch_planner",
+      "round": 1,
+      "kind": "omnigent",
+      "started_at": "2026-10-03T21:12:29.916319+00:00",
+      "status": "completed",
+      "stage_status": "completed",
+      "call_status": "completed",
+      "finished_at": "2026-10-03T21:12:46.800337+00:00",
+      "seconds": 16.883537249988876,
+      "session_id": "c2c13782a7f947c0b8d66bb3a765e658",
+      "agent_id": "89e779ff411d4c22a8036dd0de39c691",
+      "agent_name": "research-worker",
+      "runner_id": "runner_token_cf5eb8ef362eff60b513b607074da197",
+      "call_id": "roles/07-branch_planner",
+      "error_type": null,
+      "usage": null,
+      "schema_valid": true,
+      "artifacts": [
+        "branches/b1_2/batches/01/planner.json",
+        "roles/07-branch_planner-request.json",
+        "roles/07-branch_planner-response.json"
+      ],
+      "events": [
+        {
+          "data": {
+            "parents": [
+              "baseline"
+            ],
+            "stage": "branches/b1_2/batches/01/planner"
+          },
+          "event": "stage_started",
+          "time": "2026-10-03T21:12:29.916319+00:00"
+        },
+        {
+          "data": {
+            "path": "roles/07-branch_planner-request.json",
+            "stage": "branches/b1_2/batches/01/planner"
+          },
+          "event": "artifact_written",
+          "time": "2026-10-03T21:12:29.917364+00:00"
+        },
+        {
+          "data": {
+            "agent_name": "research-worker",
+            "backend": "omnigent",
+            "call_id": "roles/07-branch_planner",
+            "request": "roles/07-branch_planner-request.json",
+            "role": "branch_planner",
+            "stage": "branches/b1_2/batches/01/planner"
+          },
+          "event": "agent_call_started",
+          "time": "2026-10-03T21:12:29.917421+00:00"
+        },
+        {
+          "data": {
+            "agent_id": "89e779ff411d4c22a8036dd0de39c691",
+            "agent_name": "research-worker",
+            "call_id": "roles/07-branch_planner",
+            "role": "branch_planner",
+            "session_id": "c2c13782a7f947c0b8d66bb3a765e658",
+            "stage": "branches/b1_2/batches/01/planner"
+          },
+          "event": "agent_session_created",
+          "time": "2026-10-03T21:12:29.986092+00:00"
+        },
+        {
+          "data": {
+            "agent_id": "89e779ff411d4c22a8036dd0de39c691",
+            "agent_name": "research-worker",
+            "call_id": "roles/07-branch_planner",
+            "role": "branch_planner",
+            "runner_id": "runner_token_cf5eb8ef362eff60b513b607074da197",
+            "session_id": "c2c13782a7f947c0b8d66bb3a765e658",
+            "stage": "branches/b1_2/batches/01/planner"
+          },
+          "event": "agent_session",
+          "time": "2026-10-03T21:12:31.210357+00:00"
+        },
+        {
+          "data": {
+            "output_characters": 2594,
+            "session_id": "c2c13782a7f947c0b8d66bb3a765e658",
+            "stage": "branches/b1_2/batches/01/planner",
+            "usage": null
+          },
+          "event": "agent_response_completed",
+          "time": "2026-10-03T21:12:46.311159+00:00"
+        },
+        {
+          "data": {
+            "session_id": "c2c13782a7f947c0b8d66bb3a765e658",
+            "stage": "branches/b1_2/batches/01/planner"
+          },
+          "event": "agent_runner_stopped",
+          "time": "2026-10-03T21:12:46.799406+00:00"
+        },
+        {
+          "data": {
+            "path": "roles/07-branch_planner-response.json",
+            "stage": "branches/b1_2/batches/01/planner"
+          },
+          "event": "artifact_written",
+          "time": "2026-10-03T21:12:46.800154+00:00"
+        },
+        {
+          "data": {
+            "agent_name": "research-worker",
+            "backend": "omnigent",
+            "call_id": "roles/07-branch_planner",
+            "request": "roles/07-branch_planner-request.json",
+            "response": "roles/07-branch_planner-response.json",
+            "role": "branch_planner",
+            "schema_valid": true,
+            "seconds": 16.883537249988876,
+            "session_id": "c2c13782a7f947c0b8d66bb3a765e658",
+            "stage": "branches/b1_2/batches/01/planner",
+            "usage": null
+          },
+          "event": "agent_call_completed",
+          "time": "2026-10-03T21:12:46.800337+00:00"
+        },
+        {
+          "data": {
+            "path": "branches/b1_2/batches/01/planner.json",
+            "stage": "branches/b1_2/batches/01/planner"
+          },
+          "event": "artifact_written",
+          "time": "2026-10-03T21:12:46.800681+00:00"
+        },
+        {
+          "data": {
+            "seconds": 16.885514791007154,
+            "stage": "branches/b1_2/batches/01/planner"
+          },
+          "event": "stage_completed",
+          "time": "2026-10-03T21:12:46.800732+00:00"
+        }
+      ],
+      "parents": [
+        "baseline"
+      ]
+    },
+    {
+      "stage": "branches/b1_3/batches/01/planner",
+      "role": "branch_planner",
+      "round": 1,
+      "kind": "omnigent",
+      "started_at": "2026-10-03T21:12:34.248759+00:00",
+      "status": "completed",
+      "stage_status": "completed",
+      "call_status": "completed",
+      "finished_at": "2026-10-03T21:12:50.356806+00:00",
+      "seconds": 16.108616667013848,
+      "session_id": "b3709942e276439788ca451d2ef19a3f",
+      "agent_id": "89e779ff411d4c22a8036dd0de39c691",
+      "agent_name": "research-worker",
+      "runner_id": "runner_token_bbe1c886f65ef3d527a9386ddf7b40e4",
+      "call_id": "roles/08-branch_planner",
+      "error_type": null,
+      "usage": null,
+      "schema_valid": true,
+      "artifacts": [
+        "branches/b1_3/batches/01/planner.json",
+        "roles/08-branch_planner-request.json",
+        "roles/08-branch_planner-response.json"
+      ],
+      "events": [
+        {
+          "data": {
+            "agent_name": "research-worker",
+            "backend": "omnigent",
+            "call_id": "roles/08-branch_planner",
+            "request": "roles/08-branch_planner-request.json",
+            "role": "branch_planner",
+            "stage": "branches/b1_3/batches/01/planner"
+          },
+          "event": "agent_call_started",
+          "time": "2026-10-03T21:12:34.248759+00:00"
+        },
+        {
+          "data": {
+            "agent_id": "89e779ff411d4c22a8036dd0de39c691",
+            "agent_name": "research-worker",
+            "call_id": "roles/08-branch_planner",
+            "role": "branch_planner",
+            "session_id": "b3709942e276439788ca451d2ef19a3f",
+            "stage": "branches/b1_3/batches/01/planner"
+          },
+          "event": "agent_session_created",
+          "time": "2026-10-03T21:12:34.277439+00:00"
+        },
+        {
+          "data": {
+            "agent_id": "89e779ff411d4c22a8036dd0de39c691",
+            "agent_name": "research-worker",
+            "call_id": "roles/08-branch_planner",
+            "role": "branch_planner",
+            "runner_id": "runner_token_bbe1c886f65ef3d527a9386ddf7b40e4",
+            "session_id": "b3709942e276439788ca451d2ef19a3f",
+            "stage": "branches/b1_3/batches/01/planner"
+          },
+          "event": "agent_session",
+          "time": "2026-10-03T21:12:35.317795+00:00"
+        },
+        {
+          "data": {
+            "output_characters": 2884,
+            "session_id": "b3709942e276439788ca451d2ef19a3f",
+            "stage": "branches/b1_3/batches/01/planner",
+            "usage": null
+          },
+          "event": "agent_response_completed",
+          "time": "2026-10-03T21:12:49.870842+00:00"
+        },
+        {
+          "data": {
+            "session_id": "b3709942e276439788ca451d2ef19a3f",
+            "stage": "branches/b1_3/batches/01/planner"
+          },
+          "event": "agent_runner_stopped",
+          "time": "2026-10-03T21:12:50.356002+00:00"
+        },
+        {
+          "data": {
+            "path": "roles/08-branch_planner-response.json",
+            "stage": "branches/b1_3/batches/01/planner"
+          },
+          "event": "artifact_written",
+          "time": "2026-10-03T21:12:50.356626+00:00"
+        },
+        {
+          "data": {
+            "agent_name": "research-worker",
+            "backend": "omnigent",
+            "call_id": "roles/08-branch_planner",
+            "request": "roles/08-branch_planner-request.json",
+            "response": "roles/08-branch_planner-response.json",
+            "role": "branch_planner",
+            "schema_valid": true,
+            "seconds": 16.108616667013848,
+            "session_id": "b3709942e276439788ca451d2ef19a3f",
+            "stage": "branches/b1_3/batches/01/planner",
+            "usage": null
+          },
+          "event": "agent_call_completed",
+          "time": "2026-10-03T21:12:50.356806+00:00"
+        },
+        {
+          "data": {
+            "path": "branches/b1_3/batches/01/planner.json",
+            "stage": "branches/b1_3/batches/01/planner"
+          },
+          "event": "artifact_written",
+          "time": "2026-10-03T21:12:50.357256+00:00"
+        },
+        {
+          "data": {
+            "seconds": 20.442184374987846,
+            "stage": "branches/b1_3/batches/01/planner"
+          },
+          "event": "stage_completed",
+          "time": "2026-10-03T21:12:50.357316+00:00"
+        }
+      ],
+      "parents": [
+        "branches/b1_3/batches/01/planner:roles/06-branch_planner"
+      ]
+    },
+    {
+      "stage": "branches/b1_1/batches/01/experiment",
+      "role": "experiment",
+      "round": 1,
+      "kind": "simulation",
+      "started_at": "2026-10-03T21:12:45.892091+00:00",
+      "status": "completed",
+      "stage_status": "completed",
+      "call_status": null,
+      "finished_at": "2026-10-03T21:12:46.362311+00:00",
+      "seconds": 0.47019866600749083,
+      "session_id": null,
+      "agent_id": null,
+      "agent_name": null,
+      "runner_id": null,
+      "call_id": null,
+      "error_type": null,
+      "usage": null,
+      "schema_valid": null,
+      "artifacts": [
+        "branches/b1_1/batches/01/checks.json",
+        "branches/b1_1/batches/01/specification.json",
+        "branches/b1_1/batches/01/trials.csv"
+      ],
+      "events": [
+        {
+          "data": {
+            "parents": [
+              "branches/b1_1/batches/01/planner"
+            ],
+            "stage": "branches/b1_1/batches/01/experiment"
+          },
+          "event": "stage_started",
+          "time": "2026-10-03T21:12:45.892091+00:00"
+        },
+        {
+          "data": {
+            "path": "branches/b1_1/batches/01/specification.json",
+            "stage": "branches/b1_1/batches/01/experiment"
+          },
+          "event": "artifact_written",
+          "time": "2026-10-03T21:12:45.892257+00:00"
+        },
+        {
+          "data": {
+            "specification": "branches/b1_1/batches/01/specification.json",
+            "stage": "branches/b1_1/batches/01/experiment",
+            "tool": "execute_batch"
+          },
+          "event": "tool_dispatched",
+          "time": "2026-10-03T21:12:45.892292+00:00"
+        },
+        {
+          "data": {
+            "path": "branches/b1_1/batches/01/trials.csv",
+            "stage": "branches/b1_1/batches/01/experiment"
+          },
+          "event": "artifact_written",
+          "time": "2026-10-03T21:12:46.123114+00:00"
+        },
+        {
+          "data": {
+            "path": "branches/b1_1/batches/01/checks.json",
+            "stage": "branches/b1_1/batches/01/experiment"
+          },
+          "event": "artifact_written",
+          "time": "2026-10-03T21:12:46.361948+00:00"
+        },
+        {
+          "data": {
+            "artifact": "branches/b1_1/batches/01/trials.csv",
+            "rows": 1024,
+            "stage": "branches/b1_1/batches/01/experiment",
+            "tool": "execute_batch"
+          },
+          "event": "tool_result",
+          "time": "2026-10-03T21:12:46.362139+00:00"
+        },
+        {
+          "data": {
+            "seconds": 0.47019866600749083,
+            "stage": "branches/b1_1/batches/01/experiment"
+          },
+          "event": "stage_completed",
+          "time": "2026-10-03T21:12:46.362311+00:00"
+        }
+      ],
+      "parents": [
+        "branches/b1_1/batches/01/planner"
+      ]
+    },
+    {
+      "stage": "checkpoints/001/decision",
+      "role": "decision_agent",
+      "round": 0,
+      "kind": "omnigent",
+      "started_at": "2026-10-03T21:12:46.363664+00:00",
+      "status": "completed",
+      "stage_status": "completed",
+      "call_status": "completed",
+      "finished_at": "2026-10-03T21:13:09.804725+00:00",
+      "seconds": 23.44050724999397,
+      "session_id": "c909aa8dd61149dcaa47855966b1d9ec",
+      "agent_id": "89e779ff411d4c22a8036dd0de39c691",
+      "agent_name": "research-worker",
+      "runner_id": "runner_token_34af27ea2559391ca6ca527127f50aa4",
+      "call_id": "roles/09-decision_agent",
+      "error_type": null,
+      "usage": null,
+      "schema_valid": true,
+      "artifacts": [
+        "checkpoints/001/decision.json",
+        "roles/09-decision_agent-request.json",
+        "roles/09-decision_agent-response.json"
+      ],
+      "events": [
+        {
+          "data": {
+            "parents": [
+              "branches/b1_1/batches/01/experiment"
+            ],
+            "stage": "checkpoints/001/decision"
+          },
+          "event": "stage_started",
+          "time": "2026-10-03T21:12:46.363664+00:00"
+        },
+        {
+          "data": {
+            "path": "roles/09-decision_agent-request.json",
+            "stage": "checkpoints/001/decision"
+          },
+          "event": "artifact_written",
+          "time": "2026-10-03T21:12:46.364360+00:00"
+        },
+        {
+          "data": {
+            "agent_name": "research-worker",
+            "backend": "omnigent",
+            "call_id": "roles/09-decision_agent",
+            "request": "roles/09-decision_agent-request.json",
+            "role": "decision_agent",
+            "stage": "checkpoints/001/decision"
+          },
+          "event": "agent_call_started",
+          "time": "2026-10-03T21:12:46.364403+00:00"
+        },
+        {
+          "data": {
+            "agent_id": "89e779ff411d4c22a8036dd0de39c691",
+            "agent_name": "research-worker",
+            "call_id": "roles/09-decision_agent",
+            "role": "decision_agent",
+            "session_id": "c909aa8dd61149dcaa47855966b1d9ec",
+            "stage": "checkpoints/001/decision"
+          },
+          "event": "agent_session_created",
+          "time": "2026-10-03T21:12:46.388726+00:00"
+        },
+        {
+          "data": {
+            "agent_id": "89e779ff411d4c22a8036dd0de39c691",
+            "agent_name": "research-worker",
+            "call_id": "roles/09-decision_agent",
+            "role": "decision_agent",
+            "runner_id": "runner_token_34af27ea2559391ca6ca527127f50aa4",
+            "session_id": "c909aa8dd61149dcaa47855966b1d9ec",
+            "stage": "checkpoints/001/decision"
+          },
+          "event": "agent_session",
+          "time": "2026-10-03T21:12:48.037061+00:00"
+        },
+        {
+          "data": {
+            "output_characters": 2691,
+            "session_id": "c909aa8dd61149dcaa47855966b1d9ec",
+            "stage": "checkpoints/001/decision",
+            "usage": null
+          },
+          "event": "agent_response_completed",
+          "time": "2026-10-03T21:13:09.315017+00:00"
+        },
+        {
+          "data": {
+            "session_id": "c909aa8dd61149dcaa47855966b1d9ec",
+            "stage": "checkpoints/001/decision"
+          },
+          "event": "agent_runner_stopped",
+          "time": "2026-10-03T21:13:09.803546+00:00"
+        },
+        {
+          "data": {
+            "path": "roles/09-decision_agent-response.json",
+            "stage": "checkpoints/001/decision"
+          },
+          "event": "artifact_written",
+          "time": "2026-10-03T21:13:09.804506+00:00"
+        },
+        {
+          "data": {
+            "agent_name": "research-worker",
+            "backend": "omnigent",
+            "call_id": "roles/09-decision_agent",
+            "request": "roles/09-decision_agent-request.json",
+            "response": "roles/09-decision_agent-response.json",
+            "role": "decision_agent",
+            "schema_valid": true,
+            "seconds": 23.44050724999397,
+            "session_id": "c909aa8dd61149dcaa47855966b1d9ec",
+            "stage": "checkpoints/001/decision",
+            "usage": null
+          },
+          "event": "agent_call_completed",
+          "time": "2026-10-03T21:13:09.804725+00:00"
+        },
+        {
+          "data": {
+            "path": "checkpoints/001/decision.json",
+            "stage": "checkpoints/001/decision"
+          },
+          "event": "artifact_written",
+          "time": "2026-10-03T21:13:09.805031+00:00"
+        },
+        {
+          "data": {
+            "seconds": 23.441418624977814,
+            "stage": "checkpoints/001/decision"
+          },
+          "event": "stage_completed",
+          "time": "2026-10-03T21:13:09.805155+00:00"
+        }
+      ],
+      "parents": [
+        "branches/b1_1/batches/01/experiment"
+      ]
+    },
+    {
+      "stage": "branches/b1_2/batches/01/experiment",
+      "role": "experiment",
+      "round": 1,
+      "kind": "simulation",
+      "started_at": "2026-10-03T21:12:46.800960+00:00",
+      "status": "completed",
+      "stage_status": "completed",
+      "call_status": null,
+      "finished_at": "2026-10-03T21:12:47.286028+00:00",
+      "seconds": 0.4850594580057077,
+      "session_id": null,
+      "agent_id": null,
+      "agent_name": null,
+      "runner_id": null,
+      "call_id": null,
+      "error_type": null,
+      "usage": null,
+      "schema_valid": null,
+      "artifacts": [
+        "branches/b1_2/batches/01/checks.json",
+        "branches/b1_2/batches/01/specification.json",
+        "branches/b1_2/batches/01/trials.csv"
+      ],
+      "events": [
+        {
+          "data": {
+            "parents": [
+              "branches/b1_2/batches/01/planner"
+            ],
+            "stage": "branches/b1_2/batches/01/experiment"
+          },
+          "event": "stage_started",
+          "time": "2026-10-03T21:12:46.800960+00:00"
+        },
+        {
+          "data": {
+            "path": "branches/b1_2/batches/01/specification.json",
+            "stage": "branches/b1_2/batches/01/experiment"
+          },
+          "event": "artifact_written",
+          "time": "2026-10-03T21:12:46.801111+00:00"
+        },
+        {
+          "data": {
+            "specification": "branches/b1_2/batches/01/specification.json",
+            "stage": "branches/b1_2/batches/01/experiment",
+            "tool": "execute_batch"
+          },
+          "event": "tool_dispatched",
+          "time": "2026-10-03T21:12:46.801152+00:00"
+        },
+        {
+          "data": {
+            "path": "branches/b1_2/batches/01/trials.csv",
+            "stage": "branches/b1_2/batches/01/experiment"
+          },
+          "event": "artifact_written",
+          "time": "2026-10-03T21:12:47.038274+00:00"
+        },
+        {
+          "data": {
+            "path": "branches/b1_2/batches/01/checks.json",
+            "stage": "branches/b1_2/batches/01/experiment"
+          },
+          "event": "artifact_written",
+          "time": "2026-10-03T21:12:47.285886+00:00"
+        },
+        {
+          "data": {
+            "artifact": "branches/b1_2/batches/01/trials.csv",
+            "rows": 1024,
+            "stage": "branches/b1_2/batches/01/experiment",
+            "tool": "execute_batch"
+          },
+          "event": "tool_result",
+          "time": "2026-10-03T21:12:47.285969+00:00"
+        },
+        {
+          "data": {
+            "seconds": 0.4850594580057077,
+            "stage": "branches/b1_2/batches/01/experiment"
+          },
+          "event": "stage_completed",
+          "time": "2026-10-03T21:12:47.286028+00:00"
+        }
+      ],
+      "parents": [
+        "branches/b1_2/batches/01/planner"
+      ]
+    },
+    {
+      "stage": "branches/b1_3/batches/01/experiment",
+      "role": "experiment",
+      "round": 1,
+      "kind": "simulation",
+      "started_at": "2026-10-03T21:12:50.357597+00:00",
+      "status": "completed",
+      "stage_status": "completed",
+      "call_status": null,
+      "finished_at": "2026-10-03T21:12:51.003040+00:00",
+      "seconds": 0.6454467090079561,
+      "session_id": null,
+      "agent_id": null,
+      "agent_name": null,
+      "runner_id": null,
+      "call_id": null,
+      "error_type": null,
+      "usage": null,
+      "schema_valid": null,
+      "artifacts": [
+        "branches/b1_3/batches/01/checks.json",
+        "branches/b1_3/batches/01/specification.json",
+        "branches/b1_3/batches/01/trials.csv"
+      ],
+      "events": [
+        {
+          "data": {
+            "parents": [
+              "branches/b1_3/batches/01/planner"
+            ],
+            "stage": "branches/b1_3/batches/01/experiment"
+          },
+          "event": "stage_started",
+          "time": "2026-10-03T21:12:50.357597+00:00"
+        },
+        {
+          "data": {
+            "path": "branches/b1_3/batches/01/specification.json",
+            "stage": "branches/b1_3/batches/01/experiment"
+          },
+          "event": "artifact_written",
+          "time": "2026-10-03T21:12:50.357797+00:00"
+        },
+        {
+          "data": {
+            "specification": "branches/b1_3/batches/01/specification.json",
+            "stage": "branches/b1_3/batches/01/experiment",
+            "tool": "execute_batch"
+          },
+          "event": "tool_dispatched",
+          "time": "2026-10-03T21:12:50.357844+00:00"
+        },
+        {
+          "data": {
+            "path": "branches/b1_3/batches/01/trials.csv",
+            "stage": "branches/b1_3/batches/01/experiment"
+          },
+          "event": "artifact_written",
+          "time": "2026-10-03T21:12:50.684567+00:00"
+        },
+        {
+          "data": {
+            "path": "branches/b1_3/batches/01/checks.json",
+            "stage": "branches/b1_3/batches/01/experiment"
+          },
+          "event": "artifact_written",
+          "time": "2026-10-03T21:12:51.002815+00:00"
+        },
+        {
+          "data": {
+            "artifact": "branches/b1_3/batches/01/trials.csv",
+            "rows": 1024,
+            "stage": "branches/b1_3/batches/01/experiment",
+            "tool": "execute_batch"
+          },
+          "event": "tool_result",
+          "time": "2026-10-03T21:12:51.002880+00:00"
+        },
+        {
+          "data": {
+            "seconds": 0.6454467090079561,
+            "stage": "branches/b1_3/batches/01/experiment"
+          },
+          "event": "stage_completed",
+          "time": "2026-10-03T21:12:51.003040+00:00"
+        }
+      ],
+      "parents": [
+        "branches/b1_3/batches/01/planner"
+      ]
+    },
+    {
+      "stage": "branches/b1_1/batches/02/planner",
+      "role": "branch_planner",
+      "round": 2,
+      "kind": "omnigent",
+      "started_at": "2026-10-03T21:13:09.807672+00:00",
+      "status": "completed",
+      "stage_status": "completed",
+      "call_status": "completed",
+      "finished_at": "2026-10-03T21:13:26.887298+00:00",
+      "seconds": 17.078915042016888,
+      "session_id": "8dd9f3bd050a48b499ba2fba596e0ff1",
+      "agent_id": "89e779ff411d4c22a8036dd0de39c691",
+      "agent_name": "research-worker",
+      "runner_id": "runner_token_5bedc399a7d0b007fb8e357c293c2247",
+      "call_id": "roles/10-branch_planner",
+      "error_type": null,
+      "usage": null,
+      "schema_valid": true,
+      "artifacts": [
+        "branches/b1_1/batches/02/planner.json",
+        "roles/10-branch_planner-request.json",
+        "roles/10-branch_planner-response.json"
+      ],
+      "events": [
+        {
+          "data": {
+            "parents": [
+              "checkpoints/001/decision"
+            ],
+            "stage": "branches/b1_1/batches/02/planner"
+          },
+          "event": "stage_started",
+          "time": "2026-10-03T21:13:09.807672+00:00"
+        },
+        {
+          "data": {
+            "path": "roles/10-branch_planner-request.json",
+            "stage": "branches/b1_1/batches/02/planner"
+          },
+          "event": "artifact_written",
+          "time": "2026-10-03T21:13:09.808976+00:00"
+        },
+        {
+          "data": {
+            "agent_name": "research-worker",
+            "backend": "omnigent",
+            "call_id": "roles/10-branch_planner",
+            "request": "roles/10-branch_planner-request.json",
+            "role": "branch_planner",
+            "stage": "branches/b1_1/batches/02/planner"
+          },
+          "event": "agent_call_started",
+          "time": "2026-10-03T21:13:09.809037+00:00"
+        },
+        {
+          "data": {
+            "agent_id": "89e779ff411d4c22a8036dd0de39c691",
+            "agent_name": "research-worker",
+            "call_id": "roles/10-branch_planner",
+            "role": "branch_planner",
+            "session_id": "8dd9f3bd050a48b499ba2fba596e0ff1",
+            "stage": "branches/b1_1/batches/02/planner"
+          },
+          "event": "agent_session_created",
+          "time": "2026-10-03T21:13:09.858043+00:00"
+        },
+        {
+          "data": {
+            "agent_id": "89e779ff411d4c22a8036dd0de39c691",
+            "agent_name": "research-worker",
+            "call_id": "roles/10-branch_planner",
+            "role": "branch_planner",
+            "runner_id": "runner_token_5bedc399a7d0b007fb8e357c293c2247",
+            "session_id": "8dd9f3bd050a48b499ba2fba596e0ff1",
+            "stage": "branches/b1_1/batches/02/planner"
+          },
+          "event": "agent_session",
+          "time": "2026-10-03T21:13:10.994239+00:00"
+        },
+        {
+          "data": {
+            "output_characters": 2804,
+            "session_id": "8dd9f3bd050a48b499ba2fba596e0ff1",
+            "stage": "branches/b1_1/batches/02/planner",
+            "usage": null
+          },
+          "event": "agent_response_completed",
+          "time": "2026-10-03T21:13:26.400567+00:00"
+        },
+        {
+          "data": {
+            "session_id": "8dd9f3bd050a48b499ba2fba596e0ff1",
+            "stage": "branches/b1_1/batches/02/planner"
+          },
+          "event": "agent_runner_stopped",
+          "time": "2026-10-03T21:13:26.886309+00:00"
+        },
+        {
+          "data": {
+            "path": "roles/10-branch_planner-response.json",
+            "stage": "branches/b1_1/batches/02/planner"
+          },
+          "event": "artifact_written",
+          "time": "2026-10-03T21:13:26.887126+00:00"
+        },
+        {
+          "data": {
+            "agent_name": "research-worker",
+            "backend": "omnigent",
+            "call_id": "roles/10-branch_planner",
+            "request": "roles/10-branch_planner-request.json",
+            "response": "roles/10-branch_planner-response.json",
+            "role": "branch_planner",
+            "schema_valid": true,
+            "seconds": 17.078915042016888,
+            "session_id": "8dd9f3bd050a48b499ba2fba596e0ff1",
+            "stage": "branches/b1_1/batches/02/planner",
+            "usage": null
+          },
+          "event": "agent_call_completed",
+          "time": "2026-10-03T21:13:26.887298+00:00"
+        },
+        {
+          "data": {
+            "path": "branches/b1_1/batches/02/planner.json",
+            "stage": "branches/b1_1/batches/02/planner"
+          },
+          "event": "artifact_written",
+          "time": "2026-10-03T21:13:26.887633+00:00"
+        },
+        {
+          "data": {
+            "seconds": 17.080028416006826,
+            "stage": "branches/b1_1/batches/02/planner"
+          },
+          "event": "stage_completed",
+          "time": "2026-10-03T21:13:26.887691+00:00"
+        }
+      ],
+      "parents": [
+        "checkpoints/001/decision"
+      ]
+    },
+    {
+      "stage": "checkpoints/002/decision",
+      "role": "decision_agent",
+      "round": 0,
+      "kind": "omnigent",
+      "started_at": "2026-10-03T21:13:09.809916+00:00",
+      "status": "completed",
+      "stage_status": "completed",
+      "call_status": "completed",
+      "finished_at": "2026-10-03T21:13:30.149978+00:00",
+      "seconds": 20.339390250010183,
+      "session_id": "4dd7f698139949c696cfa4f93a140de8",
+      "agent_id": "89e779ff411d4c22a8036dd0de39c691",
+      "agent_name": "research-worker",
+      "runner_id": "runner_token_6fdde6aeaf13e8b94ddfdc295e59f265",
+      "call_id": "roles/11-decision_agent",
+      "error_type": null,
+      "usage": null,
+      "schema_valid": true,
+      "artifacts": [
+        "checkpoints/002/decision.json",
+        "roles/11-decision_agent-request.json",
+        "roles/11-decision_agent-response.json"
+      ],
+      "events": [
+        {
+          "data": {
+            "parents": [
+              "branches/b1_1/batches/01/experiment",
+              "branches/b1_2/batches/01/experiment",
+              "checkpoints/001/decision"
+            ],
+            "stage": "checkpoints/002/decision"
+          },
+          "event": "stage_started",
+          "time": "2026-10-03T21:13:09.809916+00:00"
+        },
+        {
+          "data": {
+            "path": "roles/11-decision_agent-request.json",
+            "stage": "checkpoints/002/decision"
+          },
+          "event": "artifact_written",
+          "time": "2026-10-03T21:13:09.810905+00:00"
+        },
+        {
+          "data": {
+            "agent_name": "research-worker",
+            "backend": "omnigent",
+            "call_id": "roles/11-decision_agent",
+            "request": "roles/11-decision_agent-request.json",
+            "role": "decision_agent",
+            "stage": "checkpoints/002/decision"
+          },
+          "event": "agent_call_started",
+          "time": "2026-10-03T21:13:09.810956+00:00"
+        },
+        {
+          "data": {
+            "agent_id": "89e779ff411d4c22a8036dd0de39c691",
+            "agent_name": "research-worker",
+            "call_id": "roles/11-decision_agent",
+            "role": "decision_agent",
+            "session_id": "4dd7f698139949c696cfa4f93a140de8",
+            "stage": "checkpoints/002/decision"
+          },
+          "event": "agent_session_created",
+          "time": "2026-10-03T21:13:09.856713+00:00"
+        },
+        {
+          "data": {
+            "agent_id": "89e779ff411d4c22a8036dd0de39c691",
+            "agent_name": "research-worker",
+            "call_id": "roles/11-decision_agent",
+            "role": "decision_agent",
+            "runner_id": "runner_token_6fdde6aeaf13e8b94ddfdc295e59f265",
+            "session_id": "4dd7f698139949c696cfa4f93a140de8",
+            "stage": "checkpoints/002/decision"
+          },
+          "event": "agent_session",
+          "time": "2026-10-03T21:13:10.994949+00:00"
+        },
+        {
+          "data": {
+            "output_characters": 3366,
+            "session_id": "4dd7f698139949c696cfa4f93a140de8",
+            "stage": "checkpoints/002/decision",
+            "usage": null
+          },
+          "event": "agent_response_completed",
+          "time": "2026-10-03T21:13:29.658136+00:00"
+        },
+        {
+          "data": {
+            "session_id": "4dd7f698139949c696cfa4f93a140de8",
+            "stage": "checkpoints/002/decision"
+          },
+          "event": "agent_runner_stopped",
+          "time": "2026-10-03T21:13:30.148963+00:00"
+        },
+        {
+          "data": {
+            "path": "roles/11-decision_agent-response.json",
+            "stage": "checkpoints/002/decision"
+          },
+          "event": "artifact_written",
+          "time": "2026-10-03T21:13:30.149703+00:00"
+        },
+        {
+          "data": {
+            "agent_name": "research-worker",
+            "backend": "omnigent",
+            "call_id": "roles/11-decision_agent",
+            "request": "roles/11-decision_agent-request.json",
+            "response": "roles/11-decision_agent-response.json",
+            "role": "decision_agent",
+            "schema_valid": true,
+            "seconds": 20.339390250010183,
+            "session_id": "4dd7f698139949c696cfa4f93a140de8",
+            "stage": "checkpoints/002/decision",
+            "usage": null
+          },
+          "event": "agent_call_completed",
+          "time": "2026-10-03T21:13:30.149978+00:00"
+        },
+        {
+          "data": {
+            "path": "checkpoints/002/decision.json",
+            "stage": "checkpoints/002/decision"
+          },
+          "event": "artifact_written",
+          "time": "2026-10-03T21:13:30.150369+00:00"
+        },
+        {
+          "data": {
+            "seconds": 20.3405255000107,
+            "stage": "checkpoints/002/decision"
+          },
+          "event": "stage_completed",
+          "time": "2026-10-03T21:13:30.150505+00:00"
+        }
+      ],
+      "parents": [
+        "branches/b1_1/batches/01/experiment",
+        "branches/b1_2/batches/01/experiment",
+        "checkpoints/001/decision"
+      ]
+    },
+    {
+      "stage": "branches/b1_1/batches/02/experiment",
+      "role": "experiment",
+      "round": 2,
+      "kind": "simulation",
+      "started_at": "2026-10-03T21:13:26.888319+00:00",
+      "status": "completed",
+      "stage_status": "completed",
+      "call_status": null,
+      "finished_at": "2026-10-03T21:13:27.758458+00:00",
+      "seconds": 0.8701580830093008,
+      "session_id": null,
+      "agent_id": null,
+      "agent_name": null,
+      "runner_id": null,
+      "call_id": null,
+      "error_type": null,
+      "usage": null,
+      "schema_valid": null,
+      "artifacts": [
+        "branches/b1_1/batches/02/checks.json",
+        "branches/b1_1/batches/02/specification.json",
+        "branches/b1_1/batches/02/trials.csv"
+      ],
+      "events": [
+        {
+          "data": {
+            "parents": [
+              "branches/b1_1/batches/02/planner"
+            ],
+            "stage": "branches/b1_1/batches/02/experiment"
+          },
+          "event": "stage_started",
+          "time": "2026-10-03T21:13:26.888319+00:00"
+        },
+        {
+          "data": {
+            "path": "branches/b1_1/batches/02/specification.json",
+            "stage": "branches/b1_1/batches/02/experiment"
+          },
+          "event": "artifact_written",
+          "time": "2026-10-03T21:13:26.888615+00:00"
+        },
+        {
+          "data": {
+            "specification": "branches/b1_1/batches/02/specification.json",
+            "stage": "branches/b1_1/batches/02/experiment",
+            "tool": "execute_batch"
+          },
+          "event": "tool_dispatched",
+          "time": "2026-10-03T21:13:26.888674+00:00"
+        },
+        {
+          "data": {
+            "path": "branches/b1_1/batches/02/trials.csv",
+            "stage": "branches/b1_1/batches/02/experiment"
+          },
+          "event": "artifact_written",
+          "time": "2026-10-03T21:13:27.329646+00:00"
+        },
+        {
+          "data": {
+            "path": "branches/b1_1/batches/02/checks.json",
+            "stage": "branches/b1_1/batches/02/experiment"
+          },
+          "event": "artifact_written",
+          "time": "2026-10-03T21:13:27.758337+00:00"
+        },
+        {
+          "data": {
+            "artifact": "branches/b1_1/batches/02/trials.csv",
+            "rows": 2048,
+            "stage": "branches/b1_1/batches/02/experiment",
+            "tool": "execute_batch"
+          },
+          "event": "tool_result",
+          "time": "2026-10-03T21:13:27.758399+00:00"
+        },
+        {
+          "data": {
+            "seconds": 0.8701580830093008,
+            "stage": "branches/b1_1/batches/02/experiment"
+          },
+          "event": "stage_completed",
+          "time": "2026-10-03T21:13:27.758458+00:00"
+        }
+      ],
+      "parents": [
+        "branches/b1_1/batches/02/planner"
+      ]
+    },
+    {
+      "stage": "branches/b1_2/batches/02/planner",
+      "role": "branch_planner",
+      "round": 2,
+      "kind": "omnigent",
+      "started_at": "2026-10-03T21:13:30.153739+00:00",
+      "status": "completed",
+      "stage_status": "completed",
+      "call_status": "completed",
+      "finished_at": "2026-10-03T21:13:47.741321+00:00",
+      "seconds": 17.58667962497566,
+      "session_id": "f06bc0ec75134f2989dc4fff03d9907a",
+      "agent_id": "89e779ff411d4c22a8036dd0de39c691",
+      "agent_name": "research-worker",
+      "runner_id": "runner_token_74f95c74153b83065a51d54daddc6bf8",
+      "call_id": "roles/12-branch_planner",
+      "error_type": null,
+      "usage": null,
+      "schema_valid": true,
+      "artifacts": [
+        "branches/b1_2/batches/02/planner.json",
+        "roles/12-branch_planner-request.json",
+        "roles/12-branch_planner-response.json"
+      ],
+      "events": [
+        {
+          "data": {
+            "parents": [
+              "checkpoints/002/decision"
+            ],
+            "stage": "branches/b1_2/batches/02/planner"
+          },
+          "event": "stage_started",
+          "time": "2026-10-03T21:13:30.153739+00:00"
+        },
+        {
+          "data": {
+            "path": "roles/12-branch_planner-request.json",
+            "stage": "branches/b1_2/batches/02/planner"
+          },
+          "event": "artifact_written",
+          "time": "2026-10-03T21:13:30.155270+00:00"
+        },
+        {
+          "data": {
+            "agent_name": "research-worker",
+            "backend": "omnigent",
+            "call_id": "roles/12-branch_planner",
+            "request": "roles/12-branch_planner-request.json",
+            "role": "branch_planner",
+            "stage": "branches/b1_2/batches/02/planner"
+          },
+          "event": "agent_call_started",
+          "time": "2026-10-03T21:13:30.155347+00:00"
+        },
+        {
+          "data": {
+            "agent_id": "89e779ff411d4c22a8036dd0de39c691",
+            "agent_name": "research-worker",
+            "call_id": "roles/12-branch_planner",
+            "role": "branch_planner",
+            "session_id": "f06bc0ec75134f2989dc4fff03d9907a",
+            "stage": "branches/b1_2/batches/02/planner"
+          },
+          "event": "agent_session_created",
+          "time": "2026-10-03T21:13:30.204980+00:00"
+        },
+        {
+          "data": {
+            "agent_id": "89e779ff411d4c22a8036dd0de39c691",
+            "agent_name": "research-worker",
+            "call_id": "roles/12-branch_planner",
+            "role": "branch_planner",
+            "runner_id": "runner_token_74f95c74153b83065a51d54daddc6bf8",
+            "session_id": "f06bc0ec75134f2989dc4fff03d9907a",
+            "stage": "branches/b1_2/batches/02/planner"
+          },
+          "event": "agent_session",
+          "time": "2026-10-03T21:13:31.265257+00:00"
+        },
+        {
+          "data": {
+            "output_characters": 2603,
+            "session_id": "f06bc0ec75134f2989dc4fff03d9907a",
+            "stage": "branches/b1_2/batches/02/planner",
+            "usage": null
+          },
+          "event": "agent_response_completed",
+          "time": "2026-10-03T21:13:47.302104+00:00"
+        },
+        {
+          "data": {
+            "session_id": "f06bc0ec75134f2989dc4fff03d9907a",
+            "stage": "branches/b1_2/batches/02/planner"
+          },
+          "event": "agent_runner_stopped",
+          "time": "2026-10-03T21:13:47.740422+00:00"
+        },
+        {
+          "data": {
+            "path": "roles/12-branch_planner-response.json",
+            "stage": "branches/b1_2/batches/02/planner"
+          },
+          "event": "artifact_written",
+          "time": "2026-10-03T21:13:47.741137+00:00"
+        },
+        {
+          "data": {
+            "agent_name": "research-worker",
+            "backend": "omnigent",
+            "call_id": "roles/12-branch_planner",
+            "request": "roles/12-branch_planner-request.json",
+            "response": "roles/12-branch_planner-response.json",
+            "role": "branch_planner",
+            "schema_valid": true,
+            "seconds": 17.58667962497566,
+            "session_id": "f06bc0ec75134f2989dc4fff03d9907a",
+            "stage": "branches/b1_2/batches/02/planner",
+            "usage": null
+          },
+          "event": "agent_call_completed",
+          "time": "2026-10-03T21:13:47.741321+00:00"
+        },
+        {
+          "data": {
+            "path": "branches/b1_2/batches/02/planner.json",
+            "stage": "branches/b1_2/batches/02/planner"
+          },
+          "event": "artifact_written",
+          "time": "2026-10-03T21:13:47.741665+00:00"
+        },
+        {
+          "data": {
+            "seconds": 17.588025750010274,
+            "stage": "branches/b1_2/batches/02/planner"
+          },
+          "event": "stage_completed",
+          "time": "2026-10-03T21:13:47.741730+00:00"
+        }
+      ],
+      "parents": [
+        "checkpoints/002/decision"
+      ]
+    },
+    {
+      "stage": "checkpoints/003/decision",
+      "role": "decision_agent",
+      "round": 0,
+      "kind": "omnigent",
+      "started_at": "2026-10-03T21:13:30.156480+00:00",
+      "status": "completed",
+      "stage_status": "completed",
+      "call_status": "completed",
+      "finished_at": "2026-10-03T21:13:51.603723+00:00",
+      "seconds": 21.446468790993094,
+      "session_id": "0921cf7492f44ba08bfbda7484bdb574",
+      "agent_id": "89e779ff411d4c22a8036dd0de39c691",
+      "agent_name": "research-worker",
+      "runner_id": "runner_token_8aa32490970791ff602d05250f2584a1",
+      "call_id": "roles/13-decision_agent",
+      "error_type": null,
+      "usage": null,
+      "schema_valid": true,
+      "artifacts": [
+        "checkpoints/003/decision.json",
+        "roles/13-decision_agent-request.json",
+        "roles/13-decision_agent-response.json"
+      ],
+      "events": [
+        {
+          "data": {
+            "parents": [
+              "branches/b1_1/batches/01/experiment",
+              "branches/b1_2/batches/01/experiment",
+              "branches/b1_3/batches/01/experiment",
+              "checkpoints/002/decision"
+            ],
+            "stage": "checkpoints/003/decision"
+          },
+          "event": "stage_started",
+          "time": "2026-10-03T21:13:30.156480+00:00"
+        },
+        {
+          "data": {
+            "path": "roles/13-decision_agent-request.json",
+            "stage": "checkpoints/003/decision"
+          },
+          "event": "artifact_written",
+          "time": "2026-10-03T21:13:30.157508+00:00"
+        },
+        {
+          "data": {
+            "agent_name": "research-worker",
+            "backend": "omnigent",
+            "call_id": "roles/13-decision_agent",
+            "request": "roles/13-decision_agent-request.json",
+            "role": "decision_agent",
+            "stage": "checkpoints/003/decision"
+          },
+          "event": "agent_call_started",
+          "time": "2026-10-03T21:13:30.157575+00:00"
+        },
+        {
+          "data": {
+            "agent_id": "89e779ff411d4c22a8036dd0de39c691",
+            "agent_name": "research-worker",
+            "call_id": "roles/13-decision_agent",
+            "role": "decision_agent",
+            "session_id": "0921cf7492f44ba08bfbda7484bdb574",
+            "stage": "checkpoints/003/decision"
+          },
+          "event": "agent_session_created",
+          "time": "2026-10-03T21:13:30.205506+00:00"
+        },
+        {
+          "data": {
+            "agent_id": "89e779ff411d4c22a8036dd0de39c691",
+            "agent_name": "research-worker",
+            "call_id": "roles/13-decision_agent",
+            "role": "decision_agent",
+            "runner_id": "runner_token_8aa32490970791ff602d05250f2584a1",
+            "session_id": "0921cf7492f44ba08bfbda7484bdb574",
+            "stage": "checkpoints/003/decision"
+          },
+          "event": "agent_session",
+          "time": "2026-10-03T21:13:31.275488+00:00"
+        },
+        {
+          "data": {
+            "output_characters": 3665,
+            "session_id": "0921cf7492f44ba08bfbda7484bdb574",
+            "stage": "checkpoints/003/decision",
+            "usage": null
+          },
+          "event": "agent_response_completed",
+          "time": "2026-10-03T21:13:51.168870+00:00"
+        },
+        {
+          "data": {
+            "session_id": "0921cf7492f44ba08bfbda7484bdb574",
+            "stage": "checkpoints/003/decision"
+          },
+          "event": "agent_runner_stopped",
+          "time": "2026-10-03T21:13:51.602495+00:00"
+        },
+        {
+          "data": {
+            "path": "roles/13-decision_agent-response.json",
+            "stage": "checkpoints/003/decision"
+          },
+          "event": "artifact_written",
+          "time": "2026-10-03T21:13:51.603447+00:00"
+        },
+        {
+          "data": {
+            "agent_name": "research-worker",
+            "backend": "omnigent",
+            "call_id": "roles/13-decision_agent",
+            "request": "roles/13-decision_agent-request.json",
+            "response": "roles/13-decision_agent-response.json",
+            "role": "decision_agent",
+            "schema_valid": true,
+            "seconds": 21.446468790993094,
+            "session_id": "0921cf7492f44ba08bfbda7484bdb574",
+            "stage": "checkpoints/003/decision",
+            "usage": null
+          },
+          "event": "agent_call_completed",
+          "time": "2026-10-03T21:13:51.603723+00:00"
+        },
+        {
+          "data": {
+            "path": "checkpoints/003/decision.json",
+            "stage": "checkpoints/003/decision"
+          },
+          "event": "artifact_written",
+          "time": "2026-10-03T21:13:51.604137+00:00"
+        },
+        {
+          "data": {
+            "seconds": 21.447696457995335,
+            "stage": "checkpoints/003/decision"
+          },
+          "event": "stage_completed",
+          "time": "2026-10-03T21:13:51.604204+00:00"
+        }
+      ],
+      "parents": [
+        "branches/b1_1/batches/01/experiment",
+        "branches/b1_2/batches/01/experiment",
+        "branches/b1_3/batches/01/experiment",
+        "checkpoints/002/decision"
+      ]
+    },
+    {
+      "stage": "branches/b1_2/batches/02/experiment",
+      "role": "experiment",
+      "round": 2,
+      "kind": "simulation",
+      "started_at": "2026-10-03T21:13:47.742505+00:00",
+      "status": "completed",
+      "stage_status": "completed",
+      "call_status": null,
+      "finished_at": "2026-10-03T21:13:48.537803+00:00",
+      "seconds": 0.7953215419838671,
+      "session_id": null,
+      "agent_id": null,
+      "agent_name": null,
+      "runner_id": null,
+      "call_id": null,
+      "error_type": null,
+      "usage": null,
+      "schema_valid": null,
+      "artifacts": [
+        "branches/b1_2/batches/02/checks.json",
+        "branches/b1_2/batches/02/specification.json",
+        "branches/b1_2/batches/02/trials.csv"
+      ],
+      "events": [
+        {
+          "data": {
+            "parents": [
+              "branches/b1_2/batches/02/planner"
+            ],
+            "stage": "branches/b1_2/batches/02/experiment"
+          },
+          "event": "stage_started",
+          "time": "2026-10-03T21:13:47.742505+00:00"
+        },
+        {
+          "data": {
+            "path": "branches/b1_2/batches/02/specification.json",
+            "stage": "branches/b1_2/batches/02/experiment"
+          },
+          "event": "artifact_written",
+          "time": "2026-10-03T21:13:47.742819+00:00"
+        },
+        {
+          "data": {
+            "specification": "branches/b1_2/batches/02/specification.json",
+            "stage": "branches/b1_2/batches/02/experiment",
+            "tool": "execute_batch"
+          },
+          "event": "tool_dispatched",
+          "time": "2026-10-03T21:13:47.742885+00:00"
+        },
+        {
+          "data": {
+            "path": "branches/b1_2/batches/02/trials.csv",
+            "stage": "branches/b1_2/batches/02/experiment"
+          },
+          "event": "artifact_written",
+          "time": "2026-10-03T21:13:48.141888+00:00"
+        },
+        {
+          "data": {
+            "path": "branches/b1_2/batches/02/checks.json",
+            "stage": "branches/b1_2/batches/02/experiment"
+          },
+          "event": "artifact_written",
+          "time": "2026-10-03T21:13:48.537605+00:00"
+        },
+        {
+          "data": {
+            "artifact": "branches/b1_2/batches/02/trials.csv",
+            "rows": 2048,
+            "stage": "branches/b1_2/batches/02/experiment",
+            "tool": "execute_batch"
+          },
+          "event": "tool_result",
+          "time": "2026-10-03T21:13:48.537672+00:00"
+        },
+        {
+          "data": {
+            "seconds": 0.7953215419838671,
+            "stage": "branches/b1_2/batches/02/experiment"
+          },
+          "event": "stage_completed",
+          "time": "2026-10-03T21:13:48.537803+00:00"
+        }
+      ],
+      "parents": [
+        "branches/b1_2/batches/02/planner"
+      ]
+    },
+    {
+      "stage": "branches/b1_3/batches/02/planner",
+      "role": "branch_planner",
+      "round": 2,
+      "kind": "omnigent",
+      "started_at": "2026-10-03T21:13:51.607252+00:00",
+      "status": "completed",
+      "stage_status": "completed",
+      "call_status": "completed",
+      "finished_at": "2026-10-03T21:14:09.445712+00:00",
+      "seconds": 17.837737208988983,
+      "session_id": "2b1e24b087f94ea9a53444d6265908f0",
+      "agent_id": "89e779ff411d4c22a8036dd0de39c691",
+      "agent_name": "research-worker",
+      "runner_id": "runner_token_5ec2df256692076663a7df62b531dffd",
+      "call_id": "roles/14-branch_planner",
+      "error_type": null,
+      "usage": null,
+      "schema_valid": true,
+      "artifacts": [
+        "branches/b1_3/batches/02/planner.json",
+        "roles/14-branch_planner-request.json",
+        "roles/14-branch_planner-response.json"
+      ],
+      "events": [
+        {
+          "data": {
+            "parents": [
+              "checkpoints/003/decision"
+            ],
+            "stage": "branches/b1_3/batches/02/planner"
+          },
+          "event": "stage_started",
+          "time": "2026-10-03T21:13:51.607252+00:00"
+        },
+        {
+          "data": {
+            "path": "roles/14-branch_planner-request.json",
+            "stage": "branches/b1_3/batches/02/planner"
+          },
+          "event": "artifact_written",
+          "time": "2026-10-03T21:13:51.609076+00:00"
+        },
+        {
+          "data": {
+            "agent_name": "research-worker",
+            "backend": "omnigent",
+            "call_id": "roles/14-branch_planner",
+            "request": "roles/14-branch_planner-request.json",
+            "role": "branch_planner",
+            "stage": "branches/b1_3/batches/02/planner"
+          },
+          "event": "agent_call_started",
+          "time": "2026-10-03T21:13:51.609136+00:00"
+        },
+        {
+          "data": {
+            "agent_id": "89e779ff411d4c22a8036dd0de39c691",
+            "agent_name": "research-worker",
+            "call_id": "roles/14-branch_planner",
+            "role": "branch_planner",
+            "session_id": "2b1e24b087f94ea9a53444d6265908f0",
+            "stage": "branches/b1_3/batches/02/planner"
+          },
+          "event": "agent_session_created",
+          "time": "2026-10-03T21:13:51.655755+00:00"
+        },
+        {
+          "data": {
+            "agent_id": "89e779ff411d4c22a8036dd0de39c691",
+            "agent_name": "research-worker",
+            "call_id": "roles/14-branch_planner",
+            "role": "branch_planner",
+            "runner_id": "runner_token_5ec2df256692076663a7df62b531dffd",
+            "session_id": "2b1e24b087f94ea9a53444d6265908f0",
+            "stage": "branches/b1_3/batches/02/planner"
+          },
+          "event": "agent_session",
+          "time": "2026-10-03T21:13:52.749383+00:00"
+        },
+        {
+          "data": {
+            "output_characters": 2882,
+            "session_id": "2b1e24b087f94ea9a53444d6265908f0",
+            "stage": "branches/b1_3/batches/02/planner",
+            "usage": null
+          },
+          "event": "agent_response_completed",
+          "time": "2026-10-03T21:14:09.004423+00:00"
+        },
+        {
+          "data": {
+            "session_id": "2b1e24b087f94ea9a53444d6265908f0",
+            "stage": "branches/b1_3/batches/02/planner"
+          },
+          "event": "agent_runner_stopped",
+          "time": "2026-10-03T21:14:09.444736+00:00"
+        },
+        {
+          "data": {
+            "path": "roles/14-branch_planner-response.json",
+            "stage": "branches/b1_3/batches/02/planner"
+          },
+          "event": "artifact_written",
+          "time": "2026-10-03T21:14:09.445494+00:00"
+        },
+        {
+          "data": {
+            "agent_name": "research-worker",
+            "backend": "omnigent",
+            "call_id": "roles/14-branch_planner",
+            "request": "roles/14-branch_planner-request.json",
+            "response": "roles/14-branch_planner-response.json",
+            "role": "branch_planner",
+            "schema_valid": true,
+            "seconds": 17.837737208988983,
+            "session_id": "2b1e24b087f94ea9a53444d6265908f0",
+            "stage": "branches/b1_3/batches/02/planner",
+            "usage": null
+          },
+          "event": "agent_call_completed",
+          "time": "2026-10-03T21:14:09.445712+00:00"
+        },
+        {
+          "data": {
+            "path": "branches/b1_3/batches/02/planner.json",
+            "stage": "branches/b1_3/batches/02/planner"
+          },
+          "event": "artifact_written",
+          "time": "2026-10-03T21:14:09.446139+00:00"
+        },
+        {
+          "data": {
+            "seconds": 17.838980750006158,
+            "stage": "branches/b1_3/batches/02/planner"
+          },
+          "event": "stage_completed",
+          "time": "2026-10-03T21:14:09.446209+00:00"
+        }
+      ],
+      "parents": [
+        "checkpoints/003/decision"
+      ]
+    },
+    {
+      "stage": "checkpoints/004/decision",
+      "role": "decision_agent",
+      "round": 0,
+      "kind": "omnigent",
+      "started_at": "2026-10-03T21:13:51.610154+00:00",
+      "status": "completed",
+      "stage_status": "completed",
+      "call_status": "completed",
+      "finished_at": "2026-10-03T21:14:14.440212+00:00",
+      "seconds": 22.82939354199334,
+      "session_id": "245555d737fd4d0a80628fd1c0aa76de",
+      "agent_id": "89e779ff411d4c22a8036dd0de39c691",
+      "agent_name": "research-worker",
+      "runner_id": "runner_token_896bb46f618a007dd061da0d1bef478a",
+      "call_id": "roles/15-decision_agent",
+      "error_type": null,
+      "usage": null,
+      "schema_valid": true,
+      "artifacts": [
+        "checkpoints/004/decision.json",
+        "roles/15-decision_agent-request.json",
+        "roles/15-decision_agent-response.json"
+      ],
+      "events": [
+        {
+          "data": {
+            "parents": [
+              "branches/b1_1/batches/02/experiment",
+              "branches/b1_2/batches/01/experiment",
+              "branches/b1_3/batches/01/experiment",
+              "checkpoints/003/decision"
+            ],
+            "stage": "checkpoints/004/decision"
+          },
+          "event": "stage_started",
+          "time": "2026-10-03T21:13:51.610154+00:00"
+        },
+        {
+          "data": {
+            "path": "roles/15-decision_agent-request.json",
+            "stage": "checkpoints/004/decision"
+          },
+          "event": "artifact_written",
+          "time": "2026-10-03T21:13:51.611083+00:00"
+        },
+        {
+          "data": {
+            "agent_name": "research-worker",
+            "backend": "omnigent",
+            "call_id": "roles/15-decision_agent",
+            "request": "roles/15-decision_agent-request.json",
+            "role": "decision_agent",
+            "stage": "checkpoints/004/decision"
+          },
+          "event": "agent_call_started",
+          "time": "2026-10-03T21:13:51.611139+00:00"
+        },
+        {
+          "data": {
+            "agent_id": "89e779ff411d4c22a8036dd0de39c691",
+            "agent_name": "research-worker",
+            "call_id": "roles/15-decision_agent",
+            "role": "decision_agent",
+            "session_id": "245555d737fd4d0a80628fd1c0aa76de",
+            "stage": "checkpoints/004/decision"
+          },
+          "event": "agent_session_created",
+          "time": "2026-10-03T21:13:51.654808+00:00"
+        },
+        {
+          "data": {
+            "agent_id": "89e779ff411d4c22a8036dd0de39c691",
+            "agent_name": "research-worker",
+            "call_id": "roles/15-decision_agent",
+            "role": "decision_agent",
+            "runner_id": "runner_token_896bb46f618a007dd061da0d1bef478a",
+            "session_id": "245555d737fd4d0a80628fd1c0aa76de",
+            "stage": "checkpoints/004/decision"
+          },
+          "event": "agent_session",
+          "time": "2026-10-03T21:13:52.748476+00:00"
+        },
+        {
+          "data": {
+            "output_characters": 3436,
+            "session_id": "245555d737fd4d0a80628fd1c0aa76de",
+            "stage": "checkpoints/004/decision",
+            "usage": null
+          },
+          "event": "agent_response_completed",
+          "time": "2026-10-03T21:14:13.949147+00:00"
+        },
+        {
+          "data": {
+            "session_id": "245555d737fd4d0a80628fd1c0aa76de",
+            "stage": "checkpoints/004/decision"
+          },
+          "event": "agent_runner_stopped",
+          "time": "2026-10-03T21:14:14.439405+00:00"
+        },
+        {
+          "data": {
+            "path": "roles/15-decision_agent-response.json",
+            "stage": "checkpoints/004/decision"
+          },
+          "event": "artifact_written",
+          "time": "2026-10-03T21:14:14.440016+00:00"
+        },
+        {
+          "data": {
+            "agent_name": "research-worker",
+            "backend": "omnigent",
+            "call_id": "roles/15-decision_agent",
+            "request": "roles/15-decision_agent-request.json",
+            "response": "roles/15-decision_agent-response.json",
+            "role": "decision_agent",
+            "schema_valid": true,
+            "seconds": 22.82939354199334,
+            "session_id": "245555d737fd4d0a80628fd1c0aa76de",
+            "stage": "checkpoints/004/decision",
+            "usage": null
+          },
+          "event": "agent_call_completed",
+          "time": "2026-10-03T21:14:14.440212+00:00"
+        },
+        {
+          "data": {
+            "path": "checkpoints/004/decision.json",
+            "stage": "checkpoints/004/decision"
+          },
+          "event": "artifact_written",
+          "time": "2026-10-03T21:14:14.440485+00:00"
+        },
+        {
+          "data": {
+            "seconds": 22.830363999994006,
+            "stage": "checkpoints/004/decision"
+          },
+          "event": "stage_completed",
+          "time": "2026-10-03T21:14:14.440538+00:00"
+        }
+      ],
+      "parents": [
+        "branches/b1_1/batches/02/experiment",
+        "branches/b1_2/batches/01/experiment",
+        "branches/b1_3/batches/01/experiment",
+        "checkpoints/003/decision"
+      ]
+    },
+    {
+      "stage": "branches/b1_3/batches/02/experiment",
+      "role": "experiment",
+      "round": 2,
+      "kind": "simulation",
+      "started_at": "2026-10-03T21:14:09.446583+00:00",
+      "status": "completed",
+      "stage_status": "completed",
+      "call_status": null,
+      "finished_at": "2026-10-03T21:14:10.105403+00:00",
+      "seconds": 0.6588313339743763,
+      "session_id": null,
+      "agent_id": null,
+      "agent_name": null,
+      "runner_id": null,
+      "call_id": null,
+      "error_type": null,
+      "usage": null,
+      "schema_valid": null,
+      "artifacts": [
+        "branches/b1_3/batches/02/checks.json",
+        "branches/b1_3/batches/02/specification.json",
+        "branches/b1_3/batches/02/trials.csv"
+      ],
+      "events": [
+        {
+          "data": {
+            "parents": [
+              "branches/b1_3/batches/02/planner"
+            ],
+            "stage": "branches/b1_3/batches/02/experiment"
+          },
+          "event": "stage_started",
+          "time": "2026-10-03T21:14:09.446583+00:00"
+        },
+        {
+          "data": {
+            "path": "branches/b1_3/batches/02/specification.json",
+            "stage": "branches/b1_3/batches/02/experiment"
+          },
+          "event": "artifact_written",
+          "time": "2026-10-03T21:14:09.446839+00:00"
+        },
+        {
+          "data": {
+            "specification": "branches/b1_3/batches/02/specification.json",
+            "stage": "branches/b1_3/batches/02/experiment",
+            "tool": "execute_batch"
+          },
+          "event": "tool_dispatched",
+          "time": "2026-10-03T21:14:09.446906+00:00"
+        },
+        {
+          "data": {
+            "path": "branches/b1_3/batches/02/trials.csv",
+            "stage": "branches/b1_3/batches/02/experiment"
+          },
+          "event": "artifact_written",
+          "time": "2026-10-03T21:14:09.780526+00:00"
+        },
+        {
+          "data": {
+            "path": "branches/b1_3/batches/02/checks.json",
+            "stage": "branches/b1_3/batches/02/experiment"
+          },
+          "event": "artifact_written",
+          "time": "2026-10-03T21:14:10.105185+00:00"
+        },
+        {
+          "data": {
+            "artifact": "branches/b1_3/batches/02/trials.csv",
+            "rows": 1024,
+            "stage": "branches/b1_3/batches/02/experiment",
+            "tool": "execute_batch"
+          },
+          "event": "tool_result",
+          "time": "2026-10-03T21:14:10.105242+00:00"
+        },
+        {
+          "data": {
+            "seconds": 0.6588313339743763,
+            "stage": "branches/b1_3/batches/02/experiment"
+          },
+          "event": "stage_completed",
+          "time": "2026-10-03T21:14:10.105403+00:00"
+        }
+      ],
+      "parents": [
+        "branches/b1_3/batches/02/planner"
+      ]
+    },
+    {
+      "stage": "branches/b1_1/batches/03/planner",
+      "role": "branch_planner",
+      "round": 3,
+      "kind": "omnigent",
+      "started_at": "2026-10-03T21:14:14.443252+00:00",
+      "status": "completed",
+      "stage_status": "completed",
+      "call_status": "completed",
+      "finished_at": "2026-10-03T21:14:29.453627+00:00",
+      "seconds": 15.00973312498536,
+      "session_id": "29845cb26aab4761be6610911b73d340",
+      "agent_id": "89e779ff411d4c22a8036dd0de39c691",
+      "agent_name": "research-worker",
+      "runner_id": "runner_token_71ecb34d8373a27e85f67b736b640d1f",
+      "call_id": "roles/16-branch_planner",
+      "error_type": null,
+      "usage": null,
+      "schema_valid": true,
+      "artifacts": [
+        "branches/b1_1/batches/03/planner.json",
+        "roles/16-branch_planner-request.json",
+        "roles/16-branch_planner-response.json"
+      ],
+      "events": [
+        {
+          "data": {
+            "parents": [
+              "checkpoints/004/decision"
+            ],
+            "stage": "branches/b1_1/batches/03/planner"
+          },
+          "event": "stage_started",
+          "time": "2026-10-03T21:14:14.443252+00:00"
+        },
+        {
+          "data": {
+            "path": "roles/16-branch_planner-request.json",
+            "stage": "branches/b1_1/batches/03/planner"
+          },
+          "event": "artifact_written",
+          "time": "2026-10-03T21:14:14.444698+00:00"
+        },
+        {
+          "data": {
+            "agent_name": "research-worker",
+            "backend": "omnigent",
+            "call_id": "roles/16-branch_planner",
+            "request": "roles/16-branch_planner-request.json",
+            "role": "branch_planner",
+            "stage": "branches/b1_1/batches/03/planner"
+          },
+          "event": "agent_call_started",
+          "time": "2026-10-03T21:14:14.444757+00:00"
+        },
+        {
+          "data": {
+            "agent_id": "89e779ff411d4c22a8036dd0de39c691",
+            "agent_name": "research-worker",
+            "call_id": "roles/16-branch_planner",
+            "role": "branch_planner",
+            "session_id": "29845cb26aab4761be6610911b73d340",
+            "stage": "branches/b1_1/batches/03/planner"
+          },
+          "event": "agent_session_created",
+          "time": "2026-10-03T21:14:14.486099+00:00"
+        },
+        {
+          "data": {
+            "agent_id": "89e779ff411d4c22a8036dd0de39c691",
+            "agent_name": "research-worker",
+            "call_id": "roles/16-branch_planner",
+            "role": "branch_planner",
+            "runner_id": "runner_token_71ecb34d8373a27e85f67b736b640d1f",
+            "session_id": "29845cb26aab4761be6610911b73d340",
+            "stage": "branches/b1_1/batches/03/planner"
+          },
+          "event": "agent_session",
+          "time": "2026-10-03T21:14:15.545711+00:00"
+        },
+        {
+          "data": {
+            "output_characters": 2630,
+            "session_id": "29845cb26aab4761be6610911b73d340",
+            "stage": "branches/b1_1/batches/03/planner",
+            "usage": null
+          },
+          "event": "agent_response_completed",
+          "time": "2026-10-03T21:14:28.962119+00:00"
+        },
+        {
+          "data": {
+            "session_id": "29845cb26aab4761be6610911b73d340",
+            "stage": "branches/b1_1/batches/03/planner"
+          },
+          "event": "agent_runner_stopped",
+          "time": "2026-10-03T21:14:29.452432+00:00"
+        },
+        {
+          "data": {
+            "path": "roles/16-branch_planner-response.json",
+            "stage": "branches/b1_1/batches/03/planner"
+          },
+          "event": "artifact_written",
+          "time": "2026-10-03T21:14:29.453412+00:00"
+        },
+        {
+          "data": {
+            "agent_name": "research-worker",
+            "backend": "omnigent",
+            "call_id": "roles/16-branch_planner",
+            "request": "roles/16-branch_planner-request.json",
+            "response": "roles/16-branch_planner-response.json",
+            "role": "branch_planner",
+            "schema_valid": true,
+            "seconds": 15.00973312498536,
+            "session_id": "29845cb26aab4761be6610911b73d340",
+            "stage": "branches/b1_1/batches/03/planner",
+            "usage": null
+          },
+          "event": "agent_call_completed",
+          "time": "2026-10-03T21:14:29.453627+00:00"
+        },
+        {
+          "data": {
+            "path": "branches/b1_1/batches/03/planner.json",
+            "stage": "branches/b1_1/batches/03/planner"
+          },
+          "event": "artifact_written",
+          "time": "2026-10-03T21:14:29.454055+00:00"
+        },
+        {
+          "data": {
+            "seconds": 15.010918332991423,
+            "stage": "branches/b1_1/batches/03/planner"
+          },
+          "event": "stage_completed",
+          "time": "2026-10-03T21:14:29.454143+00:00"
+        }
+      ],
+      "parents": [
+        "checkpoints/004/decision"
+      ]
+    },
+    {
+      "stage": "checkpoints/005/decision",
+      "role": "decision_agent",
+      "round": 0,
+      "kind": "omnigent",
+      "started_at": "2026-10-03T21:14:14.445623+00:00",
+      "status": "completed",
+      "stage_status": "completed",
+      "call_status": "completed",
+      "finished_at": "2026-10-03T21:14:33.885507+00:00",
+      "seconds": 19.439271292008925,
+      "session_id": "385673c542fa449681756645b6fa4a97",
+      "agent_id": "89e779ff411d4c22a8036dd0de39c691",
+      "agent_name": "research-worker",
+      "runner_id": "runner_token_2de997c8652a3c0e27fdef5af3e68630",
+      "call_id": "roles/17-decision_agent",
+      "error_type": null,
+      "usage": null,
+      "schema_valid": true,
+      "artifacts": [
+        "checkpoints/005/decision.json",
+        "roles/17-decision_agent-request.json",
+        "roles/17-decision_agent-response.json"
+      ],
+      "events": [
+        {
+          "data": {
+            "parents": [
+              "branches/b1_1/batches/02/experiment",
+              "branches/b1_2/batches/02/experiment",
+              "branches/b1_3/batches/01/experiment",
+              "checkpoints/004/decision"
+            ],
+            "stage": "checkpoints/005/decision"
+          },
+          "event": "stage_started",
+          "time": "2026-10-03T21:14:14.445623+00:00"
+        },
+        {
+          "data": {
+            "path": "roles/17-decision_agent-request.json",
+            "stage": "checkpoints/005/decision"
+          },
+          "event": "artifact_written",
+          "time": "2026-10-03T21:14:14.446403+00:00"
+        },
+        {
+          "data": {
+            "agent_name": "research-worker",
+            "backend": "omnigent",
+            "call_id": "roles/17-decision_agent",
+            "request": "roles/17-decision_agent-request.json",
+            "role": "decision_agent",
+            "stage": "checkpoints/005/decision"
+          },
+          "event": "agent_call_started",
+          "time": "2026-10-03T21:14:14.446452+00:00"
+        },
+        {
+          "data": {
+            "agent_id": "89e779ff411d4c22a8036dd0de39c691",
+            "agent_name": "research-worker",
+            "call_id": "roles/17-decision_agent",
+            "role": "decision_agent",
+            "session_id": "385673c542fa449681756645b6fa4a97",
+            "stage": "checkpoints/005/decision"
+          },
+          "event": "agent_session_created",
+          "time": "2026-10-03T21:14:14.486895+00:00"
+        },
+        {
+          "data": {
+            "agent_id": "89e779ff411d4c22a8036dd0de39c691",
+            "agent_name": "research-worker",
+            "call_id": "roles/17-decision_agent",
+            "role": "decision_agent",
+            "runner_id": "runner_token_2de997c8652a3c0e27fdef5af3e68630",
+            "session_id": "385673c542fa449681756645b6fa4a97",
+            "stage": "checkpoints/005/decision"
+          },
+          "event": "agent_session",
+          "time": "2026-10-03T21:14:15.536068+00:00"
+        },
+        {
+          "data": {
+            "output_characters": 3425,
+            "session_id": "385673c542fa449681756645b6fa4a97",
+            "stage": "checkpoints/005/decision",
+            "usage": null
+          },
+          "event": "agent_response_completed",
+          "time": "2026-10-03T21:14:33.391271+00:00"
+        },
+        {
+          "data": {
+            "session_id": "385673c542fa449681756645b6fa4a97",
+            "stage": "checkpoints/005/decision"
+          },
+          "event": "agent_runner_stopped",
+          "time": "2026-10-03T21:14:33.884537+00:00"
+        },
+        {
+          "data": {
+            "path": "roles/17-decision_agent-response.json",
+            "stage": "checkpoints/005/decision"
+          },
+          "event": "artifact_written",
+          "time": "2026-10-03T21:14:33.885258+00:00"
+        },
+        {
+          "data": {
+            "agent_name": "research-worker",
+            "backend": "omnigent",
+            "call_id": "roles/17-decision_agent",
+            "request": "roles/17-decision_agent-request.json",
+            "response": "roles/17-decision_agent-response.json",
+            "role": "decision_agent",
+            "schema_valid": true,
+            "seconds": 19.439271292008925,
+            "session_id": "385673c542fa449681756645b6fa4a97",
+            "stage": "checkpoints/005/decision",
+            "usage": null
+          },
+          "event": "agent_call_completed",
+          "time": "2026-10-03T21:14:33.885507+00:00"
+        },
+        {
+          "data": {
+            "path": "checkpoints/005/decision.json",
+            "stage": "checkpoints/005/decision"
+          },
+          "event": "artifact_written",
+          "time": "2026-10-03T21:14:33.885864+00:00"
+        },
+        {
+          "data": {
+            "seconds": 19.440286999975797,
+            "stage": "checkpoints/005/decision"
+          },
+          "event": "stage_completed",
+          "time": "2026-10-03T21:14:33.885941+00:00"
+        }
+      ],
+      "parents": [
+        "branches/b1_1/batches/02/experiment",
+        "branches/b1_2/batches/02/experiment",
+        "branches/b1_3/batches/01/experiment",
+        "checkpoints/004/decision"
+      ]
+    },
+    {
+      "stage": "branches/b1_1/batches/03/experiment",
+      "role": "experiment",
+      "round": 3,
+      "kind": "simulation",
+      "started_at": "2026-10-03T21:14:29.454540+00:00",
+      "status": "completed",
+      "stage_status": "completed",
+      "call_status": null,
+      "finished_at": "2026-10-03T21:14:31.148786+00:00",
+      "seconds": 1.6942561659961939,
+      "session_id": null,
+      "agent_id": null,
+      "agent_name": null,
+      "runner_id": null,
+      "call_id": null,
+      "error_type": null,
+      "usage": null,
+      "schema_valid": null,
+      "artifacts": [
+        "branches/b1_1/batches/03/checks.json",
+        "branches/b1_1/batches/03/specification.json",
+        "branches/b1_1/batches/03/trials.csv"
+      ],
+      "events": [
+        {
+          "data": {
+            "parents": [
+              "branches/b1_1/batches/03/planner"
+            ],
+            "stage": "branches/b1_1/batches/03/experiment"
+          },
+          "event": "stage_started",
+          "time": "2026-10-03T21:14:29.454540+00:00"
+        },
+        {
+          "data": {
+            "path": "branches/b1_1/batches/03/specification.json",
+            "stage": "branches/b1_1/batches/03/experiment"
+          },
+          "event": "artifact_written",
+          "time": "2026-10-03T21:14:29.454806+00:00"
+        },
+        {
+          "data": {
+            "specification": "branches/b1_1/batches/03/specification.json",
+            "stage": "branches/b1_1/batches/03/experiment",
+            "tool": "execute_batch"
+          },
+          "event": "tool_dispatched",
+          "time": "2026-10-03T21:14:29.454870+00:00"
+        },
+        {
+          "data": {
+            "path": "branches/b1_1/batches/03/trials.csv",
+            "stage": "branches/b1_1/batches/03/experiment"
+          },
+          "event": "artifact_written",
+          "time": "2026-10-03T21:14:30.314983+00:00"
+        },
+        {
+          "data": {
+            "path": "branches/b1_1/batches/03/checks.json",
+            "stage": "branches/b1_1/batches/03/experiment"
+          },
+          "event": "artifact_written",
+          "time": "2026-10-03T21:14:31.148678+00:00"
+        },
+        {
+          "data": {
+            "artifact": "branches/b1_1/batches/03/trials.csv",
+            "rows": 4096,
+            "stage": "branches/b1_1/batches/03/experiment",
+            "tool": "execute_batch"
+          },
+          "event": "tool_result",
+          "time": "2026-10-03T21:14:31.148740+00:00"
+        },
+        {
+          "data": {
+            "seconds": 1.6942561659961939,
+            "stage": "branches/b1_1/batches/03/experiment"
+          },
+          "event": "stage_completed",
+          "time": "2026-10-03T21:14:31.148786+00:00"
+        }
+      ],
+      "parents": [
+        "branches/b1_1/batches/03/planner"
+      ]
+    },
+    {
+      "stage": "branches/b1_2/batches/03/planner",
+      "role": "branch_planner",
+      "round": 3,
+      "kind": "omnigent",
+      "started_at": "2026-10-03T21:14:33.889752+00:00",
+      "status": "completed",
+      "stage_status": "completed",
+      "call_status": "completed",
+      "finished_at": "2026-10-03T21:14:56.802367+00:00",
+      "seconds": 22.91034883298562,
+      "session_id": "f51d2377921e42baa7381e5135d29ebf",
+      "agent_id": "89e779ff411d4c22a8036dd0de39c691",
+      "agent_name": "research-worker",
+      "runner_id": "runner_token_119c34eff9019db59663aa17f23b5493",
+      "call_id": "roles/18-branch_planner",
+      "error_type": null,
+      "usage": null,
+      "schema_valid": true,
+      "artifacts": [
+        "branches/b1_2/batches/03/planner.json",
+        "roles/18-branch_planner-request.json",
+        "roles/18-branch_planner-response.json"
+      ],
+      "events": [
+        {
+          "data": {
+            "parents": [
+              "checkpoints/005/decision"
+            ],
+            "stage": "branches/b1_2/batches/03/planner"
+          },
+          "event": "stage_started",
+          "time": "2026-10-03T21:14:33.889752+00:00"
+        },
+        {
+          "data": {
+            "path": "roles/18-branch_planner-request.json",
+            "stage": "branches/b1_2/batches/03/planner"
+          },
+          "event": "artifact_written",
+          "time": "2026-10-03T21:14:33.891116+00:00"
+        },
+        {
+          "data": {
+            "agent_name": "research-worker",
+            "backend": "omnigent",
+            "call_id": "roles/18-branch_planner",
+            "request": "roles/18-branch_planner-request.json",
+            "role": "branch_planner",
+            "stage": "branches/b1_2/batches/03/planner"
+          },
+          "event": "agent_call_started",
+          "time": "2026-10-03T21:14:33.891192+00:00"
+        },
+        {
+          "data": {
+            "agent_id": "89e779ff411d4c22a8036dd0de39c691",
+            "agent_name": "research-worker",
+            "call_id": "roles/18-branch_planner",
+            "role": "branch_planner",
+            "session_id": "f51d2377921e42baa7381e5135d29ebf",
+            "stage": "branches/b1_2/batches/03/planner"
+          },
+          "event": "agent_session_created",
+          "time": "2026-10-03T21:14:33.941209+00:00"
+        },
+        {
+          "data": {
+            "agent_id": "89e779ff411d4c22a8036dd0de39c691",
+            "agent_name": "research-worker",
+            "call_id": "roles/18-branch_planner",
+            "role": "branch_planner",
+            "runner_id": "runner_token_119c34eff9019db59663aa17f23b5493",
+            "session_id": "f51d2377921e42baa7381e5135d29ebf",
+            "stage": "branches/b1_2/batches/03/planner"
+          },
+          "event": "agent_session",
+          "time": "2026-10-03T21:14:35.002010+00:00"
+        },
+        {
+          "data": {
+            "output_characters": 2600,
+            "session_id": "f51d2377921e42baa7381e5135d29ebf",
+            "stage": "branches/b1_2/batches/03/planner",
+            "usage": null
+          },
+          "event": "agent_response_completed",
+          "time": "2026-10-03T21:14:56.469020+00:00"
+        },
+        {
+          "data": {
+            "session_id": "f51d2377921e42baa7381e5135d29ebf",
+            "stage": "branches/b1_2/batches/03/planner"
+          },
+          "event": "agent_runner_stopped",
+          "time": "2026-10-03T21:14:56.801672+00:00"
+        },
+        {
+          "data": {
+            "path": "roles/18-branch_planner-response.json",
+            "stage": "branches/b1_2/batches/03/planner"
+          },
+          "event": "artifact_written",
+          "time": "2026-10-03T21:14:56.802214+00:00"
+        },
+        {
+          "data": {
+            "agent_name": "research-worker",
+            "backend": "omnigent",
+            "call_id": "roles/18-branch_planner",
+            "request": "roles/18-branch_planner-request.json",
+            "response": "roles/18-branch_planner-response.json",
+            "role": "branch_planner",
+            "schema_valid": true,
+            "seconds": 22.91034883298562,
+            "session_id": "f51d2377921e42baa7381e5135d29ebf",
+            "stage": "branches/b1_2/batches/03/planner",
+            "usage": null
+          },
+          "event": "agent_call_completed",
+          "time": "2026-10-03T21:14:56.802367+00:00"
+        },
+        {
+          "data": {
+            "path": "branches/b1_2/batches/03/planner.json",
+            "stage": "branches/b1_2/batches/03/planner"
+          },
+          "event": "artifact_written",
+          "time": "2026-10-03T21:14:56.802637+00:00"
+        },
+        {
+          "data": {
+            "seconds": 22.911284458998125,
+            "stage": "branches/b1_2/batches/03/planner"
+          },
+          "event": "stage_completed",
+          "time": "2026-10-03T21:14:56.802689+00:00"
+        }
+      ],
+      "parents": [
+        "checkpoints/005/decision"
+      ]
+    },
+    {
+      "stage": "checkpoints/006/decision",
+      "role": "decision_agent",
+      "round": 0,
+      "kind": "omnigent",
+      "started_at": "2026-10-03T21:14:33.892217+00:00",
+      "status": "completed",
+      "stage_status": "completed",
+      "call_status": "completed",
+      "finished_at": "2026-10-03T21:14:51.319846+00:00",
+      "seconds": 17.42564466697513,
+      "session_id": "d98d9356c57b4d26acb67d62694438b3",
+      "agent_id": "89e779ff411d4c22a8036dd0de39c691",
+      "agent_name": "research-worker",
+      "runner_id": "runner_token_342a5607d9c66b56e524a1090e91e5aa",
+      "call_id": "roles/19-decision_agent",
+      "error_type": null,
+      "usage": null,
+      "schema_valid": true,
+      "artifacts": [
+        "checkpoints/006/decision.json",
+        "roles/19-decision_agent-request.json",
+        "roles/19-decision_agent-response.json"
+      ],
+      "events": [
+        {
+          "data": {
+            "parents": [
+              "branches/b1_1/batches/02/experiment",
+              "branches/b1_2/batches/02/experiment",
+              "branches/b1_3/batches/02/experiment",
+              "checkpoints/005/decision"
+            ],
+            "stage": "checkpoints/006/decision"
+          },
+          "event": "stage_started",
+          "time": "2026-10-03T21:14:33.892217+00:00"
+        },
+        {
+          "data": {
+            "path": "roles/19-decision_agent-request.json",
+            "stage": "checkpoints/006/decision"
+          },
+          "event": "artifact_written",
+          "time": "2026-10-03T21:14:33.893199+00:00"
+        },
+        {
+          "data": {
+            "agent_name": "research-worker",
+            "backend": "omnigent",
+            "call_id": "roles/19-decision_agent",
+            "request": "roles/19-decision_agent-request.json",
+            "role": "decision_agent",
+            "stage": "checkpoints/006/decision"
+          },
+          "event": "agent_call_started",
+          "time": "2026-10-03T21:14:33.893256+00:00"
+        },
+        {
+          "data": {
+            "agent_id": "89e779ff411d4c22a8036dd0de39c691",
+            "agent_name": "research-worker",
+            "call_id": "roles/19-decision_agent",
+            "role": "decision_agent",
+            "session_id": "d98d9356c57b4d26acb67d62694438b3",
+            "stage": "checkpoints/006/decision"
+          },
+          "event": "agent_session_created",
+          "time": "2026-10-03T21:14:33.940474+00:00"
+        },
+        {
+          "data": {
+            "agent_id": "89e779ff411d4c22a8036dd0de39c691",
+            "agent_name": "research-worker",
+            "call_id": "roles/19-decision_agent",
+            "role": "decision_agent",
+            "runner_id": "runner_token_342a5607d9c66b56e524a1090e91e5aa",
+            "session_id": "d98d9356c57b4d26acb67d62694438b3",
+            "stage": "checkpoints/006/decision"
+          },
+          "event": "agent_session",
+          "time": "2026-10-03T21:14:34.996985+00:00"
+        },
+        {
+          "data": {
+            "output_characters": 3344,
+            "session_id": "d98d9356c57b4d26acb67d62694438b3",
+            "stage": "checkpoints/006/decision",
+            "usage": null
+          },
+          "event": "agent_response_completed",
+          "time": "2026-10-03T21:14:50.988054+00:00"
+        },
+        {
+          "data": {
+            "session_id": "d98d9356c57b4d26acb67d62694438b3",
+            "stage": "checkpoints/006/decision"
+          },
+          "event": "agent_runner_stopped",
+          "time": "2026-10-03T21:14:51.319210+00:00"
+        },
+        {
+          "data": {
+            "path": "roles/19-decision_agent-response.json",
+            "stage": "checkpoints/006/decision"
+          },
+          "event": "artifact_written",
+          "time": "2026-10-03T21:14:51.319722+00:00"
+        },
+        {
+          "data": {
+            "agent_name": "research-worker",
+            "backend": "omnigent",
+            "call_id": "roles/19-decision_agent",
+            "request": "roles/19-decision_agent-request.json",
+            "response": "roles/19-decision_agent-response.json",
+            "role": "decision_agent",
+            "schema_valid": true,
+            "seconds": 17.42564466697513,
+            "session_id": "d98d9356c57b4d26acb67d62694438b3",
+            "stage": "checkpoints/006/decision",
+            "usage": null
+          },
+          "event": "agent_call_completed",
+          "time": "2026-10-03T21:14:51.319846+00:00"
+        },
+        {
+          "data": {
+            "path": "checkpoints/006/decision.json",
+            "stage": "checkpoints/006/decision"
+          },
+          "event": "artifact_written",
+          "time": "2026-10-03T21:14:51.320088+00:00"
+        },
+        {
+          "data": {
+            "seconds": 17.42662724998081,
+            "stage": "checkpoints/006/decision"
+          },
+          "event": "stage_completed",
+          "time": "2026-10-03T21:14:51.320133+00:00"
+        }
+      ],
+      "parents": [
+        "branches/b1_1/batches/02/experiment",
+        "branches/b1_2/batches/02/experiment",
+        "branches/b1_3/batches/02/experiment",
+        "checkpoints/005/decision"
+      ]
+    },
+    {
+      "stage": "checkpoints/006/validation",
+      "role": "validator",
+      "round": 0,
+      "kind": "omnigent",
+      "started_at": "2026-10-03T21:14:51.323468+00:00",
+      "status": "completed",
+      "stage_status": "completed",
+      "call_status": "completed",
+      "finished_at": "2026-10-03T21:15:13.693552+00:00",
+      "seconds": 22.368112083990127,
+      "session_id": "cfe15f0512e44693975abb7c31063bc6",
+      "agent_id": "89e779ff411d4c22a8036dd0de39c691",
+      "agent_name": "research-worker",
+      "runner_id": "runner_token_ce0be1f039b5a236e2f28cc3c00db79c",
+      "call_id": "roles/20-validator",
+      "error_type": null,
+      "usage": null,
+      "schema_valid": true,
+      "artifacts": [
+        "checkpoints/006/validation.json",
+        "roles/20-validator-request.json",
+        "roles/20-validator-response.json"
+      ],
+      "events": [
+        {
+          "data": {
+            "parents": [
+              "checkpoints/006/decision"
+            ],
+            "stage": "checkpoints/006/validation"
+          },
+          "event": "stage_started",
+          "time": "2026-10-03T21:14:51.323468+00:00"
+        },
+        {
+          "data": {
+            "path": "roles/20-validator-request.json",
+            "stage": "checkpoints/006/validation"
+          },
+          "event": "artifact_written",
+          "time": "2026-10-03T21:14:51.325036+00:00"
+        },
+        {
+          "data": {
+            "agent_name": "research-worker",
+            "backend": "omnigent",
+            "call_id": "roles/20-validator",
+            "request": "roles/20-validator-request.json",
+            "role": "validator",
+            "stage": "checkpoints/006/validation"
+          },
+          "event": "agent_call_started",
+          "time": "2026-10-03T21:14:51.325082+00:00"
+        },
+        {
+          "data": {
+            "agent_id": "89e779ff411d4c22a8036dd0de39c691",
+            "agent_name": "research-worker",
+            "call_id": "roles/20-validator",
+            "role": "validator",
+            "session_id": "cfe15f0512e44693975abb7c31063bc6",
+            "stage": "checkpoints/006/validation"
+          },
+          "event": "agent_session_created",
+          "time": "2026-10-03T21:14:51.346380+00:00"
+        },
+        {
+          "data": {
+            "agent_id": "89e779ff411d4c22a8036dd0de39c691",
+            "agent_name": "research-worker",
+            "call_id": "roles/20-validator",
+            "role": "validator",
+            "runner_id": "runner_token_ce0be1f039b5a236e2f28cc3c00db79c",
+            "session_id": "cfe15f0512e44693975abb7c31063bc6",
+            "stage": "checkpoints/006/validation"
+          },
+          "event": "agent_session",
+          "time": "2026-10-03T21:14:52.384328+00:00"
+        },
+        {
+          "data": {
+            "output_characters": 3411,
+            "session_id": "cfe15f0512e44693975abb7c31063bc6",
+            "stage": "checkpoints/006/validation",
+            "usage": null
+          },
+          "event": "agent_response_completed",
+          "time": "2026-10-03T21:15:13.198388+00:00"
+        },
+        {
+          "data": {
+            "session_id": "cfe15f0512e44693975abb7c31063bc6",
+            "stage": "checkpoints/006/validation"
+          },
+          "event": "agent_runner_stopped",
+          "time": "2026-10-03T21:15:13.692541+00:00"
+        },
+        {
+          "data": {
+            "path": "roles/20-validator-response.json",
+            "stage": "checkpoints/006/validation"
+          },
+          "event": "artifact_written",
+          "time": "2026-10-03T21:15:13.693337+00:00"
+        },
+        {
+          "data": {
+            "agent_name": "research-worker",
+            "backend": "omnigent",
+            "call_id": "roles/20-validator",
+            "request": "roles/20-validator-request.json",
+            "response": "roles/20-validator-response.json",
+            "role": "validator",
+            "schema_valid": true,
+            "seconds": 22.368112083990127,
+            "session_id": "cfe15f0512e44693975abb7c31063bc6",
+            "stage": "checkpoints/006/validation",
+            "usage": null
+          },
+          "event": "agent_call_completed",
+          "time": "2026-10-03T21:15:13.693552+00:00"
+        },
+        {
+          "data": {
+            "path": "checkpoints/006/validation.json",
+            "stage": "checkpoints/006/validation"
+          },
+          "event": "artifact_written",
+          "time": "2026-10-03T21:15:13.694093+00:00"
+        },
+        {
+          "data": {
+            "seconds": 22.369711917010136,
+            "stage": "checkpoints/006/validation"
+          },
+          "event": "stage_completed",
+          "time": "2026-10-03T21:15:13.694217+00:00"
+        }
+      ],
+      "parents": [
+        "checkpoints/006/decision"
+      ]
+    },
+    {
+      "stage": "branches/b1_2/batches/03/experiment",
+      "role": "experiment",
+      "round": 3,
+      "kind": "simulation",
+      "started_at": "2026-10-03T21:14:56.802947+00:00",
+      "status": "completed",
+      "stage_status": "completed",
+      "call_status": null,
+      "finished_at": "2026-10-03T21:14:58.355111+00:00",
+      "seconds": 1.55198337501497,
+      "session_id": null,
+      "agent_id": null,
+      "agent_name": null,
+      "runner_id": null,
+      "call_id": null,
+      "error_type": null,
+      "usage": null,
+      "schema_valid": null,
+      "artifacts": [
+        "branches/b1_2/batches/03/checks.json",
+        "branches/b1_2/batches/03/specification.json",
+        "branches/b1_2/batches/03/trials.csv"
+      ],
+      "events": [
+        {
+          "data": {
+            "parents": [
+              "branches/b1_2/batches/03/planner"
+            ],
+            "stage": "branches/b1_2/batches/03/experiment"
+          },
+          "event": "stage_started",
+          "time": "2026-10-03T21:14:56.802947+00:00"
+        },
+        {
+          "data": {
+            "path": "branches/b1_2/batches/03/specification.json",
+            "stage": "branches/b1_2/batches/03/experiment"
+          },
+          "event": "artifact_written",
+          "time": "2026-10-03T21:14:56.803134+00:00"
+        },
+        {
+          "data": {
+            "specification": "branches/b1_2/batches/03/specification.json",
+            "stage": "branches/b1_2/batches/03/experiment",
+            "tool": "execute_batch"
+          },
+          "event": "tool_dispatched",
+          "time": "2026-10-03T21:14:56.803177+00:00"
+        },
+        {
+          "data": {
+            "path": "branches/b1_2/batches/03/trials.csv",
+            "stage": "branches/b1_2/batches/03/experiment"
+          },
+          "event": "artifact_written",
+          "time": "2026-10-03T21:14:57.579537+00:00"
+        },
+        {
+          "data": {
+            "path": "branches/b1_2/batches/03/checks.json",
+            "stage": "branches/b1_2/batches/03/experiment"
+          },
+          "event": "artifact_written",
+          "time": "2026-10-03T21:14:58.354729+00:00"
+        },
+        {
+          "data": {
+            "artifact": "branches/b1_2/batches/03/trials.csv",
+            "rows": 4096,
+            "stage": "branches/b1_2/batches/03/experiment",
+            "tool": "execute_batch"
+          },
+          "event": "tool_result",
+          "time": "2026-10-03T21:14:58.354786+00:00"
+        },
+        {
+          "data": {
+            "seconds": 1.55198337501497,
+            "stage": "branches/b1_2/batches/03/experiment"
+          },
+          "event": "stage_completed",
+          "time": "2026-10-03T21:14:58.355111+00:00"
+        }
+      ],
+      "parents": [
+        "branches/b1_2/batches/03/planner"
+      ]
+    },
+    {
+      "stage": "checkpoints/007/decision",
+      "role": "decision_agent",
+      "round": 0,
+      "kind": "omnigent",
+      "started_at": "2026-10-03T21:15:13.699489+00:00",
+      "status": "completed",
+      "stage_status": "completed",
+      "call_status": "completed",
+      "finished_at": "2026-10-03T21:15:31.355925+00:00",
+      "seconds": 17.65530245899572,
+      "session_id": "dc53110035e64a2d85ee7c336f97d4e3",
+      "agent_id": "89e779ff411d4c22a8036dd0de39c691",
+      "agent_name": "research-worker",
+      "runner_id": "runner_token_e68ab88c3662ca7ea46e67b519833a15",
+      "call_id": "roles/21-decision_agent",
+      "error_type": null,
+      "usage": null,
+      "schema_valid": true,
+      "artifacts": [
+        "checkpoints/007/decision.json",
+        "roles/21-decision_agent-request.json",
+        "roles/21-decision_agent-response.json"
+      ],
+      "events": [
+        {
+          "data": {
+            "parents": [
+              "branches/b1_1/batches/03/experiment",
+              "branches/b1_2/batches/02/experiment",
+              "branches/b1_3/batches/02/experiment",
+              "checkpoints/006/decision"
+            ],
+            "stage": "checkpoints/007/decision"
+          },
+          "event": "stage_started",
+          "time": "2026-10-03T21:15:13.699489+00:00"
+        },
+        {
+          "data": {
+            "path": "roles/21-decision_agent-request.json",
+            "stage": "checkpoints/007/decision"
+          },
+          "event": "artifact_written",
+          "time": "2026-10-03T21:15:13.700665+00:00"
+        },
+        {
+          "data": {
+            "agent_name": "research-worker",
+            "backend": "omnigent",
+            "call_id": "roles/21-decision_agent",
+            "request": "roles/21-decision_agent-request.json",
+            "role": "decision_agent",
+            "stage": "checkpoints/007/decision"
+          },
+          "event": "agent_call_started",
+          "time": "2026-10-03T21:15:13.700730+00:00"
+        },
+        {
+          "data": {
+            "agent_id": "89e779ff411d4c22a8036dd0de39c691",
+            "agent_name": "research-worker",
+            "call_id": "roles/21-decision_agent",
+            "role": "decision_agent",
+            "session_id": "dc53110035e64a2d85ee7c336f97d4e3",
+            "stage": "checkpoints/007/decision"
+          },
+          "event": "agent_session_created",
+          "time": "2026-10-03T21:15:13.728166+00:00"
+        },
+        {
+          "data": {
+            "agent_id": "89e779ff411d4c22a8036dd0de39c691",
+            "agent_name": "research-worker",
+            "call_id": "roles/21-decision_agent",
+            "role": "decision_agent",
+            "runner_id": "runner_token_e68ab88c3662ca7ea46e67b519833a15",
+            "session_id": "dc53110035e64a2d85ee7c336f97d4e3",
+            "stage": "checkpoints/007/decision"
+          },
+          "event": "agent_session",
+          "time": "2026-10-03T21:15:14.787790+00:00"
+        },
+        {
+          "data": {
+            "output_characters": 3314,
+            "session_id": "dc53110035e64a2d85ee7c336f97d4e3",
+            "stage": "checkpoints/007/decision",
+            "usage": null
+          },
+          "event": "agent_response_completed",
+          "time": "2026-10-03T21:15:30.870734+00:00"
+        },
+        {
+          "data": {
+            "session_id": "dc53110035e64a2d85ee7c336f97d4e3",
+            "stage": "checkpoints/007/decision"
+          },
+          "event": "agent_runner_stopped",
+          "time": "2026-10-03T21:15:31.354637+00:00"
+        },
+        {
+          "data": {
+            "path": "roles/21-decision_agent-response.json",
+            "stage": "checkpoints/007/decision"
+          },
+          "event": "artifact_written",
+          "time": "2026-10-03T21:15:31.355538+00:00"
+        },
+        {
+          "data": {
+            "agent_name": "research-worker",
+            "backend": "omnigent",
+            "call_id": "roles/21-decision_agent",
+            "request": "roles/21-decision_agent-request.json",
+            "response": "roles/21-decision_agent-response.json",
+            "role": "decision_agent",
+            "schema_valid": true,
+            "seconds": 17.65530245899572,
+            "session_id": "dc53110035e64a2d85ee7c336f97d4e3",
+            "stage": "checkpoints/007/decision",
+            "usage": null
+          },
+          "event": "agent_call_completed",
+          "time": "2026-10-03T21:15:31.355925+00:00"
+        },
+        {
+          "data": {
+            "path": "checkpoints/007/decision.json",
+            "stage": "checkpoints/007/decision"
+          },
+          "event": "artifact_written",
+          "time": "2026-10-03T21:15:31.356345+00:00"
+        },
+        {
+          "data": {
+            "seconds": 17.65669249999337,
+            "stage": "checkpoints/007/decision"
+          },
+          "event": "stage_completed",
+          "time": "2026-10-03T21:15:31.356432+00:00"
+        }
+      ],
+      "parents": [
+        "branches/b1_1/batches/03/experiment",
+        "branches/b1_2/batches/02/experiment",
+        "branches/b1_3/batches/02/experiment",
+        "checkpoints/006/decision"
+      ]
+    },
+    {
+      "stage": "checkpoints/008/decision",
+      "role": "decision_agent",
+      "round": 0,
+      "kind": "omnigent",
+      "started_at": "2026-10-03T21:15:31.364561+00:00",
+      "status": "completed",
+      "stage_status": "completed",
+      "call_status": "completed",
+      "finished_at": "2026-10-03T21:15:49.772560+00:00",
+      "seconds": 18.407065915991552,
+      "session_id": "9ecdb651434841f387c8afb5e4ff390a",
+      "agent_id": "89e779ff411d4c22a8036dd0de39c691",
+      "agent_name": "research-worker",
+      "runner_id": "runner_token_602b42ce75183249bc2c7099839eaccf",
+      "call_id": "roles/22-decision_agent",
+      "error_type": null,
+      "usage": null,
+      "schema_valid": true,
+      "artifacts": [
+        "checkpoints/008/decision.json",
+        "roles/22-decision_agent-request.json",
+        "roles/22-decision_agent-response.json"
+      ],
+      "events": [
+        {
+          "data": {
+            "parents": [
+              "branches/b1_1/batches/03/experiment",
+              "branches/b1_2/batches/03/experiment",
+              "branches/b1_3/batches/02/experiment",
+              "checkpoints/007/decision"
+            ],
+            "stage": "checkpoints/008/decision"
+          },
+          "event": "stage_started",
+          "time": "2026-10-03T21:15:31.364561+00:00"
+        },
+        {
+          "data": {
+            "path": "roles/22-decision_agent-request.json",
+            "stage": "checkpoints/008/decision"
+          },
+          "event": "artifact_written",
+          "time": "2026-10-03T21:15:31.365700+00:00"
+        },
+        {
+          "data": {
+            "agent_name": "research-worker",
+            "backend": "omnigent",
+            "call_id": "roles/22-decision_agent",
+            "request": "roles/22-decision_agent-request.json",
+            "role": "decision_agent",
+            "stage": "checkpoints/008/decision"
+          },
+          "event": "agent_call_started",
+          "time": "2026-10-03T21:15:31.365768+00:00"
+        },
+        {
+          "data": {
+            "agent_id": "89e779ff411d4c22a8036dd0de39c691",
+            "agent_name": "research-worker",
+            "call_id": "roles/22-decision_agent",
+            "role": "decision_agent",
+            "session_id": "9ecdb651434841f387c8afb5e4ff390a",
+            "stage": "checkpoints/008/decision"
+          },
+          "event": "agent_session_created",
+          "time": "2026-10-03T21:15:31.395378+00:00"
+        },
+        {
+          "data": {
+            "agent_id": "89e779ff411d4c22a8036dd0de39c691",
+            "agent_name": "research-worker",
+            "call_id": "roles/22-decision_agent",
+            "role": "decision_agent",
+            "runner_id": "runner_token_602b42ce75183249bc2c7099839eaccf",
+            "session_id": "9ecdb651434841f387c8afb5e4ff390a",
+            "stage": "checkpoints/008/decision"
+          },
+          "event": "agent_session",
+          "time": "2026-10-03T21:15:32.438565+00:00"
+        },
+        {
+          "data": {
+            "output_characters": 3687,
+            "session_id": "9ecdb651434841f387c8afb5e4ff390a",
+            "stage": "checkpoints/008/decision",
+            "usage": null
+          },
+          "event": "agent_response_completed",
+          "time": "2026-10-03T21:15:49.386002+00:00"
+        },
+        {
+          "data": {
+            "session_id": "9ecdb651434841f387c8afb5e4ff390a",
+            "stage": "checkpoints/008/decision"
+          },
+          "event": "agent_runner_stopped",
+          "time": "2026-10-03T21:15:49.771424+00:00"
+        },
+        {
+          "data": {
+            "path": "roles/22-decision_agent-response.json",
+            "stage": "checkpoints/008/decision"
+          },
+          "event": "artifact_written",
+          "time": "2026-10-03T21:15:49.772286+00:00"
+        },
+        {
+          "data": {
+            "agent_name": "research-worker",
+            "backend": "omnigent",
+            "call_id": "roles/22-decision_agent",
+            "request": "roles/22-decision_agent-request.json",
+            "response": "roles/22-decision_agent-response.json",
+            "role": "decision_agent",
+            "schema_valid": true,
+            "seconds": 18.407065915991552,
+            "session_id": "9ecdb651434841f387c8afb5e4ff390a",
+            "stage": "checkpoints/008/decision",
+            "usage": null
+          },
+          "event": "agent_call_completed",
+          "time": "2026-10-03T21:15:49.772560+00:00"
+        },
+        {
+          "data": {
+            "path": "checkpoints/008/decision.json",
+            "stage": "checkpoints/008/decision"
+          },
+          "event": "artifact_written",
+          "time": "2026-10-03T21:15:49.772974+00:00"
+        },
+        {
+          "data": {
+            "seconds": 18.408388707990525,
+            "stage": "checkpoints/008/decision"
+          },
+          "event": "stage_completed",
+          "time": "2026-10-03T21:15:49.773061+00:00"
+        }
+      ],
+      "parents": [
+        "branches/b1_1/batches/03/experiment",
+        "branches/b1_2/batches/03/experiment",
+        "branches/b1_3/batches/02/experiment",
+        "checkpoints/007/decision"
+      ]
+    }
+  ]
+}

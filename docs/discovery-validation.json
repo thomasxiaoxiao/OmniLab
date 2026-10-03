@@ -1,0 +1,51 @@
+{
+  "checked_at": "2026-10-03T13:44:36.752603-07:00",
+  "tests": {
+    "full_suite": 140,
+    "final_frontend_subset": 11,
+    "final_checkpoint_subset": 5,
+    "agent_spec_test": 1,
+    "result": "passed"
+  },
+  "lint": "passed",
+  "format": "passed",
+  "lockfile": "uv lock --check --offline passed",
+  "live_runs": [
+    {
+      "run": "output/research/omnigent-discovery-v3",
+      "status": "needs_literature_review",
+      "elapsed_seconds": 147.287,
+      "completed_sessions": 7,
+      "role_calls": 7,
+      "computed_simulations": 136,
+      "cache_hits": 6,
+      "trials_per_size": 64,
+      "transition": null,
+      "hash_verification": "passed",
+      "journal_verification": "passed"
+    },
+    {
+      "run": "output/research/omnigent-discovery-v3-final",
+      "status": "needs_literature_review",
+      "elapsed_seconds": 151.563,
+      "completed_sessions": 7,
+      "role_calls": 7,
+      "computed_simulations": 72,
+      "cache_hits": 6,
+      "trials_per_size": 32,
+      "transition": {
+        "applied_action": "literature",
+        "reason": "More simulations cannot repair missing independent prior-art evidence.",
+        "requested_action": "literature",
+        "status": "needs_literature_review"
+      },
+      "hash_verification": "passed",
+      "journal_verification": "passed"
+    }
+  ],
+  "limitations": [
+    "Seed-only smoke runs; independent literature still required.",
+    "No verified novelty or acceleration multiplier.",
+    "No production deployment."
+  ]
+}

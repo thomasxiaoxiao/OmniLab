@@ -134,6 +134,7 @@ def simulate(
     trials: int,
     seed: int,
     check_budget: Callable[[], None] | None = None,
+    on_trial: Callable[[dict], None] | None = None,
 ) -> list[dict]:
     rows = []
     for trial in range(trials):
@@ -151,6 +152,8 @@ def simulate(
                 **measure(lattice(size, model, p, actual_seed, mode)),
             }
         )
+        if on_trial:
+            on_trial(rows[-1])
     return rows
 
 

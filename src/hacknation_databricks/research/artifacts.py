@@ -4,6 +4,7 @@ import hashlib
 import json
 import platform
 import subprocess
+import threading
 import time
 from contextlib import contextmanager
 from datetime import UTC, datetime
@@ -30,7 +31,8 @@ class RunStore:
             raise ValueError(f"Output directory is not empty: {directory}; use a fresh run path")
         self.directory = directory
         self.started = time.monotonic()
-        self.active_stage = None
+        self._local = threading.local()
+        self._lock = threading.RLock()
         self.event("run_created", {})
 
     def write(self, name: str, value: object) -> Path:
@@ -44,6 +46,25 @@ class RunStore:
         return target
 
     def event(self, name: str, data: dict) -> None:
+        with self._lock:
+            self._event(name, data)
+
+    def write_text(self, name: str, value: str) -> Path:
+        target = self.directory / name
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text(value, encoding="utf-8")
+        self.event("artifact_written", {"path": name})
+        return target
+
+    @property
+    def active_stage(self):
+        return getattr(self._local, "stage", None)
+
+    @active_stage.setter
+    def active_stage(self, value):
+        self._local.stage = value
+
+    def _event(self, name: str, data: dict) -> None:
         if self.active_stage:
             data = {"stage": self.active_stage, **data}
         with (self.directory / "events.jsonl").open("a") as stream:
@@ -60,20 +81,24 @@ class RunStore:
             )
 
     @contextmanager
-    def stage(self, name: str):
+    def stage(self, name: str, *, parents: list[str] | None = None):
         start = time.monotonic()
+        previous = self.active_stage
         self.active_stage = name
-        self.event("stage_started", {"stage": name})
+        self.event(
+            "stage_started",
+            {"stage": name, **({"parents": parents} if parents is not None else {})},
+        )
         try:
             yield
-        except Exception as exc:
+        except BaseException as exc:
             # Do not serialize provider error bodies: they may contain credentials.
             self.event("stage_failed", {"stage": name, "error_type": type(exc).__name__})
             raise
         else:
             self.event("stage_completed", {"stage": name, "seconds": time.monotonic() - start})
         finally:
-            self.active_stage = None
+            self.active_stage = previous
 
     def seal(self) -> None:
         entries = {}

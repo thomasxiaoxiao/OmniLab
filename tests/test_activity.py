@@ -41,6 +41,7 @@ def test_mocked_omnigent_sessions_correlate_rounds_responses_and_outputs(tmp_pat
     class MockedOmnigent(OmnigentRoles):
         async def _request(self, role, prompt):
             fake = FixtureRoles(self.sources, self.store, self.config)
+            fake.name = "omnigent"
             answer = fake._respond(role, json.loads(prompt)["data"])
             if role == "literature":
                 answer["assessment"] = "candidate_gap"
@@ -69,7 +70,7 @@ def test_mocked_omnigent_sessions_correlate_rounds_responses_and_outputs(tmp_pat
     run_research(
         source,
         tmp_path / "run",
-        RunConfig(sizes=[8, 16], trials=32),
+        RunConfig(sizes=[8, 16], trials=32, max_rounds=2),
         backend="omnigent",
         literature=[literature],
         roles_factory=MockedOmnigent,
@@ -77,9 +78,9 @@ def test_mocked_omnigent_sessions_correlate_rounds_responses_and_outputs(tmp_pat
     journal = load_journal(tmp_path / "run")
     assert journal.verified, journal.issues
     nodes = load_activity(journal)
-    assert len(nodes) == 13
+    assert len(nodes) == 15
     agents = [node for node in nodes if node.session_id]
-    assert len(agents) == 10
+    assert len(agents) == 12
     assert all(n.schema_valid and n.status == "completed" for n in agents)
     assert agents[0].runner_id == "mock-runner"
     assert "roles/01-reader-request.json" in agents[0].artifacts
@@ -103,6 +104,7 @@ def test_invalid_agent_output_remains_visible_as_failed(tmp_path):
             tmp_path / "run",
             backend="omnigent",
             roles_factory=InvalidOutput,
+            config=RunConfig(workflow="sequential"),
         )
     journal = load_journal(tmp_path / "run")
     assert journal.verified, journal.issues

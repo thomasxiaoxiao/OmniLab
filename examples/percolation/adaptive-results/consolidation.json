@@ -1,0 +1,85 @@
+{
+  "critiques": [
+    {
+      "decision": "reject",
+      "proposal_id": "b3_1",
+      "rationale": "Consolidate into b1_1. ref_2512_10566, page 5, explicitly recommends investigating disorder: \"Future work should explore whether the JP transition observed here persists under alterna- tive directional rules, or in the presence of disorder, and assess whether JP represents a broader class of mixed connectivity transitions in nonequilibrium or anisotropic media.\" The lattice comparison is feasible at the supplied sizes and falsifiable through a wrapping-probability difference, but duplicates b1_1 and cannot establish persistence of the continuum Janus transition.",
+      "risks": [
+        "Continuum-to-lattice equivalence is unsupported.",
+        "A fixed-p difference cannot distinguish a threshold shift from other finite-size effects.",
+        "Independent batches and adequate interval precision are not yet demonstrated."
+      ]
+    },
+    {
+      "decision": "reject",
+      "proposal_id": "b3_2",
+      "rationale": "Consolidate into b1_3. ref_2512_10566, page 4, states \"nodes increasingly link downward, leaving few available upward connections to sustain mutual reachability.\" This motivates reciprocity qualitatively but does not establish the effect of 25% bidirectionality in the catalog lattice. The finite-size comparison is feasible and falsifiable once wrapping and conversion rules are fixed; b1_3 provides the same intervention with more direct seed support and a sharper conditional prediction.",
+      "risks": [
+        "The quoted continuum mechanism does not validate the lattice model.",
+        "Exactly-one-axis wrapping and specified-axis wrapping have different monotonicity properties.",
+        "The sign and detectable magnitude are not established by this source."
+      ]
+    },
+    {
+      "decision": "reject",
+      "proposal_id": "b2_1",
+      "rationale": "Consolidate into b1_1. ref_2605_16987, page 9, states \"the present results rely on the statistical symmetry between incoming and outgoing paths\" and asks about breaking that symmetry. Randomizing row and column directions need not break this ensemble symmetry. The proposed wrapping comparison is computationally feasible and falsifiable, but it duplicates b1_1 and cannot serve as a direct test of the cited symmetry-breaking question.",
+      "risks": [
+        "Orientation disorder is not equivalent to incoming/outgoing symmetry breaking.",
+        "The random-Manhattan critical threshold is not established.",
+        "Small-lattice effects cannot determine critical universality."
+      ]
+    },
+    {
+      "decision": "reject",
+      "proposal_id": "b2_2",
+      "rationale": "Consolidate into b1_3. ref_2605_16987, page 2, describes a different construction: \"Each nearest- neighbor pair of sites is connected by two antiparallel directed bonds, as sketched in Fig. 2.\" This does not directly support converting 25% of existing diodes into reciprocal bonds. The catalog intervention is feasible and its wrapping difference is falsifiable, but b1_3 offers the stronger source connection and explicitly identifies the coupling needed for a directional prediction.",
+      "risks": [
+        "Independent antiparallel occupation differs from reciprocal conversion.",
+        "An exactly-one-axis observable could decrease when two-axis wrapping increases.",
+        "No measurements establish a detectable effect."
+      ]
+    },
+    {
+      "decision": "accept",
+      "proposal_id": "b1_1",
+      "rationale": "Highest priority: direct source motivation and a distinct orientation-disorder mechanism. The seed, page 13, explicitly lists \"the randomly-oriented Manhattan lattice [40]\" among proposed extensions. Compare specified-axis strongly connected wrapping against alternating Manhattan directions at p=0.69716 for L=8 and 16, averaging over orientation and occupation randomness. This is feasible within the supplied bounded simulation framework and falsifiable using the supervisor's unchanged effect and interval criteria with fresh controls and independent batches.",
+      "risks": [
+        "Reference [40] has not been directly reviewed; novelty is unverified.",
+        "The orientation ensemble and disorder resampling rule require specification.",
+        "Fixed p does not match distance from each model's critical threshold.",
+        "Two small sizes cannot establish asymptotic behavior or universality.",
+        "The initial 128 trials may not meet the required simultaneous interval width."
+      ]
+    },
+    {
+      "decision": "accept",
+      "proposal_id": "b1_2",
+      "rationale": "Third priority: a complementary occupation-mode consistency check. The seed, page 13, proposes \"strongly-connected clusters under site (rather than bond) percolation\"; page 7 reports \"the same threshold ofp c = 0.7401931(10)\" for Manhattan site percolation. These motivate, but do not prove, lower site wrapping at p=0.69716. The matched-size comparison is feasible and the directional prediction is falsifiable under the unchanged decision criteria. Retain it as a control on interpretation rather than a novel mechanism claim.",
+      "risks": [
+        "Equal occupation probability does not imply matched criticality or equal retained connectivity.",
+        "A reported infinite-size threshold alone does not prove finite-size ordering.",
+        "Site occupation and wrapping implementations require validation.",
+        "A result consistent with the prediction would remain a limited consistency check."
+      ]
+    },
+    {
+      "decision": "accept",
+      "proposal_id": "b1_3",
+      "rationale": "Second priority: reciprocity complements orientation disorder with an edge-addition mechanism. The seed, page 2, describes bonds \"in both directions, equivalent to an undirected bond.\" Page 13 explicitly identifies resistor-diode lattices as prior work. At p=1, test whether 25% reciprocal conversion produces a detectable increase in specified-axis strongly connected wrapping. The catalog comparison is feasible and falsifiable. Under an edge-preserving coupling, existing wrapping cannot be destroyed, but monotonicity does not guarantee a strict or sufficiently large increase.",
+      "risks": [
+        "The 25% conversion rule must distinguish an exact fraction from independent conversion probability.",
+        "The monotonicity argument requires preserving original edges and counting specified-axis wrapping, including both-axis events.",
+        "Saturation could obscure a detectable increase.",
+        "Independent control samples can fluctuate even when coupled realizations obey monotonicity.",
+        "Prior resistor-diode literature has not been sufficiently reviewed to assess novelty."
+      ]
+    }
+  ],
+  "invest": [
+    "b1_1",
+    "b1_3",
+    "b1_2"
+  ],
+  "rationale": "Retain three complementary interventions: orientation disorder first, reciprocal edge addition second, and site-versus-bond occupation third. Reject duplicate proposals to avoid spending separate batches on the same catalog comparison; retain their quotations as contextual evidence. Selection accepts bounded tests, not their predicted outcomes. Before execution, the supervisor must specify orientation and conversion sampling and confirm that wrapping means a specified axis including both-axis events. Use fresh controls, at least two independent seed batches, the unchanged minimum effect of 0.05, maximum simultaneous interval width of 0.25, and finite-size tolerance of 0.12 within the existing budgets. The initial 128 trials are not evidence that precision requirements will be met. Insufficient evidence currently exists for any measured effect, resolved mechanism, fulfilled goal, universality claim, or scientific novelty. A detectable fixed-p difference alone cannot distinguish a shifted threshold from broader structural effects. If uncertainty remains at budget exhaustion, report it rather than weaken thresholds. This assessment uses supplied quotations and briefs only; it does not independently verify full texts, cited literature, or implementation artifacts."
+}

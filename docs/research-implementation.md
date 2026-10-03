@@ -1,11 +1,25 @@
 # Research workflow implementation
 
+## Current adaptive execution
+
+The default Omnigent launcher and `examples/percolation/discovery.json` now use
+workflow v4. Parallel source/citation researchers feed a consolidator; multiple
+research branches run simulations and the decision agent evaluates every partial
+batch before allocating more work. Baseline controls and treatment samples are
+refreshed, earlier batches are retained, and completion requires a declared
+numerical goal plus independent validation. Configurable limits extend to 32
+batches per direction and 16 workers, with finite request/time/compute budgets.
+The second implemented example uses Astrosat's positional-error analysis.
+
+See [adaptive-discovery.md](adaptive-discovery.md) for contracts, scientific
+assumptions, policies, artifacts and commands. The sections below describe the
+retained sequential workflow used by earlier configurations and AnyJev.
+
 The current implementation follows `overall-design.md`. That design requests a
 multiagent research system for [arXiv:2607.24975v1](https://arxiv.org/abs/2607.24975v1),
-**Strongly-connected percolation on directed lattices**. This differs materially
-from the housing-law challenge in `AGENTS.md` and `hackthon-instruction.pdf`.
-The original files are preserved. This implementation does not claim to complete
-or score a housing-law submission.
+**Strongly-connected percolation on directed lattices**. The corrected
+`hackthon-instruction.pdf` requires Omnigent orchestration for scientific discovery;
+`AGENTS.md` now reflects that brief.
 
 ## Execution contract
 
@@ -13,14 +27,19 @@ The Python supervisor enforces this sequence:
 
 1. Read the supplied seed; extract at most three distinct directions with exact,
    page-local supporting quotations.
-2. Critique every direction exactly once. Rejected directions cannot run.
+2. Critique every direction exactly once and select an accepted direction explicitly.
+   Rejected directions cannot run.
 3. Run and validate the numerical baseline before proceeding.
 4. Review supplied literature, choose the reviewed experiment, run it, replay
    seeds and check invariants, then independently review the measurements.
-5. Evaluate the gate. Repeat with more trials only while additional measurements
-   can resolve the remaining uncertainty and the budgets allow it.
+5. Compare screening and precision tests by expected learning, feasibility and
+   simulation cost. The planner selects the sampling budget before execution.
+6. Interpret the result in a separate next-decision session. Record repeat,
+   literature review or stop and the proposed next experiment. Repeat only while
+   scientific gates and finite budgets permit it. A missing literature review
+   cannot be repaired by more simulations.
 
-The default `anyjev` backend uses local Qwen3 4B logits via MLX. AnyJev scores
+The optional `anyjev` backend uses local Qwen3 4B logits via MLX. AnyJev scores
 closed options across cyclic order rotations, with no generated text or executable
 instructions. Evidence selection, proposal critique, direction ranking, literature
 assessment, execution authorization and validation are model decisions. The
@@ -33,8 +52,8 @@ from every page and the model reviews that bounded subset. Retrieval scope is
 explicit. Original PDF bytes and hashes are saved with the run. Scripted decisions
 exist only as test doubles, with no production CLI or UI entry point.
 
-The `omnigent` backend creates separate reader, critic, literature-reviewer,
-planner, validator and novelty-evaluator sessions through the **Omnigent 0.16.0 Sessions API**.
+The default `omnigent` backend creates separate reader, critic, literature-reviewer,
+planner, validator, novelty-evaluator and next-decision sessions through the **Omnigent 0.16.0 Sessions API**.
 It resolves a registered agent, launches a session runner on the configured online
 host (or binds an existing runner), consumes typed streaming events, interrupts
 incomplete requests and requests cleanup of host-launched runners. Sessions have role/run labels, and IDs and reported token usage are
@@ -107,8 +126,26 @@ Each new output directory contains:
 | `rounds/NN/` | Literature, plan, recipe, trials, reviews, effect intervals and gate |
 | `roles/` | Validated role outputs or optional Omnigent prompts/responses |
 | `decisions/`, `decision-model.json` | Closed questions, model scores, inference usage and pinned weights |
+| `rounds/NN/test_options.json`, `next_decision.json`, `transition.json` | Compared tests, specialist recommendation and enforced supervisor action (v3) |
 | `events.jsonl` | Real stage start, completion, failure and session events |
 | `report.json`, `manifest.json` | Honest acceptance status and artifact checksums |
+| `comparison/simulation.svg`, `comparison/summary.txt`, `comparison/comparison.json` | Required final original/proposed visualization, numerical sentence and provenance |
+| `comparisons/NNN/` | The same comparison outputs for every completed result checkpoint |
+
+Both sequential and adaptive workflows produce these comparison artifacts before
+sealing. They derive numbers from the saved effect measurements and read the actual
+saved experiment recipe, never a newer catalog definition. The accepted branch's
+snapshot is bounded by the finalization decision; late results cannot replace it.
+Intervals, denominators and Astrosat false-alert tradeoffs stay explicit. Failed
+or rejected runs without completed measurements retain an unavailable result,
+without fabricated rates. Older sealed runs expose read-only derived downloads.
+
+The agent trace displays instructions from each archived `roles/*-request.json`,
+not today's prompt catalog. Source IDs and branch/batch assignments distinguish
+sessions sharing a role. Exact prompt downloads include the recorded input data,
+constraints and output schema. Response fields and actual dependency handoffs show
+how the supervisor uses those outputs; failed attempts do not inherit the later
+successful retry's simulation handoff.
 
 Trial seeds derive from scientific parameters and a master seed, independent of
 worker scheduling. Cached jobs are keyed by parameters and the implementation
