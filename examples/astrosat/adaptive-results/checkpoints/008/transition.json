@@ -1,0 +1,29 @@
+{
+  "batch": 3,
+  "branch_id": "b1_1",
+  "checkpoint": 8,
+  "decision": {
+    "action": "finalize",
+    "goal_branch_id": "b1_3",
+    "invest": [],
+    "missing_evidence": [
+      "Completed results from the b1_2 batch still in flight.",
+      "Supervisor-confirmed executable artifact validation; the supplied independent review did not read CSVs, verify hashes or rerun simulations.",
+      "Matched-candidate two- versus three-sigma comparisons with incremental recovery, added false alerts and uncertainty.",
+      "Raw spatial-versus-temporal miss decomposition supporting or contradicting the temporal-limitation hypothesis.",
+      "Empirical calibration of the assumed error distributions and an operational loss criterion for the false-alert tradeoff.",
+      "Literature evidence assessing novelty and external validation assessing real-world generalizability."
+    ],
+    "next_experiment": "Finalize the scoped b1_3 numerical finding through the supervisor's required validation stage, preserving all thresholds and reporting the existing supporting review separately from any executable validation. Incorporate the pending b1_2 batch only after completion. No additional batches are requested for the achieved goal. For a separately authorized follow-up, evaluate two- and three-sigma guards on identical held-out candidates with the same nominal control and +/-5-second temporal window. Prespecify the budget and comparison criteria; record paired incremental recovery, added false alerts, denominators, uncertainty and spatial-versus-temporal miss causes. This would test whether the third sigma adds useful recovery and whether residual misses arise from timing, neither of which the current unequal branch summaries establish.",
+    "rationale": "Finalize b1_3 because it is goal_eligible, has a supplied supporting validation review, and meets the declared numerical goal according to the supervisor. Additional exploratory batches are unnecessary for that goal. The new b1_1 result does not displace it: narrower intervals still do not establish the prescribed minimum effect. Source grounding: seed, page 2, \"The \ufb01eld of view could be expanded by this distance and the results interpreted probabilistically.\" The temporal control is grounded in seed, page 2, \"To mitigate this error we list satellites with an expected intersection at +/- 5 sec- onds of the observation time such that all objects are listed.\" These passages motivate field expansion and the temporal window; they do not establish a three-sigma prescription or the assumed distributions. Evidence remains insufficient for timing-related causation, operational superiority, scientific novelty or universality.",
+    "result_interpretation": "The latest b1_1 batch brings that branch to three batches and 4608 candidates. Its fresh and stale missed-transit differences are -0.10526 and -0.11290, with intervals [-0.17704, -0.02867] and [-0.19384, -0.02670]. Both exclude zero but fail to establish the required reduction of at least 0.05. False-alert rates are approximately 28% in both scenarios. b1_2 remains unresolved on its two completed batches; its in-flight result has not arrived. b1_3 remains eligible: its fresh and stale intervals [-0.20165, -0.09933] and [-0.17367, -0.07260] satisfy the minimum-effect and width criteria across three batches. Its false-alert rates rise to 55.75% and 58.21%. The supplied previous validation supports this scoped numerical result, and the supervisor now reports goal.achieved=true. This updates the earlier decision's statement that validation was outstanding, while retaining the distinction between review of supplied statistics and independently executed artifact or physical-model validation."
+  },
+  "decision_seconds": 19.528,
+  "goal_accepted": false,
+  "input": "checkpoints/008/input.json",
+  "observation_after_stop": true,
+  "pending_branches": [
+    "b1_2"
+  ],
+  "result_to_decision_seconds": 68.58
+}

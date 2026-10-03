@@ -1,7 +1,7 @@
 [project]
 name = "hacknation-databricks"
 version = "0.1.0"
-description = "Bounded model decisions and reproducible research with AnyJev"
+description = "Omnigent scientific discovery with reproducible experiments"
 readme = "README.md"
 requires-python = ">=3.12,<3.13"
 dependencies = [

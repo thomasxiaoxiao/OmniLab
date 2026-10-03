@@ -1,0 +1,30 @@
+{
+  "batch": 2,
+  "branch_id": "b1_3",
+  "checkpoint": 6,
+  "decision": {
+    "action": "finalize",
+    "goal_branch_id": "b1_3",
+    "invest": [],
+    "missing_evidence": [
+      "Independent validation results for b1_3 under the approved unchanged criteria.",
+      "Supervisor verification of fresh controls and independent seeds across screening and validation batches.",
+      "Verification that the b1_3 intervention preserves every original directed edge and implements the approved bidirectional-bond allocation.",
+      "Independent verification of specified-axis strongly connected wrapping measurements.",
+      "Completed results from the existing in-flight b1_1 and b1_2 jobs.",
+      "Evidence separating the observed finite-size response from critical-threshold effects.",
+      "Relevant literature sufficient to assess novelty; scientific novelty remains unverified."
+    ],
+    "next_experiment": "Have the deterministic supervisor independently validate b1_3 using fresh independent seed batches and fresh random-diode controls at p=1, sizes 8 and 16, with the approved 25% bidirectional-bond intervention. Verify that every original directed edge is retained and check the specified-axis wrapping implementation. Preserve the approved validation protocol, simultaneous interval method, effect and width thresholds, and all budgets; retain every validation outcome. Finalization selects the branch for validation and must not itself mark the overall goal achieved. Consolidate existing in-flight b1_1 and b1_2 results when they arrive without duplicating jobs or treating them as completed evidence.",
+    "rationale": "Select b1_3 because its completed measurements satisfy the unchanged numerical selection criteria at both tested sizes. Source seed, page 2 states: \"A somewhat different class of directed lattices, which we do not study here, are ones where some pairs of sites are connected by directed bonds in both directions, equivalent to an undirected bond.\" This grounds the intervention's model class; the 25% intervention and its predicted strict increase are agent-generated. Preserving original directed edges while adding reverse edges provides a monotonicity rationale, but implementation verification remains necessary. The result warrants independent validation rather than additional screening batches. There is insufficient evidence for established scientific novelty, universality, or effects beyond these finite sizes and fixed occupation probability.",
+    "result_interpretation": "The completed second b1_3 batch changes the decision from further screening to selection for independent validation. Both sizes now meet the two-batch minimum, exceed the 0.05 effect criterion, and have simultaneous interval widths below 0.25. At size 8, the wrapping-rate difference is 0.21484375 with interval [0.12709630589649357, 0.291683624567862]. At size 16, it is 0.248046875 with interval [0.15995144805874906, 0.3235490171137342]. The supervisor reports goal_eligible=true. This supports a finite-size wrapping increase under the specified intervention; it does not establish novelty or universality. Available b1_1 results remain unresolved. For b1_2, size 16 meets the effect criterion, while size 8 excludes zero but does not establish a decrease exceeding 0.05. Further b1_1 and b1_2 jobs remain in flight; their results are unavailable. Overall goal achievement remains pending independent validation."
+  },
+  "decision_seconds": 17.427,
+  "goal_accepted": true,
+  "input": "checkpoints/006/input.json",
+  "pending_branches": [
+    "b1_1",
+    "b1_2"
+  ],
+  "result_to_decision_seconds": 41.213
+}

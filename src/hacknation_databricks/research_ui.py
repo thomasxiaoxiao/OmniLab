@@ -20,7 +20,7 @@ from hacknation_databricks.research.workflow import run_research
 load_dotenv(".runtime/research.env")
 st.set_page_config(page_title="Research & Validation Lab", page_icon="🔬", layout="wide")
 st.title("Research & Validation Lab")
-st.caption("Not legal advice.")
+st.caption("Research prototype · scientific conclusions require further validation.")
 st.markdown("Read a paper → critique directions → reproduce a baseline → test an extension")
 st.caption(f"Deployed revision: {os.environ.get('APP_REVISION', 'development')}")
 st.link_button("Read the seed paper · arXiv:2607.24975v1", PAPER_URL)

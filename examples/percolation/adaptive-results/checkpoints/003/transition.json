@@ -1,0 +1,32 @@
+{
+  "batch": 1,
+  "branch_id": "b1_3",
+  "checkpoint": 3,
+  "decision": {
+    "action": "invest",
+    "goal_branch_id": null,
+    "invest": [
+      "b1_3"
+    ],
+    "missing_evidence": [
+      "A second independent b1_3 seed batch with fresh matched controls.",
+      "Supervisor assessment of aggregated intervals, predeclared finite-size criteria and goal eligibility.",
+      "Independent validation of any eligible selected branch.",
+      "Completed results from the in-flight b1_1 and b1_2 work.",
+      "Verification of seed independence, sampling, wrapping implementation and preservation of original directed edges under the b1_3 intervention.",
+      "Additional evidence separating the finite-size response from critical-threshold or universality claims.",
+      "Literature evidence sufficient to assess scientific novelty; novelty remains unverified."
+    ],
+    "next_experiment": "Run a second b1_3 batch with independent seeds and fresh matched random-diode controls at p=1, sizes 8 and 16, and the approved 25% bidirectional treatment. Preserve the approved occupation and conversion sampling, sample allocation, horizontal wrapping definition and simultaneous interval procedure. Have the supervisor verify that treatment preserves every original directed edge and that seed batches are independent. Aggregate the completed batches and assess the unchanged minimum effect 0.05, maximum interval width 0.25, minimum two batches and predeclared finite-size criteria. Continue existing b1_1 and b1_2 work without duplicating pending jobs; consolidate each returned batch before allocating further work. Stay within current budgets and the eight-batch cap. Finalize only if the supervisor reports goal_eligible=true, then submit the selected branch for independent validation.",
+    "rationale": "Prioritize independent repetition of b1_3 because it is the first branch whose completed comparisons satisfy both effect and precision thresholds at both sizes. This shifts the next available allocation from b1_2 while allowing its already-running work to finish. Source seed, page 2 states: \"A somewhat different class of directed lattices, which we do not study here, are ones where some pairs of sites are connected by directed bonds in both directions, equivalent to an undirected bond.\" This supports the model extension, not a novelty claim. If the implementation preserves original directed edges, adding reverse edges cannot destroy existing wrapping; the measurements support a strict increase under the tested conditions. Independent repetition can assess its reproducibility. The comparison at p=1 does not establish matched criticality, threshold behavior or universality. Available budget and the eight-batch cap permit this next test, but no branch can yet be finalized.",
+    "result_interpretation": "The completed b1_3 batch changes the priority: both sizes now show positive effects exceeding 0.05 throughout their supplied simultaneous intervals. At size 8, the difference is 0.2109375 with interval [0.08383528266671092, 0.3171514631696658] and width 0.23331618050295488. At size 16, it is 0.26171875 with interval [0.12548391824843952, 0.3720366738078056] and width 0.24655275555936607. Both widths meet the 0.25 limit, but only one batch is complete and goal_eligible remains false. Treatment wrapping in every observed sample does not establish population probability one. For b1_2, the completed size-16 interval supports a decrease exceeding 0.05; size 8 remains unresolved and both widths exceed 0.25. For b1_1, both completed intervals include zero and exceed 0.25. Pending b1_1 and b1_2 batches provide no additional evidence yet. These are finite-size numerical results; mechanism resolution and scientific novelty remain unverified."
+  },
+  "decision_seconds": 21.448,
+  "goal_accepted": false,
+  "input": "checkpoints/003/input.json",
+  "pending_branches": [
+    "b1_1",
+    "b1_2"
+  ],
+  "result_to_decision_seconds": 60.601
+}

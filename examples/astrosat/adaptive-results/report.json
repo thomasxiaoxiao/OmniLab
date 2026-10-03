@@ -1,0 +1,1364 @@
+{
+  "acceleration": {
+    "baseline_seconds": null,
+    "bottleneck": "Partial simulation result to next investment decision",
+    "multiplier": null,
+    "observed_decision_seconds": [
+      24.617,
+      20.338,
+      22.697,
+      23.094,
+      20.405,
+      20.606,
+      21.453,
+      19.528,
+      19.395
+    ],
+    "observed_result_to_decision_seconds": [
+      24.619,
+      43.646,
+      65.862,
+      49.025,
+      45.639,
+      44.744,
+      46.14,
+      68.58,
+      62.305
+    ],
+    "status": "No comparable manual baseline measured"
+  },
+  "acceptance": {
+    "baseline_simulations": true,
+    "followup_implemented": true,
+    "full_paper_reproduction": false,
+    "live_agents_executed": true
+  },
+  "backend": "omnigent",
+  "baseline": {
+    "checks": [
+      {
+        "measured": 0.25941368464558606,
+        "passed": true,
+        "quantity": "2 km timing error (s)",
+        "reference": 0.27,
+        "tolerance": 0.015
+      },
+      {
+        "measured": 3.2426710580698255,
+        "passed": true,
+        "quantity": "25 km timing error (s)",
+        "reference": 3.26,
+        "tolerance": 0.03
+      },
+      {
+        "measured": 0.08551602532510652,
+        "passed": true,
+        "quantity": "500 m angular error (deg)",
+        "reference": 0.09,
+        "tolerance": 0.01
+      }
+    ],
+    "claim": "Equation-1 geometry consistency check against rounded published examples.",
+    "limitation": "Does not reproduce the paper's historical satellite population or TLEs.",
+    "numerical": {
+      "passed": true,
+      "seed_replays": 0
+    },
+    "passed": true
+  },
+  "branches": {
+    "b1_1": {
+      "batches": 3,
+      "checks": [
+        {
+          "conclusion": "unresolved",
+          "control": 0.12456140350877193,
+          "control_false_alert_rate": 0.16551326412918108,
+          "control_samples": 570,
+          "difference": -0.10526315789473684,
+          "difference_interval": [
+            -0.17704292036468272,
+            -0.02867057109068817
+          ],
+          "false_alert_rate": 0.2808535178777393,
+          "interval_width": 0.14837234927399456,
+          "negative_candidates": 1734,
+          "positive_transits": 570,
+          "resolved": false,
+          "scenario": "fresh",
+          "treatment": 0.01929824561403509,
+          "treatment_samples": 570
+        },
+        {
+          "conclusion": "unresolved",
+          "control": 0.14516129032258066,
+          "control_false_alert_rate": 0.15807560137457044,
+          "control_samples": 558,
+          "difference": -0.11290322580645162,
+          "difference_interval": [
+            -0.1938373124252837,
+            -0.026698574328386113
+          ],
+          "false_alert_rate": 0.2800687285223368,
+          "interval_width": 0.1671387380968976,
+          "negative_candidates": 1746,
+          "positive_transits": 558,
+          "resolved": false,
+          "scenario": "stale",
+          "treatment": 0.03225806451612903,
+          "treatment_samples": 558
+        }
+      ],
+      "goal_eligible": false,
+      "interval_method": "Conservative Wilson endpoint bounds; Bonferroni across 3 branches, all planned batch looks, groups and endpoints. Paired covariance not exploited.",
+      "metric": "missed-transit rate",
+      "proposal": {
+        "evidence": [
+          {
+            "page": 2,
+            "quote": "The \ufb01eld of view could be expanded by this distance and the results interpreted probabilistically.",
+            "source_id": "seed"
+          },
+          {
+            "page": 2,
+            "quote": "The cross-track error is more critical as it determines whether the object will pass through the \ufb01eld or not.",
+            "source_id": "seed"
+          }
+        ],
+        "experiment": "transit_margin_1",
+        "hypothesis": "Under the catalog's Gaussian-error and simplified transit assumptions, expanding the field boundary by one cross-track standard deviation will reduce missed true crossings compared with the nominal field plus the unchanged +/-5-second temporal window, while increasing false-positive alerts. Measure both outcomes separately for fresh and stale scenarios. Field expansion is an explicit paper suggestion; the one-sigma prescription and distributional assumptions are agent-generated.",
+        "id": "b1_1",
+        "origin": "agent_hypothesis",
+        "source_id": "seed",
+        "title": "Test a one-sigma cross-track guard"
+      },
+      "samples": 4608,
+      "scientific_novelty": "unverified",
+      "status": "ready"
+    },
+    "b1_2": {
+      "batches": 3,
+      "checks": [
+        {
+          "conclusion": "difference_detected",
+          "control": 0.11057692307692307,
+          "control_false_alert_rate": 0.14783653846153846,
+          "control_samples": 832,
+          "difference": -0.10817307692307691,
+          "difference_interval": [
+            -0.1563045405303753,
+            -0.05662864608842505
+          ],
+          "false_alert_rate": 0.40865384615384615,
+          "interval_width": 0.09967589444195024,
+          "negative_candidates": 2496,
+          "positive_transits": 832,
+          "resolved": true,
+          "scenario": "fresh",
+          "treatment": 0.002403846153846154,
+          "treatment_samples": 832
+        },
+        {
+          "conclusion": "difference_detected",
+          "control": 0.1350407450523865,
+          "control_false_alert_rate": 0.15309842041312272,
+          "control_samples": 859,
+          "difference": -0.12689173457508732,
+          "difference_interval": [
+            -0.18099523261549919,
+            -0.06890859293443916
+          ],
+          "false_alert_rate": 0.4224382341028757,
+          "interval_width": 0.11208663968106003,
+          "negative_candidates": 2469,
+          "positive_transits": 859,
+          "resolved": true,
+          "scenario": "stale",
+          "treatment": 0.008149010477299184,
+          "treatment_samples": 859
+        }
+      ],
+      "goal_eligible": true,
+      "interval_method": "Conservative Wilson endpoint bounds; Bonferroni across 3 branches, all planned batch looks, groups and endpoints. Paired covariance not exploited.",
+      "metric": "missed-transit rate",
+      "proposal": {
+        "evidence": [
+          {
+            "page": 2,
+            "quote": "If we assume a cross-track error of 500 m then the expected angular error for a low altitude object (335 km) at zenith (worst case) is 0.09 degree (5.2 arcminutes).",
+            "source_id": "seed"
+          },
+          {
+            "page": 2,
+            "quote": "This is di\ufb03cult to mitigate and will have a larger real e\ufb00ect on smaller \ufb01elds.",
+            "source_id": "seed"
+          }
+        ],
+        "experiment": "transit_margin_2",
+        "hypothesis": "Under the fixed catalog assumptions, a two-sigma cross-track guard will reduce missed true crossings further than the one-sigma guard but increase false-positive alerts. Compare both guards with the common nominal-field control using matched simulated candidates, reporting missed-crossing fractions, false-positive counts and uncertainty separately for fresh and stale scenarios. Neither the two-sigma choice nor its operational desirability is established by the paper.",
+        "id": "b1_2",
+        "origin": "agent_hypothesis",
+        "source_id": "seed",
+        "title": "Measure the tradeoff from a two-sigma guard"
+      },
+      "samples": 6656,
+      "scientific_novelty": "unverified",
+      "status": "ready"
+    },
+    "b1_3": {
+      "batches": 3,
+      "checks": [
+        {
+          "conclusion": "difference_detected",
+          "control": 0.1527313266443701,
+          "control_false_alert_rate": 0.15109787867510235,
+          "control_samples": 897,
+          "difference": -0.1527313266443701,
+          "difference_interval": [
+            -0.2016538315767649,
+            -0.09933407259834343
+          ],
+          "false_alert_rate": 0.5574990695943431,
+          "interval_width": 0.10231975897842147,
+          "negative_candidates": 2687,
+          "positive_transits": 897,
+          "resolved": true,
+          "scenario": "fresh",
+          "treatment": 0.0,
+          "treatment_samples": 897
+        },
+        {
+          "conclusion": "difference_detected",
+          "control": 0.12727272727272726,
+          "control_false_alert_rate": 0.14718934911242604,
+          "control_samples": 880,
+          "difference": -0.12499999999999999,
+          "difference_interval": [
+            -0.1736690850424005,
+            -0.07259895078979484
+          ],
+          "false_alert_rate": 0.5821005917159763,
+          "interval_width": 0.10107013425260566,
+          "negative_candidates": 2704,
+          "positive_transits": 880,
+          "resolved": true,
+          "scenario": "stale",
+          "treatment": 0.0022727272727272726,
+          "treatment_samples": 880
+        }
+      ],
+      "goal_eligible": true,
+      "interval_method": "Conservative Wilson endpoint bounds; Bonferroni across 3 branches, all planned batch looks, groups and endpoints. Paired covariance not exploited.",
+      "metric": "missed-transit rate",
+      "proposal": {
+        "evidence": [
+          {
+            "page": 2,
+            "quote": "For example an in-track error of 25 km (Vallado & Cefola 2012) will lead to an angular o\ufb00set of 4.3 degrees or 3.26 seconds.",
+            "source_id": "seed"
+          },
+          {
+            "page": 2,
+            "quote": "To mitigate this error we list satellites with an expected intersection at +/- 5 sec- onds of the observation time such that all objects are listed.",
+            "source_id": "seed"
+          }
+        ],
+        "experiment": "transit_margin_3",
+        "hypothesis": "With the temporal window fixed at +/-5 seconds, a three-sigma cross-track guard will reduce spatial misses relative to the nominal control but leave more residual timing-related misses in the stale scenario than in the fresh scenario. Compare against the two-sigma guard to measure incremental recovery and added false positives; distinguish spatial and temporal causes where raw outputs permit. This is an agent hypothesis about the prescribed simulation, not evidence of real-world coverage or novelty.",
+        "id": "b1_3",
+        "origin": "agent_hypothesis",
+        "source_id": "seed",
+        "title": "Test whether temporal uncertainty limits a three-sigma guard"
+      },
+      "samples": 7168,
+      "scientific_novelty": "unverified",
+      "status": "ready"
+    }
+  },
+  "checkpoints": [
+    {
+      "batch": 1,
+      "branch_id": "b1_3",
+      "checkpoint": 1,
+      "decision": {
+        "action": "invest",
+        "goal_branch_id": null,
+        "invest": [
+          "b1_3",
+          "b1_2",
+          "b1_1"
+        ],
+        "missing_evidence": [
+          "Completed b1_1 and b1_2 results; both are still in flight.",
+          "At least a second independent seed batch for b1_3 and sufficient simultaneous precision to decide against the unchanged effect threshold.",
+          "Matched-candidate guard-width comparisons with incremental recovery, false-alert counts and uncertainty.",
+          "Raw miss-cause information sufficient to distinguish spatial and temporal failures.",
+          "Recorded seeds, sampling bounds and control provenance supporting reproducibility and batch independence.",
+          "Independent validation of any branch that becomes goal_eligible.",
+          "Empirical justification for the simulation's error distributions and operational alert-cost criteria.",
+          "Literature evidence sufficient to assess scientific novelty; novelty and real-world generalizability remain unverified."
+        ],
+        "next_experiment": "Run the next independent seed batch for b1_3 with the existing nominal control, fixed +/-5-second temporal window, unchanged sampling assumptions and separate fresh/stale reporting. Consolidate it with the first batch using the prescribed simultaneous interval method and unchanged 0.05 minimum effect, 0.25 maximum interval width and minimum two-batch requirement. As existing b1_2 and b1_1 batches finish, compare guard widths using matched candidates and controls within each seed batch; prioritize subsequent b1_2 then b1_1 batches. Report incremental recovered crossings and added false alerts with denominators and available uncertainty. Inspect spatial versus temporal miss causes only where raw outputs support attribution. Preserve all outcomes, enforce the eight-batch-per-branch cap and remaining budgets, and reserve resources for independent validation after eligibility.",
+        "rationale": "Prioritize a second independent b1_3 batch to assess whether its apparent recovery survives additional sampling and yields sufficiently narrow simultaneous intervals. Then prioritize b1_2 for the incremental two-versus-three-sigma comparison and b1_1 for the narrower-guard tradeoff, retaining their existing in-flight work. The result shifts emphasis from presumed timing limitations toward quantifying whether the third sigma offers recovery worth its additional false alerts. The source motivates testing field expansion: seed, page 2, \"The \ufb01eld of view could be expanded by this distance and the results interpreted probabilistically.\" It also states: seed, page 2, \"The cross-track error is more critical as it determines whether the object will pass through the \ufb01eld or not.\" Neither passage establishes a Gaussian error law or a preferred guard width. No branch is goal_eligible; further bounded tests can help, so neither finalization nor stopping is justified.",
+        "result_interpretation": "Only b1_3 has completed a batch. Its simulated missed-transit rate was 0/132 for fresh and 0/136 for stale candidates, versus control rates of 11.36% and 14.71%. Treatment-minus-control simultaneous intervals were [-0.2516, 0.0451] and [-0.2890, 0.0212]; both include zero and have widths exceeding 0.25. False-alert rates increased from 14.21% to 51.58% in fresh and from 14.63% to 56.91% in stale scenarios. These measurements suggest spatial recovery with a substantial alert burden, but establish neither the required effect nor operational utility. Zero observed treatment misses in both scenarios provides no observed support for the predicted excess residual timing misses in stale conditions; it does not establish their absence. b1_1 and b1_2 remain in flight, so guard-width comparisons are unavailable."
+      },
+      "decision_seconds": 24.617,
+      "goal_accepted": false,
+      "input": "checkpoints/001/input.json",
+      "pending_branches": [
+        "b1_1",
+        "b1_2"
+      ],
+      "result_to_decision_seconds": 24.619
+    },
+    {
+      "batch": 1,
+      "branch_id": "b1_1",
+      "checkpoint": 2,
+      "decision": {
+        "action": "invest",
+        "goal_branch_id": null,
+        "invest": [
+          "b1_3",
+          "b1_2",
+          "b1_1"
+        ],
+        "missing_evidence": [
+          "Completed b1_2 results and the pending b1_3 result.",
+          "At least two independent seed batches and simultaneous intervals meeting the unchanged decision criteria for a candidate branch.",
+          "Matched-candidate guard comparisons with incremental recovery, false-alert counts, denominators and uncertainty.",
+          "Raw miss-cause records supporting spatial versus temporal attribution.",
+          "Recorded seeds, sampling bounds and control provenance demonstrating reproducibility and batch independence.",
+          "Independent validation after a branch becomes goal_eligible.",
+          "Empirical support for the simulated error distributions and operational alert-cost criteria.",
+          "Literature evidence sufficient to assess novelty; real-world generalizability also remains unverified."
+        ],
+        "next_experiment": "Retain the in-flight b1_3 and b1_2 work and consolidate each result when it completes. Allocate subsequent independent seed batches in priority order b1_3, b1_2, b1_1, reassessing after each completion. Preserve nominal controls, the fixed +/-5-second temporal window, sampling assumptions and separate fresh/stale reporting. Apply the prescribed simultaneous interval method with unchanged minimum effect 0.05, maximum width 0.25 and minimum two independent batches. Compare guard widths only where matched candidates and controls are available; report incremental recovery and added false alerts with denominators and uncertainty. Attribute misses to timing or spatial error only if raw outputs support it. Enforce the eight-batch cap per branch and remaining budgets, preserve unfavorable outcomes, and reserve resources for independent validation once a branch becomes goal_eligible.",
+        "rationale": "Keep b1_3 first because its available intervals are closest to the required precision and another independent batch is already in flight. Keep b1_2 second to assess whether the third sigma provides incremental recovery, then extend b1_1 to determine whether its apparent recovery persists with fewer false alerts. The new b1_1 measurements strengthen the reason to compare narrower guards rather than select the largest guard solely for zero observed misses. The source motivates spatial expansion: seed, page 2, \"The \ufb01eld of view could be expanded by this distance and the results interpreted probabilistically.\" It also states: seed, page 2, \"The cross-track error is more critical as it determines whether the object will pass through the \ufb01eld or not.\" These passages do not establish Gaussian errors or an optimal guard. All completed evidence remains insufficient for the declared goal; available bounded tests can still improve precision. Scientific novelty and operational usefulness remain unverified.",
+        "result_interpretation": "b1_1 now has one completed batch: missed-transit rates fell from 14.06% to 1.56% in fresh scenarios and from 7.69% to 0% in stale scenarios. Treatment-minus-control intervals remain unresolved: [-0.3587, 0.1518] and [-0.2804, 0.1527], with widths 0.5104 and 0.4331. False-alert rates increased from 15.10% to 23.96% and from 20.94% to 34.03%, respectively. Previously available b1_3 results show zero treatment misses in both scenarios, but intervals also include zero and exceed the 0.25 width limit; false-alert rates reach 51.58% and 56.91%. These partial results make the narrower guard's recovery-versus-alert tradeoff worth retaining. Different samples and controls prevent attributing between-branch differences to guard width. b1_2 has no completed results; b1_2 and b1_3 remain in flight. No branch meets eligibility, and the predicted excess stale timing misses remains unsupported by observed treatment misses."
+      },
+      "decision_seconds": 20.338,
+      "goal_accepted": false,
+      "input": "checkpoints/002/input.json",
+      "pending_branches": [
+        "b1_2",
+        "b1_3"
+      ],
+      "result_to_decision_seconds": 43.646
+    },
+    {
+      "batch": 1,
+      "branch_id": "b1_2",
+      "checkpoint": 3,
+      "decision": {
+        "action": "invest",
+        "goal_branch_id": null,
+        "invest": [
+          "b1_3",
+          "b1_2",
+          "b1_1"
+        ],
+        "missing_evidence": [
+          "Completed results from the additional b1_3 and b1_1 batches currently in flight.",
+          "At least two independent seed batches and simultaneous intervals satisfying the unchanged effect and precision criteria for a candidate branch.",
+          "Matched-candidate comparisons between guard widths, including incremental recovery, added false alerts, denominators and uncertainty.",
+          "Raw miss-cause records supporting spatial versus temporal attribution.",
+          "Recorded seeds, sampling bounds and control provenance establishing reproducibility and batch independence.",
+          "Independent validation after a branch becomes goal_eligible.",
+          "Empirical support for simulated error distributions and operational alert-cost criteria.",
+          "Literature evidence sufficient to assess novelty; real-world generalizability also remains unverified."
+        ],
+        "next_experiment": "Retain the in-flight b1_3 and b1_1 batches and consolidate each only when completed. Allocate subsequent independent seed batches in priority order b1_3, b1_2, b1_1, reassessing after every completion. Preserve nominal controls, the fixed +/-5-second temporal window, sampling assumptions and separate fresh/stale reporting. Keep the prescribed simultaneous interval method, minimum effect 0.05, maximum interval width 0.25 and minimum two independent batches unchanged. Where matched candidate records are available, compare one-, two- and three-sigma guards for incremental recovery and additional false alerts, reporting counts, denominators and uncertainty. Use raw miss-cause records to assess whether b1_2 stale misses reflect temporal or spatial errors; otherwise leave attribution unresolved. Enforce the eight-batch cap per branch and remaining budgets, preserve unfavorable results, and reserve resources for independent validation after a branch becomes goal_eligible.",
+        "rationale": "Keep b1_3 first because its completed intervals are closest to the required precision and another batch is in flight. Keep b1_2 second to clarify its stale residual misses and assess the incremental value of the third sigma on matched candidates. Retain b1_1 because its lower observed false-alert rates warrant testing whether a narrower guard provides sufficient recovery. The new b1_2 measurements strengthen the need for direct guard comparisons rather than selecting on zero observed misses. Spatial expansion is source-grounded: seed, page 2, \"The \ufb01eld of view could be expanded by this distance and the results interpreted probabilistically.\" The source also states, seed, page 2, \"The cross-track error is more critical as it determines whether the object will pass through the \ufb01eld or not.\" These passages do not establish Gaussian errors, optimal guard width or operational benefit. Evidence is insufficient for the declared goal, but further independent batches within the unchanged limits can improve precision. Scientific novelty remains unverified.",
+        "result_interpretation": "The newly completed b1_2 batch shows missed-transit rates falling from 10.94% to 0% for fresh candidates and from 14.49% to 4.35% for stale candidates. Its treatment-minus-control intervals are [-0.3228, 0.1418] and [-0.3484, 0.1784], with widths 0.4646 and 0.5267; neither resolves the effect. False-alert rates rise from 15.10% to 41.15% and from 14.44% to 45.99%. Previously completed b1_1 results show reductions of 12.50 and 7.69 percentage points, with treatment false-alert rates of 23.96% and 34.03%. Previously completed b1_3 results show zero treatment misses and false-alert rates of 51.58% and 56.91%; its interval widths remain 0.2967 and 0.3102. Every branch has only one completed batch, all effect intervals include zero, and none is goal_eligible. The new result adds evidence of a recovery-versus-alert tradeoff but does not establish incremental benefit from wider guards: branch samples and controls differ. The stale misses in b1_2 cannot be attributed to timing from these aggregates. Additional b1_3 and b1_1 batches remain in flight; their outcomes are unavailable."
+      },
+      "decision_seconds": 22.697,
+      "goal_accepted": false,
+      "input": "checkpoints/003/input.json",
+      "pending_branches": [
+        "b1_3",
+        "b1_1"
+      ],
+      "result_to_decision_seconds": 65.862
+    },
+    {
+      "batch": 2,
+      "branch_id": "b1_3",
+      "checkpoint": 4,
+      "decision": {
+        "action": "invest",
+        "goal_branch_id": null,
+        "invest": [
+          "b1_3",
+          "b1_2",
+          "b1_1"
+        ],
+        "missing_evidence": [
+          "Completed outcomes for the b1_1 and b1_2 batches currently in flight.",
+          "Simultaneous intervals resolving the unchanged minimum-effect criterion in both b1_3 scenarios.",
+          "Matched-candidate guard-width comparisons with incremental recovery, additional false alerts, denominators and uncertainty.",
+          "Raw miss-cause records distinguishing spatial and temporal errors.",
+          "Recorded seeds, sampling bounds and control provenance verifying batch independence and reproducibility.",
+          "Independent validation after a branch becomes goal_eligible.",
+          "Empirical support for error distributions and operational criteria for the false-alert tradeoff.",
+          "Literature evidence assessing novelty and external evidence assessing real-world generalizability."
+        ],
+        "next_experiment": "Allocate the next independent seed batch to b1_3, while retaining the b1_1 and b1_2 batches already in flight. Consolidate completed results and reassess after each completion; use priority b1_3, b1_2, b1_1 for subsequent allocations. Preserve nominal controls, sampling assumptions, the +/-5-second temporal window, separate fresh/stale reporting and the prescribed simultaneous interval method. Keep minimum effect 0.05, maximum interval width 0.25, minimum two independent batches and the eight-batch cap unchanged. Test whether b1_3's upper interval endpoints reach -0.05 in both scenarios. Where authorized matched candidate records exist, compare guard widths for incremental recovery and added false alerts, including denominators and uncertainty. Inspect raw miss causes before attributing stale residuals to timing; otherwise retain that uncertainty. Preserve unfavorable results, enforce remaining budgets and reserve resources for independent validation after a branch becomes goal_eligible.",
+        "rationale": "Prioritize b1_3 because it now meets precision and batch-count criteria and narrowly misses the minimum-effect criterion in both scenarios. Further independent batches can help determine whether the simultaneous bounds support the required reduction, although success is not guaranteed. Retain b1_2 next for the incremental value of the third sigma, and b1_1 for its lower observed false-alert burden. Source grounding is limited but explicit: seed, page 2, \"The \ufb01eld of view could be expanded by this distance and the results interpreted probabilistically.\" Also, seed, page 2, \"The cross-track error is more critical as it determines whether the object will pass through the \ufb01eld or not.\" These passages support investigating spatial margins, but do not establish Gaussian error distributions, the chosen sigma prescriptions, timing attribution or operational benefit. Evidence is insufficient to finalize any branch. Missing novelty literature does not prevent this scoped numerical investigation; scientific novelty and real-world generalizability remain unverified.",
+        "result_interpretation": "The second completed b1_3 batch changes the evidence: both simultaneous treatment-minus-control intervals now exclude zero and satisfy the maximum width of 0.25. Fresh missed-transit rates fall from 13.07% to 0%, with interval [-0.20448, -0.04835] and width 0.15613; stale rates fall from 13.70% to 0.27%, with interval [-0.21541, -0.04362] and width 0.17179. However, neither upper endpoint reaches -0.05, so a reduction of at least five percentage points remains unresolved under the unchanged criterion. Two batches meet the batch-count requirement, but goal_eligible remains false. False-alert rates rise from 14.59% to 53.60% fresh and from 14.26% to 58.07% stale. The b1_1 and b1_2 completed results remain limited to one batch each, with intervals including zero and exceeding the width limit; their additional in-flight outcomes are unavailable. Differing branch controls prevent a matched comparison of guard widths. The small stale residual in b1_3 does not establish a temporal mechanism."
+      },
+      "decision_seconds": 23.094,
+      "goal_accepted": false,
+      "input": "checkpoints/004/input.json",
+      "pending_branches": [
+        "b1_1",
+        "b1_2"
+      ],
+      "result_to_decision_seconds": 49.025
+    },
+    {
+      "batch": 2,
+      "branch_id": "b1_1",
+      "checkpoint": 5,
+      "decision": {
+        "action": "invest",
+        "goal_branch_id": null,
+        "invest": [
+          "b1_3",
+          "b1_2",
+          "b1_1"
+        ],
+        "missing_evidence": [
+          "Completed outcomes for the b1_2 and b1_3 batches currently in flight.",
+          "Simultaneous intervals resolving the unchanged minimum-effect criterion in both scenarios for an eligible branch.",
+          "Matched-candidate guard comparisons with incremental recovery, additional false alerts, denominators and uncertainty.",
+          "Raw miss-cause records distinguishing spatial and temporal errors.",
+          "Recorded seeds, sampling bounds and control provenance verifying batch independence and reproducibility.",
+          "Independent validation after a branch becomes goal_eligible.",
+          "Empirical support for the assumed error distributions and operational criteria for the false-alert tradeoff.",
+          "Literature evidence assessing novelty and external evidence assessing real-world generalizability."
+        ],
+        "next_experiment": "Retain the b1_2 and b1_3 batches already in flight and incorporate each only when completed. Allocate subsequent independent seed batches in priority order b1_3, b1_2, b1_1, accounting for pending work and reassessing after each completion. Test whether b1_3's simultaneous upper difference bounds reach -0.05 in both fresh and stale scenarios; apply the same criterion to other branches. Preserve nominal controls, sampling assumptions, the +/-5-second window, separate scenario reporting, the prescribed simultaneous interval method, minimum effect 0.05, maximum width 0.25, minimum two independent batches and eight-batch cap. Use available authorized matched records to quantify incremental recovery and added false alerts between guards, with denominators and uncertainty. Inspect raw miss causes before attributing residuals to timing. Preserve all outcomes and reserve resources for independent validation after a branch becomes goal_eligible.",
+        "rationale": "Retain b1_3 as first priority because its available simultaneous bounds are closest to resolving the prescribed minimum effect in both scenarios. Keep b1_2 second to investigate the intermediate guard and b1_1 third because its lower observed false-alert burden remains relevant, although cross-branch comparisons are descriptive without matched records. The new b1_1 result removes insufficient width and batch count as immediate obstacles, but leaves minimum-effect uncertainty. Source grounding: seed, page 2, \"The \ufb01eld of view could be expanded by this distance and the results interpreted probabilistically.\" Also, seed, page 2, \"The cross-track error is more critical as it determines whether the object will pass through the \ufb01eld or not.\" These passages support testing spatial margins; they do not establish the sigma choices, Gaussian assumptions or operational benefit. Additional allowed batches can still help within the supplied budget and eight-batch cap. Evidence is insufficient to finalize any branch, attribute residual misses to timing, or establish scientific novelty or real-world generalizability.",
+        "result_interpretation": "The newly completed second b1_1 batch brings both interval widths below 0.25 and meets the two-batch count requirement. Fresh missed-transit rates are 12.93% control versus 1.89% treatment, with treatment-minus-control interval [-0.20859, -0.00332]; stale rates are 13.68% versus 3.58%, with interval [-0.21106, 0.01752]. Neither interval establishes the required reduction of at least 0.05. False-alert rates increase from 16.41% to 27.73% fresh and from 15.72% to 27.44% stale. Thus precision improved, but the decision remains unresolved. The available b1_3 results still come from two completed batches: upper interval endpoints -0.04835 fresh and -0.04362 stale narrowly miss -0.05, despite meeting the width requirement. Its false-alert rates are 53.60% and 58.07%. b1_2 still has only one completed batch and intervals exceeding 0.25. Additional b1_2 and b1_3 batches remain in flight; their outcomes are unavailable. All branches remain goal-ineligible, and no independent validation is supplied."
+      },
+      "decision_seconds": 20.405,
+      "goal_accepted": false,
+      "input": "checkpoints/005/input.json",
+      "pending_branches": [
+        "b1_2",
+        "b1_3"
+      ],
+      "result_to_decision_seconds": 45.639
+    },
+    {
+      "batch": 2,
+      "branch_id": "b1_2",
+      "checkpoint": 6,
+      "decision": {
+        "action": "invest",
+        "goal_branch_id": null,
+        "invest": [
+          "b1_3",
+          "b1_2",
+          "b1_1"
+        ],
+        "missing_evidence": [
+          "Completed outcomes for the b1_3 and b1_1 batches currently in flight.",
+          "Simultaneous intervals resolving the unchanged minimum-effect criterion in both scenarios for an eligible branch.",
+          "Matched-candidate guard comparisons, including incremental recovery, added false alerts, denominators and uncertainty.",
+          "Raw miss-cause records distinguishing spatial and temporal errors.",
+          "Recorded seeds, sampling bounds and control provenance verifying batch independence and reproducibility.",
+          "Independent validation after a branch becomes goal_eligible.",
+          "Empirical support for the assumed error distributions and operational criteria for the false-alert tradeoff.",
+          "Literature evidence assessing novelty and external evidence assessing real-world generalizability."
+        ],
+        "next_experiment": "Incorporate the already-running b1_3 and b1_1 batches only when completed. Allocate subsequent independent seed batches in priority order b1_3, b1_2, b1_1, accounting for pending allocations and reassessing after every completion. Test whether simultaneous treatment-minus-control upper bounds reach -0.05 in both fresh and stale scenarios. Preserve nominal controls, sampling assumptions, the +/-5-second window, separate scenario reporting, the prescribed simultaneous interval method, minimum effect 0.05, maximum interval width 0.25, minimum two independent batches and eight-batch cap. Use authorized matched records, if available, to measure incremental recovery and additional false alerts between guards with denominators and uncertainty; inspect raw miss causes before attributing residuals to timing. Preserve unfavorable outcomes and reserve budget for independent validation once a branch becomes goal_eligible. Do not finalize from proximity to a threshold.",
+        "rationale": "Retain b1_3 first because its completed results are closest to resolving the unchanged minimum-effect criterion in both scenarios. Retain b1_2 second because its new batch removes insufficient precision as an immediate obstacle and supports a reduction relative to its control, although the required magnitude remains uncertain. Keep b1_1 third because its lower observed false-alert burden warrants continued investigation. Source grounding: seed, page 2, \"The \ufb01eld of view could be expanded by this distance and the results interpreted probabilistically.\" Also, seed, page 2, \"The cross-track error is more critical as it determines whether the object will pass through the \ufb01eld or not.\" These passages support spatial-margin tests but do not establish the sigma prescriptions, Gaussian assumptions or operational desirability. Additional independent batches can still help within the eight-batch cap and remaining budget. Evidence is insufficient for finalization, timing-cause attribution, scientific novelty or real-world generalizability.",
+        "result_interpretation": "The completed second b1_2 batch now satisfies the batch-count and interval-width requirements in both scenarios, superseding the previous one-batch assessment. Fresh missed-transit rates are 11.84% control versus 0% treatment, with difference interval [-0.19989, -0.02742]; stale rates are 13.75% versus 1.56%, with interval [-0.21887, -0.01513]. Both intervals support a reduction but do not establish the required reduction of at least 0.05. False-alert rates rise from 15.64% to 41.81% fresh and from 16.04% to 45.21% stale. The available two-batch b1_3 results remain closest to the minimum-effect criterion: upper endpoints are -0.04835 fresh and -0.04362 stale, with false-alert rates of 53.60% and 58.07%. Available b1_1 results also meet batch-count and width requirements but leave the minimum effect unresolved; its stale interval includes zero. Cross-branch comparisons are descriptive because matched records are absent. Pending b1_3 and b1_1 outcomes have not arrived. All branches remain goal-ineligible."
+      },
+      "decision_seconds": 20.606,
+      "goal_accepted": false,
+      "input": "checkpoints/006/input.json",
+      "pending_branches": [
+        "b1_3",
+        "b1_1"
+      ],
+      "result_to_decision_seconds": 44.744
+    },
+    {
+      "batch": 3,
+      "branch_id": "b1_3",
+      "checkpoint": 7,
+      "decision": {
+        "action": "finalize",
+        "goal_branch_id": "b1_3",
+        "invest": [],
+        "missing_evidence": [
+          "Independent validation results for b1_3 under the unchanged acceptance criteria.",
+          "Recorded seeds, sampling bounds and control provenance verifying independence and reproducibility.",
+          "Completed results from the b1_1 and b1_2 batches currently in flight.",
+          "Matched-candidate two- versus three-sigma comparisons with incremental recovery, added false alerts, denominators and uncertainty.",
+          "Raw miss-cause records supporting or contradicting the proposed temporal limitation.",
+          "Empirical support for simulation error distributions and an operational criterion for acceptable false-alert burden.",
+          "Literature evidence assessing novelty and external validation assessing real-world generalizability."
+        ],
+        "next_experiment": "Run the supervisor's independent validation of b1_3 using held-out independent seeds and fresh nominal-field controls. Preserve the three-sigma guard, +/-5-second temporal window, catalog assumptions, scenario separation, prescribed simultaneous interval method, minimum effect 0.05, maximum interval width 0.25, minimum two independent batches and applicable eight-batch cap. Record seeds, control provenance, raw outcomes and all failures. Report missed-transit differences and false-alert rates with denominators and uncertainty. Apply the unchanged validation criteria before declaring the goal achieved; revise the decision if validation fails. Preserve and incorporate b1_1 and b1_2 pending outcomes only when they actually complete. Where authorized raw records permit, examine spatial versus temporal miss causes and matched two- versus three-sigma outcomes without treating unmatched branch summaries as a causal comparison.",
+        "rationale": "Finalize b1_3 as the eligible candidate for the required independent validation, not as a declaration of validated success. Its simultaneous intervals now establish the prescribed minimum reduction in both scenarios within the reported simulation, superseding the previous near-threshold assessment. Source grounding: seed, page 2, \"The \ufb01eld of view could be expanded by this distance and the results interpreted probabilistically.\" The fixed temporal mitigation is grounded in seed, page 2, \"To mitigate this error we list satellites with an expected intersection at +/- 5 sec- onds of the observation time such that all objects are listed.\" These passages motivate the investigation but do not establish a three-sigma prescription, the assumed error distributions, or operational desirability. Further exploratory sampling of b1_3 is unnecessary before validation. Evidence remains insufficient for the proposed temporal mechanism, real-world coverage, scientific novelty or universality.",
+        "result_interpretation": "The third completed b1_3 batch changes the decision from further sampling to independent validation. Across three batches and 7168 simulated candidates, fresh missed-transit rates are 15.27% control versus 0% treatment, with treatment-minus-control interval [-0.20165, -0.09933]. Stale rates are 12.73% versus 0.23%, with interval [-0.17367, -0.07260]. Both upper bounds are below -0.05 and both widths are below 0.25; the supervisor marks b1_3 goal_eligible. False-alert rates increase from 15.11% to 55.75% fresh and from 14.72% to 58.21% stale. Thus the numerical reduction carries a substantial alert burden. The available two-batch b1_1 and b1_2 results remain unresolved against the minimum-effect criterion; their pending batches have not arrived. Independent validation remains outstanding, so the overall goal is not yet achieved. Aggregate results cannot establish timing-related causation or incremental benefit over the two-sigma guard."
+      },
+      "decision_seconds": 21.453,
+      "goal_accepted": true,
+      "input": "checkpoints/007/input.json",
+      "pending_branches": [
+        "b1_1",
+        "b1_2"
+      ],
+      "result_to_decision_seconds": 46.14
+    },
+    {
+      "batch": 3,
+      "branch_id": "b1_1",
+      "checkpoint": 8,
+      "decision": {
+        "action": "finalize",
+        "goal_branch_id": "b1_3",
+        "invest": [],
+        "missing_evidence": [
+          "Completed results from the b1_2 batch still in flight.",
+          "Supervisor-confirmed executable artifact validation; the supplied independent review did not read CSVs, verify hashes or rerun simulations.",
+          "Matched-candidate two- versus three-sigma comparisons with incremental recovery, added false alerts and uncertainty.",
+          "Raw spatial-versus-temporal miss decomposition supporting or contradicting the temporal-limitation hypothesis.",
+          "Empirical calibration of the assumed error distributions and an operational loss criterion for the false-alert tradeoff.",
+          "Literature evidence assessing novelty and external validation assessing real-world generalizability."
+        ],
+        "next_experiment": "Finalize the scoped b1_3 numerical finding through the supervisor's required validation stage, preserving all thresholds and reporting the existing supporting review separately from any executable validation. Incorporate the pending b1_2 batch only after completion. No additional batches are requested for the achieved goal. For a separately authorized follow-up, evaluate two- and three-sigma guards on identical held-out candidates with the same nominal control and +/-5-second temporal window. Prespecify the budget and comparison criteria; record paired incremental recovery, added false alerts, denominators, uncertainty and spatial-versus-temporal miss causes. This would test whether the third sigma adds useful recovery and whether residual misses arise from timing, neither of which the current unequal branch summaries establish.",
+        "rationale": "Finalize b1_3 because it is goal_eligible, has a supplied supporting validation review, and meets the declared numerical goal according to the supervisor. Additional exploratory batches are unnecessary for that goal. The new b1_1 result does not displace it: narrower intervals still do not establish the prescribed minimum effect. Source grounding: seed, page 2, \"The \ufb01eld of view could be expanded by this distance and the results interpreted probabilistically.\" The temporal control is grounded in seed, page 2, \"To mitigate this error we list satellites with an expected intersection at +/- 5 sec- onds of the observation time such that all objects are listed.\" These passages motivate field expansion and the temporal window; they do not establish a three-sigma prescription or the assumed distributions. Evidence remains insufficient for timing-related causation, operational superiority, scientific novelty or universality.",
+        "result_interpretation": "The latest b1_1 batch brings that branch to three batches and 4608 candidates. Its fresh and stale missed-transit differences are -0.10526 and -0.11290, with intervals [-0.17704, -0.02867] and [-0.19384, -0.02670]. Both exclude zero but fail to establish the required reduction of at least 0.05. False-alert rates are approximately 28% in both scenarios. b1_2 remains unresolved on its two completed batches; its in-flight result has not arrived. b1_3 remains eligible: its fresh and stale intervals [-0.20165, -0.09933] and [-0.17367, -0.07260] satisfy the minimum-effect and width criteria across three batches. Its false-alert rates rise to 55.75% and 58.21%. The supplied previous validation supports this scoped numerical result, and the supervisor now reports goal.achieved=true. This updates the earlier decision's statement that validation was outstanding, while retaining the distinction between review of supplied statistics and independently executed artifact or physical-model validation."
+      },
+      "decision_seconds": 19.528,
+      "goal_accepted": false,
+      "input": "checkpoints/008/input.json",
+      "observation_after_stop": true,
+      "pending_branches": [
+        "b1_2"
+      ],
+      "result_to_decision_seconds": 68.58
+    },
+    {
+      "batch": 3,
+      "branch_id": "b1_2",
+      "checkpoint": 9,
+      "decision": {
+        "action": "finalize",
+        "goal_branch_id": "b1_3",
+        "invest": [],
+        "missing_evidence": [
+          "Supervisor-confirmed executable artifact validation; the supplied independent review did not read CSVs, verify hashes or rerun simulations.",
+          "Matched-candidate two- versus three-sigma comparisons with uncertainty for incremental recovery and added false alerts.",
+          "Spatial-versus-temporal miss decomposition to assess the temporal-limitation hypothesis.",
+          "Empirical calibration of simulation error distributions and geometry against observational data.",
+          "An operational loss criterion for evaluating the missed-transit versus false-alert tradeoff.",
+          "Literature evidence assessing novelty and external validation assessing real-world generalizability."
+        ],
+        "next_experiment": "Finalize the scoped b1_3 finding through the supervisor's required validation stage and incorporate the completed b1_2 result into the consolidated record. Request no additional batches for the achieved goal. A separately authorized follow-up should compare two- and three-sigma guards on identical held-out candidates with a common nominal control and unchanged +/-5-second window. Prespecify its budget and comparison criteria, retain existing thresholds, and report paired incremental recovery, added false alerts, denominators, uncertainty and spatial-versus-temporal miss causes. This tests whether the third sigma adds useful recovery and whether residual misses reflect timing; current branch summaries establish neither.",
+        "rationale": "Retain b1_3 for finalization because it is goal_eligible, meets the unchanged numerical thresholds, and has the supplied supporting independent review. The supervisor reports goal.achieved=true; additional batches are unnecessary for this scoped goal. Source grounding: seed, page 2, \"The \ufb01eld of view could be expanded by this distance and the results interpreted probabilistically.\" The temporal control is grounded in seed, page 2, \"To mitigate this error we list satellites with an expected intersection at +/- 5 sec- onds of the observation time such that all objects are listed.\" These passages motivate expansion and the temporal window, not the sigma prescriptions or assumed error distributions. The b1_2 update strengthens the reason to examine whether the third sigma provides useful additional recovery, without displacing the already supported finalization branch. Evidence remains insufficient for temporal causation, operational superiority, established scientific novelty or universality. The supporting review assessed supplied statistics; executable artifact validation remains the supervisor's responsibility.",
+        "result_interpretation": "The completed third b1_2 batch changes that branch from unresolved to goal_eligible: fresh and stale treatment-minus-control missed-transit differences are -0.10817 and -0.12689, with simultaneous intervals [-0.15630, -0.05663] and [-0.18100, -0.06891]. Both establish reductions exceeding 0.05 under the supplied interval procedure. False-alert rates increase from 14.78% to 40.87% and from 15.31% to 42.24%. No batches remain in flight. b1_3 remains eligible with three batches and 7168 candidates: its differences are -0.15273 and -0.12500, with intervals [-0.20165, -0.09933] and [-0.17367, -0.07260]; false-alert rates reach 55.75% and 58.21%. b1_1 intervals exclude zero but do not establish the required minimum reduction of 0.05. The newly completed b1_2 result supplies another qualifying numerical finding, but unequal branch samples prevent establishing the incremental benefit or operational superiority of either guard."
+      },
+      "decision_seconds": 19.395,
+      "goal_accepted": false,
+      "input": "checkpoints/009/input.json",
+      "observation_after_stop": true,
+      "pending_branches": [],
+      "result_to_decision_seconds": 62.305
+    }
+  ],
+  "computed_simulations": 36864,
+  "control_policy": {
+    "evaluation_frequency": "Every completed simulation batch",
+    "in_flight_policy": "Finish already authorized batches; retain late results",
+    "max_invested_directions": 3,
+    "max_parallel_agent_calls": 6,
+    "seed_policy": "Recorded master seed; independent branch/batch/arm streams",
+    "tool_policy": "Omnigent structured plans dispatch allowlisted Python tools"
+  },
+  "domain": "astrosat",
+  "elapsed_seconds": 301.594,
+  "goal": {
+    "achieved": true,
+    "branch_id": "b1_3",
+    "description": "Resolve a source-grounded mechanism with fresh controls, independent seed batches and a simultaneous interval narrow enough to decide.",
+    "independent_validation_required": true,
+    "maximum_interval_width": 0.25,
+    "minimum_batches": 2,
+    "minimum_effect": 0.05
+  },
+  "next_decision": {
+    "action": "finalize",
+    "goal_branch_id": "b1_3",
+    "invest": [],
+    "missing_evidence": [
+      "Supervisor-confirmed executable artifact validation; the supplied independent review did not read CSVs, verify hashes or rerun simulations.",
+      "Matched-candidate two- versus three-sigma comparisons with uncertainty for incremental recovery and added false alerts.",
+      "Spatial-versus-temporal miss decomposition to assess the temporal-limitation hypothesis.",
+      "Empirical calibration of simulation error distributions and geometry against observational data.",
+      "An operational loss criterion for evaluating the missed-transit versus false-alert tradeoff.",
+      "Literature evidence assessing novelty and external validation assessing real-world generalizability."
+    ],
+    "next_experiment": "Finalize the scoped b1_3 finding through the supervisor's required validation stage and incorporate the completed b1_2 result into the consolidated record. Request no additional batches for the achieved goal. A separately authorized follow-up should compare two- and three-sigma guards on identical held-out candidates with a common nominal control and unchanged +/-5-second window. Prespecify its budget and comparison criteria, retain existing thresholds, and report paired incremental recovery, added false alerts, denominators, uncertainty and spatial-versus-temporal miss causes. This tests whether the third sigma adds useful recovery and whether residual misses reflect timing; current branch summaries establish neither.",
+    "rationale": "Retain b1_3 for finalization because it is goal_eligible, meets the unchanged numerical thresholds, and has the supplied supporting independent review. The supervisor reports goal.achieved=true; additional batches are unnecessary for this scoped goal. Source grounding: seed, page 2, \"The \ufb01eld of view could be expanded by this distance and the results interpreted probabilistically.\" The temporal control is grounded in seed, page 2, \"To mitigate this error we list satellites with an expected intersection at +/- 5 sec- onds of the observation time such that all objects are listed.\" These passages motivate expansion and the temporal window, not the sigma prescriptions or assumed error distributions. The b1_2 update strengthens the reason to examine whether the third sigma provides useful additional recovery, without displacing the already supported finalization branch. Evidence remains insufficient for temporal causation, operational superiority, established scientific novelty or universality. The supporting review assessed supplied statistics; executable artifact validation remains the supervisor's responsibility.",
+    "result_interpretation": "The completed third b1_2 batch changes that branch from unresolved to goal_eligible: fresh and stale treatment-minus-control missed-transit differences are -0.10817 and -0.12689, with simultaneous intervals [-0.15630, -0.05663] and [-0.18100, -0.06891]. Both establish reductions exceeding 0.05 under the supplied interval procedure. False-alert rates increase from 14.78% to 40.87% and from 15.31% to 42.24%. No batches remain in flight. b1_3 remains eligible with three batches and 7168 candidates: its differences are -0.15273 and -0.12500, with intervals [-0.20165, -0.09933] and [-0.17367, -0.07260]; false-alert rates reach 55.75% and 58.21%. b1_1 intervals exclude zero but do not establish the required minimum reduction of 0.05. The newly completed b1_2 result supplies another qualifying numerical finding, but unequal branch samples prevent establishing the incremental benefit or operational superiority of either guard."
+  },
+  "proposals": [
+    {
+      "evidence": [
+        {
+          "page": 2,
+          "quote": "The \ufb01eld of view could be expanded by this distance and the results interpreted probabilistically.",
+          "source_id": "seed"
+        },
+        {
+          "page": 2,
+          "quote": "The cross-track error is more critical as it determines whether the object will pass through the \ufb01eld or not.",
+          "source_id": "seed"
+        }
+      ],
+      "experiment": "transit_margin_1",
+      "hypothesis": "Under the catalog's Gaussian-error and simplified transit assumptions, expanding the field boundary by one cross-track standard deviation will reduce missed true crossings compared with the nominal field plus the unchanged +/-5-second temporal window, while increasing false-positive alerts. Measure both outcomes separately for fresh and stale scenarios. Field expansion is an explicit paper suggestion; the one-sigma prescription and distributional assumptions are agent-generated.",
+      "id": "b1_1",
+      "origin": "agent_hypothesis",
+      "source_id": "seed",
+      "title": "Test a one-sigma cross-track guard"
+    },
+    {
+      "evidence": [
+        {
+          "page": 2,
+          "quote": "For example an in-track error of 25 km (Vallado & Cefola 2012) will lead to an angular o\ufb00set of 4.3 degrees or 3.26 seconds.",
+          "source_id": "seed"
+        },
+        {
+          "page": 2,
+          "quote": "To mitigate this error we list satellites with an expected intersection at +/- 5 sec- onds of the observation time such that all objects are listed.",
+          "source_id": "seed"
+        }
+      ],
+      "experiment": "transit_margin_3",
+      "hypothesis": "With the temporal window fixed at +/-5 seconds, a three-sigma cross-track guard will reduce spatial misses relative to the nominal control but leave more residual timing-related misses in the stale scenario than in the fresh scenario. Compare against the two-sigma guard to measure incremental recovery and added false positives; distinguish spatial and temporal causes where raw outputs permit. This is an agent hypothesis about the prescribed simulation, not evidence of real-world coverage or novelty.",
+      "id": "b1_3",
+      "origin": "agent_hypothesis",
+      "source_id": "seed",
+      "title": "Test whether temporal uncertainty limits a three-sigma guard"
+    },
+    {
+      "evidence": [
+        {
+          "page": 2,
+          "quote": "If we assume a cross-track error of 500 m then the expected angular error for a low altitude object (335 km) at zenith (worst case) is 0.09 degree (5.2 arcminutes).",
+          "source_id": "seed"
+        },
+        {
+          "page": 2,
+          "quote": "This is di\ufb03cult to mitigate and will have a larger real e\ufb00ect on smaller \ufb01elds.",
+          "source_id": "seed"
+        }
+      ],
+      "experiment": "transit_margin_2",
+      "hypothesis": "Under the fixed catalog assumptions, a two-sigma cross-track guard will reduce missed true crossings further than the one-sigma guard but increase false-positive alerts. Compare both guards with the common nominal-field control using matched simulated candidates, reporting missed-crossing fractions, false-positive counts and uncertainty separately for fresh and stale scenarios. Neither the two-sigma choice nor its operational desirability is established by the paper.",
+      "id": "b1_2",
+      "origin": "agent_hypothesis",
+      "source_id": "seed",
+      "title": "Measure the tradeoff from a two-sigma guard"
+    }
+  ],
+  "role_calls": 25,
+  "rounds": [
+    {
+      "batch": 1,
+      "branch_id": "b1_3",
+      "effect": {
+        "batches": 1,
+        "checks": [
+          {
+            "conclusion": "unresolved",
+            "control": 0.11363636363636363,
+            "control_false_alert_rate": 0.14210526315789473,
+            "control_samples": 132,
+            "difference": -0.11363636363636363,
+            "difference_interval": [
+              -0.25155210696811947,
+              0.045133287515873075
+            ],
+            "false_alert_rate": 0.5157894736842106,
+            "interval_width": 0.29668539448399256,
+            "negative_candidates": 380,
+            "positive_transits": 132,
+            "resolved": false,
+            "scenario": "fresh",
+            "treatment": 0.0,
+            "treatment_samples": 132
+          },
+          {
+            "conclusion": "unresolved",
+            "control": 0.14705882352941177,
+            "control_false_alert_rate": 0.14627659574468085,
+            "control_samples": 136,
+            "difference": -0.14705882352941177,
+            "difference_interval": [
+              -0.289004557735962,
+              0.021151454643236298
+            ],
+            "false_alert_rate": 0.5691489361702128,
+            "interval_width": 0.3101560123791983,
+            "negative_candidates": 376,
+            "positive_transits": 136,
+            "resolved": false,
+            "scenario": "stale",
+            "treatment": 0.0,
+            "treatment_samples": 136
+          }
+        ],
+        "goal_eligible": false,
+        "interval_method": "Conservative Wilson endpoint bounds; Bonferroni across 3 branches, all planned batch looks, groups and endpoints. Paired covariance not exploited.",
+        "metric": "missed-transit rate",
+        "samples": 1024,
+        "scientific_novelty": "unverified"
+      },
+      "next_decision": {
+        "action": "invest",
+        "goal_branch_id": null,
+        "invest": [
+          "b1_3",
+          "b1_2",
+          "b1_1"
+        ],
+        "missing_evidence": [
+          "Completed b1_1 and b1_2 results; both are still in flight.",
+          "At least a second independent seed batch for b1_3 and sufficient simultaneous precision to decide against the unchanged effect threshold.",
+          "Matched-candidate guard-width comparisons with incremental recovery, false-alert counts and uncertainty.",
+          "Raw miss-cause information sufficient to distinguish spatial and temporal failures.",
+          "Recorded seeds, sampling bounds and control provenance supporting reproducibility and batch independence.",
+          "Independent validation of any branch that becomes goal_eligible.",
+          "Empirical justification for the simulation's error distributions and operational alert-cost criteria.",
+          "Literature evidence sufficient to assess scientific novelty; novelty and real-world generalizability remain unverified."
+        ],
+        "next_experiment": "Run the next independent seed batch for b1_3 with the existing nominal control, fixed +/-5-second temporal window, unchanged sampling assumptions and separate fresh/stale reporting. Consolidate it with the first batch using the prescribed simultaneous interval method and unchanged 0.05 minimum effect, 0.25 maximum interval width and minimum two-batch requirement. As existing b1_2 and b1_1 batches finish, compare guard widths using matched candidates and controls within each seed batch; prioritize subsequent b1_2 then b1_1 batches. Report incremental recovered crossings and added false alerts with denominators and available uncertainty. Inspect spatial versus temporal miss causes only where raw outputs support attribution. Preserve all outcomes, enforce the eight-batch-per-branch cap and remaining budgets, and reserve resources for independent validation after eligibility.",
+        "rationale": "Prioritize a second independent b1_3 batch to assess whether its apparent recovery survives additional sampling and yields sufficiently narrow simultaneous intervals. Then prioritize b1_2 for the incremental two-versus-three-sigma comparison and b1_1 for the narrower-guard tradeoff, retaining their existing in-flight work. The result shifts emphasis from presumed timing limitations toward quantifying whether the third sigma offers recovery worth its additional false alerts. The source motivates testing field expansion: seed, page 2, \"The \ufb01eld of view could be expanded by this distance and the results interpreted probabilistically.\" It also states: seed, page 2, \"The cross-track error is more critical as it determines whether the object will pass through the \ufb01eld or not.\" Neither passage establishes a Gaussian error law or a preferred guard width. No branch is goal_eligible; further bounded tests can help, so neither finalization nor stopping is justified.",
+        "result_interpretation": "Only b1_3 has completed a batch. Its simulated missed-transit rate was 0/132 for fresh and 0/136 for stale candidates, versus control rates of 11.36% and 14.71%. Treatment-minus-control simultaneous intervals were [-0.2516, 0.0451] and [-0.2890, 0.0212]; both include zero and have widths exceeding 0.25. False-alert rates increased from 14.21% to 51.58% in fresh and from 14.63% to 56.91% in stale scenarios. These measurements suggest spatial recovery with a substantial alert burden, but establish neither the required effect nor operational utility. Zero observed treatment misses in both scenarios provides no observed support for the predicted excess residual timing misses in stale conditions; it does not establish their absence. b1_1 and b1_2 remain in flight, so guard-width comparisons are unavailable."
+      },
+      "round": 1,
+      "trials_per_size": 512
+    },
+    {
+      "batch": 1,
+      "branch_id": "b1_1",
+      "effect": {
+        "batches": 1,
+        "checks": [
+          {
+            "conclusion": "unresolved",
+            "control": 0.140625,
+            "control_false_alert_rate": 0.15104166666666666,
+            "control_samples": 64,
+            "difference": -0.125,
+            "difference_interval": [
+              -0.35866722768412584,
+              0.1517767014169796
+            ],
+            "false_alert_rate": 0.23958333333333334,
+            "interval_width": 0.5104439291011055,
+            "negative_candidates": 192,
+            "positive_transits": 64,
+            "resolved": false,
+            "scenario": "fresh",
+            "treatment": 0.015625,
+            "treatment_samples": 64
+          },
+          {
+            "conclusion": "unresolved",
+            "control": 0.07692307692307693,
+            "control_false_alert_rate": 0.2094240837696335,
+            "control_samples": 65,
+            "difference": -0.07692307692307693,
+            "difference_interval": [
+              -0.280381217306125,
+              0.15272531321284402
+            ],
+            "false_alert_rate": 0.3403141361256545,
+            "interval_width": 0.43310653051896897,
+            "negative_candidates": 191,
+            "positive_transits": 65,
+            "resolved": false,
+            "scenario": "stale",
+            "treatment": 0.0,
+            "treatment_samples": 65
+          }
+        ],
+        "goal_eligible": false,
+        "interval_method": "Conservative Wilson endpoint bounds; Bonferroni across 3 branches, all planned batch looks, groups and endpoints. Paired covariance not exploited.",
+        "metric": "missed-transit rate",
+        "samples": 512,
+        "scientific_novelty": "unverified"
+      },
+      "next_decision": {
+        "action": "invest",
+        "goal_branch_id": null,
+        "invest": [
+          "b1_3",
+          "b1_2",
+          "b1_1"
+        ],
+        "missing_evidence": [
+          "Completed b1_2 results and the pending b1_3 result.",
+          "At least two independent seed batches and simultaneous intervals meeting the unchanged decision criteria for a candidate branch.",
+          "Matched-candidate guard comparisons with incremental recovery, false-alert counts, denominators and uncertainty.",
+          "Raw miss-cause records supporting spatial versus temporal attribution.",
+          "Recorded seeds, sampling bounds and control provenance demonstrating reproducibility and batch independence.",
+          "Independent validation after a branch becomes goal_eligible.",
+          "Empirical support for the simulated error distributions and operational alert-cost criteria.",
+          "Literature evidence sufficient to assess novelty; real-world generalizability also remains unverified."
+        ],
+        "next_experiment": "Retain the in-flight b1_3 and b1_2 work and consolidate each result when it completes. Allocate subsequent independent seed batches in priority order b1_3, b1_2, b1_1, reassessing after each completion. Preserve nominal controls, the fixed +/-5-second temporal window, sampling assumptions and separate fresh/stale reporting. Apply the prescribed simultaneous interval method with unchanged minimum effect 0.05, maximum width 0.25 and minimum two independent batches. Compare guard widths only where matched candidates and controls are available; report incremental recovery and added false alerts with denominators and uncertainty. Attribute misses to timing or spatial error only if raw outputs support it. Enforce the eight-batch cap per branch and remaining budgets, preserve unfavorable outcomes, and reserve resources for independent validation once a branch becomes goal_eligible.",
+        "rationale": "Keep b1_3 first because its available intervals are closest to the required precision and another independent batch is already in flight. Keep b1_2 second to assess whether the third sigma provides incremental recovery, then extend b1_1 to determine whether its apparent recovery persists with fewer false alerts. The new b1_1 measurements strengthen the reason to compare narrower guards rather than select the largest guard solely for zero observed misses. The source motivates spatial expansion: seed, page 2, \"The \ufb01eld of view could be expanded by this distance and the results interpreted probabilistically.\" It also states: seed, page 2, \"The cross-track error is more critical as it determines whether the object will pass through the \ufb01eld or not.\" These passages do not establish Gaussian errors or an optimal guard. All completed evidence remains insufficient for the declared goal; available bounded tests can still improve precision. Scientific novelty and operational usefulness remain unverified.",
+        "result_interpretation": "b1_1 now has one completed batch: missed-transit rates fell from 14.06% to 1.56% in fresh scenarios and from 7.69% to 0% in stale scenarios. Treatment-minus-control intervals remain unresolved: [-0.3587, 0.1518] and [-0.2804, 0.1527], with widths 0.5104 and 0.4331. False-alert rates increased from 15.10% to 23.96% and from 20.94% to 34.03%, respectively. Previously available b1_3 results show zero treatment misses in both scenarios, but intervals also include zero and exceed the 0.25 width limit; false-alert rates reach 51.58% and 56.91%. These partial results make the narrower guard's recovery-versus-alert tradeoff worth retaining. Different samples and controls prevent attributing between-branch differences to guard width. b1_2 has no completed results; b1_2 and b1_3 remain in flight. No branch meets eligibility, and the predicted excess stale timing misses remains unsupported by observed treatment misses."
+      },
+      "round": 2,
+      "trials_per_size": 256
+    },
+    {
+      "batch": 1,
+      "branch_id": "b1_2",
+      "effect": {
+        "batches": 1,
+        "checks": [
+          {
+            "conclusion": "unresolved",
+            "control": 0.109375,
+            "control_false_alert_rate": 0.15104166666666666,
+            "control_samples": 64,
+            "difference": -0.109375,
+            "difference_interval": [
+              -0.32279762667621636,
+              0.14176841619246344
+            ],
+            "false_alert_rate": 0.4114583333333333,
+            "interval_width": 0.4645660428686798,
+            "negative_candidates": 192,
+            "positive_transits": 64,
+            "resolved": false,
+            "scenario": "fresh",
+            "treatment": 0.0,
+            "treatment_samples": 64
+          },
+          {
+            "conclusion": "unresolved",
+            "control": 0.14492753623188406,
+            "control_false_alert_rate": 0.1443850267379679,
+            "control_samples": 69,
+            "difference": -0.10144927536231885,
+            "difference_interval": [
+              -0.34838695440828654,
+              0.17835111994819652
+            ],
+            "false_alert_rate": 0.45989304812834225,
+            "interval_width": 0.5267380743564831,
+            "negative_candidates": 187,
+            "positive_transits": 69,
+            "resolved": false,
+            "scenario": "stale",
+            "treatment": 0.043478260869565216,
+            "treatment_samples": 69
+          }
+        ],
+        "goal_eligible": false,
+        "interval_method": "Conservative Wilson endpoint bounds; Bonferroni across 3 branches, all planned batch looks, groups and endpoints. Paired covariance not exploited.",
+        "metric": "missed-transit rate",
+        "samples": 512,
+        "scientific_novelty": "unverified"
+      },
+      "next_decision": {
+        "action": "invest",
+        "goal_branch_id": null,
+        "invest": [
+          "b1_3",
+          "b1_2",
+          "b1_1"
+        ],
+        "missing_evidence": [
+          "Completed results from the additional b1_3 and b1_1 batches currently in flight.",
+          "At least two independent seed batches and simultaneous intervals satisfying the unchanged effect and precision criteria for a candidate branch.",
+          "Matched-candidate comparisons between guard widths, including incremental recovery, added false alerts, denominators and uncertainty.",
+          "Raw miss-cause records supporting spatial versus temporal attribution.",
+          "Recorded seeds, sampling bounds and control provenance establishing reproducibility and batch independence.",
+          "Independent validation after a branch becomes goal_eligible.",
+          "Empirical support for simulated error distributions and operational alert-cost criteria.",
+          "Literature evidence sufficient to assess novelty; real-world generalizability also remains unverified."
+        ],
+        "next_experiment": "Retain the in-flight b1_3 and b1_1 batches and consolidate each only when completed. Allocate subsequent independent seed batches in priority order b1_3, b1_2, b1_1, reassessing after every completion. Preserve nominal controls, the fixed +/-5-second temporal window, sampling assumptions and separate fresh/stale reporting. Keep the prescribed simultaneous interval method, minimum effect 0.05, maximum interval width 0.25 and minimum two independent batches unchanged. Where matched candidate records are available, compare one-, two- and three-sigma guards for incremental recovery and additional false alerts, reporting counts, denominators and uncertainty. Use raw miss-cause records to assess whether b1_2 stale misses reflect temporal or spatial errors; otherwise leave attribution unresolved. Enforce the eight-batch cap per branch and remaining budgets, preserve unfavorable results, and reserve resources for independent validation after a branch becomes goal_eligible.",
+        "rationale": "Keep b1_3 first because its completed intervals are closest to the required precision and another batch is in flight. Keep b1_2 second to clarify its stale residual misses and assess the incremental value of the third sigma on matched candidates. Retain b1_1 because its lower observed false-alert rates warrant testing whether a narrower guard provides sufficient recovery. The new b1_2 measurements strengthen the need for direct guard comparisons rather than selecting on zero observed misses. Spatial expansion is source-grounded: seed, page 2, \"The \ufb01eld of view could be expanded by this distance and the results interpreted probabilistically.\" The source also states, seed, page 2, \"The cross-track error is more critical as it determines whether the object will pass through the \ufb01eld or not.\" These passages do not establish Gaussian errors, optimal guard width or operational benefit. Evidence is insufficient for the declared goal, but further independent batches within the unchanged limits can improve precision. Scientific novelty remains unverified.",
+        "result_interpretation": "The newly completed b1_2 batch shows missed-transit rates falling from 10.94% to 0% for fresh candidates and from 14.49% to 4.35% for stale candidates. Its treatment-minus-control intervals are [-0.3228, 0.1418] and [-0.3484, 0.1784], with widths 0.4646 and 0.5267; neither resolves the effect. False-alert rates rise from 15.10% to 41.15% and from 14.44% to 45.99%. Previously completed b1_1 results show reductions of 12.50 and 7.69 percentage points, with treatment false-alert rates of 23.96% and 34.03%. Previously completed b1_3 results show zero treatment misses and false-alert rates of 51.58% and 56.91%; its interval widths remain 0.2967 and 0.3102. Every branch has only one completed batch, all effect intervals include zero, and none is goal_eligible. The new result adds evidence of a recovery-versus-alert tradeoff but does not establish incremental benefit from wider guards: branch samples and controls differ. The stale misses in b1_2 cannot be attributed to timing from these aggregates. Additional b1_3 and b1_1 batches remain in flight; their outcomes are unavailable."
+      },
+      "round": 3,
+      "trials_per_size": 256
+    },
+    {
+      "batch": 2,
+      "branch_id": "b1_3",
+      "effect": {
+        "batches": 2,
+        "checks": [
+          {
+            "conclusion": "unresolved",
+            "control": 0.1306532663316583,
+            "control_false_alert_rate": 0.14586994727592267,
+            "control_samples": 398,
+            "difference": -0.1306532663316583,
+            "difference_interval": [
+              -0.20448035822388735,
+              -0.048354562083678124
+            ],
+            "false_alert_rate": 0.5360281195079086,
+            "interval_width": 0.15612579614020922,
+            "negative_candidates": 1138,
+            "positive_transits": 398,
+            "resolved": false,
+            "scenario": "fresh",
+            "treatment": 0.0,
+            "treatment_samples": 398
+          },
+          {
+            "conclusion": "unresolved",
+            "control": 0.136986301369863,
+            "control_false_alert_rate": 0.1426131511528608,
+            "control_samples": 365,
+            "difference": -0.13424657534246576,
+            "difference_interval": [
+              -0.2154110751152564,
+              -0.04361821986777514
+            ],
+            "false_alert_rate": 0.5807002561912895,
+            "interval_width": 0.17179285524748125,
+            "negative_candidates": 1171,
+            "positive_transits": 365,
+            "resolved": false,
+            "scenario": "stale",
+            "treatment": 0.0027397260273972603,
+            "treatment_samples": 365
+          }
+        ],
+        "goal_eligible": false,
+        "interval_method": "Conservative Wilson endpoint bounds; Bonferroni across 3 branches, all planned batch looks, groups and endpoints. Paired covariance not exploited.",
+        "metric": "missed-transit rate",
+        "samples": 3072,
+        "scientific_novelty": "unverified"
+      },
+      "next_decision": {
+        "action": "invest",
+        "goal_branch_id": null,
+        "invest": [
+          "b1_3",
+          "b1_2",
+          "b1_1"
+        ],
+        "missing_evidence": [
+          "Completed outcomes for the b1_1 and b1_2 batches currently in flight.",
+          "Simultaneous intervals resolving the unchanged minimum-effect criterion in both b1_3 scenarios.",
+          "Matched-candidate guard-width comparisons with incremental recovery, additional false alerts, denominators and uncertainty.",
+          "Raw miss-cause records distinguishing spatial and temporal errors.",
+          "Recorded seeds, sampling bounds and control provenance verifying batch independence and reproducibility.",
+          "Independent validation after a branch becomes goal_eligible.",
+          "Empirical support for error distributions and operational criteria for the false-alert tradeoff.",
+          "Literature evidence assessing novelty and external evidence assessing real-world generalizability."
+        ],
+        "next_experiment": "Allocate the next independent seed batch to b1_3, while retaining the b1_1 and b1_2 batches already in flight. Consolidate completed results and reassess after each completion; use priority b1_3, b1_2, b1_1 for subsequent allocations. Preserve nominal controls, sampling assumptions, the +/-5-second temporal window, separate fresh/stale reporting and the prescribed simultaneous interval method. Keep minimum effect 0.05, maximum interval width 0.25, minimum two independent batches and the eight-batch cap unchanged. Test whether b1_3's upper interval endpoints reach -0.05 in both scenarios. Where authorized matched candidate records exist, compare guard widths for incremental recovery and added false alerts, including denominators and uncertainty. Inspect raw miss causes before attributing stale residuals to timing; otherwise retain that uncertainty. Preserve unfavorable results, enforce remaining budgets and reserve resources for independent validation after a branch becomes goal_eligible.",
+        "rationale": "Prioritize b1_3 because it now meets precision and batch-count criteria and narrowly misses the minimum-effect criterion in both scenarios. Further independent batches can help determine whether the simultaneous bounds support the required reduction, although success is not guaranteed. Retain b1_2 next for the incremental value of the third sigma, and b1_1 for its lower observed false-alert burden. Source grounding is limited but explicit: seed, page 2, \"The \ufb01eld of view could be expanded by this distance and the results interpreted probabilistically.\" Also, seed, page 2, \"The cross-track error is more critical as it determines whether the object will pass through the \ufb01eld or not.\" These passages support investigating spatial margins, but do not establish Gaussian error distributions, the chosen sigma prescriptions, timing attribution or operational benefit. Evidence is insufficient to finalize any branch. Missing novelty literature does not prevent this scoped numerical investigation; scientific novelty and real-world generalizability remain unverified.",
+        "result_interpretation": "The second completed b1_3 batch changes the evidence: both simultaneous treatment-minus-control intervals now exclude zero and satisfy the maximum width of 0.25. Fresh missed-transit rates fall from 13.07% to 0%, with interval [-0.20448, -0.04835] and width 0.15613; stale rates fall from 13.70% to 0.27%, with interval [-0.21541, -0.04362] and width 0.17179. However, neither upper endpoint reaches -0.05, so a reduction of at least five percentage points remains unresolved under the unchanged criterion. Two batches meet the batch-count requirement, but goal_eligible remains false. False-alert rates rise from 14.59% to 53.60% fresh and from 14.26% to 58.07% stale. The b1_1 and b1_2 completed results remain limited to one batch each, with intervals including zero and exceeding the width limit; their additional in-flight outcomes are unavailable. Differing branch controls prevent a matched comparison of guard widths. The small stale residual in b1_3 does not establish a temporal mechanism."
+      },
+      "round": 4,
+      "trials_per_size": 1024
+    },
+    {
+      "batch": 2,
+      "branch_id": "b1_1",
+      "effect": {
+        "batches": 2,
+        "checks": [
+          {
+            "conclusion": "unresolved",
+            "control": 0.12933753943217666,
+            "control_false_alert_rate": 0.1640706126687435,
+            "control_samples": 317,
+            "difference": -0.11041009463722398,
+            "difference_interval": [
+              -0.20858539753972752,
+              -0.0033203221450425896
+            ],
+            "false_alert_rate": 0.2772585669781931,
+            "interval_width": 0.20526507539468491,
+            "negative_candidates": 963,
+            "positive_transits": 317,
+            "resolved": false,
+            "scenario": "fresh",
+            "treatment": 0.01892744479495268,
+            "treatment_samples": 317
+          },
+          {
+            "conclusion": "unresolved",
+            "control": 0.13680781758957655,
+            "control_false_alert_rate": 0.15724563206577596,
+            "control_samples": 307,
+            "difference": -0.10097719869706841,
+            "difference_interval": [
+              -0.2110631141657816,
+              0.017516087888391305
+            ],
+            "false_alert_rate": 0.2744090441932169,
+            "interval_width": 0.22857920205417293,
+            "negative_candidates": 973,
+            "positive_transits": 307,
+            "resolved": false,
+            "scenario": "stale",
+            "treatment": 0.035830618892508145,
+            "treatment_samples": 307
+          }
+        ],
+        "goal_eligible": false,
+        "interval_method": "Conservative Wilson endpoint bounds; Bonferroni across 3 branches, all planned batch looks, groups and endpoints. Paired covariance not exploited.",
+        "metric": "missed-transit rate",
+        "samples": 2560,
+        "scientific_novelty": "unverified"
+      },
+      "next_decision": {
+        "action": "invest",
+        "goal_branch_id": null,
+        "invest": [
+          "b1_3",
+          "b1_2",
+          "b1_1"
+        ],
+        "missing_evidence": [
+          "Completed outcomes for the b1_2 and b1_3 batches currently in flight.",
+          "Simultaneous intervals resolving the unchanged minimum-effect criterion in both scenarios for an eligible branch.",
+          "Matched-candidate guard comparisons with incremental recovery, additional false alerts, denominators and uncertainty.",
+          "Raw miss-cause records distinguishing spatial and temporal errors.",
+          "Recorded seeds, sampling bounds and control provenance verifying batch independence and reproducibility.",
+          "Independent validation after a branch becomes goal_eligible.",
+          "Empirical support for the assumed error distributions and operational criteria for the false-alert tradeoff.",
+          "Literature evidence assessing novelty and external evidence assessing real-world generalizability."
+        ],
+        "next_experiment": "Retain the b1_2 and b1_3 batches already in flight and incorporate each only when completed. Allocate subsequent independent seed batches in priority order b1_3, b1_2, b1_1, accounting for pending work and reassessing after each completion. Test whether b1_3's simultaneous upper difference bounds reach -0.05 in both fresh and stale scenarios; apply the same criterion to other branches. Preserve nominal controls, sampling assumptions, the +/-5-second window, separate scenario reporting, the prescribed simultaneous interval method, minimum effect 0.05, maximum width 0.25, minimum two independent batches and eight-batch cap. Use available authorized matched records to quantify incremental recovery and added false alerts between guards, with denominators and uncertainty. Inspect raw miss causes before attributing residuals to timing. Preserve all outcomes and reserve resources for independent validation after a branch becomes goal_eligible.",
+        "rationale": "Retain b1_3 as first priority because its available simultaneous bounds are closest to resolving the prescribed minimum effect in both scenarios. Keep b1_2 second to investigate the intermediate guard and b1_1 third because its lower observed false-alert burden remains relevant, although cross-branch comparisons are descriptive without matched records. The new b1_1 result removes insufficient width and batch count as immediate obstacles, but leaves minimum-effect uncertainty. Source grounding: seed, page 2, \"The \ufb01eld of view could be expanded by this distance and the results interpreted probabilistically.\" Also, seed, page 2, \"The cross-track error is more critical as it determines whether the object will pass through the \ufb01eld or not.\" These passages support testing spatial margins; they do not establish the sigma choices, Gaussian assumptions or operational benefit. Additional allowed batches can still help within the supplied budget and eight-batch cap. Evidence is insufficient to finalize any branch, attribute residual misses to timing, or establish scientific novelty or real-world generalizability.",
+        "result_interpretation": "The newly completed second b1_1 batch brings both interval widths below 0.25 and meets the two-batch count requirement. Fresh missed-transit rates are 12.93% control versus 1.89% treatment, with treatment-minus-control interval [-0.20859, -0.00332]; stale rates are 13.68% versus 3.58%, with interval [-0.21106, 0.01752]. Neither interval establishes the required reduction of at least 0.05. False-alert rates increase from 16.41% to 27.73% fresh and from 15.72% to 27.44% stale. Thus precision improved, but the decision remains unresolved. The available b1_3 results still come from two completed batches: upper interval endpoints -0.04835 fresh and -0.04362 stale narrowly miss -0.05, despite meeting the width requirement. Its false-alert rates are 53.60% and 58.07%. b1_2 still has only one completed batch and intervals exceeding 0.25. Additional b1_2 and b1_3 batches remain in flight; their outcomes are unavailable. All branches remain goal-ineligible, and no independent validation is supplied."
+      },
+      "round": 5,
+      "trials_per_size": 1024
+    },
+    {
+      "batch": 2,
+      "branch_id": "b1_2",
+      "effect": {
+        "batches": 2,
+        "checks": [
+          {
+            "conclusion": "unresolved",
+            "control": 0.11838006230529595,
+            "control_false_alert_rate": 0.15641293013555788,
+            "control_samples": 321,
+            "difference": -0.11838006230529595,
+            "difference_interval": [
+              -0.199892958330949,
+              -0.027423556206273174
+            ],
+            "false_alert_rate": 0.4181438998957247,
+            "interval_width": 0.17246940212467582,
+            "negative_candidates": 959,
+            "positive_transits": 321,
+            "resolved": false,
+            "scenario": "fresh",
+            "treatment": 0.0,
+            "treatment_samples": 321
+          },
+          {
+            "conclusion": "unresolved",
+            "control": 0.1375,
+            "control_false_alert_rate": 0.16041666666666668,
+            "control_samples": 320,
+            "difference": -0.12187500000000001,
+            "difference_interval": [
+              -0.21886753040612533,
+              -0.015130888526800765
+            ],
+            "false_alert_rate": 0.45208333333333334,
+            "interval_width": 0.20373664187932455,
+            "negative_candidates": 960,
+            "positive_transits": 320,
+            "resolved": false,
+            "scenario": "stale",
+            "treatment": 0.015625,
+            "treatment_samples": 320
+          }
+        ],
+        "goal_eligible": false,
+        "interval_method": "Conservative Wilson endpoint bounds; Bonferroni across 3 branches, all planned batch looks, groups and endpoints. Paired covariance not exploited.",
+        "metric": "missed-transit rate",
+        "samples": 2560,
+        "scientific_novelty": "unverified"
+      },
+      "next_decision": {
+        "action": "invest",
+        "goal_branch_id": null,
+        "invest": [
+          "b1_3",
+          "b1_2",
+          "b1_1"
+        ],
+        "missing_evidence": [
+          "Completed outcomes for the b1_3 and b1_1 batches currently in flight.",
+          "Simultaneous intervals resolving the unchanged minimum-effect criterion in both scenarios for an eligible branch.",
+          "Matched-candidate guard comparisons, including incremental recovery, added false alerts, denominators and uncertainty.",
+          "Raw miss-cause records distinguishing spatial and temporal errors.",
+          "Recorded seeds, sampling bounds and control provenance verifying batch independence and reproducibility.",
+          "Independent validation after a branch becomes goal_eligible.",
+          "Empirical support for the assumed error distributions and operational criteria for the false-alert tradeoff.",
+          "Literature evidence assessing novelty and external evidence assessing real-world generalizability."
+        ],
+        "next_experiment": "Incorporate the already-running b1_3 and b1_1 batches only when completed. Allocate subsequent independent seed batches in priority order b1_3, b1_2, b1_1, accounting for pending allocations and reassessing after every completion. Test whether simultaneous treatment-minus-control upper bounds reach -0.05 in both fresh and stale scenarios. Preserve nominal controls, sampling assumptions, the +/-5-second window, separate scenario reporting, the prescribed simultaneous interval method, minimum effect 0.05, maximum interval width 0.25, minimum two independent batches and eight-batch cap. Use authorized matched records, if available, to measure incremental recovery and additional false alerts between guards with denominators and uncertainty; inspect raw miss causes before attributing residuals to timing. Preserve unfavorable outcomes and reserve budget for independent validation once a branch becomes goal_eligible. Do not finalize from proximity to a threshold.",
+        "rationale": "Retain b1_3 first because its completed results are closest to resolving the unchanged minimum-effect criterion in both scenarios. Retain b1_2 second because its new batch removes insufficient precision as an immediate obstacle and supports a reduction relative to its control, although the required magnitude remains uncertain. Keep b1_1 third because its lower observed false-alert burden warrants continued investigation. Source grounding: seed, page 2, \"The \ufb01eld of view could be expanded by this distance and the results interpreted probabilistically.\" Also, seed, page 2, \"The cross-track error is more critical as it determines whether the object will pass through the \ufb01eld or not.\" These passages support spatial-margin tests but do not establish the sigma prescriptions, Gaussian assumptions or operational desirability. Additional independent batches can still help within the eight-batch cap and remaining budget. Evidence is insufficient for finalization, timing-cause attribution, scientific novelty or real-world generalizability.",
+        "result_interpretation": "The completed second b1_2 batch now satisfies the batch-count and interval-width requirements in both scenarios, superseding the previous one-batch assessment. Fresh missed-transit rates are 11.84% control versus 0% treatment, with difference interval [-0.19989, -0.02742]; stale rates are 13.75% versus 1.56%, with interval [-0.21887, -0.01513]. Both intervals support a reduction but do not establish the required reduction of at least 0.05. False-alert rates rise from 15.64% to 41.81% fresh and from 16.04% to 45.21% stale. The available two-batch b1_3 results remain closest to the minimum-effect criterion: upper endpoints are -0.04835 fresh and -0.04362 stale, with false-alert rates of 53.60% and 58.07%. Available b1_1 results also meet batch-count and width requirements but leave the minimum effect unresolved; its stale interval includes zero. Cross-branch comparisons are descriptive because matched records are absent. Pending b1_3 and b1_1 outcomes have not arrived. All branches remain goal-ineligible."
+      },
+      "round": 6,
+      "trials_per_size": 1024
+    },
+    {
+      "batch": 3,
+      "branch_id": "b1_3",
+      "effect": {
+        "batches": 3,
+        "checks": [
+          {
+            "conclusion": "difference_detected",
+            "control": 0.1527313266443701,
+            "control_false_alert_rate": 0.15109787867510235,
+            "control_samples": 897,
+            "difference": -0.1527313266443701,
+            "difference_interval": [
+              -0.2016538315767649,
+              -0.09933407259834343
+            ],
+            "false_alert_rate": 0.5574990695943431,
+            "interval_width": 0.10231975897842147,
+            "negative_candidates": 2687,
+            "positive_transits": 897,
+            "resolved": true,
+            "scenario": "fresh",
+            "treatment": 0.0,
+            "treatment_samples": 897
+          },
+          {
+            "conclusion": "difference_detected",
+            "control": 0.12727272727272726,
+            "control_false_alert_rate": 0.14718934911242604,
+            "control_samples": 880,
+            "difference": -0.12499999999999999,
+            "difference_interval": [
+              -0.1736690850424005,
+              -0.07259895078979484
+            ],
+            "false_alert_rate": 0.5821005917159763,
+            "interval_width": 0.10107013425260566,
+            "negative_candidates": 2704,
+            "positive_transits": 880,
+            "resolved": true,
+            "scenario": "stale",
+            "treatment": 0.0022727272727272726,
+            "treatment_samples": 880
+          }
+        ],
+        "goal_eligible": true,
+        "interval_method": "Conservative Wilson endpoint bounds; Bonferroni across 3 branches, all planned batch looks, groups and endpoints. Paired covariance not exploited.",
+        "metric": "missed-transit rate",
+        "samples": 7168,
+        "scientific_novelty": "unverified"
+      },
+      "next_decision": {
+        "action": "finalize",
+        "goal_branch_id": "b1_3",
+        "invest": [],
+        "missing_evidence": [
+          "Independent validation results for b1_3 under the unchanged acceptance criteria.",
+          "Recorded seeds, sampling bounds and control provenance verifying independence and reproducibility.",
+          "Completed results from the b1_1 and b1_2 batches currently in flight.",
+          "Matched-candidate two- versus three-sigma comparisons with incremental recovery, added false alerts, denominators and uncertainty.",
+          "Raw miss-cause records supporting or contradicting the proposed temporal limitation.",
+          "Empirical support for simulation error distributions and an operational criterion for acceptable false-alert burden.",
+          "Literature evidence assessing novelty and external validation assessing real-world generalizability."
+        ],
+        "next_experiment": "Run the supervisor's independent validation of b1_3 using held-out independent seeds and fresh nominal-field controls. Preserve the three-sigma guard, +/-5-second temporal window, catalog assumptions, scenario separation, prescribed simultaneous interval method, minimum effect 0.05, maximum interval width 0.25, minimum two independent batches and applicable eight-batch cap. Record seeds, control provenance, raw outcomes and all failures. Report missed-transit differences and false-alert rates with denominators and uncertainty. Apply the unchanged validation criteria before declaring the goal achieved; revise the decision if validation fails. Preserve and incorporate b1_1 and b1_2 pending outcomes only when they actually complete. Where authorized raw records permit, examine spatial versus temporal miss causes and matched two- versus three-sigma outcomes without treating unmatched branch summaries as a causal comparison.",
+        "rationale": "Finalize b1_3 as the eligible candidate for the required independent validation, not as a declaration of validated success. Its simultaneous intervals now establish the prescribed minimum reduction in both scenarios within the reported simulation, superseding the previous near-threshold assessment. Source grounding: seed, page 2, \"The \ufb01eld of view could be expanded by this distance and the results interpreted probabilistically.\" The fixed temporal mitigation is grounded in seed, page 2, \"To mitigate this error we list satellites with an expected intersection at +/- 5 sec- onds of the observation time such that all objects are listed.\" These passages motivate the investigation but do not establish a three-sigma prescription, the assumed error distributions, or operational desirability. Further exploratory sampling of b1_3 is unnecessary before validation. Evidence remains insufficient for the proposed temporal mechanism, real-world coverage, scientific novelty or universality.",
+        "result_interpretation": "The third completed b1_3 batch changes the decision from further sampling to independent validation. Across three batches and 7168 simulated candidates, fresh missed-transit rates are 15.27% control versus 0% treatment, with treatment-minus-control interval [-0.20165, -0.09933]. Stale rates are 12.73% versus 0.23%, with interval [-0.17367, -0.07260]. Both upper bounds are below -0.05 and both widths are below 0.25; the supervisor marks b1_3 goal_eligible. False-alert rates increase from 15.11% to 55.75% fresh and from 14.72% to 58.21% stale. Thus the numerical reduction carries a substantial alert burden. The available two-batch b1_1 and b1_2 results remain unresolved against the minimum-effect criterion; their pending batches have not arrived. Independent validation remains outstanding, so the overall goal is not yet achieved. Aggregate results cannot establish timing-related causation or incremental benefit over the two-sigma guard."
+      },
+      "round": 7,
+      "trials_per_size": 2048
+    },
+    {
+      "batch": 3,
+      "branch_id": "b1_1",
+      "effect": {
+        "batches": 3,
+        "checks": [
+          {
+            "conclusion": "unresolved",
+            "control": 0.12456140350877193,
+            "control_false_alert_rate": 0.16551326412918108,
+            "control_samples": 570,
+            "difference": -0.10526315789473684,
+            "difference_interval": [
+              -0.17704292036468272,
+              -0.02867057109068817
+            ],
+            "false_alert_rate": 0.2808535178777393,
+            "interval_width": 0.14837234927399456,
+            "negative_candidates": 1734,
+            "positive_transits": 570,
+            "resolved": false,
+            "scenario": "fresh",
+            "treatment": 0.01929824561403509,
+            "treatment_samples": 570
+          },
+          {
+            "conclusion": "unresolved",
+            "control": 0.14516129032258066,
+            "control_false_alert_rate": 0.15807560137457044,
+            "control_samples": 558,
+            "difference": -0.11290322580645162,
+            "difference_interval": [
+              -0.1938373124252837,
+              -0.026698574328386113
+            ],
+            "false_alert_rate": 0.2800687285223368,
+            "interval_width": 0.1671387380968976,
+            "negative_candidates": 1746,
+            "positive_transits": 558,
+            "resolved": false,
+            "scenario": "stale",
+            "treatment": 0.03225806451612903,
+            "treatment_samples": 558
+          }
+        ],
+        "goal_eligible": false,
+        "interval_method": "Conservative Wilson endpoint bounds; Bonferroni across 3 branches, all planned batch looks, groups and endpoints. Paired covariance not exploited.",
+        "metric": "missed-transit rate",
+        "samples": 4608,
+        "scientific_novelty": "unverified"
+      },
+      "next_decision": {
+        "action": "finalize",
+        "goal_branch_id": "b1_3",
+        "invest": [],
+        "missing_evidence": [
+          "Completed results from the b1_2 batch still in flight.",
+          "Supervisor-confirmed executable artifact validation; the supplied independent review did not read CSVs, verify hashes or rerun simulations.",
+          "Matched-candidate two- versus three-sigma comparisons with incremental recovery, added false alerts and uncertainty.",
+          "Raw spatial-versus-temporal miss decomposition supporting or contradicting the temporal-limitation hypothesis.",
+          "Empirical calibration of the assumed error distributions and an operational loss criterion for the false-alert tradeoff.",
+          "Literature evidence assessing novelty and external validation assessing real-world generalizability."
+        ],
+        "next_experiment": "Finalize the scoped b1_3 numerical finding through the supervisor's required validation stage, preserving all thresholds and reporting the existing supporting review separately from any executable validation. Incorporate the pending b1_2 batch only after completion. No additional batches are requested for the achieved goal. For a separately authorized follow-up, evaluate two- and three-sigma guards on identical held-out candidates with the same nominal control and +/-5-second temporal window. Prespecify the budget and comparison criteria; record paired incremental recovery, added false alerts, denominators, uncertainty and spatial-versus-temporal miss causes. This would test whether the third sigma adds useful recovery and whether residual misses arise from timing, neither of which the current unequal branch summaries establish.",
+        "rationale": "Finalize b1_3 because it is goal_eligible, has a supplied supporting validation review, and meets the declared numerical goal according to the supervisor. Additional exploratory batches are unnecessary for that goal. The new b1_1 result does not displace it: narrower intervals still do not establish the prescribed minimum effect. Source grounding: seed, page 2, \"The \ufb01eld of view could be expanded by this distance and the results interpreted probabilistically.\" The temporal control is grounded in seed, page 2, \"To mitigate this error we list satellites with an expected intersection at +/- 5 sec- onds of the observation time such that all objects are listed.\" These passages motivate field expansion and the temporal window; they do not establish a three-sigma prescription or the assumed distributions. Evidence remains insufficient for timing-related causation, operational superiority, scientific novelty or universality.",
+        "result_interpretation": "The latest b1_1 batch brings that branch to three batches and 4608 candidates. Its fresh and stale missed-transit differences are -0.10526 and -0.11290, with intervals [-0.17704, -0.02867] and [-0.19384, -0.02670]. Both exclude zero but fail to establish the required reduction of at least 0.05. False-alert rates are approximately 28% in both scenarios. b1_2 remains unresolved on its two completed batches; its in-flight result has not arrived. b1_3 remains eligible: its fresh and stale intervals [-0.20165, -0.09933] and [-0.17367, -0.07260] satisfy the minimum-effect and width criteria across three batches. Its false-alert rates rise to 55.75% and 58.21%. The supplied previous validation supports this scoped numerical result, and the supervisor now reports goal.achieved=true. This updates the earlier decision's statement that validation was outstanding, while retaining the distinction between review of supplied statistics and independently executed artifact or physical-model validation."
+      },
+      "round": 8,
+      "trials_per_size": 1024
+    },
+    {
+      "batch": 3,
+      "branch_id": "b1_2",
+      "effect": {
+        "batches": 3,
+        "checks": [
+          {
+            "conclusion": "difference_detected",
+            "control": 0.11057692307692307,
+            "control_false_alert_rate": 0.14783653846153846,
+            "control_samples": 832,
+            "difference": -0.10817307692307691,
+            "difference_interval": [
+              -0.1563045405303753,
+              -0.05662864608842505
+            ],
+            "false_alert_rate": 0.40865384615384615,
+            "interval_width": 0.09967589444195024,
+            "negative_candidates": 2496,
+            "positive_transits": 832,
+            "resolved": true,
+            "scenario": "fresh",
+            "treatment": 0.002403846153846154,
+            "treatment_samples": 832
+          },
+          {
+            "conclusion": "difference_detected",
+            "control": 0.1350407450523865,
+            "control_false_alert_rate": 0.15309842041312272,
+            "control_samples": 859,
+            "difference": -0.12689173457508732,
+            "difference_interval": [
+              -0.18099523261549919,
+              -0.06890859293443916
+            ],
+            "false_alert_rate": 0.4224382341028757,
+            "interval_width": 0.11208663968106003,
+            "negative_candidates": 2469,
+            "positive_transits": 859,
+            "resolved": true,
+            "scenario": "stale",
+            "treatment": 0.008149010477299184,
+            "treatment_samples": 859
+          }
+        ],
+        "goal_eligible": true,
+        "interval_method": "Conservative Wilson endpoint bounds; Bonferroni across 3 branches, all planned batch looks, groups and endpoints. Paired covariance not exploited.",
+        "metric": "missed-transit rate",
+        "samples": 6656,
+        "scientific_novelty": "unverified"
+      },
+      "next_decision": {
+        "action": "finalize",
+        "goal_branch_id": "b1_3",
+        "invest": [],
+        "missing_evidence": [
+          "Supervisor-confirmed executable artifact validation; the supplied independent review did not read CSVs, verify hashes or rerun simulations.",
+          "Matched-candidate two- versus three-sigma comparisons with uncertainty for incremental recovery and added false alerts.",
+          "Spatial-versus-temporal miss decomposition to assess the temporal-limitation hypothesis.",
+          "Empirical calibration of simulation error distributions and geometry against observational data.",
+          "An operational loss criterion for evaluating the missed-transit versus false-alert tradeoff.",
+          "Literature evidence assessing novelty and external validation assessing real-world generalizability."
+        ],
+        "next_experiment": "Finalize the scoped b1_3 finding through the supervisor's required validation stage and incorporate the completed b1_2 result into the consolidated record. Request no additional batches for the achieved goal. A separately authorized follow-up should compare two- and three-sigma guards on identical held-out candidates with a common nominal control and unchanged +/-5-second window. Prespecify its budget and comparison criteria, retain existing thresholds, and report paired incremental recovery, added false alerts, denominators, uncertainty and spatial-versus-temporal miss causes. This tests whether the third sigma adds useful recovery and whether residual misses reflect timing; current branch summaries establish neither.",
+        "rationale": "Retain b1_3 for finalization because it is goal_eligible, meets the unchanged numerical thresholds, and has the supplied supporting independent review. The supervisor reports goal.achieved=true; additional batches are unnecessary for this scoped goal. Source grounding: seed, page 2, \"The \ufb01eld of view could be expanded by this distance and the results interpreted probabilistically.\" The temporal control is grounded in seed, page 2, \"To mitigate this error we list satellites with an expected intersection at +/- 5 sec- onds of the observation time such that all objects are listed.\" These passages motivate expansion and the temporal window, not the sigma prescriptions or assumed error distributions. The b1_2 update strengthens the reason to examine whether the third sigma provides useful additional recovery, without displacing the already supported finalization branch. Evidence remains insufficient for temporal causation, operational superiority, established scientific novelty or universality. The supporting review assessed supplied statistics; executable artifact validation remains the supervisor's responsibility.",
+        "result_interpretation": "The completed third b1_2 batch changes that branch from unresolved to goal_eligible: fresh and stale treatment-minus-control missed-transit differences are -0.10817 and -0.12689, with simultaneous intervals [-0.15630, -0.05663] and [-0.18100, -0.06891]. Both establish reductions exceeding 0.05 under the supplied interval procedure. False-alert rates increase from 14.78% to 40.87% and from 15.31% to 42.24%. No batches remain in flight. b1_3 remains eligible with three batches and 7168 candidates: its differences are -0.15273 and -0.12500, with intervals [-0.20165, -0.09933] and [-0.17367, -0.07260]; false-alert rates reach 55.75% and 58.21%. b1_1 intervals exclude zero but do not establish the required minimum reduction of 0.05. The newly completed b1_2 result supplies another qualifying numerical finding, but unequal branch samples prevent establishing the incremental benefit or operational superiority of either guard."
+      },
+      "round": 9,
+      "trials_per_size": 2048
+    }
+  ],
+  "scientific_novelty": "unverified",
+  "source_kind": "full_text",
+  "status": "goal_achieved",
+  "validation": {
+    "decision": "supported",
+    "limitations": [
+      "No CSVs were read, hashes verified or simulations rerun in this review. Replay success is supplied evidence of reproducibility, not an independently executed validation of the physical model.",
+      "Wilson intervals have approximate coverage. Bonferroni adjusts multiplicity but does not turn approximate marginal coverage into an exact finite-sample familywise guarantee; paired covariance is not exploited.",
+      "False-alert rates rise from 15.11% to 55.75% for fresh candidates and from 14.72% to 58.21% for stale candidates. These are conditional on nontransits, not fractions of alerts that are false; no operational loss function establishes an acceptable tradeoff.",
+      "Zero fresh misses among 897 true crossings does not establish zero population risk. The supplied treatment recall interval has a lower bound of approximately 98.54%.",
+      "Insufficient evidence establishes that residual stale misses are timing-related or more frequent in the underlying population than fresh misses. The summaries lack a spatial-versus-temporal failure decomposition.",
+      "The branches use different candidate samples and unequal accumulated sample sizes. Their summaries do not establish the proposed matched comparison of two-sigma versus three-sigma guards or the incremental benefit of the third sigma.",
+      "Independent Gaussian errors, quoted distances interpreted as standard deviations, bounded uniform candidate sampling and zenith circular-orbit geometry are experimental assumptions. Brightness, SGP4, historical TLEs and observational calibration are absent; baseline agreement is only a geometry consistency check.",
+      "The literature already suggests field expansion. This scoped sensitivity result establishes neither scientific novelty nor universality, full-paper reproduction or real-world predictive performance."
+    ],
+    "reasoning": "The supplied evidence supports the numerical goal for the fixed three-sigma recipe. Three distinct seed batches exceed the two-batch minimum; their reported replay counts total 7168 candidates. The contingency tables agree with the measurements: fresh misses decrease from 137/897 to 0/897, and stale misses from 112/880 to 2/880. Treatment-minus-control intervals are [-0.20165, -0.09933] and [-0.17367, -0.07260]; both lie below -0.05 and have widths below 0.25. The supplied recall bounds independently reproduce these difference bounds by endpoint subtraction. The implementation adjusts for three branches, eight planned looks, two groups and four endpoints, avoiding ordinary unadjusted repeated testing. All three deterministic geometry checks also meet their specified tolerances. Source grounding is explicit: seed, page 2 states, \"The \ufb01eld of view could be expanded by this distance and the results interpreted probabilistically.\" With timing identical in both arms, the nested spatial alert boundary explains recovery of 137 fresh and 110 stale crossings. This supports spatial recovery under the simulation assumptions, but does not identify the causes of the two residual stale misses. The substantial false-alert increase prevents interpreting the result as an established operational improvement. This is an independent review of supplied text and statistics; artifact execution and validation remain the supervisor's responsibility."
+  },
+  "validation_branch_id": "b1_3",
+  "workflow": "adaptive",
+  "workflow_version": "4"
+}

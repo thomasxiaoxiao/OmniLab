@@ -76,6 +76,7 @@ def test_rejected_proposals_do_not_launch_experiments(tmp_path, source, config):
             if role == "critic":
                 for critique in result["critiques"]:
                     critique["decision"] = "reject"
+                result["selected_proposal_id"] = None
             return result
 
     report = run_research(source, tmp_path / "run", config, roles_factory=Rejector)
@@ -142,7 +143,7 @@ def test_quote_checks_page_and_document(source):
         {"sizes": [3, 5]},
         {"sizes": [8, 8]},
         {"sizes": [8, 1000]},
-        {"max_workers": 8},
+        {"max_workers": 17},
         {"trials": 0},
         {"max_rounds": 99},
         {"unexpected": True},
@@ -235,7 +236,7 @@ def test_candidate_loop_is_bounded_even_when_effect_fails(tmp_path, source, conf
     )
     assert report["status"] == "round_budget_exhausted"
     assert len(report["rounds"]) == config.max_rounds
-    assert report["role_calls"] == 2 + 4 * config.max_rounds
+    assert report["role_calls"] == 2 + 5 * config.max_rounds
 
 
 def test_gate_stops_on_candidate_but_never_claims_discovery(tmp_path, source, config, monkeypatch):

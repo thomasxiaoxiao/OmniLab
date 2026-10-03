@@ -1,0 +1,35 @@
+{
+  "batch": 1,
+  "branch_id": "b1_1",
+  "checkpoint": 2,
+  "decision": {
+    "action": "invest",
+    "goal_branch_id": null,
+    "invest": [
+      "b1_3",
+      "b1_2",
+      "b1_1"
+    ],
+    "missing_evidence": [
+      "Completed b1_2 results and the pending b1_3 result.",
+      "At least two independent seed batches and simultaneous intervals meeting the unchanged decision criteria for a candidate branch.",
+      "Matched-candidate guard comparisons with incremental recovery, false-alert counts, denominators and uncertainty.",
+      "Raw miss-cause records supporting spatial versus temporal attribution.",
+      "Recorded seeds, sampling bounds and control provenance demonstrating reproducibility and batch independence.",
+      "Independent validation after a branch becomes goal_eligible.",
+      "Empirical support for the simulated error distributions and operational alert-cost criteria.",
+      "Literature evidence sufficient to assess novelty; real-world generalizability also remains unverified."
+    ],
+    "next_experiment": "Retain the in-flight b1_3 and b1_2 work and consolidate each result when it completes. Allocate subsequent independent seed batches in priority order b1_3, b1_2, b1_1, reassessing after each completion. Preserve nominal controls, the fixed +/-5-second temporal window, sampling assumptions and separate fresh/stale reporting. Apply the prescribed simultaneous interval method with unchanged minimum effect 0.05, maximum width 0.25 and minimum two independent batches. Compare guard widths only where matched candidates and controls are available; report incremental recovery and added false alerts with denominators and uncertainty. Attribute misses to timing or spatial error only if raw outputs support it. Enforce the eight-batch cap per branch and remaining budgets, preserve unfavorable outcomes, and reserve resources for independent validation once a branch becomes goal_eligible.",
+    "rationale": "Keep b1_3 first because its available intervals are closest to the required precision and another independent batch is already in flight. Keep b1_2 second to assess whether the third sigma provides incremental recovery, then extend b1_1 to determine whether its apparent recovery persists with fewer false alerts. The new b1_1 measurements strengthen the reason to compare narrower guards rather than select the largest guard solely for zero observed misses. The source motivates spatial expansion: seed, page 2, \"The \ufb01eld of view could be expanded by this distance and the results interpreted probabilistically.\" It also states: seed, page 2, \"The cross-track error is more critical as it determines whether the object will pass through the \ufb01eld or not.\" These passages do not establish Gaussian errors or an optimal guard. All completed evidence remains insufficient for the declared goal; available bounded tests can still improve precision. Scientific novelty and operational usefulness remain unverified.",
+    "result_interpretation": "b1_1 now has one completed batch: missed-transit rates fell from 14.06% to 1.56% in fresh scenarios and from 7.69% to 0% in stale scenarios. Treatment-minus-control intervals remain unresolved: [-0.3587, 0.1518] and [-0.2804, 0.1527], with widths 0.5104 and 0.4331. False-alert rates increased from 15.10% to 23.96% and from 20.94% to 34.03%, respectively. Previously available b1_3 results show zero treatment misses in both scenarios, but intervals also include zero and exceed the 0.25 width limit; false-alert rates reach 51.58% and 56.91%. These partial results make the narrower guard's recovery-versus-alert tradeoff worth retaining. Different samples and controls prevent attributing between-branch differences to guard width. b1_2 has no completed results; b1_2 and b1_3 remain in flight. No branch meets eligibility, and the predicted excess stale timing misses remains unsupported by observed treatment misses."
+  },
+  "decision_seconds": 20.338,
+  "goal_accepted": false,
+  "input": "checkpoints/002/input.json",
+  "pending_branches": [
+    "b1_2",
+    "b1_3"
+  ],
+  "result_to_decision_seconds": 43.646
+}

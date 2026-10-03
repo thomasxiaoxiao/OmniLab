@@ -1,0 +1,35 @@
+{
+  "batch": 2,
+  "branch_id": "b1_3",
+  "checkpoint": 4,
+  "decision": {
+    "action": "invest",
+    "goal_branch_id": null,
+    "invest": [
+      "b1_3",
+      "b1_2",
+      "b1_1"
+    ],
+    "missing_evidence": [
+      "Completed outcomes for the b1_1 and b1_2 batches currently in flight.",
+      "Simultaneous intervals resolving the unchanged minimum-effect criterion in both b1_3 scenarios.",
+      "Matched-candidate guard-width comparisons with incremental recovery, additional false alerts, denominators and uncertainty.",
+      "Raw miss-cause records distinguishing spatial and temporal errors.",
+      "Recorded seeds, sampling bounds and control provenance verifying batch independence and reproducibility.",
+      "Independent validation after a branch becomes goal_eligible.",
+      "Empirical support for error distributions and operational criteria for the false-alert tradeoff.",
+      "Literature evidence assessing novelty and external evidence assessing real-world generalizability."
+    ],
+    "next_experiment": "Allocate the next independent seed batch to b1_3, while retaining the b1_1 and b1_2 batches already in flight. Consolidate completed results and reassess after each completion; use priority b1_3, b1_2, b1_1 for subsequent allocations. Preserve nominal controls, sampling assumptions, the +/-5-second temporal window, separate fresh/stale reporting and the prescribed simultaneous interval method. Keep minimum effect 0.05, maximum interval width 0.25, minimum two independent batches and the eight-batch cap unchanged. Test whether b1_3's upper interval endpoints reach -0.05 in both scenarios. Where authorized matched candidate records exist, compare guard widths for incremental recovery and added false alerts, including denominators and uncertainty. Inspect raw miss causes before attributing stale residuals to timing; otherwise retain that uncertainty. Preserve unfavorable results, enforce remaining budgets and reserve resources for independent validation after a branch becomes goal_eligible.",
+    "rationale": "Prioritize b1_3 because it now meets precision and batch-count criteria and narrowly misses the minimum-effect criterion in both scenarios. Further independent batches can help determine whether the simultaneous bounds support the required reduction, although success is not guaranteed. Retain b1_2 next for the incremental value of the third sigma, and b1_1 for its lower observed false-alert burden. Source grounding is limited but explicit: seed, page 2, \"The \ufb01eld of view could be expanded by this distance and the results interpreted probabilistically.\" Also, seed, page 2, \"The cross-track error is more critical as it determines whether the object will pass through the \ufb01eld or not.\" These passages support investigating spatial margins, but do not establish Gaussian error distributions, the chosen sigma prescriptions, timing attribution or operational benefit. Evidence is insufficient to finalize any branch. Missing novelty literature does not prevent this scoped numerical investigation; scientific novelty and real-world generalizability remain unverified.",
+    "result_interpretation": "The second completed b1_3 batch changes the evidence: both simultaneous treatment-minus-control intervals now exclude zero and satisfy the maximum width of 0.25. Fresh missed-transit rates fall from 13.07% to 0%, with interval [-0.20448, -0.04835] and width 0.15613; stale rates fall from 13.70% to 0.27%, with interval [-0.21541, -0.04362] and width 0.17179. However, neither upper endpoint reaches -0.05, so a reduction of at least five percentage points remains unresolved under the unchanged criterion. Two batches meet the batch-count requirement, but goal_eligible remains false. False-alert rates rise from 14.59% to 53.60% fresh and from 14.26% to 58.07% stale. The b1_1 and b1_2 completed results remain limited to one batch each, with intervals including zero and exceeding the width limit; their additional in-flight outcomes are unavailable. Differing branch controls prevent a matched comparison of guard widths. The small stale residual in b1_3 does not establish a temporal mechanism."
+  },
+  "decision_seconds": 23.094,
+  "goal_accepted": false,
+  "input": "checkpoints/004/input.json",
+  "pending_branches": [
+    "b1_1",
+    "b1_2"
+  ],
+  "result_to_decision_seconds": 49.025
+}

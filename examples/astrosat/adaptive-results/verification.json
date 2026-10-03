@@ -1,0 +1,28 @@
+{
+  "run_id": "omnigent-adaptive-astrosat-validated",
+  "domain": "astrosat",
+  "status": "goal_achieved",
+  "agent_requests": 25,
+  "sessions_created": 25,
+  "completed_responses": 23,
+  "runner_stop_requests_recorded": 25,
+  "cleanup_unconfirmed": 0,
+  "peak_concurrent_requests": 3,
+  "decision_checkpoints": 9,
+  "computed_simulations_including_replay": 36864,
+  "elapsed_seconds": 301.594,
+  "goal_achieved": true,
+  "validation_verdict": "supported",
+  "hash_verification_passed": true,
+  "journal_verification_passed": true,
+  "journal_issues": [],
+  "result_to_decision_latency_seconds": {
+    "count": 9,
+    "median": 46.14,
+    "minimum": 24.619,
+    "maximum": 68.58
+  },
+  "goal_checkpoint": 7,
+  "full_archive": "output/research/omnigent-adaptive-astrosat-validated",
+  "manifest_sha256": "3d4914c3bf74a51cc32e89232d1305fc066a103db8da320936fd2626a9dc53a1"
+}

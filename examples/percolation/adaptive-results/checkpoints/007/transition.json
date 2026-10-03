@@ -1,0 +1,29 @@
+{
+  "batch": 3,
+  "branch_id": "b1_1",
+  "checkpoint": 7,
+  "decision": {
+    "action": "finalize",
+    "goal_branch_id": "b1_3",
+    "invest": [],
+    "missing_evidence": [
+      "The additional b1_2 result currently in flight.",
+      "Direct artifact verification beyond the supplied validation review, including raw trials, seed provenance and implementation checks, unless already completed and recorded by the supervisor.",
+      "Independent scientific verification of the horizontal strongly connected wrapping implementation; deterministic replay alone does not establish correctness.",
+      "Per-batch effect summaries to assess consistency beyond pooled measurements.",
+      "Evidence across occupation probabilities, intervention probabilities and larger sizes to distinguish saturation and threshold effects from critical behavior.",
+      "Relevant literature sufficient to assess novelty; scientific novelty remains unverified."
+    ],
+    "next_experiment": "Finalize the scoped b1_3 numerical finding through the supervisor's required validation and artifact-acceptance process, reusing the supplied supported review without treating it as independent code execution. Preserve all thresholds, budgets and outcomes. Consolidate the existing b1_2 job when it completes without duplicating it or delaying the achieved numerical goal for further screening. No new simulation batches are requested. A subsequent separately specified investigation could vary reverse-edge probability at fixed p=1 to test whether smaller interventions retain a detectable wrapping increase before saturation; its protocol and multiplicity allocation must be approved before execution.",
+    "rationale": "Finalize b1_3 because it remains goal_eligible=true, has a supported validation review, and the declared numerical goal is reported achieved. Further screening is unnecessary for that goal. Source seed, page 2 states: \"A somewhat different class of directed lattices, which we do not study here, are ones where some pairs of sites are connected by directed bonds in both directions, equivalent to an undirected bond.\" This grounds the model class; the intervention probability and strict-increase prediction are agent-generated. The validation clarifies that reverse edges are independently added with probability 0.25, rather than exactly 25% being converted in every realization. Its review relied on supplied records and did not independently execute or verify artifacts. Final artifact acceptance remains the deterministic supervisor's responsibility.",
+    "result_interpretation": "The newly completed third b1_1 batch leaves both sizes unresolved under the unchanged 0.05 minimum-effect criterion: intervals are [0.002096500265016954, 0.1419210453240748] at size 8 and [0.03160499216147383, 0.16669608984196804] at size 16. Both exclude zero but include effects below 0.05. This result does not displace b1_3, whose two-batch differences are 0.21484375 and 0.248046875, with interval lower bounds above 0.05 and widths below 0.25 at both sizes. The supplied validation supports this limited numerical finding, and the supervisor now reports goal.achieved=true. For b1_2, the available two-batch results resolve size 16 but leave size 8 unresolved; its additional in-flight result remains unavailable. These measurements support a finite-size wrapping response, not established novelty or universality."
+  },
+  "decision_seconds": 17.657,
+  "goal_accepted": false,
+  "input": "checkpoints/007/input.json",
+  "observation_after_stop": true,
+  "pending_branches": [
+    "b1_2"
+  ],
+  "result_to_decision_seconds": 60.205
+}

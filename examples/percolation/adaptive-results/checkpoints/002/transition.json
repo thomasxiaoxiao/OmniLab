@@ -1,0 +1,33 @@
+{
+  "batch": 1,
+  "branch_id": "b1_2",
+  "checkpoint": 2,
+  "decision": {
+    "action": "invest",
+    "goal_branch_id": null,
+    "invest": [
+      "b1_2"
+    ],
+    "missing_evidence": [
+      "A second independent seed batch for b1_2 with fresh matched controls.",
+      "Intervals satisfying the unchanged precision and resolution criteria, including resolution of the size-8 comparison.",
+      "Completed results from the pending b1_1 work and first b1_3 batch.",
+      "Supervisor assessment of the predeclared finite-size criterion and goal eligibility.",
+      "Independent validation of any eligible branch.",
+      "Implementation, seed independence and sampling verification beyond the supplied summaries.",
+      "Additional controls to distinguish threshold displacement from other structural explanations.",
+      "Literature evidence sufficient to assess novelty; scientific novelty remains unverified."
+    ],
+    "next_experiment": "Allocate the next available batch to b1_2 using independent seeds and fresh matched controls at p=0.69716 and sizes 8 and 16. Preserve the approved site and bond sampling, horizontal wrapping definition, sample allocation and simultaneous interval procedure. Aggregate the two independent batches and reassess the unchanged minimum effect of 0.05, maximum interval width of 0.25, minimum two batches and predeclared finite-size criteria. Consolidate b1_1 and b1_3 results when their pending work completes, then reconsider allocation. Stay within existing budgets and the eight-batch cap. Finalize only after supervisor-reported goal eligibility, with independent validation to follow.",
+    "rationale": "The new measurements shift the next available allocation toward b1_2: its size-16 interval already supports a decrease exceeding the minimum effect, making independent repetition and improved precision informative. This is a threshold-informed numerical consistency check. Source seed, page 13 states: \"One could also look at strongly-connected clusters under site (rather than bond) percolation on square lat- tices, or at either bond or site percolation on non-square lattices such as triangular or hexagonal lattices, or on cubic or hypercubic lattices in higher dimensions.\" The supplied page-7 evidence reports a Manhattan site threshold above the tested p=0.69716. Equal occupation probability therefore does not match distance from criticality. The observed contrast cannot isolate threshold displacement from other effects or establish universality. Continue the already-running b1_1 and b1_3 work without duplicating it. Remaining budget and the eight-batch cap permit further informative testing.",
+    "result_interpretation": "The newly completed b1_2 batch supports prioritizing the site-versus-bond consistency check. At size 16, treatment-minus-control horizontal wrapping is -0.296875, with simultaneous interval [-0.4912247524345787, -0.07312696392772922], entirely below -0.05. At size 8, the difference is -0.1796875 with interval [-0.3735982096360824, 0.032016907627316904], so that comparison remains unresolved. Both widths exceed 0.25, and only one batch is complete. For b1_1, completed first-batch differences remain 0.01953125 and 0.109375; both intervals include zero and exceed the width limit. Its pending work supplies no additional evidence yet. b1_3 has no completed results. No branch is goal_eligible, and evidence is insufficient to establish a resolved mechanism or scientific novelty."
+  },
+  "decision_seconds": 20.341,
+  "goal_accepted": false,
+  "input": "checkpoints/002/input.json",
+  "pending_branches": [
+    "b1_3",
+    "b1_1"
+  ],
+  "result_to_decision_seconds": 42.864
+}

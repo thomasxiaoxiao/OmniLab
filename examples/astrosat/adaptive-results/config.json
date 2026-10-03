@@ -1,0 +1,23 @@
+{
+  "agent_timeout_seconds": 240,
+  "domain": "astrosat",
+  "finite_size_tolerance": 0.12,
+  "goal_max_interval_width": 0.25,
+  "goal_min_batches": 2,
+  "max_agent_calls": 96,
+  "max_agent_retries": 1,
+  "max_decision_calls": 32,
+  "max_rounds": 8,
+  "max_seconds": 3600,
+  "max_simulations": 100000,
+  "max_workers": 6,
+  "minimum_effect": 0.05,
+  "preferred_experiment": null,
+  "seed": 20261004,
+  "sizes": [
+    16,
+    32
+  ],
+  "trials": 256,
+  "workflow": "adaptive"
+}

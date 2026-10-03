@@ -1,0 +1,14 @@
+{
+  "workflow": "adaptive",
+  "domain": "astrosat",
+  "seed": 20261004,
+  "trials": 256,
+  "max_rounds": 8,
+  "max_workers": 6,
+  "max_seconds": 3600,
+  "agent_timeout_seconds": 240,
+  "max_agent_calls": 96,
+  "max_simulations": 100000,
+  "goal_min_batches": 2,
+  "goal_max_interval_width": 0.25
+}

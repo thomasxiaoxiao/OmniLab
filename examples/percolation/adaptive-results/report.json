@@ -1,0 +1,1187 @@
+{
+  "acceleration": {
+    "baseline_seconds": null,
+    "bottleneck": "Partial simulation result to next investment decision",
+    "multiplier": null,
+    "observed_decision_seconds": [
+      23.442,
+      20.341,
+      21.448,
+      22.83,
+      19.44,
+      17.427,
+      17.657,
+      18.408
+    ],
+    "observed_result_to_decision_seconds": [
+      23.443,
+      42.864,
+      60.601,
+      46.682,
+      45.348,
+      41.213,
+      60.205,
+      51.417
+    ],
+    "status": "No comparable manual baseline measured"
+  },
+  "acceptance": {
+    "baseline_simulations": true,
+    "followup_implemented": true,
+    "full_paper_reproduction": false,
+    "live_agents_executed": true
+  },
+  "backend": "omnigent",
+  "baseline": {
+    "checks": [
+      {
+        "ci95": [
+          0.6189931578757643,
+          0.7754195312906295
+        ],
+        "model": "l_lattice",
+        "observed": 0.703125,
+        "passed": true,
+        "reference": 0.75001,
+        "size": 8
+      },
+      {
+        "ci95": [
+          0.6108473759049617,
+          0.7683955944473397
+        ],
+        "model": "l_lattice",
+        "observed": 0.6953125,
+        "passed": true,
+        "reference": 0.75001,
+        "size": 16
+      },
+      {
+        "ci95": [
+          0.7190057513712909,
+          0.8574435635642075
+        ],
+        "model": "manhattan",
+        "observed": 0.796875,
+        "passed": true,
+        "reference": 0.75001,
+        "size": 8
+      },
+      {
+        "ci95": [
+          0.6767870437261757,
+          0.8238136771388623
+        ],
+        "model": "manhattan",
+        "observed": 0.7578125,
+        "passed": true,
+        "reference": 0.75001,
+        "size": 16
+      },
+      {
+        "ci95": [
+          0.7361492727731167,
+          0.8706394797905659
+        ],
+        "model": "random_diode",
+        "observed": 0.8125,
+        "passed": true,
+        "reference": 0.75001,
+        "size": 8
+      },
+      {
+        "ci95": [
+          0.5946324955486336,
+          0.7542710371754838
+        ],
+        "model": "random_diode",
+        "observed": 0.6796875,
+        "passed": true,
+        "reference": 0.75001,
+        "size": 16
+      }
+    ],
+    "claim": "Small-lattice simulation consistency check, not high-precision reproduction.",
+    "finite_size_tolerance": 0.12,
+    "limitation": "Tolerance is an engineering allowance, not a fitted scaling correction.",
+    "numerical": {
+      "passed": true,
+      "seed_replays": 6,
+      "violations": []
+    },
+    "passed": true,
+    "reference": "arXiv:2607.24975v1, Tables I-II; one-axis wrapping"
+  },
+  "branches": {
+    "b1_1": {
+      "batches": 3,
+      "checks": [
+        {
+          "conclusion": "unresolved",
+          "control": 0.7522321428571429,
+          "control_samples": 1792,
+          "difference": 0.0725446428571428,
+          "difference_interval": [
+            0.002096500265016954,
+            0.1419210453240748
+          ],
+          "interval_width": 0.13982454505905784,
+          "resolved": false,
+          "scenario": "8",
+          "treatment": 0.8247767857142857,
+          "treatment_samples": 1792
+        },
+        {
+          "conclusion": "unresolved",
+          "control": 0.75390625,
+          "control_samples": 1792,
+          "difference": 0.0998883928571429,
+          "difference_interval": [
+            0.03160499216147383,
+            0.16669608984196804
+          ],
+          "interval_width": 0.1350910976804942,
+          "resolved": false,
+          "scenario": "16",
+          "treatment": 0.8537946428571429,
+          "treatment_samples": 1792
+        }
+      ],
+      "goal_eligible": false,
+      "interval_method": "Conservative Wilson endpoint bounds; Bonferroni across 3 branches, all planned batch looks, groups and endpoints. Paired covariance not exploited.",
+      "metric": "horizontal wrapping rate",
+      "proposal": {
+        "evidence": [
+          {
+            "page": 13,
+            "quote": "One could look at other arrange- ments of the directed bonds on the square lattice, such as the two-neighbor model [38], the biased directed per- colation model [39], the randomly-oriented Manhattan lattice [40], or the biased Janus-particle directed model [67, 68].",
+            "source_id": "seed"
+          },
+          {
+            "page": 2,
+            "quote": "We conjecture that these should show strongly-connected percolation behav- ior similar to that of the lattices we study, presumably in the same universality class.",
+            "source_id": "seed"
+          }
+        ],
+        "experiment": "random_manhattan",
+        "hypothesis": "The paper explicitly proposes studying randomly oriented Manhattan lattices. Agent-generated test hypothesis: randomizing row and column directions changes the probability of strongly connected wrapping in a specified axis relative to alternating Manhattan directions at the catalog's fixed p=0.69716 and matched finite sizes. Average over both orientation and occupation randomness. A difference could reflect a shifted critical threshold or finite-size effects; it would not establish a different universality class.",
+        "id": "b1_1",
+        "origin": "paper_suggestion",
+        "source_id": "seed",
+        "title": "Wrapping under randomized row and column directions"
+      },
+      "samples": 7168,
+      "scientific_novelty": "unverified",
+      "status": "paused"
+    },
+    "b1_2": {
+      "batches": 3,
+      "checks": [
+        {
+          "conclusion": "difference_detected",
+          "control": 0.7633928571428571,
+          "control_samples": 1792,
+          "difference": -0.1869419642857142,
+          "difference_interval": [
+            -0.2646115253123502,
+            -0.10651061139800166
+          ],
+          "interval_width": 0.15810091391434855,
+          "resolved": true,
+          "scenario": "8",
+          "treatment": 0.5764508928571429,
+          "treatment_samples": 1792
+        },
+        {
+          "conclusion": "difference_detected",
+          "control": 0.7606026785714286,
+          "control_samples": 1792,
+          "difference": -0.3158482142857143,
+          "difference_interval": [
+            -0.39295219529126574,
+            -0.2340780416581652
+          ],
+          "interval_width": 0.15887415363310053,
+          "resolved": true,
+          "scenario": "16",
+          "treatment": 0.4447544642857143,
+          "treatment_samples": 1792
+        }
+      ],
+      "goal_eligible": true,
+      "interval_method": "Conservative Wilson endpoint bounds; Bonferroni across 3 branches, all planned batch looks, groups and endpoints. Paired covariance not exploited.",
+      "metric": "horizontal wrapping rate",
+      "proposal": {
+        "evidence": [
+          {
+            "page": 13,
+            "quote": "One could also look at strongly-connected clusters under site (rather than bond) percolation on square lat- tices, or at either bond or site percolation on non-square lattices such as triangular or hexagonal lattices, or on cubic or hypercubic lattices in higher dimensions.",
+            "source_id": "seed"
+          },
+          {
+            "page": 7,
+            "quote": "(The result for the L-lattice also implies that site percola- tion on the Manhattan lattice has the same threshold ofp c = 0.7401931(10), because of the mapping described in Section II\u2014see Fig. 4.)",
+            "source_id": "seed"
+          }
+        ],
+        "experiment": "site_percolation",
+        "hypothesis": "The paper explicitly suggests site-percolation extensions. Agent-generated prediction: Manhattan site percolation at the catalog's p=0.69716 has lower specified-axis strongly connected wrapping probability than Manhattan bond percolation at matched finite sizes. The paper's reported site threshold is higher than this p, so this is a threshold-informed consistency check rather than evidence of novelty or a test of universality. Occupation mode is the intervention; equal p does not match distance from each model's critical threshold.",
+        "id": "b1_2",
+        "origin": "paper_suggestion",
+        "source_id": "seed",
+        "title": "Site versus bond occupation at fixed probability"
+      },
+      "samples": 7168,
+      "scientific_novelty": "unverified",
+      "status": "ready"
+    },
+    "b1_3": {
+      "batches": 2,
+      "checks": [
+        {
+          "conclusion": "difference_detected",
+          "control": 0.78125,
+          "control_samples": 512,
+          "difference": 0.21484375,
+          "difference_interval": [
+            0.12709630589649357,
+            0.291683624567862
+          ],
+          "interval_width": 0.16458731867136844,
+          "resolved": true,
+          "scenario": "8",
+          "treatment": 0.99609375,
+          "treatment_samples": 512
+        },
+        {
+          "conclusion": "difference_detected",
+          "control": 0.751953125,
+          "control_samples": 512,
+          "difference": 0.248046875,
+          "difference_interval": [
+            0.15995144805874906,
+            0.3235490171137342
+          ],
+          "interval_width": 0.16359756905498513,
+          "resolved": true,
+          "scenario": "16",
+          "treatment": 1.0,
+          "treatment_samples": 512
+        }
+      ],
+      "goal_eligible": true,
+      "interval_method": "Conservative Wilson endpoint bounds; Bonferroni across 3 branches, all planned batch looks, groups and endpoints. Paired covariance not exploited.",
+      "metric": "horizontal wrapping rate",
+      "proposal": {
+        "evidence": [
+          {
+            "page": 2,
+            "quote": "A somewhat different class of directed lattices, which we do not study here, are ones where some pairs of sites are connected by directed bonds in both directions, equivalent to an undirected bond.",
+            "source_id": "seed"
+          },
+          {
+            "page": 13,
+            "quote": "Several researchers have looked previously at resistor-diode lattices in which occupied bonds can run either in one direction, as here, or in both direc- tions [30, 35\u201337], focusing on the case of fully random resistors and diodes, but again other arrangements are possible, including both random and non-random vari- ants.",
+            "source_id": "seed"
+          }
+        ],
+        "experiment": "resistor_diode",
+        "hypothesis": "Agent-generated prediction: converting 25% of occupied random diodes into bidirectional bonds at the catalog's p=1 increases specified-axis strongly connected wrapping probability relative to the random-diode control at matched finite sizes. Under a coupling that preserves every original directed edge, adding reverse edges cannot destroy existing strongly connected wrapping; a detectable strict increase remains an empirical question. The paper identifies resistor-diode models as prior work, so this is a sensitivity check, not an established novel direction or a comparison at matched criticality.",
+        "id": "b1_3",
+        "origin": "agent_hypothesis",
+        "source_id": "seed",
+        "title": "Wrapping response to 25% bidirectional bonds"
+      },
+      "samples": 2048,
+      "scientific_novelty": "unverified",
+      "status": "paused"
+    }
+  },
+  "checkpoints": [
+    {
+      "batch": 1,
+      "branch_id": "b1_1",
+      "checkpoint": 1,
+      "decision": {
+        "action": "invest",
+        "goal_branch_id": null,
+        "invest": [
+          "b1_1"
+        ],
+        "missing_evidence": [
+          "A second independent seed batch for b1_1.",
+          "Simultaneous intervals satisfying the unchanged resolution and maximum-width criteria.",
+          "Completed results for the in-flight b1_2 and b1_3 comparisons.",
+          "Supervisor confirmation of the predeclared finite-size consistency criterion.",
+          "Independent validation of any subsequently eligible branch.",
+          "Implementation and sampling verification beyond the supplied summaries.",
+          "Literature evidence sufficient to assess scientific novelty; novelty remains unverified."
+        ],
+        "next_experiment": "Run a second independent seed batch for b1_1 at p=0.69716 and sizes 8 and 16, preserving the approved orientation sampling, occupation sampling, horizontal wrapping definition and fresh matched controls. Aggregate both batches using the predeclared simultaneous interval procedure and unchanged effect, precision and finite-size criteria. Continue collecting the already-running b1_2 and b1_3 batches; reassess allocation after each completion. Keep the eight-batch cap and existing budgets. Request independent validation only after a branch becomes goal_eligible.",
+        "rationale": "The first measurements change the next step from initial screening to a precision-focused repeat of b1_1. They provide insufficient evidence to accept or reject its predicted effect, while substantial budget remains for another allowed batch. Retain the running comparisons without duplicating their pending work. The source supports investigating alternative arrangements: seed, page 13 states, \"or the biased Janus-particle directed model [67, 68].\" This contextual quotation supports the broader extension discussion, not the measured outcome or novelty. The supplied full page-13 quotation specifically names the randomly-oriented Manhattan lattice. A resolved fixed-probability contrast would still not distinguish a threshold shift from other structural effects or establish universality.",
+        "result_interpretation": "Only b1_1 has completed a batch. Treatment-minus-control horizontal wrapping differences are 0.01953125 at size 8 and 0.109375 at size 16, with simultaneous intervals [-0.16097129918842557, 0.19809970158068269] and [-0.07255811368079534, 0.2804771670774351]. Both intervals include zero and effects above 0.05; neither resolves the comparison. Their widths, 0.35907100076910825 and 0.35303528075823043, exceed 0.25, and only one independent batch is available. The larger point estimate at size 16 does not establish size dependence. Results for b1_2 and b1_3 remain pending. No branch is eligible for finalization."
+      },
+      "decision_seconds": 23.442,
+      "goal_accepted": false,
+      "input": "checkpoints/001/input.json",
+      "pending_branches": [
+        "b1_3",
+        "b1_2"
+      ],
+      "result_to_decision_seconds": 23.443
+    },
+    {
+      "batch": 1,
+      "branch_id": "b1_2",
+      "checkpoint": 2,
+      "decision": {
+        "action": "invest",
+        "goal_branch_id": null,
+        "invest": [
+          "b1_2"
+        ],
+        "missing_evidence": [
+          "A second independent seed batch for b1_2 with fresh matched controls.",
+          "Intervals satisfying the unchanged precision and resolution criteria, including resolution of the size-8 comparison.",
+          "Completed results from the pending b1_1 work and first b1_3 batch.",
+          "Supervisor assessment of the predeclared finite-size criterion and goal eligibility.",
+          "Independent validation of any eligible branch.",
+          "Implementation, seed independence and sampling verification beyond the supplied summaries.",
+          "Additional controls to distinguish threshold displacement from other structural explanations.",
+          "Literature evidence sufficient to assess novelty; scientific novelty remains unverified."
+        ],
+        "next_experiment": "Allocate the next available batch to b1_2 using independent seeds and fresh matched controls at p=0.69716 and sizes 8 and 16. Preserve the approved site and bond sampling, horizontal wrapping definition, sample allocation and simultaneous interval procedure. Aggregate the two independent batches and reassess the unchanged minimum effect of 0.05, maximum interval width of 0.25, minimum two batches and predeclared finite-size criteria. Consolidate b1_1 and b1_3 results when their pending work completes, then reconsider allocation. Stay within existing budgets and the eight-batch cap. Finalize only after supervisor-reported goal eligibility, with independent validation to follow.",
+        "rationale": "The new measurements shift the next available allocation toward b1_2: its size-16 interval already supports a decrease exceeding the minimum effect, making independent repetition and improved precision informative. This is a threshold-informed numerical consistency check. Source seed, page 13 states: \"One could also look at strongly-connected clusters under site (rather than bond) percolation on square lat- tices, or at either bond or site percolation on non-square lattices such as triangular or hexagonal lattices, or on cubic or hypercubic lattices in higher dimensions.\" The supplied page-7 evidence reports a Manhattan site threshold above the tested p=0.69716. Equal occupation probability therefore does not match distance from criticality. The observed contrast cannot isolate threshold displacement from other effects or establish universality. Continue the already-running b1_1 and b1_3 work without duplicating it. Remaining budget and the eight-batch cap permit further informative testing.",
+        "result_interpretation": "The newly completed b1_2 batch supports prioritizing the site-versus-bond consistency check. At size 16, treatment-minus-control horizontal wrapping is -0.296875, with simultaneous interval [-0.4912247524345787, -0.07312696392772922], entirely below -0.05. At size 8, the difference is -0.1796875 with interval [-0.3735982096360824, 0.032016907627316904], so that comparison remains unresolved. Both widths exceed 0.25, and only one batch is complete. For b1_1, completed first-batch differences remain 0.01953125 and 0.109375; both intervals include zero and exceed the width limit. Its pending work supplies no additional evidence yet. b1_3 has no completed results. No branch is goal_eligible, and evidence is insufficient to establish a resolved mechanism or scientific novelty."
+      },
+      "decision_seconds": 20.341,
+      "goal_accepted": false,
+      "input": "checkpoints/002/input.json",
+      "pending_branches": [
+        "b1_3",
+        "b1_1"
+      ],
+      "result_to_decision_seconds": 42.864
+    },
+    {
+      "batch": 1,
+      "branch_id": "b1_3",
+      "checkpoint": 3,
+      "decision": {
+        "action": "invest",
+        "goal_branch_id": null,
+        "invest": [
+          "b1_3"
+        ],
+        "missing_evidence": [
+          "A second independent b1_3 seed batch with fresh matched controls.",
+          "Supervisor assessment of aggregated intervals, predeclared finite-size criteria and goal eligibility.",
+          "Independent validation of any eligible selected branch.",
+          "Completed results from the in-flight b1_1 and b1_2 work.",
+          "Verification of seed independence, sampling, wrapping implementation and preservation of original directed edges under the b1_3 intervention.",
+          "Additional evidence separating the finite-size response from critical-threshold or universality claims.",
+          "Literature evidence sufficient to assess scientific novelty; novelty remains unverified."
+        ],
+        "next_experiment": "Run a second b1_3 batch with independent seeds and fresh matched random-diode controls at p=1, sizes 8 and 16, and the approved 25% bidirectional treatment. Preserve the approved occupation and conversion sampling, sample allocation, horizontal wrapping definition and simultaneous interval procedure. Have the supervisor verify that treatment preserves every original directed edge and that seed batches are independent. Aggregate the completed batches and assess the unchanged minimum effect 0.05, maximum interval width 0.25, minimum two batches and predeclared finite-size criteria. Continue existing b1_1 and b1_2 work without duplicating pending jobs; consolidate each returned batch before allocating further work. Stay within current budgets and the eight-batch cap. Finalize only if the supervisor reports goal_eligible=true, then submit the selected branch for independent validation.",
+        "rationale": "Prioritize independent repetition of b1_3 because it is the first branch whose completed comparisons satisfy both effect and precision thresholds at both sizes. This shifts the next available allocation from b1_2 while allowing its already-running work to finish. Source seed, page 2 states: \"A somewhat different class of directed lattices, which we do not study here, are ones where some pairs of sites are connected by directed bonds in both directions, equivalent to an undirected bond.\" This supports the model extension, not a novelty claim. If the implementation preserves original directed edges, adding reverse edges cannot destroy existing wrapping; the measurements support a strict increase under the tested conditions. Independent repetition can assess its reproducibility. The comparison at p=1 does not establish matched criticality, threshold behavior or universality. Available budget and the eight-batch cap permit this next test, but no branch can yet be finalized.",
+        "result_interpretation": "The completed b1_3 batch changes the priority: both sizes now show positive effects exceeding 0.05 throughout their supplied simultaneous intervals. At size 8, the difference is 0.2109375 with interval [0.08383528266671092, 0.3171514631696658] and width 0.23331618050295488. At size 16, it is 0.26171875 with interval [0.12548391824843952, 0.3720366738078056] and width 0.24655275555936607. Both widths meet the 0.25 limit, but only one batch is complete and goal_eligible remains false. Treatment wrapping in every observed sample does not establish population probability one. For b1_2, the completed size-16 interval supports a decrease exceeding 0.05; size 8 remains unresolved and both widths exceed 0.25. For b1_1, both completed intervals include zero and exceed 0.25. Pending b1_1 and b1_2 batches provide no additional evidence yet. These are finite-size numerical results; mechanism resolution and scientific novelty remain unverified."
+      },
+      "decision_seconds": 21.448,
+      "goal_accepted": false,
+      "input": "checkpoints/003/input.json",
+      "pending_branches": [
+        "b1_1",
+        "b1_2"
+      ],
+      "result_to_decision_seconds": 60.601
+    },
+    {
+      "batch": 2,
+      "branch_id": "b1_1",
+      "checkpoint": 4,
+      "decision": {
+        "action": "invest",
+        "goal_branch_id": null,
+        "invest": [
+          "b1_1"
+        ],
+        "missing_evidence": [
+          "A third independent b1_1 batch and its aggregated simultaneous intervals.",
+          "Completed results from the in-flight b1_2 and b1_3 batches.",
+          "Supervisor verification of fresh controls, seed independence and the wrapping implementation.",
+          "Verification that the b1_3 intervention preserves every original directed edge.",
+          "Supervisor confirmation of goal eligibility under unchanged criteria.",
+          "Independent validation of any selected eligible branch.",
+          "Evidence separating fixed-probability finite-size responses from threshold shifts or universality claims.",
+          "Literature evidence sufficient to assess novelty; novelty remains unverified."
+        ],
+        "next_experiment": "Have the supervisor run a third independent b1_1 batch with fresh matched alternating-Manhattan controls at p=0.69716 and sizes 8 and 16, averaging over orientation and occupation randomness. Preserve the approved sample allocation, wrapping definition, simultaneous interval method and all decision thresholds. Aggregate all three batches and reassess the minimum effect 0.05, maximum width 0.25 and predeclared finite-size criteria. Consolidate b1_2 and b1_3 immediately as their pending batches finish, without treating them as completed or duplicating them. Give an eligible b1_3 result priority for selection and independent validation; otherwise reassess allocation from the returned evidence. Stay within remaining budgets and eight batches per branch. Finalize only after the supervisor reports goal_eligible=true.",
+        "rationale": "Allocate a third batch to the available b1_1 branch while the existing b1_2 and b1_3 jobs finish. Its improved precision makes another permitted batch informative, although resolution is not guaranteed. Source seed, page 13 explicitly proposes: \"One could look at other arrange- ments of the directed bonds on the square lattice, such as the two-neighbor model [38], the biased directed per- colation model [39], the randomly-oriented Manhattan lattice [40], or the biased Janus-particle directed model [67, 68].\" This grounds the model extension; the fixed-probability comparison is an agent-generated test. The strongest completed numerical evidence remains b1_3, whose pending independent repetition should be assessed promptly when it arrives. Do not duplicate that job. Remaining resources and the eight-batch cap permit further investigation. There is insufficient evidence for finalization, mechanism resolution, scientific novelty or universality.",
+        "result_interpretation": "The second completed b1_1 batch improves precision: interval widths are now 0.21283 at size 8 and 0.20647 at size 16, both below 0.25. This supersedes the previous assessment that its widths exceeded the limit. However, differences of 0.06641 and 0.10417 have simultaneous intervals [-0.04114, 0.17169] and [-0.00085, 0.20562]; neither establishes an increase exceeding 0.05 or practical equivalence. Two batches alone therefore do not resolve this branch. For b1_2, only size 16 supports a decrease exceeding 0.05, and both interval widths remain too large. For b1_3, both completed comparisons exceed the effect threshold with acceptable widths, but only one batch is complete. The additional b1_2 and b1_3 work is still in flight and supplies no new evidence yet. Every branch remains goal_eligible=false."
+      },
+      "decision_seconds": 22.83,
+      "goal_accepted": false,
+      "input": "checkpoints/004/input.json",
+      "pending_branches": [
+        "b1_2",
+        "b1_3"
+      ],
+      "result_to_decision_seconds": 46.682
+    },
+    {
+      "batch": 2,
+      "branch_id": "b1_2",
+      "checkpoint": 5,
+      "decision": {
+        "action": "invest",
+        "goal_branch_id": null,
+        "invest": [
+          "b1_2"
+        ],
+        "missing_evidence": [
+          "A third independent b1_2 batch and aggregated simultaneous intervals resolving the size-8 effect criterion.",
+          "Completed results from the in-flight b1_1 and b1_3 batches.",
+          "Supervisor verification of fresh controls, independent seeds and the wrapping implementation.",
+          "Verification that the b1_3 intervention preserves every original directed edge.",
+          "Supervisor confirmation of goal eligibility under unchanged criteria.",
+          "Independent validation of any selected eligible branch.",
+          "Evidence separating fixed-probability finite-size responses from critical-threshold effects.",
+          "Relevant literature sufficient to assess novelty; scientific novelty remains unverified."
+        ],
+        "next_experiment": "Have the supervisor run a third independent b1_2 batch with fresh matched Manhattan bond controls and Manhattan site treatments at p=0.69716, sizes 8 and 16. Preserve the approved allocation, wrapping definition, simultaneous interval method and all thresholds. Aggregate every completed batch and reassess both sizes, particularly whether the size-8 interval establishes a decrease exceeding 0.05 while retaining width at most 0.25. Consolidate the pending b1_1 and b1_3 results immediately upon completion without duplicating their jobs. Prioritize an eligible b1_3 result for selection and required independent validation; otherwise reallocate using the returned evidence. Stay within remaining budgets and eight batches per branch. Finalize only a supervisor-confirmed goal_eligible branch.",
+        "rationale": "Allocate the next batch to b1_2 while b1_1 and b1_3 continue their existing jobs. The new measurements narrow the outstanding b1_2 question to whether the size-8 decrease exceeds the unchanged minimum effect. Another independent batch can improve that decision, although resolution is not guaranteed. Source seed, page 13 states: \"One could also look at strongly-connected clusters under site (rather than bond) percolation on square lat- tices, or at either bond or site percolation on non-square lattices such as triangular or hexagonal lattices, or on cubic or hypercubic lattices in higher dimensions.\" This supports the extension; the fixed-probability comparison is an agent-generated consistency check. Equal occupation probability does not match distance from the respective critical thresholds. There is insufficient evidence for mechanism resolution, novelty or universality. Remaining budgets permit further allowed testing.",
+        "result_interpretation": "The second b1_2 batch brings both interval widths below 0.25, superseding the previous assessment that they were too wide. At size 16, the difference is -0.34766 with simultaneous interval [-0.46070, -0.22275], supporting a decrease exceeding 0.05. At size 8, the difference is -0.15495 with interval [-0.27381, -0.03079]: it excludes zero but does not establish a decrease exceeding 0.05, so the declared criterion remains unresolved. Both minimum batch count and width requirements are satisfied, but b1_2 remains goal_eligible=false. Available b1_1 results remain unresolved. Available b1_3 results satisfy the numerical effect and width criteria at both sizes but include only one completed batch. Its pending repetition and the pending b1_1 batch are not evidence yet. No branch is eligible for finalization."
+      },
+      "decision_seconds": 19.44,
+      "goal_accepted": false,
+      "input": "checkpoints/005/input.json",
+      "pending_branches": [
+        "b1_3",
+        "b1_1"
+      ],
+      "result_to_decision_seconds": 45.348
+    },
+    {
+      "batch": 2,
+      "branch_id": "b1_3",
+      "checkpoint": 6,
+      "decision": {
+        "action": "finalize",
+        "goal_branch_id": "b1_3",
+        "invest": [],
+        "missing_evidence": [
+          "Independent validation results for b1_3 under the approved unchanged criteria.",
+          "Supervisor verification of fresh controls and independent seeds across screening and validation batches.",
+          "Verification that the b1_3 intervention preserves every original directed edge and implements the approved bidirectional-bond allocation.",
+          "Independent verification of specified-axis strongly connected wrapping measurements.",
+          "Completed results from the existing in-flight b1_1 and b1_2 jobs.",
+          "Evidence separating the observed finite-size response from critical-threshold effects.",
+          "Relevant literature sufficient to assess novelty; scientific novelty remains unverified."
+        ],
+        "next_experiment": "Have the deterministic supervisor independently validate b1_3 using fresh independent seed batches and fresh random-diode controls at p=1, sizes 8 and 16, with the approved 25% bidirectional-bond intervention. Verify that every original directed edge is retained and check the specified-axis wrapping implementation. Preserve the approved validation protocol, simultaneous interval method, effect and width thresholds, and all budgets; retain every validation outcome. Finalization selects the branch for validation and must not itself mark the overall goal achieved. Consolidate existing in-flight b1_1 and b1_2 results when they arrive without duplicating jobs or treating them as completed evidence.",
+        "rationale": "Select b1_3 because its completed measurements satisfy the unchanged numerical selection criteria at both tested sizes. Source seed, page 2 states: \"A somewhat different class of directed lattices, which we do not study here, are ones where some pairs of sites are connected by directed bonds in both directions, equivalent to an undirected bond.\" This grounds the intervention's model class; the 25% intervention and its predicted strict increase are agent-generated. Preserving original directed edges while adding reverse edges provides a monotonicity rationale, but implementation verification remains necessary. The result warrants independent validation rather than additional screening batches. There is insufficient evidence for established scientific novelty, universality, or effects beyond these finite sizes and fixed occupation probability.",
+        "result_interpretation": "The completed second b1_3 batch changes the decision from further screening to selection for independent validation. Both sizes now meet the two-batch minimum, exceed the 0.05 effect criterion, and have simultaneous interval widths below 0.25. At size 8, the wrapping-rate difference is 0.21484375 with interval [0.12709630589649357, 0.291683624567862]. At size 16, it is 0.248046875 with interval [0.15995144805874906, 0.3235490171137342]. The supervisor reports goal_eligible=true. This supports a finite-size wrapping increase under the specified intervention; it does not establish novelty or universality. Available b1_1 results remain unresolved. For b1_2, size 16 meets the effect criterion, while size 8 excludes zero but does not establish a decrease exceeding 0.05. Further b1_1 and b1_2 jobs remain in flight; their results are unavailable. Overall goal achievement remains pending independent validation."
+      },
+      "decision_seconds": 17.427,
+      "goal_accepted": true,
+      "input": "checkpoints/006/input.json",
+      "pending_branches": [
+        "b1_1",
+        "b1_2"
+      ],
+      "result_to_decision_seconds": 41.213
+    },
+    {
+      "batch": 3,
+      "branch_id": "b1_1",
+      "checkpoint": 7,
+      "decision": {
+        "action": "finalize",
+        "goal_branch_id": "b1_3",
+        "invest": [],
+        "missing_evidence": [
+          "The additional b1_2 result currently in flight.",
+          "Direct artifact verification beyond the supplied validation review, including raw trials, seed provenance and implementation checks, unless already completed and recorded by the supervisor.",
+          "Independent scientific verification of the horizontal strongly connected wrapping implementation; deterministic replay alone does not establish correctness.",
+          "Per-batch effect summaries to assess consistency beyond pooled measurements.",
+          "Evidence across occupation probabilities, intervention probabilities and larger sizes to distinguish saturation and threshold effects from critical behavior.",
+          "Relevant literature sufficient to assess novelty; scientific novelty remains unverified."
+        ],
+        "next_experiment": "Finalize the scoped b1_3 numerical finding through the supervisor's required validation and artifact-acceptance process, reusing the supplied supported review without treating it as independent code execution. Preserve all thresholds, budgets and outcomes. Consolidate the existing b1_2 job when it completes without duplicating it or delaying the achieved numerical goal for further screening. No new simulation batches are requested. A subsequent separately specified investigation could vary reverse-edge probability at fixed p=1 to test whether smaller interventions retain a detectable wrapping increase before saturation; its protocol and multiplicity allocation must be approved before execution.",
+        "rationale": "Finalize b1_3 because it remains goal_eligible=true, has a supported validation review, and the declared numerical goal is reported achieved. Further screening is unnecessary for that goal. Source seed, page 2 states: \"A somewhat different class of directed lattices, which we do not study here, are ones where some pairs of sites are connected by directed bonds in both directions, equivalent to an undirected bond.\" This grounds the model class; the intervention probability and strict-increase prediction are agent-generated. The validation clarifies that reverse edges are independently added with probability 0.25, rather than exactly 25% being converted in every realization. Its review relied on supplied records and did not independently execute or verify artifacts. Final artifact acceptance remains the deterministic supervisor's responsibility.",
+        "result_interpretation": "The newly completed third b1_1 batch leaves both sizes unresolved under the unchanged 0.05 minimum-effect criterion: intervals are [0.002096500265016954, 0.1419210453240748] at size 8 and [0.03160499216147383, 0.16669608984196804] at size 16. Both exclude zero but include effects below 0.05. This result does not displace b1_3, whose two-batch differences are 0.21484375 and 0.248046875, with interval lower bounds above 0.05 and widths below 0.25 at both sizes. The supplied validation supports this limited numerical finding, and the supervisor now reports goal.achieved=true. For b1_2, the available two-batch results resolve size 16 but leave size 8 unresolved; its additional in-flight result remains unavailable. These measurements support a finite-size wrapping response, not established novelty or universality."
+      },
+      "decision_seconds": 17.657,
+      "goal_accepted": false,
+      "input": "checkpoints/007/input.json",
+      "observation_after_stop": true,
+      "pending_branches": [
+        "b1_2"
+      ],
+      "result_to_decision_seconds": 60.205
+    },
+    {
+      "batch": 3,
+      "branch_id": "b1_2",
+      "checkpoint": 8,
+      "decision": {
+        "action": "finalize",
+        "goal_branch_id": "b1_3",
+        "invest": [],
+        "missing_evidence": [
+          "Direct artifact verification of raw trials, seed provenance, implementation and hashes, unless already completed and recorded by the supervisor.",
+          "Independent scientific verification of the horizontal strongly connected wrapping implementation; deterministic replay alone does not establish correctness.",
+          "Per-batch effect summaries to assess consistency beyond pooled measurements.",
+          "Validation specific to the newly eligible three-batch b1_2 finding; the previous review concerned b1_3 and its b1_2 eligibility statement is now outdated.",
+          "Evidence across occupation probabilities, reverse-edge probabilities and larger sizes to distinguish saturation and threshold effects from critical behavior.",
+          "Relevant literature sufficient to assess novelty; the supplied evidence is insufficient to establish scientific novelty or universality."
+        ],
+        "next_experiment": "Request no new simulation batches. Finalize b1_3 through the deterministic supervisor's required validation and artifact-acceptance process, preserving unchanged thresholds, all outcomes and the completed b1_2 result. Update the consolidated record to remove the obsolete in-flight status and b1_2 ineligibility statement. For a subsequent separately specified investigation, test smaller reverse-edge probabilities at fixed p=1 against fresh random-diode controls to determine whether a detectable wrapping increase persists before saturation. Prespecify intervention levels, sizes, seeds, budget and multiplicity allocation before execution; this would assess intervention sensitivity, not establish universality.",
+        "rationale": "Retain b1_3 for finalization because it is goal_eligible=true, already has a supported validation review, and the supervisor reports the declared goal achieved. Source seed, page 2 states: \"A somewhat different class of directed lattices, which we do not study here, are ones where some pairs of sites are connected by directed bonds in both directions, equivalent to an undirected bond.\" This grounds the model class; the intervention and strict-increase prediction are agent-generated. The supplied validation clarifies that reverse edges are added independently with probability 0.25, rather than converting exactly 25% in each realization. Its support concerns a finite-size numerical contrast and relies on supplied records, not independent artifact inspection. The newly eligible b1_2 is a secondary consistency finding requiring its own validation before acceptance. Remaining budget alone does not justify additional batches after the numerical goal is met.",
+        "result_interpretation": "The completed third b1_2 batch now resolves both sizes: treatment-minus-control differences are -0.1869419642857142 at L=8 and -0.3158482142857143 at L=16, with intervals [-0.2646115253123502, -0.10651061139800166] and [-0.39295219529126574, -0.2340780416581652]. Both establish decreases exceeding the declared 0.05 minimum effect, with widths below 0.25. This supersedes the earlier assessment that b1_2 was ineligible. It supports the threshold-informed site-versus-bond consistency check, not matched-criticality behavior. b1_1 remains unresolved: both intervals exclude zero but include effects below 0.05. b1_3 remains eligible after two batches, with increases of 0.21484375 and 0.248046875 and both interval lower bounds above 0.05. No jobs remain in flight. The additional b1_2 evidence strengthens the completed record without displacing the supported b1_3 finding or requiring further screening. Scientific novelty and universality remain unverified."
+      },
+      "decision_seconds": 18.408,
+      "goal_accepted": false,
+      "input": "checkpoints/008/input.json",
+      "observation_after_stop": true,
+      "pending_branches": [],
+      "result_to_decision_seconds": 51.417
+    }
+  ],
+  "computed_simulations": 33542,
+  "control_policy": {
+    "evaluation_frequency": "Every completed simulation batch",
+    "in_flight_policy": "Finish already authorized batches; retain late results",
+    "max_invested_directions": 3,
+    "max_parallel_agent_calls": 6,
+    "seed_policy": "Recorded master seed; independent branch/batch/arm streams",
+    "tool_policy": "Omnigent structured plans dispatch allowlisted Python tools"
+  },
+  "domain": "percolation",
+  "elapsed_seconds": 269.57,
+  "goal": {
+    "achieved": true,
+    "branch_id": "b1_3",
+    "description": "Resolve a source-grounded mechanism with fresh controls, independent seed batches and a simultaneous interval narrow enough to decide.",
+    "independent_validation_required": true,
+    "maximum_interval_width": 0.25,
+    "minimum_batches": 2,
+    "minimum_effect": 0.05
+  },
+  "next_decision": {
+    "action": "finalize",
+    "goal_branch_id": "b1_3",
+    "invest": [],
+    "missing_evidence": [
+      "Direct artifact verification of raw trials, seed provenance, implementation and hashes, unless already completed and recorded by the supervisor.",
+      "Independent scientific verification of the horizontal strongly connected wrapping implementation; deterministic replay alone does not establish correctness.",
+      "Per-batch effect summaries to assess consistency beyond pooled measurements.",
+      "Validation specific to the newly eligible three-batch b1_2 finding; the previous review concerned b1_3 and its b1_2 eligibility statement is now outdated.",
+      "Evidence across occupation probabilities, reverse-edge probabilities and larger sizes to distinguish saturation and threshold effects from critical behavior.",
+      "Relevant literature sufficient to assess novelty; the supplied evidence is insufficient to establish scientific novelty or universality."
+    ],
+    "next_experiment": "Request no new simulation batches. Finalize b1_3 through the deterministic supervisor's required validation and artifact-acceptance process, preserving unchanged thresholds, all outcomes and the completed b1_2 result. Update the consolidated record to remove the obsolete in-flight status and b1_2 ineligibility statement. For a subsequent separately specified investigation, test smaller reverse-edge probabilities at fixed p=1 against fresh random-diode controls to determine whether a detectable wrapping increase persists before saturation. Prespecify intervention levels, sizes, seeds, budget and multiplicity allocation before execution; this would assess intervention sensitivity, not establish universality.",
+    "rationale": "Retain b1_3 for finalization because it is goal_eligible=true, already has a supported validation review, and the supervisor reports the declared goal achieved. Source seed, page 2 states: \"A somewhat different class of directed lattices, which we do not study here, are ones where some pairs of sites are connected by directed bonds in both directions, equivalent to an undirected bond.\" This grounds the model class; the intervention and strict-increase prediction are agent-generated. The supplied validation clarifies that reverse edges are added independently with probability 0.25, rather than converting exactly 25% in each realization. Its support concerns a finite-size numerical contrast and relies on supplied records, not independent artifact inspection. The newly eligible b1_2 is a secondary consistency finding requiring its own validation before acceptance. Remaining budget alone does not justify additional batches after the numerical goal is met.",
+    "result_interpretation": "The completed third b1_2 batch now resolves both sizes: treatment-minus-control differences are -0.1869419642857142 at L=8 and -0.3158482142857143 at L=16, with intervals [-0.2646115253123502, -0.10651061139800166] and [-0.39295219529126574, -0.2340780416581652]. Both establish decreases exceeding the declared 0.05 minimum effect, with widths below 0.25. This supersedes the earlier assessment that b1_2 was ineligible. It supports the threshold-informed site-versus-bond consistency check, not matched-criticality behavior. b1_1 remains unresolved: both intervals exclude zero but include effects below 0.05. b1_3 remains eligible after two batches, with increases of 0.21484375 and 0.248046875 and both interval lower bounds above 0.05. No jobs remain in flight. The additional b1_2 evidence strengthens the completed record without displacing the supported b1_3 finding or requiring further screening. Scientific novelty and universality remain unverified."
+  },
+  "proposals": [
+    {
+      "evidence": [
+        {
+          "page": 13,
+          "quote": "One could look at other arrange- ments of the directed bonds on the square lattice, such as the two-neighbor model [38], the biased directed per- colation model [39], the randomly-oriented Manhattan lattice [40], or the biased Janus-particle directed model [67, 68].",
+          "source_id": "seed"
+        },
+        {
+          "page": 2,
+          "quote": "We conjecture that these should show strongly-connected percolation behav- ior similar to that of the lattices we study, presumably in the same universality class.",
+          "source_id": "seed"
+        }
+      ],
+      "experiment": "random_manhattan",
+      "hypothesis": "The paper explicitly proposes studying randomly oriented Manhattan lattices. Agent-generated test hypothesis: randomizing row and column directions changes the probability of strongly connected wrapping in a specified axis relative to alternating Manhattan directions at the catalog's fixed p=0.69716 and matched finite sizes. Average over both orientation and occupation randomness. A difference could reflect a shifted critical threshold or finite-size effects; it would not establish a different universality class.",
+      "id": "b1_1",
+      "origin": "paper_suggestion",
+      "source_id": "seed",
+      "title": "Wrapping under randomized row and column directions"
+    },
+    {
+      "evidence": [
+        {
+          "page": 2,
+          "quote": "A somewhat different class of directed lattices, which we do not study here, are ones where some pairs of sites are connected by directed bonds in both directions, equivalent to an undirected bond.",
+          "source_id": "seed"
+        },
+        {
+          "page": 13,
+          "quote": "Several researchers have looked previously at resistor-diode lattices in which occupied bonds can run either in one direction, as here, or in both direc- tions [30, 35\u201337], focusing on the case of fully random resistors and diodes, but again other arrangements are possible, including both random and non-random vari- ants.",
+          "source_id": "seed"
+        }
+      ],
+      "experiment": "resistor_diode",
+      "hypothesis": "Agent-generated prediction: converting 25% of occupied random diodes into bidirectional bonds at the catalog's p=1 increases specified-axis strongly connected wrapping probability relative to the random-diode control at matched finite sizes. Under a coupling that preserves every original directed edge, adding reverse edges cannot destroy existing strongly connected wrapping; a detectable strict increase remains an empirical question. The paper identifies resistor-diode models as prior work, so this is a sensitivity check, not an established novel direction or a comparison at matched criticality.",
+      "id": "b1_3",
+      "origin": "agent_hypothesis",
+      "source_id": "seed",
+      "title": "Wrapping response to 25% bidirectional bonds"
+    },
+    {
+      "evidence": [
+        {
+          "page": 13,
+          "quote": "One could also look at strongly-connected clusters under site (rather than bond) percolation on square lat- tices, or at either bond or site percolation on non-square lattices such as triangular or hexagonal lattices, or on cubic or hypercubic lattices in higher dimensions.",
+          "source_id": "seed"
+        },
+        {
+          "page": 7,
+          "quote": "(The result for the L-lattice also implies that site percola- tion on the Manhattan lattice has the same threshold ofp c = 0.7401931(10), because of the mapping described in Section II\u2014see Fig. 4.)",
+          "source_id": "seed"
+        }
+      ],
+      "experiment": "site_percolation",
+      "hypothesis": "The paper explicitly suggests site-percolation extensions. Agent-generated prediction: Manhattan site percolation at the catalog's p=0.69716 has lower specified-axis strongly connected wrapping probability than Manhattan bond percolation at matched finite sizes. The paper's reported site threshold is higher than this p, so this is a threshold-informed consistency check rather than evidence of novelty or a test of universality. Occupation mode is the intervention; equal p does not match distance from each model's critical threshold.",
+      "id": "b1_2",
+      "origin": "paper_suggestion",
+      "source_id": "seed",
+      "title": "Site versus bond occupation at fixed probability"
+    }
+  ],
+  "role_calls": 22,
+  "rounds": [
+    {
+      "batch": 1,
+      "branch_id": "b1_1",
+      "effect": {
+        "batches": 1,
+        "checks": [
+          {
+            "conclusion": "unresolved",
+            "control": 0.79296875,
+            "control_samples": 256,
+            "difference": 0.01953125,
+            "difference_interval": [
+              -0.16097129918842557,
+              0.19809970158068269
+            ],
+            "interval_width": 0.35907100076910825,
+            "resolved": false,
+            "scenario": "8",
+            "treatment": 0.8125,
+            "treatment_samples": 256
+          },
+          {
+            "conclusion": "unresolved",
+            "control": 0.75,
+            "control_samples": 256,
+            "difference": 0.109375,
+            "difference_interval": [
+              -0.07255811368079534,
+              0.2804771670774351
+            ],
+            "interval_width": 0.35303528075823043,
+            "resolved": false,
+            "scenario": "16",
+            "treatment": 0.859375,
+            "treatment_samples": 256
+          }
+        ],
+        "goal_eligible": false,
+        "interval_method": "Conservative Wilson endpoint bounds; Bonferroni across 3 branches, all planned batch looks, groups and endpoints. Paired covariance not exploited.",
+        "metric": "horizontal wrapping rate",
+        "samples": 1024,
+        "scientific_novelty": "unverified"
+      },
+      "next_decision": {
+        "action": "invest",
+        "goal_branch_id": null,
+        "invest": [
+          "b1_1"
+        ],
+        "missing_evidence": [
+          "A second independent seed batch for b1_1.",
+          "Simultaneous intervals satisfying the unchanged resolution and maximum-width criteria.",
+          "Completed results for the in-flight b1_2 and b1_3 comparisons.",
+          "Supervisor confirmation of the predeclared finite-size consistency criterion.",
+          "Independent validation of any subsequently eligible branch.",
+          "Implementation and sampling verification beyond the supplied summaries.",
+          "Literature evidence sufficient to assess scientific novelty; novelty remains unverified."
+        ],
+        "next_experiment": "Run a second independent seed batch for b1_1 at p=0.69716 and sizes 8 and 16, preserving the approved orientation sampling, occupation sampling, horizontal wrapping definition and fresh matched controls. Aggregate both batches using the predeclared simultaneous interval procedure and unchanged effect, precision and finite-size criteria. Continue collecting the already-running b1_2 and b1_3 batches; reassess allocation after each completion. Keep the eight-batch cap and existing budgets. Request independent validation only after a branch becomes goal_eligible.",
+        "rationale": "The first measurements change the next step from initial screening to a precision-focused repeat of b1_1. They provide insufficient evidence to accept or reject its predicted effect, while substantial budget remains for another allowed batch. Retain the running comparisons without duplicating their pending work. The source supports investigating alternative arrangements: seed, page 13 states, \"or the biased Janus-particle directed model [67, 68].\" This contextual quotation supports the broader extension discussion, not the measured outcome or novelty. The supplied full page-13 quotation specifically names the randomly-oriented Manhattan lattice. A resolved fixed-probability contrast would still not distinguish a threshold shift from other structural effects or establish universality.",
+        "result_interpretation": "Only b1_1 has completed a batch. Treatment-minus-control horizontal wrapping differences are 0.01953125 at size 8 and 0.109375 at size 16, with simultaneous intervals [-0.16097129918842557, 0.19809970158068269] and [-0.07255811368079534, 0.2804771670774351]. Both intervals include zero and effects above 0.05; neither resolves the comparison. Their widths, 0.35907100076910825 and 0.35303528075823043, exceed 0.25, and only one independent batch is available. The larger point estimate at size 16 does not establish size dependence. Results for b1_2 and b1_3 remain pending. No branch is eligible for finalization."
+      },
+      "round": 1,
+      "trials_per_size": 256
+    },
+    {
+      "batch": 1,
+      "branch_id": "b1_2",
+      "effect": {
+        "batches": 1,
+        "checks": [
+          {
+            "conclusion": "unresolved",
+            "control": 0.77734375,
+            "control_samples": 256,
+            "difference": -0.1796875,
+            "difference_interval": [
+              -0.3735982096360824,
+              0.032016907627316904
+            ],
+            "interval_width": 0.4056151172633993,
+            "resolved": false,
+            "scenario": "8",
+            "treatment": 0.59765625,
+            "treatment_samples": 256
+          },
+          {
+            "conclusion": "difference_detected",
+            "control": 0.73828125,
+            "control_samples": 256,
+            "difference": -0.296875,
+            "difference_interval": [
+              -0.4912247524345787,
+              -0.07312696392772922
+            ],
+            "interval_width": 0.4180977885068495,
+            "resolved": true,
+            "scenario": "16",
+            "treatment": 0.44140625,
+            "treatment_samples": 256
+          }
+        ],
+        "goal_eligible": false,
+        "interval_method": "Conservative Wilson endpoint bounds; Bonferroni across 3 branches, all planned batch looks, groups and endpoints. Paired covariance not exploited.",
+        "metric": "horizontal wrapping rate",
+        "samples": 1024,
+        "scientific_novelty": "unverified"
+      },
+      "next_decision": {
+        "action": "invest",
+        "goal_branch_id": null,
+        "invest": [
+          "b1_2"
+        ],
+        "missing_evidence": [
+          "A second independent seed batch for b1_2 with fresh matched controls.",
+          "Intervals satisfying the unchanged precision and resolution criteria, including resolution of the size-8 comparison.",
+          "Completed results from the pending b1_1 work and first b1_3 batch.",
+          "Supervisor assessment of the predeclared finite-size criterion and goal eligibility.",
+          "Independent validation of any eligible branch.",
+          "Implementation, seed independence and sampling verification beyond the supplied summaries.",
+          "Additional controls to distinguish threshold displacement from other structural explanations.",
+          "Literature evidence sufficient to assess novelty; scientific novelty remains unverified."
+        ],
+        "next_experiment": "Allocate the next available batch to b1_2 using independent seeds and fresh matched controls at p=0.69716 and sizes 8 and 16. Preserve the approved site and bond sampling, horizontal wrapping definition, sample allocation and simultaneous interval procedure. Aggregate the two independent batches and reassess the unchanged minimum effect of 0.05, maximum interval width of 0.25, minimum two batches and predeclared finite-size criteria. Consolidate b1_1 and b1_3 results when their pending work completes, then reconsider allocation. Stay within existing budgets and the eight-batch cap. Finalize only after supervisor-reported goal eligibility, with independent validation to follow.",
+        "rationale": "The new measurements shift the next available allocation toward b1_2: its size-16 interval already supports a decrease exceeding the minimum effect, making independent repetition and improved precision informative. This is a threshold-informed numerical consistency check. Source seed, page 13 states: \"One could also look at strongly-connected clusters under site (rather than bond) percolation on square lat- tices, or at either bond or site percolation on non-square lattices such as triangular or hexagonal lattices, or on cubic or hypercubic lattices in higher dimensions.\" The supplied page-7 evidence reports a Manhattan site threshold above the tested p=0.69716. Equal occupation probability therefore does not match distance from criticality. The observed contrast cannot isolate threshold displacement from other effects or establish universality. Continue the already-running b1_1 and b1_3 work without duplicating it. Remaining budget and the eight-batch cap permit further informative testing.",
+        "result_interpretation": "The newly completed b1_2 batch supports prioritizing the site-versus-bond consistency check. At size 16, treatment-minus-control horizontal wrapping is -0.296875, with simultaneous interval [-0.4912247524345787, -0.07312696392772922], entirely below -0.05. At size 8, the difference is -0.1796875 with interval [-0.3735982096360824, 0.032016907627316904], so that comparison remains unresolved. Both widths exceed 0.25, and only one batch is complete. For b1_1, completed first-batch differences remain 0.01953125 and 0.109375; both intervals include zero and exceed the width limit. Its pending work supplies no additional evidence yet. b1_3 has no completed results. No branch is goal_eligible, and evidence is insufficient to establish a resolved mechanism or scientific novelty."
+      },
+      "round": 2,
+      "trials_per_size": 256
+    },
+    {
+      "batch": 1,
+      "branch_id": "b1_3",
+      "effect": {
+        "batches": 1,
+        "checks": [
+          {
+            "conclusion": "difference_detected",
+            "control": 0.7890625,
+            "control_samples": 256,
+            "difference": 0.2109375,
+            "difference_interval": [
+              0.08383528266671092,
+              0.3171514631696658
+            ],
+            "interval_width": 0.23331618050295488,
+            "resolved": true,
+            "scenario": "8",
+            "treatment": 1.0,
+            "treatment_samples": 256
+          },
+          {
+            "conclusion": "difference_detected",
+            "control": 0.73828125,
+            "control_samples": 256,
+            "difference": 0.26171875,
+            "difference_interval": [
+              0.12548391824843952,
+              0.3720366738078056
+            ],
+            "interval_width": 0.24655275555936607,
+            "resolved": true,
+            "scenario": "16",
+            "treatment": 1.0,
+            "treatment_samples": 256
+          }
+        ],
+        "goal_eligible": false,
+        "interval_method": "Conservative Wilson endpoint bounds; Bonferroni across 3 branches, all planned batch looks, groups and endpoints. Paired covariance not exploited.",
+        "metric": "horizontal wrapping rate",
+        "samples": 1024,
+        "scientific_novelty": "unverified"
+      },
+      "next_decision": {
+        "action": "invest",
+        "goal_branch_id": null,
+        "invest": [
+          "b1_3"
+        ],
+        "missing_evidence": [
+          "A second independent b1_3 seed batch with fresh matched controls.",
+          "Supervisor assessment of aggregated intervals, predeclared finite-size criteria and goal eligibility.",
+          "Independent validation of any eligible selected branch.",
+          "Completed results from the in-flight b1_1 and b1_2 work.",
+          "Verification of seed independence, sampling, wrapping implementation and preservation of original directed edges under the b1_3 intervention.",
+          "Additional evidence separating the finite-size response from critical-threshold or universality claims.",
+          "Literature evidence sufficient to assess scientific novelty; novelty remains unverified."
+        ],
+        "next_experiment": "Run a second b1_3 batch with independent seeds and fresh matched random-diode controls at p=1, sizes 8 and 16, and the approved 25% bidirectional treatment. Preserve the approved occupation and conversion sampling, sample allocation, horizontal wrapping definition and simultaneous interval procedure. Have the supervisor verify that treatment preserves every original directed edge and that seed batches are independent. Aggregate the completed batches and assess the unchanged minimum effect 0.05, maximum interval width 0.25, minimum two batches and predeclared finite-size criteria. Continue existing b1_1 and b1_2 work without duplicating pending jobs; consolidate each returned batch before allocating further work. Stay within current budgets and the eight-batch cap. Finalize only if the supervisor reports goal_eligible=true, then submit the selected branch for independent validation.",
+        "rationale": "Prioritize independent repetition of b1_3 because it is the first branch whose completed comparisons satisfy both effect and precision thresholds at both sizes. This shifts the next available allocation from b1_2 while allowing its already-running work to finish. Source seed, page 2 states: \"A somewhat different class of directed lattices, which we do not study here, are ones where some pairs of sites are connected by directed bonds in both directions, equivalent to an undirected bond.\" This supports the model extension, not a novelty claim. If the implementation preserves original directed edges, adding reverse edges cannot destroy existing wrapping; the measurements support a strict increase under the tested conditions. Independent repetition can assess its reproducibility. The comparison at p=1 does not establish matched criticality, threshold behavior or universality. Available budget and the eight-batch cap permit this next test, but no branch can yet be finalized.",
+        "result_interpretation": "The completed b1_3 batch changes the priority: both sizes now show positive effects exceeding 0.05 throughout their supplied simultaneous intervals. At size 8, the difference is 0.2109375 with interval [0.08383528266671092, 0.3171514631696658] and width 0.23331618050295488. At size 16, it is 0.26171875 with interval [0.12548391824843952, 0.3720366738078056] and width 0.24655275555936607. Both widths meet the 0.25 limit, but only one batch is complete and goal_eligible remains false. Treatment wrapping in every observed sample does not establish population probability one. For b1_2, the completed size-16 interval supports a decrease exceeding 0.05; size 8 remains unresolved and both widths exceed 0.25. For b1_1, both completed intervals include zero and exceed 0.25. Pending b1_1 and b1_2 batches provide no additional evidence yet. These are finite-size numerical results; mechanism resolution and scientific novelty remain unverified."
+      },
+      "round": 3,
+      "trials_per_size": 256
+    },
+    {
+      "batch": 2,
+      "branch_id": "b1_1",
+      "effect": {
+        "batches": 2,
+        "checks": [
+          {
+            "conclusion": "unresolved",
+            "control": 0.7565104166666666,
+            "control_samples": 768,
+            "difference": 0.06640625,
+            "difference_interval": [
+              -0.041143670197023696,
+              0.17168936897531817
+            ],
+            "interval_width": 0.21283303917234186,
+            "resolved": false,
+            "scenario": "8",
+            "treatment": 0.8229166666666666,
+            "treatment_samples": 768
+          },
+          {
+            "conclusion": "unresolved",
+            "control": 0.75,
+            "control_samples": 768,
+            "difference": 0.10416666666666663,
+            "difference_interval": [
+              -0.0008458051446498249,
+              0.2056233718556999
+            ],
+            "interval_width": 0.20646917700034972,
+            "resolved": false,
+            "scenario": "16",
+            "treatment": 0.8541666666666666,
+            "treatment_samples": 768
+          }
+        ],
+        "goal_eligible": false,
+        "interval_method": "Conservative Wilson endpoint bounds; Bonferroni across 3 branches, all planned batch looks, groups and endpoints. Paired covariance not exploited.",
+        "metric": "horizontal wrapping rate",
+        "samples": 3072,
+        "scientific_novelty": "unverified"
+      },
+      "next_decision": {
+        "action": "invest",
+        "goal_branch_id": null,
+        "invest": [
+          "b1_1"
+        ],
+        "missing_evidence": [
+          "A third independent b1_1 batch and its aggregated simultaneous intervals.",
+          "Completed results from the in-flight b1_2 and b1_3 batches.",
+          "Supervisor verification of fresh controls, seed independence and the wrapping implementation.",
+          "Verification that the b1_3 intervention preserves every original directed edge.",
+          "Supervisor confirmation of goal eligibility under unchanged criteria.",
+          "Independent validation of any selected eligible branch.",
+          "Evidence separating fixed-probability finite-size responses from threshold shifts or universality claims.",
+          "Literature evidence sufficient to assess novelty; novelty remains unverified."
+        ],
+        "next_experiment": "Have the supervisor run a third independent b1_1 batch with fresh matched alternating-Manhattan controls at p=0.69716 and sizes 8 and 16, averaging over orientation and occupation randomness. Preserve the approved sample allocation, wrapping definition, simultaneous interval method and all decision thresholds. Aggregate all three batches and reassess the minimum effect 0.05, maximum width 0.25 and predeclared finite-size criteria. Consolidate b1_2 and b1_3 immediately as their pending batches finish, without treating them as completed or duplicating them. Give an eligible b1_3 result priority for selection and independent validation; otherwise reassess allocation from the returned evidence. Stay within remaining budgets and eight batches per branch. Finalize only after the supervisor reports goal_eligible=true.",
+        "rationale": "Allocate a third batch to the available b1_1 branch while the existing b1_2 and b1_3 jobs finish. Its improved precision makes another permitted batch informative, although resolution is not guaranteed. Source seed, page 13 explicitly proposes: \"One could look at other arrange- ments of the directed bonds on the square lattice, such as the two-neighbor model [38], the biased directed per- colation model [39], the randomly-oriented Manhattan lattice [40], or the biased Janus-particle directed model [67, 68].\" This grounds the model extension; the fixed-probability comparison is an agent-generated test. The strongest completed numerical evidence remains b1_3, whose pending independent repetition should be assessed promptly when it arrives. Do not duplicate that job. Remaining resources and the eight-batch cap permit further investigation. There is insufficient evidence for finalization, mechanism resolution, scientific novelty or universality.",
+        "result_interpretation": "The second completed b1_1 batch improves precision: interval widths are now 0.21283 at size 8 and 0.20647 at size 16, both below 0.25. This supersedes the previous assessment that its widths exceeded the limit. However, differences of 0.06641 and 0.10417 have simultaneous intervals [-0.04114, 0.17169] and [-0.00085, 0.20562]; neither establishes an increase exceeding 0.05 or practical equivalence. Two batches alone therefore do not resolve this branch. For b1_2, only size 16 supports a decrease exceeding 0.05, and both interval widths remain too large. For b1_3, both completed comparisons exceed the effect threshold with acceptable widths, but only one batch is complete. The additional b1_2 and b1_3 work is still in flight and supplies no new evidence yet. Every branch remains goal_eligible=false."
+      },
+      "round": 4,
+      "trials_per_size": 512
+    },
+    {
+      "batch": 2,
+      "branch_id": "b1_2",
+      "effect": {
+        "batches": 2,
+        "checks": [
+          {
+            "conclusion": "unresolved",
+            "control": 0.7434895833333334,
+            "control_samples": 768,
+            "difference": -0.15494791666666674,
+            "difference_interval": [
+              -0.27381437327345737,
+              -0.030792257209229956
+            ],
+            "interval_width": 0.2430221160642274,
+            "resolved": false,
+            "scenario": "8",
+            "treatment": 0.5885416666666666,
+            "treatment_samples": 768
+          },
+          {
+            "conclusion": "difference_detected",
+            "control": 0.78125,
+            "control_samples": 768,
+            "difference": -0.34765625,
+            "difference_interval": [
+              -0.46069616052913775,
+              -0.22274896836899238
+            ],
+            "interval_width": 0.23794719216014537,
+            "resolved": true,
+            "scenario": "16",
+            "treatment": 0.43359375,
+            "treatment_samples": 768
+          }
+        ],
+        "goal_eligible": false,
+        "interval_method": "Conservative Wilson endpoint bounds; Bonferroni across 3 branches, all planned batch looks, groups and endpoints. Paired covariance not exploited.",
+        "metric": "horizontal wrapping rate",
+        "samples": 3072,
+        "scientific_novelty": "unverified"
+      },
+      "next_decision": {
+        "action": "invest",
+        "goal_branch_id": null,
+        "invest": [
+          "b1_2"
+        ],
+        "missing_evidence": [
+          "A third independent b1_2 batch and aggregated simultaneous intervals resolving the size-8 effect criterion.",
+          "Completed results from the in-flight b1_1 and b1_3 batches.",
+          "Supervisor verification of fresh controls, independent seeds and the wrapping implementation.",
+          "Verification that the b1_3 intervention preserves every original directed edge.",
+          "Supervisor confirmation of goal eligibility under unchanged criteria.",
+          "Independent validation of any selected eligible branch.",
+          "Evidence separating fixed-probability finite-size responses from critical-threshold effects.",
+          "Relevant literature sufficient to assess novelty; scientific novelty remains unverified."
+        ],
+        "next_experiment": "Have the supervisor run a third independent b1_2 batch with fresh matched Manhattan bond controls and Manhattan site treatments at p=0.69716, sizes 8 and 16. Preserve the approved allocation, wrapping definition, simultaneous interval method and all thresholds. Aggregate every completed batch and reassess both sizes, particularly whether the size-8 interval establishes a decrease exceeding 0.05 while retaining width at most 0.25. Consolidate the pending b1_1 and b1_3 results immediately upon completion without duplicating their jobs. Prioritize an eligible b1_3 result for selection and required independent validation; otherwise reallocate using the returned evidence. Stay within remaining budgets and eight batches per branch. Finalize only a supervisor-confirmed goal_eligible branch.",
+        "rationale": "Allocate the next batch to b1_2 while b1_1 and b1_3 continue their existing jobs. The new measurements narrow the outstanding b1_2 question to whether the size-8 decrease exceeds the unchanged minimum effect. Another independent batch can improve that decision, although resolution is not guaranteed. Source seed, page 13 states: \"One could also look at strongly-connected clusters under site (rather than bond) percolation on square lat- tices, or at either bond or site percolation on non-square lattices such as triangular or hexagonal lattices, or on cubic or hypercubic lattices in higher dimensions.\" This supports the extension; the fixed-probability comparison is an agent-generated consistency check. Equal occupation probability does not match distance from the respective critical thresholds. There is insufficient evidence for mechanism resolution, novelty or universality. Remaining budgets permit further allowed testing.",
+        "result_interpretation": "The second b1_2 batch brings both interval widths below 0.25, superseding the previous assessment that they were too wide. At size 16, the difference is -0.34766 with simultaneous interval [-0.46070, -0.22275], supporting a decrease exceeding 0.05. At size 8, the difference is -0.15495 with interval [-0.27381, -0.03079]: it excludes zero but does not establish a decrease exceeding 0.05, so the declared criterion remains unresolved. Both minimum batch count and width requirements are satisfied, but b1_2 remains goal_eligible=false. Available b1_1 results remain unresolved. Available b1_3 results satisfy the numerical effect and width criteria at both sizes but include only one completed batch. Its pending repetition and the pending b1_1 batch are not evidence yet. No branch is eligible for finalization."
+      },
+      "round": 5,
+      "trials_per_size": 512
+    },
+    {
+      "batch": 2,
+      "branch_id": "b1_3",
+      "effect": {
+        "batches": 2,
+        "checks": [
+          {
+            "conclusion": "difference_detected",
+            "control": 0.78125,
+            "control_samples": 512,
+            "difference": 0.21484375,
+            "difference_interval": [
+              0.12709630589649357,
+              0.291683624567862
+            ],
+            "interval_width": 0.16458731867136844,
+            "resolved": true,
+            "scenario": "8",
+            "treatment": 0.99609375,
+            "treatment_samples": 512
+          },
+          {
+            "conclusion": "difference_detected",
+            "control": 0.751953125,
+            "control_samples": 512,
+            "difference": 0.248046875,
+            "difference_interval": [
+              0.15995144805874906,
+              0.3235490171137342
+            ],
+            "interval_width": 0.16359756905498513,
+            "resolved": true,
+            "scenario": "16",
+            "treatment": 1.0,
+            "treatment_samples": 512
+          }
+        ],
+        "goal_eligible": true,
+        "interval_method": "Conservative Wilson endpoint bounds; Bonferroni across 3 branches, all planned batch looks, groups and endpoints. Paired covariance not exploited.",
+        "metric": "horizontal wrapping rate",
+        "samples": 2048,
+        "scientific_novelty": "unverified"
+      },
+      "next_decision": {
+        "action": "finalize",
+        "goal_branch_id": "b1_3",
+        "invest": [],
+        "missing_evidence": [
+          "Independent validation results for b1_3 under the approved unchanged criteria.",
+          "Supervisor verification of fresh controls and independent seeds across screening and validation batches.",
+          "Verification that the b1_3 intervention preserves every original directed edge and implements the approved bidirectional-bond allocation.",
+          "Independent verification of specified-axis strongly connected wrapping measurements.",
+          "Completed results from the existing in-flight b1_1 and b1_2 jobs.",
+          "Evidence separating the observed finite-size response from critical-threshold effects.",
+          "Relevant literature sufficient to assess novelty; scientific novelty remains unverified."
+        ],
+        "next_experiment": "Have the deterministic supervisor independently validate b1_3 using fresh independent seed batches and fresh random-diode controls at p=1, sizes 8 and 16, with the approved 25% bidirectional-bond intervention. Verify that every original directed edge is retained and check the specified-axis wrapping implementation. Preserve the approved validation protocol, simultaneous interval method, effect and width thresholds, and all budgets; retain every validation outcome. Finalization selects the branch for validation and must not itself mark the overall goal achieved. Consolidate existing in-flight b1_1 and b1_2 results when they arrive without duplicating jobs or treating them as completed evidence.",
+        "rationale": "Select b1_3 because its completed measurements satisfy the unchanged numerical selection criteria at both tested sizes. Source seed, page 2 states: \"A somewhat different class of directed lattices, which we do not study here, are ones where some pairs of sites are connected by directed bonds in both directions, equivalent to an undirected bond.\" This grounds the intervention's model class; the 25% intervention and its predicted strict increase are agent-generated. Preserving original directed edges while adding reverse edges provides a monotonicity rationale, but implementation verification remains necessary. The result warrants independent validation rather than additional screening batches. There is insufficient evidence for established scientific novelty, universality, or effects beyond these finite sizes and fixed occupation probability.",
+        "result_interpretation": "The completed second b1_3 batch changes the decision from further screening to selection for independent validation. Both sizes now meet the two-batch minimum, exceed the 0.05 effect criterion, and have simultaneous interval widths below 0.25. At size 8, the wrapping-rate difference is 0.21484375 with interval [0.12709630589649357, 0.291683624567862]. At size 16, it is 0.248046875 with interval [0.15995144805874906, 0.3235490171137342]. The supervisor reports goal_eligible=true. This supports a finite-size wrapping increase under the specified intervention; it does not establish novelty or universality. Available b1_1 results remain unresolved. For b1_2, size 16 meets the effect criterion, while size 8 excludes zero but does not establish a decrease exceeding 0.05. Further b1_1 and b1_2 jobs remain in flight; their results are unavailable. Overall goal achievement remains pending independent validation."
+      },
+      "round": 6,
+      "trials_per_size": 256
+    },
+    {
+      "batch": 3,
+      "branch_id": "b1_1",
+      "effect": {
+        "batches": 3,
+        "checks": [
+          {
+            "conclusion": "unresolved",
+            "control": 0.7522321428571429,
+            "control_samples": 1792,
+            "difference": 0.0725446428571428,
+            "difference_interval": [
+              0.002096500265016954,
+              0.1419210453240748
+            ],
+            "interval_width": 0.13982454505905784,
+            "resolved": false,
+            "scenario": "8",
+            "treatment": 0.8247767857142857,
+            "treatment_samples": 1792
+          },
+          {
+            "conclusion": "unresolved",
+            "control": 0.75390625,
+            "control_samples": 1792,
+            "difference": 0.0998883928571429,
+            "difference_interval": [
+              0.03160499216147383,
+              0.16669608984196804
+            ],
+            "interval_width": 0.1350910976804942,
+            "resolved": false,
+            "scenario": "16",
+            "treatment": 0.8537946428571429,
+            "treatment_samples": 1792
+          }
+        ],
+        "goal_eligible": false,
+        "interval_method": "Conservative Wilson endpoint bounds; Bonferroni across 3 branches, all planned batch looks, groups and endpoints. Paired covariance not exploited.",
+        "metric": "horizontal wrapping rate",
+        "samples": 7168,
+        "scientific_novelty": "unverified"
+      },
+      "next_decision": {
+        "action": "finalize",
+        "goal_branch_id": "b1_3",
+        "invest": [],
+        "missing_evidence": [
+          "The additional b1_2 result currently in flight.",
+          "Direct artifact verification beyond the supplied validation review, including raw trials, seed provenance and implementation checks, unless already completed and recorded by the supervisor.",
+          "Independent scientific verification of the horizontal strongly connected wrapping implementation; deterministic replay alone does not establish correctness.",
+          "Per-batch effect summaries to assess consistency beyond pooled measurements.",
+          "Evidence across occupation probabilities, intervention probabilities and larger sizes to distinguish saturation and threshold effects from critical behavior.",
+          "Relevant literature sufficient to assess novelty; scientific novelty remains unverified."
+        ],
+        "next_experiment": "Finalize the scoped b1_3 numerical finding through the supervisor's required validation and artifact-acceptance process, reusing the supplied supported review without treating it as independent code execution. Preserve all thresholds, budgets and outcomes. Consolidate the existing b1_2 job when it completes without duplicating it or delaying the achieved numerical goal for further screening. No new simulation batches are requested. A subsequent separately specified investigation could vary reverse-edge probability at fixed p=1 to test whether smaller interventions retain a detectable wrapping increase before saturation; its protocol and multiplicity allocation must be approved before execution.",
+        "rationale": "Finalize b1_3 because it remains goal_eligible=true, has a supported validation review, and the declared numerical goal is reported achieved. Further screening is unnecessary for that goal. Source seed, page 2 states: \"A somewhat different class of directed lattices, which we do not study here, are ones where some pairs of sites are connected by directed bonds in both directions, equivalent to an undirected bond.\" This grounds the model class; the intervention probability and strict-increase prediction are agent-generated. The validation clarifies that reverse edges are independently added with probability 0.25, rather than exactly 25% being converted in every realization. Its review relied on supplied records and did not independently execute or verify artifacts. Final artifact acceptance remains the deterministic supervisor's responsibility.",
+        "result_interpretation": "The newly completed third b1_1 batch leaves both sizes unresolved under the unchanged 0.05 minimum-effect criterion: intervals are [0.002096500265016954, 0.1419210453240748] at size 8 and [0.03160499216147383, 0.16669608984196804] at size 16. Both exclude zero but include effects below 0.05. This result does not displace b1_3, whose two-batch differences are 0.21484375 and 0.248046875, with interval lower bounds above 0.05 and widths below 0.25 at both sizes. The supplied validation supports this limited numerical finding, and the supervisor now reports goal.achieved=true. For b1_2, the available two-batch results resolve size 16 but leave size 8 unresolved; its additional in-flight result remains unavailable. These measurements support a finite-size wrapping response, not established novelty or universality."
+      },
+      "round": 7,
+      "trials_per_size": 1024
+    },
+    {
+      "batch": 3,
+      "branch_id": "b1_2",
+      "effect": {
+        "batches": 3,
+        "checks": [
+          {
+            "conclusion": "difference_detected",
+            "control": 0.7633928571428571,
+            "control_samples": 1792,
+            "difference": -0.1869419642857142,
+            "difference_interval": [
+              -0.2646115253123502,
+              -0.10651061139800166
+            ],
+            "interval_width": 0.15810091391434855,
+            "resolved": true,
+            "scenario": "8",
+            "treatment": 0.5764508928571429,
+            "treatment_samples": 1792
+          },
+          {
+            "conclusion": "difference_detected",
+            "control": 0.7606026785714286,
+            "control_samples": 1792,
+            "difference": -0.3158482142857143,
+            "difference_interval": [
+              -0.39295219529126574,
+              -0.2340780416581652
+            ],
+            "interval_width": 0.15887415363310053,
+            "resolved": true,
+            "scenario": "16",
+            "treatment": 0.4447544642857143,
+            "treatment_samples": 1792
+          }
+        ],
+        "goal_eligible": true,
+        "interval_method": "Conservative Wilson endpoint bounds; Bonferroni across 3 branches, all planned batch looks, groups and endpoints. Paired covariance not exploited.",
+        "metric": "horizontal wrapping rate",
+        "samples": 7168,
+        "scientific_novelty": "unverified"
+      },
+      "next_decision": {
+        "action": "finalize",
+        "goal_branch_id": "b1_3",
+        "invest": [],
+        "missing_evidence": [
+          "Direct artifact verification of raw trials, seed provenance, implementation and hashes, unless already completed and recorded by the supervisor.",
+          "Independent scientific verification of the horizontal strongly connected wrapping implementation; deterministic replay alone does not establish correctness.",
+          "Per-batch effect summaries to assess consistency beyond pooled measurements.",
+          "Validation specific to the newly eligible three-batch b1_2 finding; the previous review concerned b1_3 and its b1_2 eligibility statement is now outdated.",
+          "Evidence across occupation probabilities, reverse-edge probabilities and larger sizes to distinguish saturation and threshold effects from critical behavior.",
+          "Relevant literature sufficient to assess novelty; the supplied evidence is insufficient to establish scientific novelty or universality."
+        ],
+        "next_experiment": "Request no new simulation batches. Finalize b1_3 through the deterministic supervisor's required validation and artifact-acceptance process, preserving unchanged thresholds, all outcomes and the completed b1_2 result. Update the consolidated record to remove the obsolete in-flight status and b1_2 ineligibility statement. For a subsequent separately specified investigation, test smaller reverse-edge probabilities at fixed p=1 against fresh random-diode controls to determine whether a detectable wrapping increase persists before saturation. Prespecify intervention levels, sizes, seeds, budget and multiplicity allocation before execution; this would assess intervention sensitivity, not establish universality.",
+        "rationale": "Retain b1_3 for finalization because it is goal_eligible=true, already has a supported validation review, and the supervisor reports the declared goal achieved. Source seed, page 2 states: \"A somewhat different class of directed lattices, which we do not study here, are ones where some pairs of sites are connected by directed bonds in both directions, equivalent to an undirected bond.\" This grounds the model class; the intervention and strict-increase prediction are agent-generated. The supplied validation clarifies that reverse edges are added independently with probability 0.25, rather than converting exactly 25% in each realization. Its support concerns a finite-size numerical contrast and relies on supplied records, not independent artifact inspection. The newly eligible b1_2 is a secondary consistency finding requiring its own validation before acceptance. Remaining budget alone does not justify additional batches after the numerical goal is met.",
+        "result_interpretation": "The completed third b1_2 batch now resolves both sizes: treatment-minus-control differences are -0.1869419642857142 at L=8 and -0.3158482142857143 at L=16, with intervals [-0.2646115253123502, -0.10651061139800166] and [-0.39295219529126574, -0.2340780416581652]. Both establish decreases exceeding the declared 0.05 minimum effect, with widths below 0.25. This supersedes the earlier assessment that b1_2 was ineligible. It supports the threshold-informed site-versus-bond consistency check, not matched-criticality behavior. b1_1 remains unresolved: both intervals exclude zero but include effects below 0.05. b1_3 remains eligible after two batches, with increases of 0.21484375 and 0.248046875 and both interval lower bounds above 0.05. No jobs remain in flight. The additional b1_2 evidence strengthens the completed record without displacing the supported b1_3 finding or requiring further screening. Scientific novelty and universality remain unverified."
+      },
+      "round": 8,
+      "trials_per_size": 1024
+    }
+  ],
+  "scientific_novelty": "unverified",
+  "source_kind": "full_text",
+  "status": "goal_achieved",
+  "validation": {
+    "decision": "supported",
+    "limitations": [
+      "Review used supplied source text, implementation and summaries only. I did not execute code, inspect raw CSVs, verify hashes or independently reproduce the reported replays.",
+      "Wilson intervals have approximate binomial coverage. Bonferroni allocation addresses multiplicity but does not make their familywise coverage an exact finite-sample guarantee, especially near treatment saturation.",
+      "Only L=8 and L=16 at p=1 were tested. There is insufficient evidence for infinite-size behavior, universality, critical exponents, global novelty or real-world predictions.",
+      "The implementation assigns reverse edges independently with probability 0.25; it does not convert exactly 25% of bonds in every realization.",
+      "The edge-addition monotonicity argument applies to a shared-graph coupling. Actual control and treatment trials use separate random seeds, so these results do not directly test realization-by-realization monotonicity.",
+      "Equal occupation probability does not establish matched criticality. The contrast can reflect movement away from the random-diode critical point; it does not isolate a novel critical mechanism.",
+      "The supplied percolation baseline is stochastic, despite the generic geometry-baseline wording. Its six passing checks and engineering tolerance of 0.12 establish only limited consistency, not high-precision paper reproduction or comprehensive implementation correctness.",
+      "Pooled statistics do not show each batch's effect separately. Distinct seeds and reported replays support reproducibility, but replaying the same implementation does not independently validate its scientific correctness; b1_1 and b1_2 remain ineligible under their supplied checks."
+    ],
+    "reasoning": "The supplied evidence supports the limited numerical claim for b1_3: independently making each occupied bond bidirectional with probability 0.25 at p=1 increases horizontal strongly connected wrapping at L=8 and L=16. Counts give differences of (510-400)/512=0.21484375 and (512-385)/512=0.248046875. Subtracting the supplied arm interval endpoints reproduces the reported difference intervals [0.12709630589649357, 0.291683624567862] and [0.15995144805874906, 0.3235490171137342]. Both lower bounds exceed the unchanged minimum effect of 0.05, and both widths are below 0.25. Two batches with distinct seeds satisfy the declared batch requirement; supplied replay records report 1024 successful trial replays per batch. The implementation allocates uncertainty across three branches, eight planned looks and two sizes, addressing adaptive selection within that declared family. Its separate arm seeds support an independent-arm comparison, not a paired experiment. Source grounding is appropriate: seed, page 2 states, \"Such lattices were studied by Redner [35] and Dhar et al. [36] in the form of the random resistor-diode model\". This establishes prior-work context, not novelty. The numerical eligibility finding is supported on the supplied record; final artifact acceptance remains the deterministic supervisor's responsibility. Further sampling of this same recipe is unnecessary for the stated numerical criteria. A subsequent scientific investigation should address dependence on occupation probability or resistor fraction rather than interpreting this saturated finite-size contrast as critical scaling."
+  },
+  "validation_branch_id": "b1_3",
+  "workflow": "adaptive",
+  "workflow_version": "4"
+}

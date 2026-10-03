@@ -93,7 +93,7 @@ def test_host_launch_waits_for_its_own_runner(tmp_path, monkeypatch):
     assert requests[0].url.path == "/v1/hosts/local_host/runners"
     assert json.loads(requests[0].content) == {
         "session_id": "session_new",
-        "workspace": str((tmp_path / "workspace").resolve()),
+        "workspace": str((tmp_path / "workspace" / "session_new").resolve()),
     }
 
 

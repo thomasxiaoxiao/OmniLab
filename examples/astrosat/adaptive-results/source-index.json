@@ -1,0 +1,29 @@
+[
+  {
+    "kind": "full_text",
+    "path": "data/papers/2111.11268v1.pdf",
+    "retrieved_at": "2026-10-03T20:48:37.086588+00:00",
+    "sha256": "e56bf525c71437be590c99f6cb4697cb41442f05c5836d7f555c34851eca0ebf",
+    "source_id": "seed",
+    "title": "arXiv:2111.11268v1",
+    "url": "https://arxiv.org/abs/2111.11268v1"
+  },
+  {
+    "kind": "full_text",
+    "path": "data/literature/2108.12335v1.pdf",
+    "retrieved_at": "2026-10-03T20:53:43.251119+00:00",
+    "sha256": "d8af86f452e9455f3085920347098829a347f7605707af8365ad20b6955efa21",
+    "source_id": "ref_2108_12335",
+    "title": "Analytical simulations of the effect of satellite constellations on optical and near-infrared observations",
+    "url": "https://arxiv.org/abs/2108.12335v1"
+  },
+  {
+    "kind": "full_text",
+    "path": "data/literature/2101.00374v1.pdf",
+    "retrieved_at": "2026-10-03T20:53:50.067192+00:00",
+    "sha256": "83b31adfd23a0c114433c7b67f13af462743c711a2d73f0b44878394c21f76c5",
+    "source_id": "ref_2101_00374",
+    "title": "The Brightness of VisorSat-Design Starlink Satellites",
+    "url": "https://arxiv.org/abs/2101.00374v1"
+  }
+]

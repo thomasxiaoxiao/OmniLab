@@ -1,0 +1,32 @@
+{
+  "batch": 1,
+  "branch_id": "b1_1",
+  "checkpoint": 1,
+  "decision": {
+    "action": "invest",
+    "goal_branch_id": null,
+    "invest": [
+      "b1_1"
+    ],
+    "missing_evidence": [
+      "A second independent seed batch for b1_1.",
+      "Simultaneous intervals satisfying the unchanged resolution and maximum-width criteria.",
+      "Completed results for the in-flight b1_2 and b1_3 comparisons.",
+      "Supervisor confirmation of the predeclared finite-size consistency criterion.",
+      "Independent validation of any subsequently eligible branch.",
+      "Implementation and sampling verification beyond the supplied summaries.",
+      "Literature evidence sufficient to assess scientific novelty; novelty remains unverified."
+    ],
+    "next_experiment": "Run a second independent seed batch for b1_1 at p=0.69716 and sizes 8 and 16, preserving the approved orientation sampling, occupation sampling, horizontal wrapping definition and fresh matched controls. Aggregate both batches using the predeclared simultaneous interval procedure and unchanged effect, precision and finite-size criteria. Continue collecting the already-running b1_2 and b1_3 batches; reassess allocation after each completion. Keep the eight-batch cap and existing budgets. Request independent validation only after a branch becomes goal_eligible.",
+    "rationale": "The first measurements change the next step from initial screening to a precision-focused repeat of b1_1. They provide insufficient evidence to accept or reject its predicted effect, while substantial budget remains for another allowed batch. Retain the running comparisons without duplicating their pending work. The source supports investigating alternative arrangements: seed, page 13 states, \"or the biased Janus-particle directed model [67, 68].\" This contextual quotation supports the broader extension discussion, not the measured outcome or novelty. The supplied full page-13 quotation specifically names the randomly-oriented Manhattan lattice. A resolved fixed-probability contrast would still not distinguish a threshold shift from other structural effects or establish universality.",
+    "result_interpretation": "Only b1_1 has completed a batch. Treatment-minus-control horizontal wrapping differences are 0.01953125 at size 8 and 0.109375 at size 16, with simultaneous intervals [-0.16097129918842557, 0.19809970158068269] and [-0.07255811368079534, 0.2804771670774351]. Both intervals include zero and effects above 0.05; neither resolves the comparison. Their widths, 0.35907100076910825 and 0.35303528075823043, exceed 0.25, and only one independent batch is available. The larger point estimate at size 16 does not establish size dependence. Results for b1_2 and b1_3 remain pending. No branch is eligible for finalization."
+  },
+  "decision_seconds": 23.442,
+  "goal_accepted": false,
+  "input": "checkpoints/001/input.json",
+  "pending_branches": [
+    "b1_3",
+    "b1_2"
+  ],
+  "result_to_decision_seconds": 23.443
+}

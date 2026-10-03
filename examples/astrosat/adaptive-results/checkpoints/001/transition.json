@@ -1,0 +1,35 @@
+{
+  "batch": 1,
+  "branch_id": "b1_3",
+  "checkpoint": 1,
+  "decision": {
+    "action": "invest",
+    "goal_branch_id": null,
+    "invest": [
+      "b1_3",
+      "b1_2",
+      "b1_1"
+    ],
+    "missing_evidence": [
+      "Completed b1_1 and b1_2 results; both are still in flight.",
+      "At least a second independent seed batch for b1_3 and sufficient simultaneous precision to decide against the unchanged effect threshold.",
+      "Matched-candidate guard-width comparisons with incremental recovery, false-alert counts and uncertainty.",
+      "Raw miss-cause information sufficient to distinguish spatial and temporal failures.",
+      "Recorded seeds, sampling bounds and control provenance supporting reproducibility and batch independence.",
+      "Independent validation of any branch that becomes goal_eligible.",
+      "Empirical justification for the simulation's error distributions and operational alert-cost criteria.",
+      "Literature evidence sufficient to assess scientific novelty; novelty and real-world generalizability remain unverified."
+    ],
+    "next_experiment": "Run the next independent seed batch for b1_3 with the existing nominal control, fixed +/-5-second temporal window, unchanged sampling assumptions and separate fresh/stale reporting. Consolidate it with the first batch using the prescribed simultaneous interval method and unchanged 0.05 minimum effect, 0.25 maximum interval width and minimum two-batch requirement. As existing b1_2 and b1_1 batches finish, compare guard widths using matched candidates and controls within each seed batch; prioritize subsequent b1_2 then b1_1 batches. Report incremental recovered crossings and added false alerts with denominators and available uncertainty. Inspect spatial versus temporal miss causes only where raw outputs support attribution. Preserve all outcomes, enforce the eight-batch-per-branch cap and remaining budgets, and reserve resources for independent validation after eligibility.",
+    "rationale": "Prioritize a second independent b1_3 batch to assess whether its apparent recovery survives additional sampling and yields sufficiently narrow simultaneous intervals. Then prioritize b1_2 for the incremental two-versus-three-sigma comparison and b1_1 for the narrower-guard tradeoff, retaining their existing in-flight work. The result shifts emphasis from presumed timing limitations toward quantifying whether the third sigma offers recovery worth its additional false alerts. The source motivates testing field expansion: seed, page 2, \"The \ufb01eld of view could be expanded by this distance and the results interpreted probabilistically.\" It also states: seed, page 2, \"The cross-track error is more critical as it determines whether the object will pass through the \ufb01eld or not.\" Neither passage establishes a Gaussian error law or a preferred guard width. No branch is goal_eligible; further bounded tests can help, so neither finalization nor stopping is justified.",
+    "result_interpretation": "Only b1_3 has completed a batch. Its simulated missed-transit rate was 0/132 for fresh and 0/136 for stale candidates, versus control rates of 11.36% and 14.71%. Treatment-minus-control simultaneous intervals were [-0.2516, 0.0451] and [-0.2890, 0.0212]; both include zero and have widths exceeding 0.25. False-alert rates increased from 14.21% to 51.58% in fresh and from 14.63% to 56.91% in stale scenarios. These measurements suggest spatial recovery with a substantial alert burden, but establish neither the required effect nor operational utility. Zero observed treatment misses in both scenarios provides no observed support for the predicted excess residual timing misses in stale conditions; it does not establish their absence. b1_1 and b1_2 remain in flight, so guard-width comparisons are unavailable."
+  },
+  "decision_seconds": 24.617,
+  "goal_accepted": false,
+  "input": "checkpoints/001/input.json",
+  "pending_branches": [
+    "b1_1",
+    "b1_2"
+  ],
+  "result_to_decision_seconds": 24.619
+}

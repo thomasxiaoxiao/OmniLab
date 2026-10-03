@@ -1,0 +1,35 @@
+{
+  "batch": 1,
+  "branch_id": "b1_2",
+  "checkpoint": 3,
+  "decision": {
+    "action": "invest",
+    "goal_branch_id": null,
+    "invest": [
+      "b1_3",
+      "b1_2",
+      "b1_1"
+    ],
+    "missing_evidence": [
+      "Completed results from the additional b1_3 and b1_1 batches currently in flight.",
+      "At least two independent seed batches and simultaneous intervals satisfying the unchanged effect and precision criteria for a candidate branch.",
+      "Matched-candidate comparisons between guard widths, including incremental recovery, added false alerts, denominators and uncertainty.",
+      "Raw miss-cause records supporting spatial versus temporal attribution.",
+      "Recorded seeds, sampling bounds and control provenance establishing reproducibility and batch independence.",
+      "Independent validation after a branch becomes goal_eligible.",
+      "Empirical support for simulated error distributions and operational alert-cost criteria.",
+      "Literature evidence sufficient to assess novelty; real-world generalizability also remains unverified."
+    ],
+    "next_experiment": "Retain the in-flight b1_3 and b1_1 batches and consolidate each only when completed. Allocate subsequent independent seed batches in priority order b1_3, b1_2, b1_1, reassessing after every completion. Preserve nominal controls, the fixed +/-5-second temporal window, sampling assumptions and separate fresh/stale reporting. Keep the prescribed simultaneous interval method, minimum effect 0.05, maximum interval width 0.25 and minimum two independent batches unchanged. Where matched candidate records are available, compare one-, two- and three-sigma guards for incremental recovery and additional false alerts, reporting counts, denominators and uncertainty. Use raw miss-cause records to assess whether b1_2 stale misses reflect temporal or spatial errors; otherwise leave attribution unresolved. Enforce the eight-batch cap per branch and remaining budgets, preserve unfavorable results, and reserve resources for independent validation after a branch becomes goal_eligible.",
+    "rationale": "Keep b1_3 first because its completed intervals are closest to the required precision and another batch is in flight. Keep b1_2 second to clarify its stale residual misses and assess the incremental value of the third sigma on matched candidates. Retain b1_1 because its lower observed false-alert rates warrant testing whether a narrower guard provides sufficient recovery. The new b1_2 measurements strengthen the need for direct guard comparisons rather than selecting on zero observed misses. Spatial expansion is source-grounded: seed, page 2, \"The \ufb01eld of view could be expanded by this distance and the results interpreted probabilistically.\" The source also states, seed, page 2, \"The cross-track error is more critical as it determines whether the object will pass through the \ufb01eld or not.\" These passages do not establish Gaussian errors, optimal guard width or operational benefit. Evidence is insufficient for the declared goal, but further independent batches within the unchanged limits can improve precision. Scientific novelty remains unverified.",
+    "result_interpretation": "The newly completed b1_2 batch shows missed-transit rates falling from 10.94% to 0% for fresh candidates and from 14.49% to 4.35% for stale candidates. Its treatment-minus-control intervals are [-0.3228, 0.1418] and [-0.3484, 0.1784], with widths 0.4646 and 0.5267; neither resolves the effect. False-alert rates rise from 15.10% to 41.15% and from 14.44% to 45.99%. Previously completed b1_1 results show reductions of 12.50 and 7.69 percentage points, with treatment false-alert rates of 23.96% and 34.03%. Previously completed b1_3 results show zero treatment misses and false-alert rates of 51.58% and 56.91%; its interval widths remain 0.2967 and 0.3102. Every branch has only one completed batch, all effect intervals include zero, and none is goal_eligible. The new result adds evidence of a recovery-versus-alert tradeoff but does not establish incremental benefit from wider guards: branch samples and controls differ. The stale misses in b1_2 cannot be attributed to timing from these aggregates. Additional b1_3 and b1_1 batches remain in flight; their outcomes are unavailable."
+  },
+  "decision_seconds": 22.697,
+  "goal_accepted": false,
+  "input": "checkpoints/003/input.json",
+  "pending_branches": [
+    "b1_3",
+    "b1_1"
+  ],
+  "result_to_decision_seconds": 65.862
+}

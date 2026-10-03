@@ -1,0 +1,8 @@
+{
+  "achieved": false,
+  "description": "Resolve a source-grounded mechanism with fresh controls, independent seed batches and a simultaneous interval narrow enough to decide.",
+  "independent_validation_required": true,
+  "maximum_interval_width": 0.25,
+  "minimum_batches": 2,
+  "minimum_effect": 0.05
+}

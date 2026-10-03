@@ -12,8 +12,13 @@ from hacknation_databricks.research.cli import fixture_source, parser
 from hacknation_databricks.research.decision_roles import passages
 from hacknation_databricks.research.models import RunConfig
 from hacknation_databricks.research.sources import read_source
-from hacknation_databricks.research.workflow import run_research
+from hacknation_databricks.research.workflow import run_research as run_workflow
 from hacknation_databricks.tracking import decision_contract, load_journal
+
+
+def run_research(*args, **kwargs):
+    kwargs.setdefault("backend", "anyjev")
+    return run_workflow(*args, **kwargs)
 
 
 @pytest.fixture
@@ -23,7 +28,7 @@ def setup(monkeypatch, tmp_path):
 
 
 def test_default_is_model_inference_and_scripted_execution_is_unavailable(tmp_path):
-    assert parser().parse_args(["run"]).backend == "anyjev"
+    assert parser().parse_args(["run"]).backend == "omnigent"
     with pytest.raises(ValueError, match="Backend"):
         run_research(read_source(fixture_source()), tmp_path, backend="scripted")
     with pytest.raises(ValueError, match="Backend"):

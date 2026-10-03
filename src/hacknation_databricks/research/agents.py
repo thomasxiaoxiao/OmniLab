@@ -3,6 +3,7 @@
 import asyncio
 import os
 import re
+import threading
 import time
 from pathlib import Path
 from typing import TypeVar
@@ -12,7 +13,7 @@ from .artifacts import RunStore, canonical
 from .models import Contract, RunConfig
 from .sources import Source
 
-PROMPT_VERSION = "research-v2-reference-evaluation"
+PROMPT_VERSION = "research-v4-adaptive-portfolio"
 T = TypeVar("T", bound=Contract)
 
 
@@ -28,6 +29,9 @@ class RoleBackend:
     def __init__(self, sources: list[Source], store: RunStore, config: RunConfig):
         self.sources, self.store, self.config = sources, store, config
         self.calls = 0
+        self._call_lock = threading.Lock()
+        self._call_context = threading.local()
+        self._slots = threading.BoundedSemaphore(config.max_workers)
         self.deadline = time.monotonic() + config.max_seconds
 
     def close(self) -> None:
@@ -51,9 +55,31 @@ class OmnigentRoles(RoleBackend):
         self.host_id = os.getenv("OMNIGENT_HOST_ID")
 
     def ask(self, role: str, payload: dict, contract: type[T]) -> T:
-        if self.calls >= self.config.max_agent_calls:
-            raise AgentBudgetExceeded("Omnigent call budget exhausted")
-        self.calls += 1
+        with self._slots:
+            for attempt in range(self.config.max_agent_retries + 1):
+                try:
+                    return self._ask(role, payload, contract)
+                except AgentUnavailable:
+                    if attempt >= self.config.max_agent_retries:
+                        raise
+                    self.store.event(
+                        "agent_retry",
+                        {
+                            "role": role,
+                            "attempt": attempt + 1,
+                            "reason": "Omnigent runtime unavailable",
+                        },
+                    )
+                    time.sleep(min(1, max(0, self.deadline - time.monotonic())))
+            raise AssertionError("Unreachable retry state")
+
+    def _ask(self, role: str, payload: dict, contract: type[T]) -> T:
+        with self._call_lock:
+            if self.calls >= self.config.max_agent_calls:
+                raise AgentBudgetExceeded("Omnigent call budget exhausted")
+            self.calls += 1
+            call_number = self.calls
+        self._call_context.number = call_number
         prompt = canonical(
             {
                 "task": role,
@@ -65,7 +91,7 @@ class OmnigentRoles(RoleBackend):
                 "URLs invented from memory, or claims of established scientific novelty.",
             }
         )
-        name = f"roles/{self.calls:02d}-{role}"
+        name = f"roles/{call_number:02d}-{role}"
         details = {
             "call_id": name,
             "role": role,
@@ -116,6 +142,7 @@ class OmnigentRoles(RoleBackend):
         headers = {"Authorization": f"Bearer {token}"} if token else None
         session_id = None
         text_parts = []
+        call_number = getattr(self._call_context, "number", self.calls)
         async with OmnigentClient(self.url, headers=headers, timeout=20) as client:
             try:
                 remaining = min(
@@ -148,7 +175,7 @@ class OmnigentRoles(RoleBackend):
                             "session_id": session_id,
                             "agent_id": agent.id,
                             "agent_name": self.agent_name,
-                            "call_id": f"roles/{self.calls:02d}-{role}",
+                            "call_id": f"roles/{call_number:02d}-{role}",
                         },
                     )
                     if self.host_id:
@@ -164,7 +191,7 @@ class OmnigentRoles(RoleBackend):
                             "runner_id": runner_id,
                             "agent_id": agent.id,
                             "agent_name": self.agent_name,
-                            "call_id": f"roles/{self.calls:02d}-{role}",
+                            "call_id": f"roles/{call_number:02d}-{role}",
                         },
                     )
                     chat = SessionsChat(client.sessions, None, None, session)
@@ -200,7 +227,7 @@ class OmnigentRoles(RoleBackend):
             except BaseException:
                 if text_parts:
                     self.store.write(
-                        f"roles/{self.calls:02d}-{role}-partial.json",
+                        f"roles/{call_number:02d}-{role}-partial.json",
                         {
                             "raw": "".join(text_parts),
                             "session_id": session_id,
@@ -233,7 +260,10 @@ class OmnigentRoles(RoleBackend):
 
         if not re.fullmatch(r"[a-zA-Z0-9_-]+", self.host_id or ""):
             raise ValueError("Invalid Omnigent host ID")
-        workspace = Path(os.getenv("RESEARCH_AGENT_WORKSPACE", ".runtime/research-agent")).resolve()
+        workspace = (
+            Path(os.getenv("RESEARCH_AGENT_WORKSPACE", ".runtime/research-agent")).resolve()
+            / session_id
+        )
         workspace.mkdir(parents=True, exist_ok=True)
         async with httpx.AsyncClient(base_url=self.url, headers=headers, timeout=30) as http:
             response = await http.post(
@@ -256,16 +286,53 @@ class OmnigentRoles(RoleBackend):
 
 
 ROLE_INSTRUCTIONS = {
+    "research_context": "Read the supplied seed paper and derive its research question and "
+    "scientific context from its full text. Cite exact page-local passages. Do not infer context "
+    "from a filename or a configured example. Then assess whether the available local tools "
+    "can test this paper: percolation supports directed-lattice connectivity and wrapping; "
+    "astrosat supports synthetic satellite-transit positional uncertainty and guard margins. "
+    "These are tool capabilities, not assumptions about the paper. Select unsupported when "
+    "neither applies; never force an unrelated paper into an available experiment family.",
+    "researcher": "Research the supplied source in parallel with other researchers. Read all its "
+    "pages and propose up to three testable directions from the experiment catalog. "
+    "Distinguish explicit paper suggestions from your own hypotheses. Cite exact page-local "
+    "passages. Related literature can motivate or challenge a direction, not prove novelty. "
+    "Return no directions when the source is irrelevant. Report actual search scope and omissions.",
+    "consolidator": "Critique every candidate exactly once for evidence, feasibility and "
+    "falsifiability. Consolidate duplicate ideas and invest in up to three accepted complementary "
+    "directions. Explore multiple mechanisms when evidence supports them. Select only eligible "
+    "candidate IDs. Explain priority and rejected assumptions; do not assert global novelty.",
+    "branch_planner": "Plan this research branch's next simulation batch. Compare both supplied "
+    "tests for learning, feasibility and cost, select one affordable test. Match branch_id and "
+    "experiment exactly. Incorporate the decision agent's latest measured-result guidance. "
+    "Screen and precision both add fresh controls and independent seeded samples; previous "
+    "samples are retained. Do not modify thresholds or invent executable code.",
+    "decision_agent": "Consolidate all available partial results after each completed batch. "
+    "Other listed branches may still be running: never pretend those results have arrived. "
+    "Reallocate the next simulation batches using invest IDs in priority order. Paused branches "
+    "can be resumed. Explain what the measurements changed and the specific next test. "
+    "Continue investigating until the declared goal is met or further allowed tests cannot "
+    "help. Finalize only a branch whose goal_eligible is true; independent validation follows. "
+    "Missing novelty literature does not prohibit an explicitly scoped numerical investigation. "
+    "Stop honestly if the goal is unattainable; never claim success because the budget ended.",
     "reader": "Read all supplied seed pages. Extract at most three explicit follow-up directions. "
     "Each direction needs a verbatim page-local quote and an allowlisted experiment. "
     "Do not paraphrase inside quotation fields or invent directions.",
     "critic": "Review every proposal exactly once. Check feasibility, source support and novelty "
-    "risks. Reject unsupported plans; an experiment is not evidence of novelty.",
+    "risks. Reject unsupported plans; an experiment is not evidence of novelty. Choose the most "
+    "useful accepted proposal in selected_proposal_id, respecting preferred_experiment if set. "
+    "Return null if none is eligible; never select a rejected proposal.",
     "literature": "Read the supplied sources and identify known overlap or a candidate gap. "
     "Cite exact page-local quotes. Use unverified when literature is insufficient. "
     "You have no live search tool: report your actual search scope.",
     "planner": "Select only the reviewed proposal's allowlisted experiment. Explain its controls. "
-    "Do not invent executable code or change the independent validation thresholds.",
+    "Compare both supplied test_options by expected learning, feasibility and simulation cost. "
+    "Select a test within the remaining budget. Use previous_rounds to adapt to results. "
+    "Explain controls. Do not invent code or change validation thresholds.",
+    "next_decision": "Interpret the actual experimental result and choose repeat, literature or "
+    "stop. Explain how the result changed your decision and specify the next experiment. "
+    "Repeat only if more measurements can resolve uncertainty and budget remains. "
+    "Choose literature for missing prior-art evidence; simulation cannot establish global novelty.",
     "validator": "Independently critique the measurements, checks and uncertainty. Reject "
     "unsupported claims. A finite-size difference does not establish universality "
     "or global novelty. Report limitations even when checks pass.",

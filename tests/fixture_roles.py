@@ -32,6 +32,18 @@ class FixtureRoles:
                 "usage": {"model_calls": 0},
             },
         )
+        if role == "planner" and "tests" in contract.model_fields and "tests" not in result:
+            result.update(
+                selected_test_id="screen",
+                tests=[
+                    {
+                        "test_id": name,
+                        "expected_learning": "Estimate finite-size wrapping effect.",
+                        "feasibility": "Allowlisted simulation with bounded cost.",
+                    }
+                    for name in payload["test_options"]
+                ],
+            )
         return contract.model_validate(result)
 
     def _respond(self, role: str, payload: dict) -> dict:
@@ -77,6 +89,15 @@ class FixtureRoles:
             return {"proposals": proposals}
         if role == "critic":
             return {
+                "selected_proposal_id": next(
+                    (
+                        p["id"]
+                        for p in payload["proposals"]
+                        if not payload.get("preferred_experiment")
+                        or p["experiment"] == payload["preferred_experiment"]
+                    ),
+                    None,
+                ),
                 "critiques": [
                     {
                         "proposal_id": p["id"],
@@ -89,7 +110,7 @@ class FixtureRoles:
                         ],
                     }
                     for p in payload["proposals"]
-                ]
+                ],
             }
         if role == "literature":
             return {
@@ -100,7 +121,23 @@ class FixtureRoles:
                 "search_scope": "Seed text only; no autonomous literature search performed.",
             }
         if role == "planner":
+            extra = (
+                {
+                    "selected_test_id": "screen",
+                    "tests": [
+                        {
+                            "test_id": name,
+                            "expected_learning": "Estimate finite-size wrapping effect.",
+                            "feasibility": "Allowlisted simulation with bounded cost.",
+                        }
+                        for name in payload["test_options"]
+                    ],
+                }
+                if self.name == "omnigent"
+                else {}
+            )
             return {
+                **extra,
                 "proposal_id": payload["proposal"]["id"],
                 "experiment": payload["proposal"]["experiment"],
                 "rationale": "Use the simulator with recorded seeds and fixed parameters.",
@@ -115,6 +152,13 @@ class FixtureRoles:
                     "No global novelty verification",
                     "Scripted review",
                 ],
+            }
+        if role == "next_decision":
+            return {
+                "action": "repeat",
+                "result_interpretation": "The measured effect needs review.",
+                "rationale": "Test fixture requests another bounded measurement.",
+                "next_experiment": "Increase trials to inspect sampling uncertainty.",
             }
         if role == "novelty_evaluator":
             return {

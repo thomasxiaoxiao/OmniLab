@@ -7,6 +7,7 @@ import json
 import os
 import re
 import tempfile
+from dataclasses import replace
 from datetime import UTC, datetime
 from pathlib import Path
 
@@ -98,6 +99,41 @@ def list_sources(root: Path) -> tuple[list[Source], list[str]]:
                     issues.append(
                         f"Source {directory.name[:12]} failed validation; excluded from runs."
                     )
+    return sources, issues
+
+
+def library_sources(root: Path) -> tuple[list[Source], list[str]]:
+    """Only the two supplied papers are built in; other sources require explicit intake."""
+    sources, issues = list_sources(root)
+    configured = os.environ.get("RESEARCH_PAPER_PATH")
+    paths = [Path(configured)] if configured else []
+    titles = {
+        "2607.24975v1": "Strongly-connected percolation on directed lattices",
+        "2111.11268v1": (
+            "Astrosat: Forecasting satellite transits for optical astronomical observations"
+        ),
+    }
+    paths.extend(
+        Path("data/papers") / f"{identifier}.pdf" for identifier in ("2607.24975v1", "2111.11268v1")
+    )
+    seen = {source.sha256 for source in sources}
+    for path in paths:
+        if not path.is_file():
+            continue
+        try:
+            source = read_source(path)
+            if path.stem in titles:
+                source = replace(source, title=f"{titles[path.stem]} · {path.stem}")
+            if path.stem in titles:
+                sources = [
+                    replace(item, title=source.title) if item.sha256 == source.sha256 else item
+                    for item in sources
+                ]
+            if source.sha256 not in seen:
+                sources.append(source)
+                seen.add(source.sha256)
+        except Exception:
+            issues.append(f"Source {path.name} failed validation; excluded from runs.")
     return sources, issues
 
 

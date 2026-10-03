@@ -1,0 +1,35 @@
+{
+  "batch": 2,
+  "branch_id": "b1_1",
+  "checkpoint": 5,
+  "decision": {
+    "action": "invest",
+    "goal_branch_id": null,
+    "invest": [
+      "b1_3",
+      "b1_2",
+      "b1_1"
+    ],
+    "missing_evidence": [
+      "Completed outcomes for the b1_2 and b1_3 batches currently in flight.",
+      "Simultaneous intervals resolving the unchanged minimum-effect criterion in both scenarios for an eligible branch.",
+      "Matched-candidate guard comparisons with incremental recovery, additional false alerts, denominators and uncertainty.",
+      "Raw miss-cause records distinguishing spatial and temporal errors.",
+      "Recorded seeds, sampling bounds and control provenance verifying batch independence and reproducibility.",
+      "Independent validation after a branch becomes goal_eligible.",
+      "Empirical support for the assumed error distributions and operational criteria for the false-alert tradeoff.",
+      "Literature evidence assessing novelty and external evidence assessing real-world generalizability."
+    ],
+    "next_experiment": "Retain the b1_2 and b1_3 batches already in flight and incorporate each only when completed. Allocate subsequent independent seed batches in priority order b1_3, b1_2, b1_1, accounting for pending work and reassessing after each completion. Test whether b1_3's simultaneous upper difference bounds reach -0.05 in both fresh and stale scenarios; apply the same criterion to other branches. Preserve nominal controls, sampling assumptions, the +/-5-second window, separate scenario reporting, the prescribed simultaneous interval method, minimum effect 0.05, maximum width 0.25, minimum two independent batches and eight-batch cap. Use available authorized matched records to quantify incremental recovery and added false alerts between guards, with denominators and uncertainty. Inspect raw miss causes before attributing residuals to timing. Preserve all outcomes and reserve resources for independent validation after a branch becomes goal_eligible.",
+    "rationale": "Retain b1_3 as first priority because its available simultaneous bounds are closest to resolving the prescribed minimum effect in both scenarios. Keep b1_2 second to investigate the intermediate guard and b1_1 third because its lower observed false-alert burden remains relevant, although cross-branch comparisons are descriptive without matched records. The new b1_1 result removes insufficient width and batch count as immediate obstacles, but leaves minimum-effect uncertainty. Source grounding: seed, page 2, \"The \ufb01eld of view could be expanded by this distance and the results interpreted probabilistically.\" Also, seed, page 2, \"The cross-track error is more critical as it determines whether the object will pass through the \ufb01eld or not.\" These passages support testing spatial margins; they do not establish the sigma choices, Gaussian assumptions or operational benefit. Additional allowed batches can still help within the supplied budget and eight-batch cap. Evidence is insufficient to finalize any branch, attribute residual misses to timing, or establish scientific novelty or real-world generalizability.",
+    "result_interpretation": "The newly completed second b1_1 batch brings both interval widths below 0.25 and meets the two-batch count requirement. Fresh missed-transit rates are 12.93% control versus 1.89% treatment, with treatment-minus-control interval [-0.20859, -0.00332]; stale rates are 13.68% versus 3.58%, with interval [-0.21106, 0.01752]. Neither interval establishes the required reduction of at least 0.05. False-alert rates increase from 16.41% to 27.73% fresh and from 15.72% to 27.44% stale. Thus precision improved, but the decision remains unresolved. The available b1_3 results still come from two completed batches: upper interval endpoints -0.04835 fresh and -0.04362 stale narrowly miss -0.05, despite meeting the width requirement. Its false-alert rates are 53.60% and 58.07%. b1_2 still has only one completed batch and intervals exceeding 0.25. Additional b1_2 and b1_3 batches remain in flight; their outcomes are unavailable. All branches remain goal-ineligible, and no independent validation is supplied."
+  },
+  "decision_seconds": 20.405,
+  "goal_accepted": false,
+  "input": "checkpoints/005/input.json",
+  "pending_branches": [
+    "b1_2",
+    "b1_3"
+  ],
+  "result_to_decision_seconds": 45.639
+}

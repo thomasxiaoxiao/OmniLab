@@ -1,0 +1,26 @@
+{
+  "batch": 2,
+  "branch_id": "b1_3",
+  "recipe": {
+    "altitude_km": 335.0,
+    "assumptions": "Independent Gaussian errors; the paper's quoted errors are treated as scenario standard deviations, which is an experimental assumption, not a paper claim. Uniform candidate midtimes and cross-track offsets around a 0.5-degree field. Straight-line, zenith, circular-orbit transit geometry; no brightness or SGP4.",
+    "control": "Nominal field plus the paper's +/-5 second temporal search window",
+    "cross_track_sigma_km": 0.5,
+    "exposure_seconds": 30.0,
+    "field_diameter_deg": 0.5,
+    "in_track_sigma_km": {
+      "fresh": 2.0,
+      "stale": 25.0
+    },
+    "margin_sigma": 3,
+    "question": "Does a 3-sigma cross-track guard reduce missed field crossings?",
+    "scenarios": [
+      "fresh",
+      "stale"
+    ],
+    "source": "arXiv:2111.11268v1, section 2.1 (page 2), equation 1",
+    "timing_window_seconds": 5.0
+  },
+  "seed": 3777130796,
+  "trials_per_group": 1024
+}

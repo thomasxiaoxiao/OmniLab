@@ -1,0 +1,29 @@
+[
+  {
+    "kind": "full_text",
+    "path": "data/papers/2607.24975v1.pdf",
+    "retrieved_at": "2026-10-03T19:34:50.682800+00:00",
+    "sha256": "ec1c1fbd4d1a05ed60875020ea2f103def25cc012bf100ebfe82991a147bd8bb",
+    "source_id": "seed",
+    "title": "2607.24975v1",
+    "url": "https://arxiv.org/abs/2607.24975v1"
+  },
+  {
+    "kind": "full_text",
+    "path": "data/literature/2605.16987v1.pdf",
+    "retrieved_at": "2026-10-03T20:10:27.524799+00:00",
+    "sha256": "9cf8cdfa011e458c11234c50a1c9c98dd65a122b8be147705aa6aa150242b79b",
+    "source_id": "ref_2605_16987",
+    "title": "Percolation transition of strongly connected clusters in finite dimensions and on complete graphs",
+    "url": "https://arxiv.org/abs/2605.16987v1"
+  },
+  {
+    "kind": "full_text",
+    "path": "data/literature/2512.10566v1.pdf",
+    "retrieved_at": "2026-10-03T20:10:40.798352+00:00",
+    "sha256": "46fb842b67df192a71563bfcfa7bff125e83edd17e9ba50cf23756677b1b2792",
+    "source_id": "ref_2512_10566",
+    "title": "Janus Percolation in Anisotropic Limited-Degree Networks",
+    "url": "https://arxiv.org/abs/2512.10566v1"
+  }
+]

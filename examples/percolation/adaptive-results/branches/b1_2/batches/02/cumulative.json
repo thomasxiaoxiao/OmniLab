@@ -1,0 +1,40 @@
+{
+  "batches": 2,
+  "checks": [
+    {
+      "conclusion": "unresolved",
+      "control": 0.7434895833333334,
+      "control_samples": 768,
+      "difference": -0.15494791666666674,
+      "difference_interval": [
+        -0.27381437327345737,
+        -0.030792257209229956
+      ],
+      "interval_width": 0.2430221160642274,
+      "resolved": false,
+      "scenario": "8",
+      "treatment": 0.5885416666666666,
+      "treatment_samples": 768
+    },
+    {
+      "conclusion": "difference_detected",
+      "control": 0.78125,
+      "control_samples": 768,
+      "difference": -0.34765625,
+      "difference_interval": [
+        -0.46069616052913775,
+        -0.22274896836899238
+      ],
+      "interval_width": 0.23794719216014537,
+      "resolved": true,
+      "scenario": "16",
+      "treatment": 0.43359375,
+      "treatment_samples": 768
+    }
+  ],
+  "goal_eligible": false,
+  "interval_method": "Conservative Wilson endpoint bounds; Bonferroni across 3 branches, all planned batch looks, groups and endpoints. Paired covariance not exploited.",
+  "metric": "horizontal wrapping rate",
+  "samples": 3072,
+  "scientific_novelty": "unverified"
+}

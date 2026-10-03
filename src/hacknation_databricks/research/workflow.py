@@ -15,11 +15,14 @@ from statistics import NormalDist
 from . import WORKFLOW_VERSION
 from .agents import AgentBudgetExceeded, AgentUnavailable, OmnigentRoles
 from .artifacts import RunStore, canonical, code_digest, environment
+from .comparison import save_comparisons
 from .decision_roles import AnyJevRoles, DecisionAbstained
 from .models import (
     CritiqueBatch,
+    DiscoveryPlan,
     ExperimentPlan,
     LiteratureReview,
+    NextDecision,
     NoveltyReview,
     ProposalBatch,
     RunConfig,
@@ -194,6 +197,40 @@ def novelty_gate(
     }
 
 
+def discovery_transition(decision, gate, validation, review, remaining_rounds):
+    """A specialist recommendation cannot bypass scientific or resource gates."""
+    if gate["met"]:
+        action, status, reason = "stop", "automated_candidate", "The bounded evidence gate is met."
+    elif validation.decision == "reject":
+        action, status, reason = (
+            "stop",
+            "validation_rejected",
+            "Independent validation rejected the result.",
+        )
+    elif decision.action == "stop":
+        action, status, reason = "stop", "research_stopped", decision.rationale
+    elif (
+        decision.action == "literature"
+        or review.assessment != "candidate_gap"
+        or len({e.source_id for e in review.sources}) < 2
+    ):
+        action, status, reason = (
+            "literature",
+            "needs_literature_review",
+            ("More simulations cannot repair missing independent prior-art evidence."),
+        )
+    elif remaining_rounds <= 0:
+        action, status, reason = "stop", "round_budget_exhausted", "No experimental rounds remain."
+    else:
+        action, status, reason = "repeat", "running", decision.rationale
+    return {
+        "requested_action": decision.action,
+        "applied_action": action,
+        "status": status,
+        "reason": reason,
+    }
+
+
 def _jobs(
     jobs: list[tuple],
     config: RunConfig,
@@ -246,7 +283,7 @@ def run_research(
     source: Source,
     output: Path,
     config: RunConfig | None = None,
-    backend: str = "anyjev",
+    backend: str = "omnigent",
     literature: list[Source] | None = None,
     cache: Path | None = None,
     progress: Callable[[str], None] | None = None,
@@ -258,7 +295,23 @@ def run_research(
     The injection point is for deterministic integration tests, never an input
     from paper text. Live mode fails explicitly; it never falls back to scripted.
     """
-    config = config or RunConfig()
+    config = config or RunConfig(workflow="adaptive")
+    if config.workflow == "adaptive":
+        from .adaptive import run_adaptive
+
+        return run_adaptive(
+            source,
+            output,
+            config,
+            backend=backend,
+            literature=literature,
+            cache=cache,
+            progress=progress,
+            roles_factory=roles_factory,
+            retrieval_report=retrieval_report,
+        )
+    if config.domain == "auto":
+        raise ValueError("Paper-derived context requires the adaptive Omnigent workflow")
     if backend not in {"anyjev", "omnigent"} and not (backend == "fixture" and roles_factory):
         raise ValueError("Backend must be anyjev or omnigent")
     sources = [source, *(literature or [])]
@@ -295,7 +348,15 @@ def run_research(
             progress(message)
 
     def save_report() -> None:
+        report["elapsed_seconds"] = round(time.monotonic() - budget.started, 3)
         report["computed_simulations"] = budget.simulations
+        report["acceleration"] = {
+            "bottleneck": "Source-backed hypothesis to validated computational result",
+            "elapsed_seconds": report["elapsed_seconds"],
+            "baseline_seconds": None,
+            "multiplier": None,
+            "status": "No comparable manual baseline measured",
+        }
         store.write("report.json", report)
 
     roles = None
@@ -341,14 +402,18 @@ def run_research(
             store.write("proposals.json", proposals.model_dump())
         announce("Critique every direction before any experiments")
         with store.stage("critic"):
-            critiques = roles.ask("critic", proposals.model_dump(), CritiqueBatch)
+            critiques = roles.ask(
+                "critic",
+                {**proposals.model_dump(), "preferred_experiment": config.preferred_experiment},
+                CritiqueBatch,
+            )
             expected = {p.id for p in proposals.proposals}
             actual = [c.proposal_id for c in critiques.critiques]
             if set(actual) != expected or len(actual) != len(expected):
                 raise ValueError("Critic must review each proposal exactly once")
             store.write("critiques.json", critiques.model_dump())
             accepted = {c.proposal_id for c in critiques.critiques if c.decision == "accept"}
-            if backend == "anyjev":
+            if backend in {"anyjev", "omnigent"}:
                 selected_id = critiques.selected_proposal_id
                 if selected_id is not None and selected_id not in accepted:
                     raise ValueError("Model selected an unaccepted proposal")
@@ -398,6 +463,7 @@ def run_research(
             report["status"] = "baseline_failed"
             return report
         report["selected_proposal"] = selected.model_dump()
+        save_report()
         for round_index in range(1, config.max_rounds + 1):
             prefix = f"rounds/{round_index:02d}"
             announce(f"Round {round_index}: read literature and plan a bounded experiment")
@@ -414,6 +480,19 @@ def run_research(
                 for evidence in review.sources:
                     check_evidence(evidence, sources)
                 store.write(f"{prefix}/literature.json", review.model_dump())
+            trials = min(config.trials * 2 ** (round_index - 1), 4096)
+            test_options = {
+                "screen": {"trials_per_size": trials, "purpose": "Screen for a finite-size effect"},
+                "precision": {
+                    "trials_per_size": min(trials * 2, 8192),
+                    "purpose": "Reduce sampling uncertainty at the same fixed p",
+                },
+            }
+            for option in test_options.values():
+                option["simulation_cost"] = (option["trials_per_size"] + 1) * len(config.sizes)
+                option["within_simulation_budget"] = (
+                    option["simulation_cost"] <= config.max_simulations - budget.simulations
+                )
             with store.stage(f"{prefix}/planner"):
                 plan = roles.ask(
                     "planner",
@@ -421,11 +500,22 @@ def run_research(
                         "proposal": selected.model_dump(),
                         "literature": review.model_dump(),
                         "recipe": RECIPES[selected.experiment],
+                        "test_options": test_options,
+                        "previous_rounds": report["rounds"],
+                        "remaining_seconds": max(
+                            0, config.max_seconds - (time.monotonic() - budget.started)
+                        ),
                     },
-                    ExperimentPlan,
+                    DiscoveryPlan if backend == "omnigent" else ExperimentPlan,
                 )
                 if plan.proposal_id != selected.id or plan.experiment != selected.experiment:
                     raise ValueError("Planner changed the reviewed proposal")
+                if isinstance(plan, DiscoveryPlan):
+                    chosen_test = test_options[plan.selected_test_id]
+                    if not chosen_test["within_simulation_budget"]:
+                        raise RunBudgetExceeded("Selected test exceeds remaining simulation budget")
+                    trials = chosen_test["trials_per_size"]
+                    store.write(f"{prefix}/test_options.json", test_options)
                 store.write(f"{prefix}/plan.json", plan.model_dump())
             recipe = RECIPES[plan.experiment]
             model, mode, control_model, p = (
@@ -437,7 +527,6 @@ def run_research(
             store.write(f"{prefix}/experiment.json", recipe)
             announce(f"Round {round_index}: simulate {plan.experiment} and independently validate")
             with store.stage(f"{prefix}/experiment"):
-                trials = min(config.trials * 2 ** (round_index - 1), 4096)
                 jobs = [
                     (model, mode, size, p, trials, config.seed + round_index)
                     for size in config.sizes
@@ -452,6 +541,7 @@ def run_research(
                 checks = {"passed": numerical["passed"], "numerical": numerical, "effect": effect}
                 store.write(f"{prefix}/checks.json", checks)
                 report["acceptance"]["followup_implemented"] = True
+                save_report()
             with store.stage(f"{prefix}/validation"):
                 evaluation = None
                 validation = roles.ask(
@@ -511,8 +601,46 @@ def run_research(
                         "gate": gate,
                     }
                 )
-                report["acceptance"]["live_agents_executed"] = backend in {"anyjev", "omnigent"}
+                report["acceptance"]["live_agents_executed"] = (
+                    isinstance(roles, OmnigentRoles) and roles.calls > 0
+                )
                 save_report()
+                if backend == "omnigent":
+                    decision = roles.ask(
+                        "next_decision",
+                        {
+                            "hypothesis": selected.hypothesis,
+                            "plan": plan.model_dump(),
+                            "effect": effect,
+                            "validation": validation.model_dump(),
+                            "literature": review.model_dump(),
+                            "gate": gate,
+                            "reference_review": evaluation.model_dump() if evaluation else None,
+                            "remaining_rounds": config.max_rounds - round_index,
+                            "remaining_simulations": config.max_simulations - budget.simulations,
+                            "previous_rounds": report["rounds"],
+                            "repeat_preconditions": "Repeat the same allowlisted treatment only; "
+                            "baseline controls remain fixed. Requires a literature candidate gap, "
+                            "two independently cited sources and remaining rounds. Other proposed "
+                            "experiments are future recommendations, not executable plans.",
+                        },
+                        NextDecision,
+                    )
+                    store.write(f"{prefix}/next_decision.json", decision.model_dump())
+                    report["rounds"][-1]["next_decision"] = decision.model_dump()
+                    report["next_decision"] = decision.model_dump()
+                    save_report()
+            if backend == "omnigent":
+                transition = discovery_transition(
+                    decision, gate, validation, review, config.max_rounds - round_index
+                )
+                store.write(f"{prefix}/transition.json", transition)
+                report["rounds"][-1]["transition"] = transition
+                report["status"] = transition["status"]
+                save_report()
+                if transition["applied_action"] != "repeat":
+                    break
+                continue
             if gate["met"]:
                 report["status"] = "automated_candidate"
                 break
@@ -562,6 +690,7 @@ def run_research(
                 )
             if hasattr(roles, "close"):
                 roles.close()
+        save_comparisons(store, report, config.model_dump(), [s.payload() for s in sources])
         save_report()
         store.event("run_finished", {"status": report["status"]})
         store.seal()
