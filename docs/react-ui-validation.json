@@ -1,0 +1,50 @@
+{
+  "recorded_at": "2026-10-04T04:09:31Z",
+  "task": "Replace Streamlit with React while preserving the existing product UI and behavior",
+  "base_revision": "d525e91fac65aa1f764c42f4d707917910b4e237",
+  "workspace_state": "Uncommitted migration alongside pre-existing and concurrent scientific changes; not an isolated release revision",
+  "frontend": "React 19.3.0, TypeScript 7.0.2, Vite 8.3.2",
+  "backend": "FastAPI 0.142.2, Uvicorn 0.54.0; existing Python view projections and Omnigent workflow",
+  "checks": {
+    "npm_run_check": "passed; 259 tests passed, 3 optional sandbox tests skipped, 1 test-client deprecation warning; pytest elapsed 30.78 seconds",
+    "npm_run_check_frontend": "passed TypeScript and Prettier after final dropdown styling correction",
+    "final_npm_run_build": "passed after final dropdown styling correction",
+    "git_diff_check": "passed",
+    "wheel": "Built successfully; verified 47 packaged frontend files and absence of Streamlit in dependency metadata",
+    "browser": "Codex in-app Chromium; production port 8505 and Vite development port 8000",
+    "development_lifecycle": "API proxy GET/POST and local fonts load; Ctrl-C terminates both Vite and Uvicorn; ports 8000 and 8011 no longer listen after shutdown",
+    "production_console_errors": 0
+  },
+  "browser_scenarios": [
+    "All five pages render existing saved run data",
+    "Searchable seed/run/profile selectors and sidebar navigation",
+    "Existing seed PDF upload is deduplicated and upload form clears on submission",
+    "Saved per-profile policy call limit propagates to Source intake",
+    "Execution graph selection displays the selected specialist prompt and children",
+    "Saved simulation player pause and controls",
+    "Generated artifact downloads successfully",
+    "Narrow source-intake layout has equal document clientWidth and scrollWidth",
+    "Final production source-intake screenshot saved at output/ui-migration/react-source-intake.jpg"
+  ],
+  "http_regressions": [
+    "Separate tab/view sessions, session-bound downloads and uploads",
+    "CSRF, cross-origin and host rejection",
+    "Registered control allowlist, numeric bounds and disabled actions",
+    "Stale and repeated actions rejected",
+    "Upload type and size enforcement, byte preservation, form clearing",
+    "Policy values reach the original Omnigent launch callback with the preallocated run ID",
+    "Launch preflight failure cannot expose old results as a new run",
+    "Graph selection allowlist and persistence",
+    "Exact artifact downloads, tampered archive quarantine and sandboxed trusted player"
+  ],
+  "limitations": [
+    "Visual parity inspected manually; cross-browser pixel identity is not claimed",
+    "Framework-only Streamlit deployment and menu chrome is retired",
+    "Session drafts remain in memory and reset on server restart; one backend worker required",
+    "This local prototype does not add multi-user account authentication",
+    "Browser verification uses existing saved scientific runs; launch tests use explicit fixtures and are not evidence of a new live Omnigent run",
+    "Scientific conclusions and their limitations remain those of the saved evidence",
+    "Visualization chunks remain large and are loaded on demand",
+    "Existing PM2 transitive dependency advisories remain documented separately"
+  ]
+}

@@ -1,6 +1,18 @@
 # Research workflow implementation
 
-## Paper-first automatic context
+## Repository execution (current UI and default CLI)
+
+The current source-based path is documented in [repository-execution.md](repository-execution.md).
+It generates Python/C experiments from a pinned public GitHub repository through
+Omnigent specialist sessions and executes them with the actual Omnigent OS sandbox.
+Discovery overview now combines overview and final synthesis, placing the simulation
+before the result and next experiment. Exact code, prompts and immutable inputs are
+retained; unsupported dependencies and failed checks stop the run without fallback.
+
+The sections below document the retained v3/v4 configurations and their historical
+results. Their fixed kernels and hybrid AnyJev decisions are not the current UI default.
+
+## Paper-first automatic context (v4)
 
 The UI reads each paper into a domain-independent `PaperBrief` before capability
 selection. No preset catalog or metric is present in this reader's payload/schema.
@@ -11,9 +23,9 @@ to the validator; the full framework snapshot lives separately in
 `framework/source.zip`. Historical archives remain immutable. This isolates
 existing tools; it does not implement arbitrary generated scientific programs.
 
-## Current adaptive execution
+## Retained adaptive execution (v4)
 
-The UI now fixes Codex + Omnigent for research and AnyJev + Omnigent for decisions.
+The v4 UI fixed Codex + Omnigent for research and AnyJev + Omnigent for decisions.
 `HybridOmnigentRoles` keeps the existing Omnigent Sessions API for scientific
 assessments, then hands each investment checkpoint to the pinned local AnyJev
 scorer. Its finite option catalog permits investing in an existing branch,
@@ -27,13 +39,12 @@ old CLI configurations retain their existing decision route.
 `Start bounded run` navigates immediately to the live execution page. A preallocated
 run ID prevents another run from stealing progress. The page refreshes every five
 seconds and displays an explicit terminal outcome plus current artifact downloads.
-Discovery overview and Final synthesis share the cited-paper/proposed-simulation
+The consolidated Discovery overview retains the cited-paper/proposed-simulation
 comparison and checkpoint-scoped file inspector. Highlight JSON files are sealed
 for future runs; existing sealed runs are projected without mutation.
 
 
-The default Omnigent launcher and `examples/percolation/discovery.json` now use
-workflow v4. Parallel source/citation researchers feed a consolidator; multiple
+`examples/percolation/discovery.json` explicitly uses workflow v4. Parallel source/citation researchers feed a consolidator; multiple
 research branches run simulations and the decision agent evaluates every partial
 batch before allocating more work. Baseline controls and treatment samples are
 refreshed, earlier batches are retained, and completion requires a declared
@@ -169,7 +180,8 @@ Each new output directory contains:
 | `rounds/NN/test_options.json`, `next_decision.json`, `transition.json` | Compared tests, specialist recommendation and enforced supervisor action (v3) |
 | `events.jsonl` | Real stage start, completion, failure and session events |
 | `report.json`, `manifest.json` | Honest acceptance status and artifact checksums |
-| `comparison/simulation.svg`, `comparison/summary.txt`, `comparison/comparison.json` | Required final original/proposed visualization, numerical sentence and provenance |
+| `comparison/process.html`, `comparison/process.json` | Required playable original/proposed simulation and validated process states with input hashes |
+| `comparison/simulation.svg`, `comparison/summary.txt`, `comparison/comparison.json` | Numerical comparison chart, numerical sentence and provenance |
 | `comparisons/NNN/` | The same comparison outputs for every completed result checkpoint |
 
 Both sequential and adaptive workflows produce these comparison artifacts before
@@ -179,6 +191,67 @@ snapshot is bounded by the finalization decision; late results cannot replace it
 Intervals, denominators and Astrosat false-alert tradeoffs stay explicit. Failed
 or rejected runs without completed measurements retain an unavailable result,
 without fabricated rates. Older sealed runs expose read-only derived downloads.
+
+### Required simulated-world output
+
+`process_visualization.py` defines the paper-independent `simulation-process/v1`
+contract. Both worlds share coordinate units, bounds and a strictly increasing
+timeline. Allowlisted lines, arrows and circles represent geometry and evolving
+states. Empty worlds, static summaries, missing arms, mismatched timelines,
+non-finite values and outputs beyond the fixed size/frame budgets fail validation.
+Source strings remain data; the trusted player uses text nodes and canvas drawing,
+never agent-generated HTML or JavaScript. Play/pause/reset and keyboard scrubbing
+work offline. Reduced-motion preferences disable autoplay.
+
+Both workflow finalizers enforce this contract for each completed checkpoint and
+the selected final dataset. The final selection still uses the accepted branch at
+decision time. A missing/failed adapter preserves all scientific artifacts and
+records `visualization_incomplete`, clears final goal achievement and sets
+`acceptance.simulated_world_comparison` false. Already failed/interrupted/budget-
+exhausted runs keep their failure status. Runs without a simulation save an explicit
+unavailable output and cannot claim a completed process. The Omnigent prompt also
+includes this requirement, but enforcement is in Python, independent of model prose.
+The artifact verifier checks the required export inventory, schema and input hashes
+even if someone removes a required file from a rewritten manifest.
+
+The adapters use the archived recipe and first saved trial, never favorable-outcome
+selection. Percolation replays two sampled graphs and checks their SCC/winding
+measurements against the recorded results. Its animation adds the sampled bonds
+or sites in a deterministic reveal order; that order illustrates construction,
+not physical time or a sweep of occupation probability. Each step recomputes strong
+connectivity and highlights a largest SCC; its final size must match the saved
+trial. Periodic arcs are split at the seam. Astrosat uses the saved nominal/true
+position and time with the existing
+straight-line geometry. Both worlds have the same orbit estimate; the proposal
+changes the cross-track alert boundary. It is not an SGP4 orbit forecast. The chosen
+sample can show no improvement or a false alert; aggregate uncertainty and costs
+remain alongside it.
+
+Rendering uses no model calls or new statistical samples. At most two recorded
+percolation trials are reconstructed per unique checkpoint; the final view reuses
+the selected checkpoint's states. `visualization_compute` records these replays and
+elapsed rendering time separately from research sampling. States are bounded to
+120 frames, 60,000 static glyphs per world, 1,024 dynamic glyphs per frame and an
+18 MB serialized payload. Visualization failures are retained and sealed. Historical
+archives remain unchanged; the UI labels reconstructions made with the current
+renderer and does not claim they passed this new gate at original run time.
+
+To extend this to a different paper or scenario:
+
+1. Add and validate the scientific implementation using the existing paper-first
+   capability-selection workflow; do not map an unrelated paper into an example.
+2. Register a reviewed function in `process_adapters.PROCESS_ADAPTERS` under that
+   implementation's domain. It receives the saved comparison and a tracked byte
+   reader. Read the actual result artifact and return `ProcessComparison` data,
+   including selection method, limitations and exact input records. A recipe alone
+   is insufficient. No player, UI, serialization or completion-gate change is needed.
+3. Verify the process against the numerical implementation and add invariant/failure
+   coverage. Structural validation cannot prove an arbitrary adapter's science.
+   Unknown implementations remain incomplete until a suitable adapter exists.
+
+Offline regression command: `.venv/bin/pytest tests/test_process_visualization.py
+tests/test_comparison_outputs.py -q`. Full manifest/process validation remains
+`research verify <run-directory>`. The process HTML opens directly in a browser.
 
 The agent trace displays instructions from each archived `roles/*-request.json`,
 not today's prompt catalog. Source IDs and branch/batch assignments distinguish

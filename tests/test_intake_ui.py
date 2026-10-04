@@ -2,7 +2,7 @@ import json
 from pathlib import Path
 
 import pytest
-from streamlit.testing.v1 import AppTest
+from view_test import ViewTest
 
 from hacknation_databricks.research.cli import fixture_source
 from hacknation_databricks.research.intake import register_upload
@@ -30,7 +30,7 @@ def test_source_form_import_updates_library_and_selected_seed(tmp_path, monkeypa
         return imported
 
     monkeypatch.setattr(source_ui, "register_arxiv", fake_import)
-    app = AppTest.from_file(str(TRACKING)).run(timeout=15)
+    app = ViewTest.from_file(str(TRACKING)).run(timeout=15)
     next(t for t in app.text_input if t.label == "arXiv link or identifier").set_value(
         "https://arxiv.org/abs/2607.24975v1"
     )
@@ -48,7 +48,7 @@ def test_source_form_import_updates_library_and_selected_seed(tmp_path, monkeypa
 
 def test_import_error_is_actionable_and_does_not_create_source(tmp_path, monkeypatch):
     monkeypatch.setenv("RESEARCH_SOURCES_DIR", str(tmp_path))
-    app = AppTest.from_function(intake_page).run()
+    app = ViewTest.from_function(intake_page).run()
     next(t for t in app.text_input if t.label == "arXiv link or identifier").set_value(
         "https://example.com/arbitrary.pdf"
     )
@@ -65,14 +65,13 @@ def test_uploaded_sources_launch_with_original_identity_and_literature(tmp_path,
     from hacknation_databricks.research import decision_roles
 
     monkeypatch.setattr(decision_roles, "DecisionProcess", DecisionWorkerFixture)
-    monkeypatch.setattr(tracking_ui, "runtime_status", lambda: {"ready": True})
     monkeypatch.setenv("RESEARCH_SOURCES_DIR", str(tmp_path / "sources"))
     monkeypatch.setenv("RESEARCH_RUNS_DIR", str(tmp_path / "runs"))
     seed = register_upload("seed.md", fixture_source().read_bytes(), tmp_path / "sources")
     related = register_upload(
         "related.md", b"Independent notes on a percolation experiment.", tmp_path / "sources"
     )
-    app = AppTest.from_file(str(TRACKING)).run()
+    app = ViewTest.from_file(str(TRACKING)).run()
     app.switch_page("app_pages/sources.py").run()
     picker = next(s for s in app.selectbox if s.label == "Seed paper")
     picker.select(next(s for s in picker.options if "seed.md" in s)).run()
@@ -90,7 +89,7 @@ def test_uploaded_sources_launch_with_original_identity_and_literature(tmp_path,
     assert (directory / "inputs/seed.md.json").exists()
     app.switch_page("app_pages/agents.py").run()
     assert next(m for m in app.metric if m.label == "Omnigent sessions").value == "0"
-    # AppTest cannot click a custom SVG; seed the state emitted by its click callback.
+    # ViewTest cannot click a custom SVG; seed the state emitted by its click callback.
     from hacknation_databricks.research.activity import load_activity
     from hacknation_databricks.tracking import load_journal
 
@@ -99,11 +98,7 @@ def test_uploaded_sources_launch_with_original_identity_and_literature(tmp_path,
     app.run()
     assert not app.exception
     assert not any(s.label == "Inspect execution step" for s in app.selectbox)
-    assert any(
-        "baseline/trials.csv" in [o.content for o in s.proto.options]
-        for s in app.get("button_group")
-        if s.proto.label == "Step artifact"
-    )
+    assert any("baseline/trials.csv" in s.options for s in app.pills if s.label == "Step artifact")
 
 
 def test_launch_rejects_tampered_sources_and_excess_literature(tmp_path, monkeypatch):
@@ -147,7 +142,7 @@ def test_running_validation_without_gate_does_not_crash():
         ]
         render_gate(journal)
 
-    assert not AppTest.from_function(page).run().exception
+    assert not ViewTest.from_function(page).run().exception
 
 
 def test_library_only_includes_explicit_imports_and_configured_source(tmp_path, monkeypatch):
@@ -217,21 +212,20 @@ def test_source_progress_matches_content_and_keeps_assessment_in_details(
     monkeypatch.setattr(activity_ui, "render_activity", lambda j: rendered.append(j.run_id))
 
     def page(path):
-        import streamlit as st
-
         from hacknation_databricks.source_ui import render_source_progress
+        from hacknation_databricks.web import components as ui
 
-        st.session_state["run_selection"] = "stopped-run"
-        st.session_state["selected_seed_path"] = path
+        ui.session_state["run_selection"] = "stopped-run"
+        ui.session_state["selected_seed_path"] = path
         render_source_progress()
 
-    app = AppTest.from_function(page, args=(str(paper),)).run()
+    app = ViewTest.from_function(page, args=(str(paper),)).run()
     assert not app.exception
     assert not app.warning
     if same_source:
         assert any("stopped before simulation" in i.value for i in app.info)
         details = next(e for e in app.expander if "saved agent assessment" in e.label)
-        assert not details.proto.expanded
+        assert not details.expanded
         assert details.text[0].value == reason
         assert any("stopped-run" in c.value for c in app.caption)
         assert rendered == ["stopped-run"]
@@ -257,7 +251,7 @@ def test_stopped_source_overview_does_not_wait_for_experiments():
         render_run_outcome(journal)
         render_discovery(journal)
 
-    app = AppTest.from_function(page).run()
+    app = ViewTest.from_function(page).run()
     assert not app.exception
     assert not app.metric  # No "Goal: Open" on a concluded compatibility check.
     assert any("stopped before simulation" in i.value for i in app.info)
@@ -279,9 +273,9 @@ def test_runtime_failure_is_distinct_from_unsupported_paper():
             )
         )
 
-    app = AppTest.from_function(page).run()
+    app = ViewTest.from_function(page).run()
     assert not app.exception
     assert len(app.warning) == 1
     assert "agent runtime" in app.warning[0].value
     assert app.expander[0].text[0].value == "ConnectError"
-    assert not app.expander[0].proto.expanded
+    assert not app.expander[0].expanded

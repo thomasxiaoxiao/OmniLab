@@ -92,7 +92,7 @@ def test_activate_replaces_existing_pm2_process(monkeypatch):
     monkeypatch.setattr(deploy, "run", run)
     deploy.activate({"revision": "candidate", "path": "/releases/new"})
     assert calls[1][-2:] == ("delete", deploy.APP_NAME)
-    assert calls[2][2:4] == ("start", "/releases/new/ecosystem.config.js")
+    assert calls[2][2:4] == ("start", str(deploy.ROOT / "ecosystem.config.js"))
 
 
 def test_failed_health_restores_previous_release(monkeypatch, tmp_path):

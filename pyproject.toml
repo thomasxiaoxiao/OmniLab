@@ -1,7 +1,7 @@
 [project]
-name = "hacknation-databricks"
+name = "omnilab"
 version = "0.1.0"
-description = "Omnigent scientific discovery with reproducible experiments"
+description = "OmniLab: scientific discovery with Omnigent and reproducible experiments"
 readme = "README.md"
 requires-python = ">=3.12,<3.13"
 dependencies = [
@@ -16,7 +16,12 @@ dependencies = [
     "python-dotenv>=1,<2",
     "pyyaml==6.0.3",
     "scipy==1.17.1",
-    "streamlit>=1.41,<2",
+    "fastapi==0.142.2",
+    "uvicorn==0.54.0",
+    "pandas==2.3.3",
+    "altair==6.3.0",
+    "pyarrow==24.0.0",
+    "ephem==4.2.1",
 ]
 
 [project.scripts]
@@ -38,8 +43,11 @@ dev = [
 requires = ["hatchling>=1.27,<2"]
 build-backend = "hatchling.build"
 
+[tool.hatch.build]
+artifacts = ["src/hacknation_databricks/web/static/**"]
+
 [tool.hatch.build.targets.wheel]
-packages = ["src/hacknation_databricks"]
+packages = ["src/hacknation_databricks", "src/omnilab"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

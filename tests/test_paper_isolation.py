@@ -180,5 +180,5 @@ def test_cli_uploaded_paper_defaults_to_paper_first_context(tmp_path, monkeypatc
     monkeypatch.setattr(cli, "run_research", capture)
     assert cli.main(["run", "--paper", str(paper), "--no-auto-literature"]) == 2
     assert seen["config"].domain == "auto"
-    assert seen["config"].workflow == "adaptive"
+    assert seen["config"].workflow == "repository"
     assert seen["source"].path == str(paper)

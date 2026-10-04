@@ -14,10 +14,10 @@ fs.mkdirSync(path.join(runtime, "logs"), { recursive: true });
 module.exports = {
   apps: [
     {
-      name: "hacknation-app",
+      name: "omnilab-app",
       cwd: appDir,
       script: path.join(appDir, ".venv", "bin", "python"),
-      args: ["-m", "hacknation_databricks"],
+      args: ["-m", fs.existsSync(path.join(appDir, "src", "omnilab")) ? "omnilab" : "hacknation_databricks"],
       interpreter: "none",
       exec_mode: "fork",
       instances: 1,
@@ -39,7 +39,7 @@ module.exports = {
       },
     },
     {
-      name: "hacknation-cd",
+      name: "omnilab-cd",
       cwd: root,
       script: path.join(root, "scripts", "deploy.py"),
       interpreter: process.env.DEPLOY_PYTHON || "python3",

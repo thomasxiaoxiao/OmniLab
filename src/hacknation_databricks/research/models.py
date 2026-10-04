@@ -10,11 +10,12 @@ class Contract(BaseModel):
 
 
 class RunConfig(Contract):
-    workflow: Literal["sequential", "adaptive"] = "sequential"
+    workflow: Literal["sequential", "adaptive", "repository"] = "sequential"
     decision_backend: Literal["codex", "anyjev"] = "codex"
     repository_url: str = Field(default="", max_length=300)
     repository_ref: str = Field(default="HEAD", max_length=100)
     research_areas: list[str] = Field(default_factory=list, max_length=3)
+    code_timeout_seconds: int = Field(default=60, ge=1, le=180)
     domain: Literal["auto", "percolation", "astrosat"] = "percolation"
     seed: int = Field(default=20261003, ge=0, le=2**32 - 1)
     sizes: list[int] = Field(default_factory=lambda: [16, 32], min_length=2, max_length=4)

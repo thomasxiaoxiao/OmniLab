@@ -1,4 +1,4 @@
-from streamlit.testing.v1 import AppTest
+from view_test import ViewTest
 
 
 def test_simulation_inspector_shows_archived_code_and_csv(tmp_path):
@@ -25,7 +25,7 @@ def test_simulation_inspector_shows_archived_code_and_csv(tmp_path):
             SimpleNamespace(artifacts=["trials.csv"]),
         )
 
-    app = AppTest.from_function(page, args=(str(tmp_path),)).run()
+    app = ViewTest.from_function(page, args=(str(tmp_path),)).run()
     assert not app.exception
     assert any("archived implementation" in c.value for c in app.code)
     assert len(app.dataframe[0].value) == 2
@@ -64,7 +64,7 @@ def test_failed_connection_keeps_prompt_visible(tmp_path):
 
         render_activity(Journal("test", Path(directory), report={"backend": "omnigent"}))
 
-    app = AppTest.from_function(page, args=(str(store.directory),)).run()
+    app = ViewTest.from_function(page, args=(str(store.directory),)).run()
     assert not app.exception
     assert any("Could not connect" in e.value for e in app.error)
     assert any("Read this exact archived paper." in c.value for c in app.code)
@@ -103,19 +103,18 @@ def test_launch_error_survives_monitor_rerun():
     def page():
         from concurrent.futures import Future
 
-        import streamlit as st
-
         from hacknation_databricks.tracking_ui import render_launch_monitor
+        from hacknation_databricks.web import components as ui
 
-        if "initialized" not in st.session_state:
+        if "initialized" not in ui.session_state:
             future = Future()
             future.set_exception(
                 ValueError("Omnigent is unavailable. Your uploaded paper is saved.")
             )
-            st.session_state["research_future"] = future
-            st.session_state["initialized"] = True
+            ui.session_state["research_future"] = future
+            ui.session_state["initialized"] = True
         render_launch_monitor()
 
-    app = AppTest.from_function(page).run()
+    app = ViewTest.from_function(page).run()
     assert not app.exception
     assert any("Your uploaded paper is saved" in e.value for e in app.error)

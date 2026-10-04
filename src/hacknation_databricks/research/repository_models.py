@@ -1,6 +1,6 @@
 """Domain-independent contracts for paper + directions + simulation repository."""
 
-from typing import Literal
+from typing import Annotated, Literal
 
 from pydantic import Field, model_validator
 
@@ -20,6 +20,7 @@ class RepositoryBrief(Contract):
     directions: list[RepositoryDirection] = Field(min_length=1, max_length=3)
     repository_fit: str = Field(min_length=10, max_length=2000)
     version_limitations: list[str] = Field(min_length=1, max_length=8)
+    repository_files: list[str] = Field(min_length=1, max_length=12)
 
 
 class RepositoryReview(Contract):
@@ -46,9 +47,18 @@ class RepositoryPlan(Contract):
     rationale: str = Field(min_length=10, max_length=1500)
     primary_module: str = Field(pattern=r"^[a-zA-Z_][a-zA-Z0-9_]*$")
     # PyPI wheel names only; no URLs, shell, editable installs or build scripts.
-    dependencies: list[str] = Field(min_length=1, max_length=20)
+    dependencies: list[
+        Annotated[str, Field(pattern=r"^[A-Za-z0-9][A-Za-z0-9_.-]*(?:==[A-Za-z0-9_.+!-]+)?$")]
+    ] = Field(
+        min_length=1,
+        max_length=20,
+        description="Package names only: numpy, scipy, ephem, or primary_module. No source paths, "
+        "function names or explanatory prose. Standard-library modules need not be listed.",
+    )
     metric: str = Field(min_length=3, max_length=200)
     units: str = Field(min_length=1, max_length=100)
+    trajectory_label: str | None = Field(default=None, min_length=1, max_length=200)
+    trajectory_units: str | None = Field(default=None, min_length=1, max_length=100)
     metric_lower: float
     metric_upper: float
     baseline: dict
@@ -64,7 +74,6 @@ class RepositoryPlan(Contract):
     @model_validator(mode="after")
     def coherent(self):
         import math
-        import re
 
         if {t.id for t in self.tests} != {"screen", "precision"}:
             raise ValueError("Compare screening and precision tests exactly once")
@@ -81,17 +90,21 @@ class RepositoryPlan(Contract):
             raise ValueError("Sanity expectation outside metric bounds")
         if self.baseline == self.treatment:
             raise ValueError("Follow-up must change an experimental parameter")
-        if any(
-            not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_.-]*(?:==[A-Za-z0-9_.+!-]+)?", d)
-            for d in self.dependencies
+        if not self.baseline or any(
+            set(parameters) != set(self.baseline) for parameters in (self.treatment, self.sanity)
         ):
-            raise ValueError("Use PyPI wheel package names or exact version pins")
+            raise ValueError(
+                "Baseline, treatment and sanity must supply the same complete parameter keys; "
+                "prose-only inherited configurations are not executable"
+            )
         return self
 
 
 class RepositoryImplementation(Contract):
     python_code: str = Field(min_length=50, max_length=16000)
-    explanation: str = Field(min_length=10, max_length=2000)
+    c_code: str = Field(default="", max_length=16000)
+    c_repository_files: list[str] = Field(default_factory=list, max_length=8)
+    explanation: str = Field(min_length=10, max_length=4000)
     repository_files: list[str] = Field(min_length=1, max_length=12)
 
 

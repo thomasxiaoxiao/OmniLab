@@ -4,7 +4,7 @@ import json
 from pathlib import Path
 
 import pytest
-from streamlit.testing.v1 import AppTest
+from view_test import ViewTest
 
 from hacknation_databricks.research.comparison import comparison_bundle
 from hacknation_databricks.research.highlights import research_highlights
@@ -70,7 +70,7 @@ def test_resolved_negligible_effect_is_not_presented_as_failed_resolution():
 @pytest.mark.parametrize("domain", ["percolation", "astrosat"])
 def test_highlights_render_saved_scientific_comparisons(domain):
     bundle = bundle_for(domain)
-    app = AppTest.from_string(
+    app = ViewTest.from_string(
         "from hacknation_databricks.highlights_ui import render_highlights\n"
         f"render_highlights({bundle!r})"
     ).run()

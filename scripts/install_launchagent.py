@@ -22,7 +22,7 @@ def main() -> None:
         raise SystemExit("Node, uv, gh, Git, and Python must be on PATH.")
     paths = list(dict.fromkeys(str(Path(value).parent) for value in binaries.values()))
     paths += ["/opt/homebrew/bin", "/usr/local/bin", "/usr/bin", "/bin", "/usr/sbin", "/sbin"]
-    label = "com.hacknation.databricks.pm2"
+    label = "com.omnilab.pm2"
     target = Path.home() / "Library/LaunchAgents" / f"{label}.plist"
     payload = {
         "Label": label,

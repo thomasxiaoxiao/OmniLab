@@ -9,4 +9,8 @@ def launch_source(monkeypatch, tmp_path):
     """Supply launch tests with evidence independent of ignored local papers."""
     root = tmp_path / "sources"
     monkeypatch.setenv("RESEARCH_SOURCES_DIR", str(root))
-    return register_upload("seed.md", fixture_source().read_bytes(), root)
+    return register_upload(
+        "seed.md",
+        fixture_source().read_bytes() + b"\nCode: https://github.com/example/science\n",
+        root,
+    )

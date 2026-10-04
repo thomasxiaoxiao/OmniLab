@@ -7,7 +7,6 @@ from dataclasses import asdict
 from pathlib import Path
 
 import pandas as pd
-import streamlit as st
 
 from hacknation_databricks.execution_graph_ui import render_execution_graph
 from hacknation_databricks.research.activity import activity_export, load_activity
@@ -19,34 +18,35 @@ from hacknation_databricks.research_views import (
     workflow_dot,
 )
 from hacknation_databricks.tracking import Journal, read_artifact
+from hacknation_databricks.web import components as ui
 
 
 def render_prompt_actions(journal, nodes, node, prompts):
-    st.subheader("Complete prompt, inputs and constraints")
+    ui.subheader("Complete prompt, inputs and constraints")
     prompt = prompts.get(node.key)
     if not prompt:
         if node.kind == "simulation":
-            st.info(
+            ui.info(
                 "Python executes this simulation from the approved specification; "
                 "it has no agent prompt."
             )
         else:
-            st.info("No saved Omnigent prompt is available for this invocation.")
+            ui.info("No saved Omnigent prompt is available for this invocation.")
         return
-    st.caption(f"{label(node.role)} · {prompt['input_scope']}")
-    st.code(prompt["exact_prompt"], language="json", wrap_lines=True, height=360)
-    st.download_button(
+    ui.caption(f"{label(node.role)} · {prompt['input_scope']}")
+    ui.code(prompt["exact_prompt"], language="json", wrap_lines=True, height=360)
+    ui.download_button(
         "Download exact agent prompt",
         prompt["exact_prompt"],
         file_name=Path(prompt["artifact"]).name,
         mime="application/json",
     )
-    left, right = st.columns(2)
-    with left, st.container(border=True):
-        st.markdown("**Requested output → recorded response**")
+    left, right = ui.columns(2)
+    with left, ui.container(border=True):
+        ui.markdown("**Requested output → recorded response**")
         schema = prompt.get("output_schema", {})
-        st.caption(f"Contract: {schema.get('title', 'unrecorded')}")
-        st.caption("Required fields: " + ", ".join(schema.get("required", [])))
+        ui.caption(f"Contract: {schema.get('title', 'unrecorded')}")
+        ui.caption("Required fields: " + ", ".join(schema.get("required", [])))
         response = saved_json(journal, f"{node.call_id}-response.json")
         if response and isinstance(response.get("raw"), str):
             try:
@@ -58,52 +58,52 @@ def render_prompt_actions(journal, nodes, node, prompts):
             if isinstance(value, dict):
                 for key in ("action", "decision", "experiment", "selected_test_id"):
                     if key in value:
-                        st.text(f"{key.replace('_', ' ').capitalize()}: {value[key]}")
+                        ui.text(f"{key.replace('_', ' ').capitalize()}: {value[key]}")
                 if value.get("invest"):
-                    st.text("Invest in: " + ", ".join(value["invest"]))
+                    ui.text("Invest in: " + ", ".join(value["invest"]))
                 if value.get("directions"):
-                    st.text(f"Proposed directions: {len(value['directions'])}")
-            st.json(value, expanded=False)
+                    ui.text(f"Proposed directions: {len(value['directions'])}")
+            ui.json(value, expanded=False)
         else:
-            st.caption("No completed response recorded yet.")
+            ui.caption("No completed response recorded yet.")
     handoff = saved_json(journal, node.stage.rsplit("/", 1)[0] + "/anyjev-handoff.json")
     if handoff and node.role == "decision_agent":
-        st.markdown("**AnyJev decision · bounded selection after the Omnigent assessment**")
-        st.json(handoff["selected_action"], expanded=False)
-        with st.expander("AnyJev options, weights and handoff"):
-            st.json(saved_json(journal, handoff["decision_artifact"]), expanded=False)
-    with right, st.container(border=True):
-        st.markdown("**Recorded downstream actions**")
+        ui.markdown("**AnyJev decision · bounded selection after the Omnigent assessment**")
+        ui.json(handoff["selected_action"], expanded=False)
+        with ui.expander("AnyJev options, weights and handoff"):
+            ui.json(saved_json(journal, handoff["decision_artifact"]), expanded=False)
+    with right, ui.container(border=True):
+        ui.markdown("**Recorded downstream actions**")
         following = downstream_steps(nodes, node)
-        st.caption(
+        ui.caption(
             "Direct dependency handoffs; the supervisor validates responses before dispatch."
             if node.parents is not None
             else "Next recorded step in this legacy sequential workflow."
         )
         for child in following:
-            st.text(f"{label(child.role)} · {child.stage} · {child.status}")
+            ui.text(f"{label(child.role)} · {child.stage} · {child.status}")
             specifications = [a for a in child.artifacts if a.endswith("/specification.json")]
             for artifact in specifications:
                 specification = saved_json(journal, artifact)
                 if specification:
-                    st.caption(
+                    ui.caption(
                         f"Executed specification: seed {specification.get('seed')} · "
                         f"{specification.get('trials_per_group')} trials per group"
                     )
-                    st.json(specification, expanded=False)
+                    ui.json(specification, expanded=False)
             for event in child.events:
                 if event["event"] in {"tool_dispatched", "tool_result"}:
-                    st.json({"event": event["event"], **event["data"]}, expanded=False)
+                    ui.json({"event": event["event"], **event["data"]}, expanded=False)
         if not following:
-            st.caption("No downstream step has been recorded.")
+            ui.caption("No downstream step has been recorded.")
 
 
 def render_artifacts(journal, artifacts):
-    st.markdown("**Saved artifacts**")
+    ui.markdown("**Saved artifacts**")
     if not artifacts:
-        st.caption("No files saved for this step yet.")
+        ui.caption("No files saved for this step yet.")
         return
-    artifact = st.pills(
+    artifact = ui.pills(
         "Step artifact", artifacts, default=artifacts[0], label_visibility="collapsed"
     )
     if artifact is None:
@@ -111,57 +111,57 @@ def render_artifacts(journal, artifacts):
     try:
         raw = read_artifact(journal.directory, artifact)
         if artifact.endswith(".json"):
-            st.json(json.loads(raw), expanded=False)
+            ui.json(json.loads(raw), expanded=False)
         elif artifact.endswith((".csv", ".parquet")):
             frame = (
                 pd.read_parquet(io.BytesIO(raw))
                 if artifact.endswith(".parquet")
                 else pd.read_csv(io.BytesIO(raw))
             )
-            st.caption(
+            ui.caption(
                 f"{len(frame):,} rows · {len(frame.columns)} columns · {Path(artifact).suffix}"
             )
-            st.dataframe(frame.head(100), hide_index=True, alt="First 100 saved simulation rows")
+            ui.dataframe(frame.head(100), hide_index=True, alt="First 100 saved simulation rows")
             if artifact.endswith(".csv"):
-                st.download_button(
+                ui.download_button(
                     "Download as Parquet",
                     frame.to_parquet(index=False),
                     file_name=Path(artifact).with_suffix(".parquet").name,
                     mime="application/octet-stream",
                 )
-                st.caption("Parquet is a derived export of the complete saved CSV.")
+                ui.caption("Parquet is a derived export of the complete saved CSV.")
         else:
-            st.code(raw[:20000].decode("utf-8", errors="replace"), language=None)
+            ui.code(raw[:20000].decode("utf-8", errors="replace"), language=None)
             if len(raw) > 20000:
-                st.caption("Preview limited to 20 KB; download includes the complete file.")
-        st.download_button(
+                ui.caption("Preview limited to 20 KB; download includes the complete file.")
+        ui.download_button(
             "Download step artifact", raw, file_name=Path(artifact).name, key="activity_artifact"
         )
     except (OSError, ValueError):
-        st.warning("Artifact is not yet readable. Refresh the run.")
+        ui.warning("Artifact is not yet readable. Refresh the run.")
 
 
 def render_simulation(journal, node):
-    st.caption("Experiment implementation bound to this run's source paper.")
+    ui.caption("Experiment implementation bound to this run's source paper.")
     manifest_path = journal.directory / "implementation.json"
     code = []
     if manifest_path.is_file():
         implementation = json.loads(read_artifact(journal.directory, "implementation.json"))
         seed = next((s for s in journal.sources if s.get("source_id") == "seed"), {})
         if implementation.get("source_sha256") != seed.get("sha256"):
-            st.error("Implementation source does not match this paper.")
+            ui.error("Implementation source does not match this paper.")
             return
         code = implementation.get("files", [])
-    with st.expander("Paper-specific simulation implementation", expanded=True):
+    with ui.expander("Paper-specific simulation implementation", expanded=True):
         if code:
-            selected = st.segmented_control("Archived implementation", code, default=code[0])
+            selected = ui.segmented_control("Archived implementation", code, default=code[0])
             if selected is None:
                 selected = code[0]
             raw = read_artifact(journal.directory, selected)
-            st.code(raw.decode("utf-8"), language="python", height=360)
-            st.download_button("Download simulation code", raw, file_name=Path(selected).name)
+            ui.code(raw.decode("utf-8"), language="python", height=360)
+            ui.download_button("Download simulation code", raw, file_name=Path(selected).name)
         else:
-            st.info(
+            ui.info(
                 "This historical run has no source-bound implementation manifest. Its shared "
                 "framework snapshot remains in Generated artifacts; it is not presented as "
                 "paper-specific simulation code."
@@ -181,11 +181,11 @@ def render_artifact_feed(journal: Journal) -> None:
         and not any(part.startswith(".") for part in p.relative_to(journal.directory).parts)
     ]
     paths.sort(key=lambda p: p.stat().st_mtime_ns, reverse=True)
-    st.caption(f"{len(paths)} produced artifacts · refreshed every five seconds")
-    with st.expander("Latest artifacts", expanded=not journal.sealed):
+    ui.caption(f"{len(paths)} produced artifacts · refreshed every five seconds")
+    with ui.expander("Latest artifacts", expanded=not journal.sealed):
         if paths:
             names = [p.relative_to(journal.directory).as_posix() for p in paths]
-            st.dataframe(
+            ui.dataframe(
                 [
                     {"Artifact": n, "Bytes": p.stat().st_size}
                     for n, p in zip(names[:8], paths[:8], strict=True)
@@ -194,70 +194,70 @@ def render_artifact_feed(journal: Journal) -> None:
                 width="stretch",
                 alt="Most recently produced run artifacts",
             )
-            name = st.selectbox(
+            name = ui.selectbox(
                 "Inspect produced artifact", names, key=f"live-file-{journal.run_id}"
             )
-            st.download_button(
+            ui.download_button(
                 "Download produced artifact",
                 read_artifact(journal.directory, name),
                 file_name=name.replace("/", "-"),
                 key=f"live-download-{journal.run_id}",
             )
         else:
-            st.caption("Waiting for the first artifact from this run.")
+            ui.caption("Waiting for the first artifact from this run.")
 
 
 def render_activity(journal: Journal) -> None:
     nodes = load_activity(journal)
     if not nodes:
-        st.info("No stage has started yet. Agent sessions appear after Omnigent creates them.")
+        ui.info("No stage has started yet. Agent sessions appear after Omnigent creates them.")
         return
-    st.caption("Click a box to view its prompt, inputs and results.")
+    ui.caption("Click a box to view its prompt, inputs and results.")
     node, graph = render_execution_graph(nodes, journal)
     prompts = {node.key: recorded_prompt(journal, node)}
     if node.error_type == "ConnectError":
-        st.error(
+        ui.error(
             "Could not connect to Omnigent. The paper remains saved, but this attempt "
             "could not reach the worker runtime. Restore the server and host, then start "
             "a new run from Source intake. This attempt is preserved."
         )
     elif node.error_type:
-        st.error(
+        ui.error(
             f"This step stopped ({node.error_type}). See Technical details for recorded events."
         )
     if node.stage_status == "failed" and node.status == "completed":
-        st.warning("The worker responded, but a later evidence check in this stage failed.")
+        ui.warning("The worker responded, but a later evidence check in this stage failed.")
     if node.kind == "simulation":
         render_simulation(journal, node)
     else:
         render_prompt_actions(journal, nodes, node, prompts)
-        with st.expander("Saved step artifacts"):
+        with ui.expander("Saved step artifacts"):
             render_artifacts(journal, node.artifacts)
-    with st.expander("Technical details · session, validation and events"):
-        st.json({k: v for k, v in asdict(node).items() if k not in {"artifacts", "events"}})
+    with ui.expander("Technical details · session, validation and events"):
+        ui.json({k: v for k, v in asdict(node).items() if k not in {"artifacts", "events"}})
         if prompt := prompts.get(node.key):
-            st.caption(f"{prompt['artifact']} · {prompt['prompt_version']}")
-        st.json(node.events, expanded=False)
-    with st.expander("Run details and exports"):
+            ui.caption(f"{prompt['artifact']} · {prompt['prompt_version']}")
+        ui.json(node.events, expanded=False)
+    with ui.expander("Run details and exports"):
         render_execution_audit(journal, nodes, node, graph)
 
 
 def render_execution_audit(journal, nodes, node, graph):
-    st.text(f"Run: {journal.run_id}")
-    st.caption(
+    ui.text(f"Run: {journal.run_id}")
+    ui.caption(
         f"{journal.report.get('backend', 'unknown').upper()} · "
         f"{journal.report.get('status', 'running').replace('_', ' ')} · "
         f"{'Artifacts verified' if journal.verified else 'Unsealed live snapshot'}"
     )
     sessions = {n.session_id for n in nodes if n.session_id}
-    metrics = st.columns(4)
+    metrics = ui.columns(4)
     metrics[0].metric("Omnigent sessions", len(sessions))
     metrics[1].metric("Specialist roles", len({n.role for n in nodes if n.kind != "simulation"}))
     metrics[2].metric("Local tool executions", sum(n.kind == "simulation" for n in nodes))
     metrics[3].metric("Produced artifacts", len({a for n in nodes for a in n.artifacts}))
-    st.caption("Session IDs identify actual invocations; shared agent IDs identify configuration.")
+    ui.caption("Session IDs identify actual invocations; shared agent IDs identify configuration.")
     counts = Counter(n.role for n in nodes)
-    st.dataframe(
+    ui.dataframe(
         [
             {
                 "Step": n.stage,
@@ -278,29 +278,29 @@ def render_execution_audit(journal, nodes, node, graph):
         width="stretch",
         alt="Recorded execution steps, agent sessions, timing and artifact counts",
     )
-    st.caption(
+    ui.caption(
         "Solid arrows are recorded handoffs. Dashed self-loops count repeated uses of a role; "
         "diamonds are decision roles."
     )
-    st.graphviz_chart(
+    ui.graphviz_chart(
         workflow_dot(nodes, node.role),
         width="stretch",
         height="content",
         alt="Recorded agent roles and handoffs with self-loops for repeated invocations",
     )
-    st.download_button(
+    ui.download_button(
         "Export execution trace",
         activity_export(journal, nodes),
         file_name=f"{journal.run_id}-execution.json",
         mime="application/json",
     )
-    st.download_button(
+    ui.download_button(
         "Download state machine",
         workflow_dot(nodes, node.role),
         file_name=f"{journal.run_id}-state-machine.dot",
         mime="text/vnd.graphviz",
     )
-    st.download_button(
+    ui.download_button(
         "Download execution timeline",
         graph,
         file_name=f"{journal.run_id}-graph.svg",

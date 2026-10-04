@@ -3,7 +3,7 @@
 from pathlib import Path
 
 import pytest
-from streamlit.testing.v1 import AppTest
+from view_test import ViewTest
 
 from hacknation_databricks.research.activity import Activity
 from hacknation_databricks.research_views import (
@@ -116,7 +116,7 @@ def test_navigation_preserves_run_and_seed_without_launching(tmp_path, monkeypat
     source = register_upload(
         "chosen.md", b"A source for a bounded experiment.", tmp_path / "sources"
     )
-    app = AppTest.from_file(str(UI)).run(timeout=15)
+    app = ViewTest.from_file(str(UI)).run(timeout=15)
     assert not app.exception
     assert app.title[0].value == "Source intake"
     assert any(s.label == "Seed paper" for s in app.selectbox)
@@ -124,7 +124,7 @@ def test_navigation_preserves_run_and_seed_without_launching(tmp_path, monkeypat
     picker = next(s for s in app.selectbox if s.label == "Seed paper")
     picker.select(next(v for v in picker.options if "chosen.md" in v)).run()
     assert app.session_state["selected_seed_path"] == str(Path(source.path).resolve())
-    for page in ["agents", "overview", "synthesis", "evidence", "sources"]:
+    for page in ["agents", "overview", "evidence", "sources"]:
         app.switch_page(f"app_pages/{page}.py").run()
         assert not app.exception
     assert "chosen.md" in next(s.value for s in app.selectbox if s.label == "Seed paper")
@@ -136,10 +136,10 @@ def test_adaptive_summary_renders_finalized_snapshot_and_tradeoff(tmp_path, monk
 
     make_run(tmp_path)
     monkeypatch.setenv("RESEARCH_RUNS_DIR", str(tmp_path))
-    app = AppTest.from_file(str(UI)).run(timeout=15)
-    app.switch_page("app_pages/synthesis.py").run()
+    app = ViewTest.from_file(str(UI)).run(timeout=15)
+    app.switch_page("app_pages/overview.py").run()
     assert not app.exception
-    assert any("Finalized discovery dataset" in item.value for item in app.success)
+    assert any("scoped research goal was reached" in item.value for item in app.success)
     assert any("Control false alerts" in frame.value.columns for frame in app.dataframe)
     assert not any(h.value == "Paper exploration" for h in app.subheader)
     app.switch_page("app_pages/overview.py").run()

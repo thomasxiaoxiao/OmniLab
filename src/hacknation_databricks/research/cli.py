@@ -37,6 +37,8 @@ def parser() -> argparse.ArgumentParser:
     run.add_argument("--paper", type=Path, default=default_source())
     run.add_argument("--literature", type=Path, action="append", default=[])
     run.add_argument("--config", type=Path)
+    run.add_argument("--repository", help="Public GitHub repository for the submitted paper")
+    run.add_argument("--repository-ref", default="HEAD", help="Commit, tag, or branch to pin")
     run.add_argument("--output", type=Path)
     run.add_argument("--cache", type=Path, default=Path(".cache/simulations"))
     run.add_argument("--no-cache", action="store_true")
@@ -45,6 +47,12 @@ def parser() -> argparse.ArgumentParser:
     )
     verify = commands.add_parser("verify", help="Verify all saved artifact hashes")
     verify.add_argument("directory", type=Path)
+    replay = commands.add_parser(
+        "replay-code", help="Replay a sealed Python/C experiment without model calls"
+    )
+    replay.add_argument("directory", type=Path)
+    replay.add_argument("--round", type=int)
+    replay.add_argument("--output", type=Path, required=True)
     doctor = commands.add_parser("doctor", help="Validate environment and native Omnigent specs")
     doctor.add_argument("--spec", type=Path, default=Path("agents/research-worker"))
     configure = commands.add_parser("configure-agent", help="Prepare an Omnigent worker bundle")
@@ -119,6 +127,12 @@ def main(argv: list[str] | None = None) -> int:
             failures = verify_artifacts(args.directory)
             print(json.dumps({"passed": not failures, "failures": failures}, indent=2))
             return 1 if failures else 0
+        if args.command == "replay-code":
+            from .repository_replay import replay_repository
+
+            result = replay_repository(args.directory, args.output, args.round)
+            print(json.dumps(result, indent=2))
+            return 0 if result["status"] == "matched" else 2
         if args.command == "doctor":
             from omnigent.spec import load
 
@@ -141,10 +155,18 @@ def main(argv: list[str] | None = None) -> int:
             RunConfig.model_validate_json(args.config.read_text())
             if args.config
             else RunConfig(
-                workflow="adaptive" if args.backend == "omnigent" else "sequential",
+                workflow="repository" if args.backend == "omnigent" else "sequential",
                 domain="auto" if args.backend == "omnigent" else "percolation",
             )
         )
+        if args.repository:
+            config = config.model_copy(
+                update={
+                    "workflow": "repository",
+                    "repository_url": args.repository,
+                    "repository_ref": args.repository_ref,
+                }
+            )
         output = args.output or Path("output/research") / datetime.now(UTC).strftime(
             "%Y%m%dT%H%M%S%fZ"
         )

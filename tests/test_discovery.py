@@ -82,7 +82,7 @@ def test_duplicate_test_comparison_is_rejected(tmp_path):
 def test_discovery_frontend_shows_actual_choice_and_next_action(tmp_path, monkeypatch):
     from pathlib import Path
 
-    from streamlit.testing.v1 import AppTest
+    from view_test import ViewTest
 
     run_research(
         read_source(fixture_source()),
@@ -92,7 +92,7 @@ def test_discovery_frontend_shows_actual_choice_and_next_action(tmp_path, monkey
     )
     monkeypatch.setenv("RESEARCH_RUNS_DIR", str(tmp_path))
     ui = Path(__file__).resolve().parents[1] / "src/hacknation_databricks/ui.py"
-    app = AppTest.from_file(str(ui)).run(timeout=15)
+    app = ViewTest.from_file(str(ui)).run(timeout=15)
     assert not app.exception
     app.switch_page("app_pages/overview.py").run()
     assert app.title[0].value == "Discovery overview"

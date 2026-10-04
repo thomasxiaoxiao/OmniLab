@@ -596,6 +596,10 @@ def _attach_model_decisions(journal: Journal, states: dict) -> None:
 def load_journal(directory: Path) -> Journal:
     if (directory / "report.json").is_file():
         try:
+            if _json(directory, "report.json").get("workflow_version") == "5":
+                from hacknation_databricks.research.repository_audit import load_repository_journal
+
+                return load_repository_journal(directory)
             if _json(directory, "report.json").get("workflow_version") == "4":
                 from hacknation_databricks.research.adaptive_audit import load_adaptive_journal
 
@@ -674,6 +678,12 @@ def load_journal(directory: Path) -> Journal:
                 raw = read_artifact(directory, name)
                 if hashlib.sha256(raw).hexdigest() != item["sha256"] or len(raw) != item["bytes"]:
                     journal.issues.append(f"Artifact changed: {name}")
+            if not journal.issues:
+                from .research.process_visualization import verify_process_outputs
+
+                journal.issues.extend(
+                    verify_process_outputs(directory, journal.report, journal.artifacts)
+                )
     except (OSError, ValueError, KeyError, TypeError, AttributeError, StopIteration):
         # Malformed data and provider responses must not leak into UI error bodies.
         journal.issues.append(

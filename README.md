@@ -1,21 +1,64 @@
-# HackNation Databricks
+# OmniLab
 
-Reproducible research and validation workspace with a Streamlit decision tracker,
-seeded experiments, saved evidence and a health endpoint at `/_stcore/health`.
+[GitHub repository](https://github.com/thomasxiaoxiao/OmniLab).
+The installed package is `omnilab`; launch its built UI with `python -m omnilab`.
+The historical `hacknation_databricks` Python import namespace and local checkout
+directory remain compatible with saved research archives and existing absolute paths.
+Omnigent is the orchestration platform used by OmniLab.
+
+Reproducible research and validation workspace with a React + TypeScript UI,
+a FastAPI research service, seeded experiments and saved evidence. Run `npm ci`,
+`uv sync --locked`, then `npm run dev` to open http://127.0.0.1:8000.
+See [React UI setup and architecture](docs/react-ui.md). The existing
+`/_stcore/health` deployment probe remains compatible; `/health` reports the revision.
 The current research scope follows `docs/overall-design.md` and `AGENTS.md`.
 `hackthon-instruction.pdf` is the corrected Agentic Scientific Discovery challenge
 brief. Omnigent must orchestrate the live discovery workflow; the earlier housing
 challenge requirements are superseded.
 
-New automatic-context runs derive paper-specific questions and hypotheses before
-seeing any preset implementation. Source changes filter saved runs by paper hash.
-Only the selected numerical kernel reaches the validator; framework snapshots are
-separate provenance. Unsupported papers retain their findings and report the missing
-implementation instead of being forced into an example. See
-[paper isolation and intake](docs/source-intake.md). General-purpose simulation-code
-generation is not implemented.
+New UI runs and unconfigured Omnigent CLI runs use the **repository workflow**.
+Supply the paper and its public GitHub repository (or use a link found in the
+paper). Omnigent specialists read the source, critique up to three directions,
+compare two tests, and generate Python/C that calls the pinned repository code.
+The supervisor executes it in Omnigent's OS sandbox, validates a baseline sanity
+check and deterministic replay, and passes measured results to an evaluator that
+can change the next experiment's parameters. No preset scientific kernel is selected
+for this path. Explicit older configurations remain available for archive compatibility.
 
-The default frontend is now the **Omnigent scientific discovery lab**, following
+**Discovery overview** combines the former overview and final synthesis. It opens
+with the simulation, then gives the result, what changed, and the next experiment.
+Plans, citations, uncertainty and execution details are expandable below.
+Only the newest run for each paper appears by default; **Show previous runs** opens
+the history. A finished repository run highlights its final evaluated experiment
+once. Intermediate rounds remain in the audit history. Failed or incomplete runs
+do not promote partial measurements to final results.
+
+Supported code: offline Python 3.12 using the standard library, NumPy, SciPy, PyEphem 4.2.1 and
+repository functions; optional C17 sources compiled as a shared library and called
+from Python. Network access and package installation are unavailable inside the
+experiment. Source/code directories are read-only; only disposable scratch is
+writable. macOS uses Seatbelt and Linux uses bubblewrap, through pinned Omnigent
+0.16.0. Missing sandbox support fails closed. macOS has no enforced resident-memory
+or per-job process-count cap. See [execution and reproduction details](docs/repository-execution.md)
+and the [live validation record](docs/repository-execution-validation.json).
+
+```bash
+.venv/bin/research run --paper /path/to/paper.pdf \
+  --repository https://github.com/OWNER/REPO --repository-ref COMMIT \
+  --output output/research/my-repository-run
+.venv/bin/research verify output/research/my-repository-run
+.venv/bin/research replay-code output/research/my-repository-run \
+  --output output/replays/my-repository-run
+```
+
+The configured seed paper remains arXiv:2607.24975v1. Its extracted text has no
+GitHub URL, so repository execution requires an explicit code source. New papers
+are never silently mapped onto percolation or Astrosat demonstrations.
+
+The following sections also document retained v3/v4 workflows and historical runs.
+Their fixed kernels and AnyJev decisions describe those explicit configurations.
+
+The default frontend is now the **OmniLab scientific discovery lab**, following
 the research workflow in `docs/overall-design.md`. It records bounded choices,
 execution gates, evidence and implementations from saved research runs. See the
 [decision tracking guide](docs/decision-tracking.md) for controls, enforcement,
@@ -39,7 +82,7 @@ a shared agent ID. See the [demo walkthrough](docs/adaptive-demo.md).
 
 ## Scientific discovery workflow
 
-The current **adaptive Omnigent workflow (v4)** runs source and citation researchers
+The retained **adaptive Omnigent workflow (v4)** runs source and citation researchers
 in parallel, consolidates up to three experimental branches, and asks a decision
 agent to reallocate work after every completed simulation batch. Standard runs
 allow eight batches per direction and six workers; extended profiles and editable
@@ -59,13 +102,27 @@ each example's `adaptive-results/` directory; full archives remain in `output/re
 
 The following v3 description documents the retained sequential compatibility path.
 
-Every completed analysis now exports `comparison/simulation.svg` (original versus
-proposed simulated results), `comparison/summary.txt` (one numerical sentence),
-and `comparison/comparison.json` (measurements, uncertainty, saved inputs and source
-references). `comparisons/NNN/` retains the same outputs for each completed
-checkpoint. Runs without measurements export an explicit unavailable result.
-The **Discovery overview** and **Final synthesis** pages display and download
-these outputs; older sealed runs derive the view without rewriting their archives.
+Every completed analysis must export `comparison/process.html`, a self-contained
+playable comparison of the original and proposed simulated worlds, and
+`comparison/process.json`, its validated states, parameters and input hashes.
+Percolation reconstructs the recorded directed lattices and animates their
+construction; Astrosat animates the saved predicted/true local transit and compares
+the nominal and expanded alert boundaries. These illustrate recorded samples;
+they do not replace aggregate evidence or improve the orbit estimator.
+
+The v3/v4 supervisor blocks completion as `visualization_incomplete` if an implemented
+experiment cannot produce valid process outputs. Missing simulations remain
+explicitly unavailable. A generic data contract and adapter registry support new
+scientific implementations without rewriting the player or completion gate;
+v3/v4 continue to use explicit domain adapters. Repository runs use generated code
+and recorded scalar trajectories; malformed samples fail their experiment stage.
+
+For v3/v4 archives, `comparison/simulation.svg` retains the numerical comparison chart,
+`comparison/summary.txt` the numerical sentence, and `comparison/comparison.json`
+the measurements, uncertainty, saved inputs and source references.
+`comparisons/NNN/` retains these outputs for every completed checkpoint.
+The consolidated **Discovery overview** displays and downloads
+these outputs; older sealed runs reconstruct a labeled view without rewriting their archives.
 **Agents & loops** opens each specialist's complete archived prompt, inputs and
 constraints when its timeline box is clicked. Returned actions and downstream work
 appear below; session identities, counts and exports are under Run details and
@@ -260,7 +317,7 @@ CI still runs for visibility. To restore the gate, run
 `DEPLOY_REQUIRE_CI=1 npm run cd:start` (and set it for one-off deploys).
 The worker exports that commit into a new
 `.runtime/releases/` directory, installs its locked production dependencies,
-and restarts the app. PM2 must report the expected revision online and Streamlit's
+and restarts the app. PM2 must report the expected revision online and the app's
 HTTP health check must pass before recording
 the release. A failed health check restores the previous release. The deployment
 lock prevents overlapping runs. Working files and the development `.venv` are
@@ -275,7 +332,7 @@ rollback, and moving to an always-on host.
 
 ## Project layout
 
-- `src/hacknation_databricks/`: Python package and thin Streamlit interface
+- `src/hacknation_databricks/`: Python research package, view projections and FastAPI service
 - `tests/`: UI and deployment safety checks
 - `scripts/`: process and deployment operations
 - `.github/`: CI, issue template, and PR template
@@ -286,33 +343,14 @@ Research source intake and all simulations can run independently of cloud setup.
 
 ## Source intake and agent visibility
 
-**Source intake** accepts saved papers, uploads and versioned arXiv inputs. The UI
-fixes the researcher to **Codex + Omnigent** and the decision agent to **AnyJev +
-Omnigent**. Standard exploration is the default budget profile; finite budget
-controls remain available. Starting a run immediately opens **Agents & execution
-loops**, follows that exact run, refreshes generated files and execution steps,
-and distinguishes starting, running, stopped and completed outcomes.
+**Source intake** accepts saved papers, uploads and versioned arXiv inputs, plus a
+public GitHub repository and revision. New runs use separate Omnigent reader,
+critic/literature, planner, experimenter and evaluator sessions. Starting a run
+opens **Agents & execution loops** and follows that exact run.
 
-AnyJev is a local bounded scoring tool following a Codex assessment session in
-Omnigent, not a native hosted Omnigent harness. Both the assessment and final
-selection are archived; ambiguity stops the run for review. The existing CLI
-retains Codex decisions unless its adaptive config sets `decision_backend` to
-`anyjev`. UI users cannot change agent backends. Existing archives keep their
-original runtime identities.
-
-**Discovery overview** owns “What changed our next move?”: the cited original
-paper result beside the proposed simulation, with its recorded recipe, measurements,
-local controls, uncertainty, raw data and next action. The separate comparison page
-has been removed. New runs save `comparisons/NNN/highlights.json` and
-`comparison/highlights.json` alongside existing comparison artifacts; older sealed
-runs render the comparison without rewriting their archives.
-
-**Final synthesis** expands that same scientific comparison into detailed results,
-validation, retained branch outcomes, bottleneck measurements and the next experiment.
-It no longer includes Paper exploration. **Generated artifacts** retains the full
-input, response, simulation and workflow audit. Inspection makes no new model or
-simulation calls.
-
-See [source intake and execution visibility](docs/source-intake.md) for limits,
-commands and verification. The older numerical viewer remains directly runnable
-at `src/hacknation_databricks/research_ui.py` for developer inspection.
+**Discovery overview** presents the recorded simulation first, followed by a plain
+result and next action. The former **Final synthesis** entry has been removed.
+**Generated artifacts** retains the paper, pinned source archive, generated code,
+parameters, seeds, measurements, prompts and handoffs. Inspecting a saved run makes
+no model or experiment calls. Older sealed runs retain their original provenance
+and scientific limitations; their visual reconstruction is labeled.

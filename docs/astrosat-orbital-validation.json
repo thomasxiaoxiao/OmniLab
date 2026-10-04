@@ -1,0 +1,295 @@
+{
+  "updated_at": "2026-10-04T03:44:49.561997+00:00",
+  "run": "output/research/omnigent-astrosat-orbital-20261004T0335Z",
+  "status": "research_stopped",
+  "elapsed_seconds": 204.024,
+  "role_calls": 6,
+  "computed_simulations": 36,
+  "final_experiment": 2,
+  "acceptance": {
+    "baseline_simulations": true,
+    "followup_implemented": true,
+    "full_paper_reproduction": false,
+    "live_agents_executed": true,
+    "simulated_world_comparison": true
+  },
+  "artifact_verification_failures": [],
+  "environment": {
+    "code_sha256": "52daec62f5caf88a8e8d350014df180d47552b5b6512967cf598db59416816cd",
+    "git_revision": "d525e91fac65aa1f764c42f4d707917910b4e237",
+    "packages": {
+      "anyjev": "0.2.0",
+      "ephem": "4.2.1",
+      "mlx-lm": "0.32.0",
+      "numpy": "2.4.3",
+      "omnigent": "0.16.0",
+      "pypdf": "6.12.2",
+      "scipy": "1.17.1"
+    },
+    "platform": "macOS-27.0.1-arm64-arm-64bit",
+    "python": "3.12.8"
+  },
+  "repository": {
+    "archive_sha256": "9c614797bc5f240077459753e17da18e9b8d60f74aca6f7ce00c43f1e3895e9c",
+    "commit": "e65cd9a22d57c146f390b758822f3e37d16be9ad",
+    "licenses": [],
+    "origin": "paper",
+    "paper_page": 1,
+    "requested_ref": "e65cd9a22d57c146f390b758822f3e37d16be9ad",
+    "retrieved_at": "2026-10-04T03:35:26.307331+00:00",
+    "source_sha256": "e56bf525c71437be590c99f6cb4697cb41442f05c5836d7f555c34851eca0ebf",
+    "url": "https://github.com/james-m-osborn/astrosat"
+  },
+  "rounds": [
+    {
+      "round": 1,
+      "summary": {
+        "control_mean": 0.0,
+        "difference": 0.16747165905268163,
+        "interval": [
+          0.163737689532987,
+          0.17120562857237626
+        ],
+        "interval_method": "Paired-seed Student t interval, 95%; exploratory, no sequential or multiple-testing correction.",
+        "meaningful_difference": 0.05,
+        "metric": "Bounded phase-difference span",
+        "proposed_mean": 0.16747165905268163,
+        "replay_passed": true,
+        "samples_per_arm": 8,
+        "sanity_passed": true,
+        "units": "dimensionless"
+      },
+      "first_proposed_trajectory": {
+        "samples": 61,
+        "minimum_mag": 1.9301069082526752,
+        "maximum_mag": 2.1225480815265456,
+        "span_mag": 0.19244117327387045
+      },
+      "unique_proposed_trajectories": 8,
+      "next_decision": {
+        "action": "followup",
+        "limitations": [
+          "Interpretation relies on the supplied supervisor summary; individual trajectories, raw spans and sample-validation records were not supplied for independent inspection.",
+          "The interval is exploratory, without sequential or multiple-testing correction, and describes synthetic timing shifts rather than independent observed passes.",
+          "Keep eight jobs per arm and eight paired comparisons; any failed job invalidates the batch rather than changing its denominator.",
+          "The zero-shift follow-up tests one deterministic nominal trajectory; repeated jobs and a narrow interval cannot establish generality or observational accuracy.",
+          "Identical-model sanity and deterministic replay do not independently validate phase geometry, numerical stability or the reported paper/code normalization discrepancy.",
+          "This historical IRIDIUM calculation is neither observed photometry nor reproduction of the paper's Starlink results; optical calibration and attitude information are absent.",
+          "Independent literature coverage and page-local primary-source excerpts are insufficient here to assess prior art or establish scientific novelty."
+        ],
+        "next_experiment": "Evaluate the nominal window with zero timing shift to check whether its bounded phase-difference span still exceeds 0.05.",
+        "next_treatment": {
+          "cross_section_m2": 0.075,
+          "metric_scale_mag": 1,
+          "model": "diffuseSpherical",
+          "observer_elevation_m": 15.338848,
+          "observer_latitude": "42:21:30.4",
+          "observer_longitude": "-71:03:35.2",
+          "observer_pressure_mbar": 0,
+          "peak_utc": "2009-05-01T00:26:32.950313Z",
+          "pointing_dec_degrees": 0,
+          "pointing_ra_degrees": 0,
+          "reference_model": "constant",
+          "sample_count": 61,
+          "search_radius_degrees": 181,
+          "shape_numerical_tolerance_mag": 1e-06,
+          "timing_shift_half_width_seconds": 0,
+          "tle_line1": "1 25469U 98051C   09119.61415140 -.00000218  00000-0 -84793-4 0  4781",
+          "tle_line2": "2 25469  86.4029 183.4052 0002522  86.7221 273.4294 14.34215064557061",
+          "tle_name": "IRIDIUM 80 [+]",
+          "window_end_seconds": 45,
+          "window_start_seconds": -45
+        },
+        "rationale": "The control mean was zero, treatment mean was 0.16747165905268163, and the reported 95% paired Student t interval was [0.163737689532987, 0.17120562857237626], using eight seed pairs rather than 488 independent observations. Sanity and replay passed, supporting identical-model agreement and repeatability, not independent physical accuracy. This result shifts the decision from detecting temporal variation under synthetic timing shifts to checking whether the nominal, unshifted window also exceeds the unchanged meaningful-effect threshold. Set only timing_shift_half_width_seconds to zero; preserve the metric, baseline and thresholds. This uses the remaining round to isolate dependence on the timing perturbation. Eight treatment jobs will then repeat the same trajectory, so a collapsed interval must not be interpreted as increased scientific certainty.",
+        "result_interpretation": "The measured model difference varies over time, with a mean bounded span of 0.16747 and an exploratory paired interval entirely above the 0.05 threshold."
+      },
+      "repository_calls": [
+        "astrosat/AstroSat.py"
+      ]
+    },
+    {
+      "round": 2,
+      "summary": {
+        "control_mean": 0.0,
+        "difference": 0.1670913056442798,
+        "interval": [
+          0.1670913056442798,
+          0.1670913056442798
+        ],
+        "interval_method": "Paired-seed Student t interval, 95%; exploratory, no sequential or multiple-testing correction.",
+        "meaningful_difference": 0.05,
+        "metric": "Bounded phase-difference span",
+        "proposed_mean": 0.1670913056442798,
+        "replay_passed": true,
+        "samples_per_arm": 8,
+        "sanity_passed": true,
+        "units": "dimensionless"
+      },
+      "first_proposed_trajectory": {
+        "samples": 61,
+        "minimum_mag": 1.9524931564304921,
+        "maximum_mag": 2.1531049483070674,
+        "span_mag": 0.2006117918765753
+      },
+      "unique_proposed_trajectories": 1,
+      "next_decision": {
+        "action": "stop",
+        "limitations": [
+          "Interpretation relies on supervisor summaries; raw trajectories, sample-validation records and computed geometry were not supplied for independent inspection.",
+          "The reported Student t intervals are exploratory and lack sequential or multiple-testing correction; the collapsed second-round interval does not quantify physical or model uncertainty.",
+          "Eight repeated nominal treatment jobs represent one deterministic trajectory, while the unchanged baseline retains synthetic timing shifts; these are not independent observed passes.",
+          "Identical-model sanity and replay do not independently establish phase-angle accuracy or numerical stability; the span-to-tolerance comparison alone cannot exclude systematic calculation errors.",
+          "The supplied plan reports a paper/code normalization discrepancy whose constant offset cancels from the span statistic, but primary-source passages needed to independently verify it are absent here.",
+          "This historical IRIDIUM calculation lacks observed photometry, calibrated optical properties and attitude information, and does not reproduce the paper's Starlink results.",
+          "Independent literature coverage and page-local primary-source evidence are insufficient to establish scientific novelty, universality or real-world validity.",
+          "The proposed independent numerical check remains unexecuted; completion of the two-round budget and a collapsed interval do not validate secondary physical hypotheses."
+        ],
+        "next_experiment": "Independently recompute phase angles with a stable vector formulation at the same 61 nominal times and compare the resulting magnitude-difference span.",
+        "next_treatment": null,
+        "rationale": "The supervisor reports a treatment mean and paired difference of 0.1670913056442798 across eight jobs per arm and eight seed pairs, not 488 independent observations. Sanity and replay passed, supporting identical-model agreement and repeatability. The reported interval collapses to the measured value because zero-shift treatment jobs repeat one deterministic trajectory; it adds no evidence of population precision. Round 1 found a mean of 0.16747165905268163 under synthetic timing shifts. This follow-up shows that exceeding the meaningful-effect threshold does not require those shifts, resolving the nominal-window question and moving the next decision toward independent numerical validation. Under the implemented metric, the nominal span is approximately 0.20061 mag, above the 0.000001 mag numerical tolerance. No rounds remain, so stop without changing the metric, baseline or thresholds.",
+        "result_interpretation": "The nominal unshifted window has a bounded phase-difference span of 0.16709, exceeding the 0.05 threshold against a zero control."
+      },
+      "repository_calls": [
+        "astrosat/AstroSat.py"
+      ]
+    }
+  ],
+  "agent_handoffs": [
+    {
+      "agent_name": "research-worker",
+      "backend": "omnigent",
+      "call_id": "roles/01-repository_reader",
+      "request": "roles/01-repository_reader-request.json",
+      "response": "roles/01-repository_reader-response.json",
+      "role": "repository_reader",
+      "schema_valid": true,
+      "seconds": 26.42001962501672,
+      "session_id": "db7ee9f9a5c74fd797ae0f2dcfe3987a",
+      "stage": "reader",
+      "usage": null
+    },
+    {
+      "agent_name": "research-worker",
+      "backend": "omnigent",
+      "call_id": "roles/02-repository_critic",
+      "request": "roles/02-repository_critic-request.json",
+      "response": "roles/02-repository_critic-response.json",
+      "role": "repository_critic",
+      "schema_valid": true,
+      "seconds": 30.32231600000523,
+      "session_id": "48428fbffb74416bb728b7fdf46f7a01",
+      "stage": "critic",
+      "usage": null
+    },
+    {
+      "agent_name": "research-worker",
+      "backend": "omnigent",
+      "call_id": "roles/03-repository_planner",
+      "request": "roles/03-repository_planner-request.json",
+      "response": "roles/03-repository_planner-response.json",
+      "role": "repository_planner",
+      "schema_valid": true,
+      "seconds": 51.43799120897893,
+      "session_id": "564c486099dd4d389b81f2a0a0c26b29",
+      "stage": "planner",
+      "usage": null
+    },
+    {
+      "agent_name": "research-worker",
+      "backend": "omnigent",
+      "call_id": "roles/04-repository_experimenter",
+      "request": "roles/04-repository_experimenter-request.json",
+      "response": "roles/04-repository_experimenter-response.json",
+      "role": "repository_experimenter",
+      "schema_valid": true,
+      "seconds": 51.67149433301529,
+      "session_id": "c93dd83359714c56876fec28c9278e9e",
+      "stage": "implementation",
+      "usage": null
+    },
+    {
+      "agent_name": "research-worker",
+      "backend": "omnigent",
+      "call_id": "roles/05-repository_evaluator",
+      "request": "roles/05-repository_evaluator-request.json",
+      "response": "roles/05-repository_evaluator-response.json",
+      "role": "repository_evaluator",
+      "schema_valid": true,
+      "seconds": 25.679274499998428,
+      "session_id": "cc1bf31bc2bd4ceea9020f8004d39da3",
+      "stage": "rounds/01/decision",
+      "usage": null
+    },
+    {
+      "agent_name": "research-worker",
+      "backend": "omnigent",
+      "call_id": "roles/06-repository_evaluator",
+      "request": "roles/06-repository_evaluator-request.json",
+      "response": "roles/06-repository_evaluator-response.json",
+      "role": "repository_evaluator",
+      "schema_valid": true,
+      "seconds": 16.833897583012003,
+      "session_id": "3de0a18b898c46e49fb118a24792af7b",
+      "stage": "rounds/02/decision",
+      "usage": null
+    }
+  ],
+  "replays": [
+    {
+      "path": "output/replays/omnigent-astrosat-orbital-screen-20261004T0342Z",
+      "new_model_calls": 0,
+      "round": 1,
+      "source_run": "output/research/omnigent-astrosat-orbital-20261004T0335Z",
+      "status": "matched",
+      "verification_failures": []
+    },
+    {
+      "path": "output/replays/omnigent-astrosat-orbital-final-20261004T0340Z",
+      "new_model_calls": 0,
+      "round": 2,
+      "source_run": "output/research/omnigent-astrosat-orbital-20261004T0335Z",
+      "status": "matched",
+      "verification_failures": []
+    }
+  ],
+  "timing": {
+    "bottleneck": "Repository result to next scientific decision",
+    "multiplier": null,
+    "observed_decision_seconds": [
+      25.680884000001242,
+      16.835701208998216
+    ],
+    "status": "No comparable manual baseline measured"
+  },
+  "withdrawn_archive": "output/research-archive/20261004T0312Z-astrosat-withdrawn/archive-index.json",
+  "fresh_failed_attempts": "output/research-archive/20261004T0338Z-astrosat-restart-attempts/archive-index.json",
+  "verification": {
+    "full_suite_before_concurrent_react_migration": {
+      "passed": 247,
+      "skipped": 3,
+      "seconds": 33.68
+    },
+    "focused_repository_and_intake_after_migration_interface_change": {
+      "passed": 46,
+      "skipped": 3,
+      "seconds": 1.88
+    },
+    "real_macos_sandbox_probes": {
+      "passed": 3,
+      "seconds": 1.33
+    },
+    "react_view_protocol": {
+      "final_visualizations": 1,
+      "result_headings": 1,
+      "first_result_node_type": "iframe",
+      "browser_visual_review": "Passed at http://127.0.0.1:8505/overview: one current AstroSat run, one final visualization, 61/61 recorded samples, summary below, earlier experiments collapsed.",
+      "screenshot": "docs/images/astrosat-final-orbital.jpg"
+    }
+  },
+  "limitations": [
+    "Reference IRIDIUM TLE near its historical 2009 epoch, not the paper's original 2021 Starlink data.",
+    "Method-level model sensitivity check; no observed photometry or independent phase-angle implementation was tested.",
+    "Round 1 varies assumed timing shifts; round 2 repeats one deterministic nominal trajectory. Repetitions do not estimate physical uncertainty.",
+    "No independent prior-art search, scientific novelty, full paper reproduction or measured acceleration multiplier."
+  ]
+}

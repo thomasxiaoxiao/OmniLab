@@ -3,12 +3,11 @@
 import os
 from pathlib import Path
 
-import streamlit as st
-
 from hacknation_databricks.research.intake import library_sources
+from hacknation_databricks.web import components as ui
 
 
-@st.cache_data(max_entries=8, ttl=60, show_spinner=False)
+@ui.cache_data(max_entries=8, ttl=60, show_spinner=False)
 def _load(root: str, signature: tuple):
     return library_sources(Path(root))
 

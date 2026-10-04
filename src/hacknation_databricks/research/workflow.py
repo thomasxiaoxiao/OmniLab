@@ -297,6 +297,19 @@ def run_research(
     from paper text. Live mode fails explicitly; it never falls back to scripted.
     """
     config = config or RunConfig(workflow="adaptive")
+    if config.workflow == "repository":
+        from .repository_workflow import run_repository
+
+        return run_repository(
+            source,
+            output,
+            config,
+            backend=backend,
+            literature=literature,
+            progress=progress,
+            roles_factory=roles_factory,
+            retrieval_report=retrieval_report,
+        )
     if config.workflow == "adaptive":
         from .adaptive import run_adaptive
 
