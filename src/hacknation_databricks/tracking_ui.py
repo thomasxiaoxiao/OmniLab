@@ -332,7 +332,7 @@ def render_sidebar() -> Path | None:
             or ui.session_state.get("new_run") == active_name
         ):
             runs.sort(key=lambda path: path.name != active_name)
-        if not ui.checkbox("Show previous runs", key="show_previous_runs"):
+        if not ui.checkbox("Show previous runs", value=True, key="show_previous_runs"):
             runs = latest_runs_by_paper(runs)
         names = [path.name for path in runs]
         chosen = ui.session_state.pop("new_run", None)
@@ -485,7 +485,9 @@ def render_run_setup() -> None:
             seed = ui.number_input("Master seed", 0, 2**32 - 1, 20261003) if pinned else None
         ui.caption(
             "Control and proposed runs share seeds. Each experiment gets new seeds. "
-            "Specialists run in sequence; the evaluator chooses the next test or stops."
+            "Reader and literature researcher work concurrently, then hand their findings "
+            "to the critic. One reviewed direction proceeds through bounded experiments; "
+            "the evaluator explains every continuation or stop."
         )
         overrides = {
             "workflow": "repository",
@@ -494,7 +496,7 @@ def render_run_setup() -> None:
             "repository_url": repository_url.strip(),
             "repository_ref": repository_ref.strip(),
             "max_rounds": rounds,
-            "max_workers": 1,
+            "max_workers": min(2, settings.max_workers),
             "trials": trials,
             "code_timeout_seconds": code_timeout,
             "max_seconds": seconds,

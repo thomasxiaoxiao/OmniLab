@@ -2,7 +2,9 @@
 
 import hashlib
 import math
+import threading
 import time
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
 import numpy as np
@@ -19,6 +21,7 @@ from .repository_models import (
     RepositoryBrief,
     RepositoryDecision,
     RepositoryImplementation,
+    RepositoryLiterature,
     RepositoryPlan,
     RepositoryReview,
 )
@@ -169,6 +172,7 @@ def run_repository(
     if backend != "fixture":
         deadline = min(deadline, started + PROJECT_DEADLINE - time.time())
     roles = None
+    save_lock = threading.Lock()
     report = {
         "workflow_version": "5",
         "workflow": "repository",
@@ -197,9 +201,10 @@ def run_repository(
     }
 
     def save():
-        report["elapsed_seconds"] = round(time.monotonic() - started, 3)
-        report["role_calls"] = roles.calls if roles else 0
-        store.write("report.json", report)
+        with save_lock:
+            report["elapsed_seconds"] = round(time.monotonic() - started, 3)
+            report["role_calls"] = roles.calls if roles else 0
+            store.write("report.json", report)
 
     def check():
         if time.monotonic() >= deadline or (
@@ -325,15 +330,31 @@ def run_repository(
             "capability": code_capability(paper_only),
             "code_origin": report["code_origin"],
         }
-        brief, reader_stage = grounded(
-            "reader",
-            "repository_reader",
-            common,
-            RepositoryBrief,
-            ["repository"],
-            lambda b: [e for d in b.directions for e in d.evidence],
-            [source],
-        )
+        # Independent questions share immutable inputs, then join at the critic.
+        # Existing Omnigent call reservations and worker slots enforce the budget.
+        with ThreadPoolExecutor(max_workers=min(2, config.max_workers)) as workers:
+            reader = workers.submit(
+                grounded,
+                "reader",
+                "repository_reader",
+                common,
+                RepositoryBrief,
+                ["repository"],
+                lambda b: [e for d in b.directions for e in d.evidence],
+                [source],
+            )
+            literature_worker = workers.submit(
+                grounded,
+                "literature",
+                "repository_literature",
+                {**common, "retrieval": retrieval_report},
+                RepositoryLiterature,
+                ["repository"],
+                lambda review: review.evidence,
+                sources,
+            )
+            brief, reader_stage = reader.result()
+            literature_review, literature_stage = literature_worker.result()
         report["proposals"] = [d.model_dump() for d in brief.directions]
         if not paper_only and not brief.repository_files:
             raise ValueError("Repository reader must select source files")
@@ -355,9 +376,10 @@ def run_repository(
                 "code": code,
                 "literature": [s.payload() for s in sources[1:]],
                 "retrieval": retrieval_report,
+                "independent_literature_review": literature_review.model_dump(),
             },
             RepositoryReview,
-            [reader_stage],
+            [reader_stage, literature_stage],
             lambda r: r.evidence,
             sources,
         )

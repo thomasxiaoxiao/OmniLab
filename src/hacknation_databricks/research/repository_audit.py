@@ -8,7 +8,12 @@ import re
 from .code_sandbox import SimulationSample, paper_implementation
 from .models import RunConfig
 from .process_visualization import checked_process
-from .repository_models import RepositoryBrief, RepositoryPlan, RepositoryReview
+from .repository_models import (
+    RepositoryBrief,
+    RepositoryLiterature,
+    RepositoryPlan,
+    RepositoryReview,
+)
 from .repository_workflow import process_from_trials, summarize_trials, validate_process_variation
 from .sources import Source, check_evidence
 
@@ -41,13 +46,17 @@ def verify_repository_outputs(directory, report, artifacts):
             if report["final_experiment"] != expected_final:
                 raise ValueError("Final experiment is not the single terminal evaluated result")
         sources = [Source(**{**s, "pages": tuple(s["pages"])}) for s in read("sources.json")]
+        if "approved_literature.json" in artifacts:
+            literature = RepositoryLiterature.model_validate(read("approved_literature.json"))
+            for evidence in literature.evidence:
+                check_evidence(evidence, sources)
         if report.get("proposals"):
             name = "approved_reader.json" if "approved_reader.json" in artifacts else "reader.json"
             brief = RepositoryBrief.model_validate(read(name))
             for direction in brief.directions:
                 for evidence in direction.evidence:
                     check_evidence(evidence, sources[:1])
-        if report.get("selected_proposal"):
+        if "approved_critic.json" in artifacts or report.get("selected_proposal"):
             name = "approved_critic.json" if "approved_critic.json" in artifacts else "critic.json"
             review = RepositoryReview.model_validate(read(name))
             for evidence in review.evidence:
@@ -197,7 +206,7 @@ def load_repository_journal(directory):
                     finished
                     or stage in states
                     or not re.fullmatch(
-                        r"repository|reader|reader_repair|critic|critic_repair|planner|implementation|rounds/\d+/(experiment|decision)",
+                        r"repository|reader|reader_repair|literature|literature_repair|critic|critic_repair|planner|implementation|rounds/\d+/(experiment|decision)",
                         stage,
                     )
                 ):

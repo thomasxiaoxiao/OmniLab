@@ -1,3 +1,43 @@
+# Parallel specialists and complete route decisions verified
+
+Updated October 3, 2026, 22:16 PDT; approximately 1 hour 51 minutes to hard stop.
+Feature scope is frozen. Active task: finish CI-backed integration and local handoff.
+
+- Reader and independent literature researcher now run concurrently and hand both
+  validated outputs to the critic. The live uploaded-paper run recorded two
+  concurrent requests with 30.875 seconds of overlap, including runtime waits.
+  The v5 experimental loop still selects one reviewed direction; dependencies
+  after the independent reviews remain sequential.
+- Run output/research/20261004T051223-523d4336 completed 7 real Omnigent sessions,
+  2 generated-code experiments and 36 sandbox jobs in 181.558 seconds. Source:
+  Percolation, uploaded with no repository. Original bounds: 8 requests, 2 workers,
+  2 experiments, 600 seconds and 1000 simulation jobs. No fallback backend.
+- Round 1 tested L=16 against L=8. Its result prompted L=32 against the fixed L=8
+  baseline in round 2. Final difference was -0.11706 with exploratory 95% interval
+  [-0.16214, -0.07198]. The evaluator stopped at its two-round limit and recommended
+  independently validated confirmation. Quantitative scaling/exponent agreement,
+  universality, the alternative reversal hypothesis and novelty remain untested.
+- All artifacts verify. Independent archived-code replay of round 2 matched exactly,
+  with zero new model calls. Four earlier Percolation/AstroSat archives also verify.
+- Agents now shows measured request concurrency, a dependency graph, and separate
+  Routes & decisions and Artifacts tabs. Every rejected/deferred/unselected route,
+  candidate test, evaluator rationale and stop outcome remains inspectable. Full
+  results include experimental scope, controls, limitations and proposed next work.
+- Browser checks show the earlier lattice reconstruction in the redesigned player.
+  Previous runs are visible by default. Current generated experiments save scalar
+  trajectories; they are not mislabeled as spatial lattice reconstructions.
+- Local full checks passed (269 standard tests before the additional deferred-route
+  case); the two route cases pass. CI on 91ab189 passed the final 270-test suite,
+  frontend/build/Ruff checks; four optional platform sandbox probes remain skipped
+  in CI. Fresh live execution and replay exercised the real macOS sandbox.
+- Evidence: docs/parallel-routes-validation.json and experiments/parallel-routes-validation.json.
+  PR #8 is checked; final evidence commit and merge are next. No runtime blocker.
+  Scientific conclusions require independent numerical and domain validation before
+  real-world use; no comparable baseline establishes an acceleration multiplier.
+
+
+---
+
 # Seed intake and full uploaded-paper launch verified
 
 Updated October 3, 2026, 21:56 PDT; about 2 hours 11 minutes to hard stop

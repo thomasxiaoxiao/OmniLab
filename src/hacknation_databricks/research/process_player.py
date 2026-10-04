@@ -7,8 +7,8 @@ from .process_visualization import checked_process
 
 PLAYER_SCRIPT = r"""
 const data = JSON.parse(document.getElementById('process-data').textContent);
-const colors = {control:'#3265a8',proposed:'#087f75',truth:'#c45b19',
-                muted:'#b6c1cf',field:'#677587'};
+const colors = {control:'#38d7f5',proposed:'#c4a0ff',truth:'#ffd166',
+                muted:'#426078',field:'#7696ad'};
 const root = document.getElementById('player');
 let index = 0, timer = null;
 const slider = root.querySelector('input');
@@ -39,13 +39,22 @@ function draw({world,card,ctx}) {
   const px=x => width/2+(x-(x0+x1)/2)*xscale;
   const py=y => height/2-(y-(y0+y1)/2)*yscale;
   ctx.clearRect(0,0,width,height);
-  ctx.fillStyle='#f8fafc'; ctx.fillRect(0,0,width,height);
+  const background=ctx.createLinearGradient(0,0,width,height);
+  background.addColorStop(0,'#10283d');background.addColorStop(1,'#081623');
+  ctx.fillStyle=background; ctx.fillRect(0,0,width,height);
+  ctx.strokeStyle='#203b50';ctx.lineWidth=.6;
+  for(let tick=0;tick<=8;tick++) {
+    const x=px(x0+(x1-x0)*tick/8),y=py(y0+(y1-y0)*tick/8);
+    ctx.beginPath();ctx.moveTo(x,py(y1));ctx.lineTo(x,py(y0));ctx.stroke();
+    ctx.beginPath();ctx.moveTo(px(x0),y);ctx.lineTo(px(x1),y);ctx.stroke();
+  }
   ctx.save(); ctx.beginPath();ctx.rect(px(x0),py(y1),(x1-x0)*xscale,(y1-y0)*yscale);ctx.clip();
   function glyph(g) {
     if (g.start>index) return;
     const highlighted=g.highlight.includes(index);
     ctx.strokeStyle=colors[highlighted?'truth':g.color];
-    ctx.fillStyle=ctx.strokeStyle;ctx.lineWidth=highlighted?2.5:1.5;
+    ctx.fillStyle=ctx.strokeStyle;ctx.lineWidth=highlighted?3:1.8;
+    ctx.shadowColor=ctx.strokeStyle;ctx.shadowBlur=highlighted?9:0;
     ctx.beginPath();
     if (g.kind==='circle') {
       ctx.arc(px(g.x),py(g.y),Math.max(1,g.radius*scale)*(highlighted?1.6:1),0,2*Math.PI);
@@ -62,9 +71,9 @@ function draw({world,card,ctx}) {
     }
   }
   world.geometry.forEach(glyph);world.frames[index].glyphs.forEach(glyph);
-  ctx.restore();ctx.strokeStyle='#b6c1cf';ctx.lineWidth=1;
+  ctx.restore();ctx.shadowBlur=0;ctx.strokeStyle='#527085';ctx.lineWidth=1;
   ctx.strokeRect(px(x0),py(y1),(x1-x0)*xscale,(y1-y0)*yscale);
-  ctx.fillStyle='#334155';ctx.font='13px system-ui';ctx.textAlign='center';
+  ctx.fillStyle='#c2d6e5';ctx.font='13px system-ui';ctx.textAlign='center';
   ctx.fillText(data.x_label,width/2,height-9);
   ctx.fillText(x0.toPrecision(3),px(x0),py(y0)+17);
   ctx.fillText(x1.toPrecision(3),px(x1),py(y0)+17);
@@ -92,6 +101,13 @@ root.querySelector('[data-reset]').addEventListener('click',()=>{pause();index=0
 slider.addEventListener('input',()=>{pause();index=Number(slider.value);render();});
 document.addEventListener('visibilitychange',()=>{if(document.hidden)pause();});
 window.addEventListener('pagehide',pause);
+// Fit the sandboxed frame to its content, including stacked mobile cards and provenance.
+const sizeObserver=new ResizeObserver(()=>{
+  window.parent.postMessage({type:'omnigent-player-height',
+    height:Math.ceil(root.getBoundingClientRect().height+48)},'*');
+});
+sizeObserver.observe(root);
+window.addEventListener('pagehide',()=>sizeObserver.disconnect());
 render();if(!reduced)start();
 """
 
@@ -112,16 +128,27 @@ def process_html(process, *, scalar_axes=False):
         '<!doctype html><html lang="en"><head><meta charset="utf-8">'
         '<meta name="viewport" content="width=device-width,initial-scale=1">'
         f"<title>{escape(process['title'])}</title><style>"
-        "body{margin:0;padding:16px;font:15px/1.5 system-ui;color:#172b42;background:white}"
-        "h1{font-size:22px;margin:0 0 8px}h2{font-size:18px;margin:0}p{margin:8px 0}"
+        "body{margin:0;padding:24px;font:15px/1.6 system-ui;color:#e0edf6;"
+        "background:radial-gradient(ellipse at top right,#233b55,transparent 65%),#091725}"
+        "h1{font-size:25px;line-height:1.2;margin:0 0 12px;letter-spacing:-.6px}"
+        "h2{font-size:18px;margin:0;color:#38d7f5}"
+        "[data-world=proposed] h2{color:#c4a0ff}p{margin:8px 0}"
         ".worlds{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:18px 0}"
-        "section{min-width:0;border:1px solid #d8e0e8;border-radius:10px;padding:12px}"
-        "section>p{font-size:13px}canvas{width:100%;height:auto;display:block}"
+        "section{min-width:0;border:1px solid #345169;border-top:3px solid #38d7f5;"
+        "border-radius:14px;padding:16px;background:#102235;box-shadow:0 12px 30px #0003}"
+        "section[data-world=proposed]{border-top-color:#c4a0ff}"
+        "section>p{font-size:13px;color:#b8ccdc}"
+        "canvas{width:100%;height:auto;display:block;border-radius:8px}"
         ".controls{display:flex;align-items:center;gap:12px;flex-wrap:wrap}"
-        "button{font:inherit;padding:6px 16px;cursor:pointer}input{flex:1;min-width:100px}"
-        "[data-step]{display:block;font-size:13px}details{margin-top:12px}"
+        "button{font:inherit;font-weight:600;padding:8px 20px;cursor:pointer;"
+        "border:1px solid #45647d;border-radius:24px;background:#18364c;color:#edfaff}"
+        "button[data-play]{background:#38d7f5;color:#092033;border-color:#38d7f5}"
+        "button:focus-visible,input:focus-visible,summary:focus-visible{outline:2px solid #ffd166}"
+        "input{flex:1;min-width:100px;accent-color:#38d7f5}"
+        "[data-step]{display:block;font:12px/2.6 ui-monospace,monospace;color:#8fdcec}"
+        "details{margin-top:12px}summary{cursor:pointer}"
         "pre{white-space:pre-wrap;overflow-wrap:anywhere;max-height:280px;overflow:auto}"
-        ".note{font-size:13px;color:#42566f}"
+        ".note{font-size:13px;color:#adc2d2}"
         "@media(max-width:600px){.worlds{grid-template-columns:1fr}}"
         '</style></head><body><main id="player"><h1></h1><p data-description></p>'
         '<div class="controls"><button data-play>Play</button><button data-reset>Reset</button>'

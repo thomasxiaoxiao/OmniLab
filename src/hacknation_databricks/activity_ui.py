@@ -9,7 +9,7 @@ from pathlib import Path
 import pandas as pd
 
 from hacknation_databricks.execution_graph_ui import render_execution_graph
-from hacknation_databricks.research.activity import activity_export, load_activity
+from hacknation_databricks.research.activity import activity_export, load_activity, request_overlap
 from hacknation_databricks.research_views import (
     downstream_steps,
     label,
@@ -212,6 +212,15 @@ def render_activity(journal: Journal) -> None:
     if not nodes:
         ui.info("No stage has started yet. Agent sessions appear after Omnigent creates them.")
         return
+    overlap = request_overlap(nodes)
+    cols = ui.columns(3)
+    cols[0].metric("Active specialist requests", overlap["live"])
+    cols[1].metric("Peak concurrent requests", overlap["peak"])
+    cols[2].metric("Time with concurrent work", f"{overlap['overlap_seconds']:.1f}s")
+    ui.caption(
+        "Measured from recorded Omnigent request start/end events, including runtime waits. "
+        "Branches sharing a graph level have independent inputs; counts above show actual overlap."
+    )
     ui.caption("Click a box to view its prompt, inputs and results.")
     node, graph = render_execution_graph(nodes, journal)
     prompts = {node.key: recorded_prompt(journal, node)}

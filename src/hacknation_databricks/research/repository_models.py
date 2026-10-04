@@ -32,6 +32,13 @@ class RepositoryReview(Contract):
     missing_evidence: list[str] = Field(min_length=1, max_length=8)
 
 
+class RepositoryLiterature(Contract):
+    literature_assessment: str = Field(min_length=10, max_length=3000)
+    search_scope: str = Field(min_length=10, max_length=1500)
+    evidence: list[Evidence] = Field(min_length=1, max_length=8)
+    missing_evidence: list[str] = Field(min_length=1, max_length=8)
+
+
 class RepositoryTest(Contract):
     id: Literal["screen", "precision"]
     replicates: int = Field(ge=4, le=32)

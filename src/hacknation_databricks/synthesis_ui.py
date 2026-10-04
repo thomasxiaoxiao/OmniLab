@@ -340,6 +340,9 @@ def render_synthesis(journal: Journal) -> None:
     from hacknation_databricks.run_feedback_ui import render_run_outcome
 
     render_run_outcome(journal)
+    from hacknation_databricks.research_routes_ui import render_research_routes
+
+    render_research_routes(journal)
     with ui.expander("Research question, sources, and selected direction"):
         render_research_path(journal)
     if dataset:
