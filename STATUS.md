@@ -1,3 +1,29 @@
+# Consolidation complete; local testing is live
+
+Updated October 3, 2026, 21:28 PDT; about 2 hours 39 minutes to hard stop
+and 39 minutes to feature freeze. Requested integration and startup are complete.
+
+- PR #6 merged into `main` at `801d932` after GitHub CI passed. All existing
+  feature branches are included in main; the local checkout is now on main.
+- Verified 259 standard tests plus all 3 real Omnigent sandbox tests; production
+  build, frontend checks and Ruff pass. Current AstroSat archive verification
+  reports no failures. Challenge PDF hash is unchanged.
+- Persistent test process: `omnilab-test` in the existing project PM2 manager.
+  Open http://127.0.0.1:8000 (API: 127.0.0.1:8011). The health endpoint returns
+  `ok` with the React frontend. Browser checks verified Source intake, the saved
+  experiment visualization/result/next decision, and the specialist handoff graph.
+  Logs: `bash scripts/pm2.sh logs omnilab-test`.
+  Stop: `bash scripts/pm2.sh stop omnilab-test`.
+  Restart after Python edits: `bash scripts/pm2.sh restart omnilab-test`.
+- No blocker remains for local testing. Next human step: exercise the bounded
+  research workflow with the desired paper and repository. This integration made
+  no new live model call. Saved scientific results remain exploratory and require
+  independent replication and observational validation before real-world use.
+  Novelty and an acceleration multiplier remain unverified; historical Replit
+  private publication remains a separate unresolved external step.
+
+---
+
 # Main consolidation and local testing
 
 Updated October 3, 2026, 21:25 PDT; about 2 hours 42 minutes to hard stop
