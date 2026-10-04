@@ -22,6 +22,21 @@ from hacknation_databricks.web import components as ui
 
 
 def render_prompt_actions(journal, nodes, node, prompts):
+    if node.kind == "anyjev":
+        ui.subheader("Decision-only evaluation · AnyJev")
+        ui.caption(
+            "Closed options scored from model logits; zero generated tokens. "
+            "Weights are uncalibrated, not scientific confidence."
+        )
+        for artifact in node.artifacts:
+            if artifact.startswith("decisions/"):
+                record = saved_json(journal, artifact)
+                ui.json(record, expanded=False)
+        handoff = saved_json(journal, node.stage.rsplit("/", 1)[0] + "/anyjev-handoff.json")
+        if handoff:
+            ui.markdown("**Selected action**")
+            ui.json(handoff["selected_action"], expanded=False)
+        return
     ui.subheader("Complete prompt, inputs and constraints")
     prompt = prompts.get(node.key)
     if not prompt:
@@ -143,10 +158,15 @@ def render_artifacts(journal, artifacts):
 
 def render_simulation(journal, node):
     ui.caption("Experiment implementation bound to this run's source paper.")
-    manifest_path = journal.directory / "implementation.json"
+    manifest_name = (
+        "code/provenance.json"
+        if (journal.directory / "code/provenance.json").is_file()
+        else "implementation.json"
+    )
+    manifest_path = journal.directory / manifest_name
     code = []
     if manifest_path.is_file():
-        implementation = json.loads(read_artifact(journal.directory, "implementation.json"))
+        implementation = json.loads(read_artifact(journal.directory, manifest_name))
         seed = next((s for s in journal.sources if s.get("source_id") == "seed"), {})
         if implementation.get("source_sha256") != seed.get("sha256"):
             ui.error("Implementation source does not match this paper.")
@@ -208,6 +228,43 @@ def render_artifact_feed(journal: Journal) -> None:
             ui.caption("Waiting for the first artifact from this run.")
 
 
+def recorded_failure(journal, node):
+    """Explain saved failures without rerunning or rewriting the archived attempt."""
+    contract = saved_json(journal, node.stage + "_contract_failure.json")
+    if node.error_type == "ValidationError" and contract:
+        errors = contract.get("errors", [])
+        details = "; ".join(
+            f"{'.'.join(map(str, e.get('loc', [])))}: {e.get('msg', e.get('type', 'invalid'))}"
+            for e in errors
+        )
+        return f"The agent response failed its saved output contract: {details}. " + (
+            "A later correction completed this stage; this rejected attempt remains in the audit."
+            if node.stage_status == "completed"
+            else "This attempt is preserved; updating the code does not rerun saved failures."
+        )
+    execution = saved_json(journal, node.stage.rsplit("/", 1)[0] + "/execution.json")
+    if (
+        node.kind == "simulation"
+        and execution
+        and (
+            "Baseline preflight failed" in execution.get("stderr", "")
+            or "Identical seeded baseline did not replay exactly"
+            in journal.report.get("reason", "")
+        )
+    ):
+        return (
+            "Identical seeded simulation outputs differed, so the result was rejected. "
+            "Measurements and scene data must replay exactly. Wall-clock timing belongs in "
+            "execution metadata, not the scientific output. See saved trials or execution details."
+        )
+    if node.kind == "simulation" and execution and execution.get("failure") == "timeout":
+        return (
+            "The simulation exceeded its execution or remaining run time budget. "
+            "No accepted result was produced; this failed attempt remains saved."
+        )
+    return f"This step stopped ({node.error_type}). See Technical details for recorded events."
+
+
 def render_activity(journal: Journal) -> None:
     nodes = load_activity(journal)
     if not nodes:
@@ -232,9 +289,7 @@ def render_activity(journal: Journal) -> None:
             "a new run from Source intake. This attempt is preserved."
         )
     elif node.error_type:
-        ui.error(
-            f"This step stopped ({node.error_type}). See Technical details for recorded events."
-        )
+        ui.error(recorded_failure(journal, node))
     if node.stage_status == "failed" and node.status == "completed":
         ui.warning("The worker responded, but a later evidence check in this stage failed.")
     if node.kind == "simulation":

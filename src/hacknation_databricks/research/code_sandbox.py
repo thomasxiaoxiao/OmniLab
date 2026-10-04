@@ -182,6 +182,8 @@ def execute_code(store, implementation, manifest, jobs, *, stage, timeout):
     """Never execute in the repository checkout or expose authentication to the child."""
     from omnigent.sandbox import get_backend
 
+    # Reject syntax errors before launching a compiler or sandbox process.
+    compile(implementation.python_code, "experiment.py", "exec")
     paper_only = paper_implementation(manifest)
     if not paper_only and not implementation.repository_files:
         raise ValueError("Repository experiments must use pinned source files")
@@ -227,6 +229,7 @@ def execute_code(store, implementation, manifest, jobs, *, stage, timeout):
             "c_sources": c_sources,
             "compiler": compiler,
             "timeout": max(1, int(timeout)),
+            "trace_repository": bool(manifest["files"]),
         }
         request_path = inputs / "request.json"
         request_path.write_text(json.dumps(request, allow_nan=False))
@@ -261,7 +264,8 @@ def execute_code(store, implementation, manifest, jobs, *, stage, timeout):
         }
         store.write(f"{stage}/execution.json", audit)
         if execution["failure"] or execution["returncode"]:
-            raise RuntimeError("Sandbox execution failed; see saved execution.json")
+            reason = execution["failure"] or f"exit code {execution['returncode']}"
+            raise RuntimeError(f"Sandbox execution failed ({reason}); see saved execution.json")
         result = json.loads(execution["stdout"])
         if len(result["trials"]) != len(jobs):
             raise ValueError("Execution omitted requested simulation jobs")

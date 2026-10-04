@@ -171,6 +171,7 @@ def test_policy_persists_and_exact_launch_identity_survives_redirect(
     assert len(submitted) == 1
     assert submitted[0][0][2] == "omnigent"
     assert submitted[0][0][5]["workflow"] == "repository"
+    assert submitted[0][0][5]["decision_backend"] == "anyjev"
     assert submitted[0][0][5]["max_agent_calls"] == 40
     assert submitted[0][1]["run_name"] in next(iter(server._sessions.values())).state.values()
     assert event(client, after, action=action).status_code == 400

@@ -65,17 +65,45 @@ def main():
 
         ctypes.CDLL = load
     os.chdir(work)
-    sys.setprofile(trace)
+    if request.get("trace_repository", True):
+        sys.setprofile(trace)
     with contextlib.redirect_stdout(sys.stderr):
         spec = importlib.util.spec_from_file_location("paper_experiment", request["implementation"])
         module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(module)
-        trials = []
-        for job in request["jobs"]:
+        jobs = request["jobs"]
+        order = list(range(len(jobs)))
+        control = next((i for i, j in enumerate(jobs) if j["arm"] == "control"), None)
+        replay = next((i for i, j in enumerate(jobs) if j["arm"] == "replay"), None)
+        paired = (
+            control is not None
+            and replay is not None
+            and all(jobs[control][key] == jobs[replay][key] for key in ("seed", "parameters"))
+        )
+        # Fail before the full batch if even one identical baseline cannot replay.
+        # Preserve the requested trial order in the returned artifact.
+        if paired:
+            order = [control, replay, *[i for i in order if i not in (control, replay)]]
+        trials = [None] * len(jobs)
+        for index in order:
+            job = jobs[index]
             value = module.simulate(
                 job["parameters"], job["seed"], str(library) if library else None
             )
-            trials.append({**job, "output": value})
+            # Snapshot mutable outputs; a later call must not change an earlier trial.
+            value = json.loads(json.dumps(value, allow_nan=False))
+            trials[index] = {**job, "output": value}
+            if paired and index == replay and value != trials[control]["output"]:
+                print(
+                    json.dumps({"partial_trials": [t for t in trials if t is not None]}),
+                    file=sys.__stdout__,
+                    flush=True,
+                )
+                raise ValueError(
+                    "Baseline preflight failed: identical seeded output did not replay exactly. "
+                    "All measurements and scene data must be deterministic; "
+                    "record wall-clock timing only in execution metadata."
+                )
     sys.setprofile(None)
     print(
         json.dumps(

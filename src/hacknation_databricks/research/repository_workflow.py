@@ -16,7 +16,9 @@ from .agents import AgentBudgetExceeded, AgentUnavailable, OmnigentRoles
 from .artifacts import RunStore, canonical, environment
 from .code_archive import archive_framework
 from .code_sandbox import SimulationSample, code_capability, execute_code
+from .decision_roles import AnyJevRoles, DecisionAbstained
 from .process_player import process_html
+from .repository_decisions import decision_state, evaluate
 from .repository_models import (
     AgentRepositoryPlan,
     RepositoryBrief,
@@ -83,6 +85,8 @@ def run_repository(
         raise ValueError(
             "Repository research requires live Omnigent; there is no alternate backend"
         )
+    if backend == "omnigent" and config.decision_backend != "anyjev":
+        raise ValueError("Live repository runs require decision_backend='anyjev'; no fallback")
     sources = [source, *(literature or [])]
     if (
         source.source_id != "seed"
@@ -98,11 +102,13 @@ def run_repository(
     if backend != "fixture":
         deadline = min(deadline, started + PROJECT_DEADLINE - time.time())
     roles = None
+    scorer = None
     save_lock = threading.Lock()
     report = {
         "workflow_version": "5",
         "workflow": "repository",
         "backend": backend,
+        "evaluator_backend": config.decision_backend,
         "status": "running",
         "rounds": [],
         "proposals": [],
@@ -130,6 +136,7 @@ def run_repository(
         with save_lock:
             report["elapsed_seconds"] = round(time.monotonic() - started, 3)
             report["role_calls"] = roles.calls if roles else 0
+            report["decision_calls"] = scorer.decision_calls if scorer else 0
             store.write("report.json", report)
 
     def check():
@@ -248,6 +255,9 @@ def run_repository(
         roles = (roles_factory or OmnigentRoles)(sources, store, config)
         if isinstance(roles, OmnigentRoles):
             roles.deadline = min(roles.deadline, deadline)
+        if config.decision_backend == "anyjev":
+            scorer = AnyJevRoles(sources, store, config)
+            scorer.deadline = deadline
         common = {
             "source": source.payload(),
             "literature": [s.payload() for s in sources[1:]],
@@ -378,6 +388,13 @@ def run_repository(
                 "scene_schema": SimulationScene.model_json_schema(),
                 "output_schema": SimulationSample.model_json_schema(),
                 "execution_contract": {
+                    "batch_timeout_seconds": config.code_timeout_seconds,
+                    "remaining_run_seconds_at_request": max(
+                        0, round(deadline - time.monotonic(), 3)
+                    ),
+                    "determinism": "The entire returned object, including measurements and "
+                    "scene, must replay exactly. Do not include elapsed wall-clock time; "
+                    "the supervisor records runtime in execution.json separately.",
                     "seed": "Use the seed argument for all randomness. Accept every integer "
                     "from 0 through 2**32-1, including sanity/replay seeds. Never hardcode or "
                     "validate against a planner-authored list of seeds in parameter prose.",
@@ -497,8 +514,8 @@ def run_repository(
                 save()
             decision_started = time.monotonic()
             decision = ask(
-                prefix + "/decision",
-                "repository_evaluator",
+                prefix + ("/assessment" if scorer else "/decision"),
+                "repository_assessor" if scorer else "repository_evaluator",
                 {
                     "plan": plan.model_dump(),
                     "current_treatment": treatment,
@@ -517,6 +534,24 @@ def run_repository(
                 RepositoryDecision,
                 [prefix + "/experiment"],
             )
+            if scorer:
+                check()
+                if progress:
+                    progress("AnyJev decision-only evaluation")
+                state = decision_state(
+                    plan,
+                    treatment,
+                    summary,
+                    decision,
+                    {
+                        "rounds": config.max_rounds - number,
+                        "simulations": config.max_simulations - report["computed_simulations"],
+                        "jobs_per_round": len(jobs),
+                    },
+                )
+                with store.stage(prefix + "/decision", parents=[prefix + "/assessment"]):
+                    decision = evaluate(scorer, store, prefix, state)
+                    store.write(prefix + "/decision.json", decision.model_dump())
             report["acceleration"]["observed_decision_seconds"].append(
                 time.monotonic() - decision_started
             )
@@ -539,10 +574,18 @@ def run_repository(
                 status="budget_exhausted",
                 reason="Finite iteration budget reached; proposed next step remains unexecuted.",
             )
-    except (AgentUnavailable, AgentBudgetExceeded) as exc:
+    except DecisionAbstained:
+        report.update(
+            status="research_stopped",
+            reason="AnyJev evaluation abstained because "
+            "option weights were ambiguous; evidence retained for review.",
+        )
+    except AgentBudgetExceeded:
+        report.update(status="budget_exhausted", reason="Agent or decision call budget exhausted.")
+    except AgentUnavailable as exc:
         report.update(
             status="blocked_live_backend",
-            reason=f"Omnigent request stopped ({type(exc).__name__}).",
+            reason=f"Required Omnigent or AnyJev runtime stopped ({type(exc).__name__}).",
         )
     except (TimeoutError, KeyboardInterrupt):
         report.update(status="interrupted", reason="Run interrupted or time limit reached.")
@@ -554,8 +597,12 @@ def run_repository(
             reason=f"Repository workflow failed ({type(exc).__name__}): {message[:300]}",
         )
     finally:
-        if roles:
-            roles.close()
+        try:
+            if scorer:
+                scorer.close()
+        finally:
+            if roles:
+                roles.close()
         if report["status"] in {"research_stopped", "budget_exhausted"} and report["rounds"]:
             last = report["rounds"][-1]
             if last.get("next_decision"):

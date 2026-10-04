@@ -16,6 +16,8 @@ ROLE_LABELS = {
     "repository_planner": "Experiment planner",
     "repository_experimenter": "Experimenter",
     "repository_evaluator": "Evaluator",
+    "repository_assessor": "Researcher result assessment",
+    "decision": "AnyJev evaluator",
     "researcher": "Paper researcher",
     "reader": "Reader",
     "consolidator": "Critic / consolidator",

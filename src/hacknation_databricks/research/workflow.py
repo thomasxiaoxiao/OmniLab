@@ -15,7 +15,10 @@ def run_research(
     retrieval_report=None,
 ):
     config = config or RunConfig(
-        workflow="repository", domain="auto", allow_paper_implementation=True
+        workflow="repository",
+        domain="auto",
+        allow_paper_implementation=True,
+        decision_backend="anyjev",
     )
     if config.workflow != "repository":
         raise ValueError(

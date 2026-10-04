@@ -94,11 +94,16 @@ def render_repository_result(journal):
                 f"{summary['units']}."
             )
         decision = row.get("next_decision", {})
+        assessment = saved_json(journal, row["artifact_prefix"] + "/assessment.json")
         ui.markdown("**What changed**")
         ui.write(
             decision.get("result_interpretation", "The evaluator has not returned a decision yet.")
         )
         ui.markdown("**Why the agents continued or stopped**")
+        if assessment:
+            ui.caption("Researcher interpretation and proposal · Codex through Omnigent")
+            ui.write(assessment["rationale"])
+            ui.caption("Final action · decision-only AnyJev evaluator")
         ui.write(decision.get("rationale", "Awaiting the evaluator."))
         ui.markdown("**Next experiment**")
         ui.write(decision.get("next_experiment", "Awaiting the evaluator."))
@@ -165,6 +170,10 @@ def render_repository_result(journal):
                 ui.markdown(f"**{name}**")
                 ui.json(value, expanded=False)
         if row and row.get("next_decision"):
+            assessment = saved_json(journal, row["artifact_prefix"] + "/assessment.json")
+            if assessment:
+                ui.markdown("**Researcher's assessment and proposal**")
+                ui.json(assessment, expanded=False)
             ui.markdown("**Evaluator's full decision**")
             ui.json(row["next_decision"], expanded=False)
         ui.caption(

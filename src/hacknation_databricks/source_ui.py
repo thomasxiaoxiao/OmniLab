@@ -49,7 +49,7 @@ def render_source_progress() -> None:
 
 def render_sources() -> None:
     ui.caption(
-        "Drag and drop a paper to add it to the selector above. "
+        "Drag and drop a paper to add it to Your papers. "
         "Originals and provenance stay with its run."
     )
     for level, message in ui.session_state.pop("intake_messages", []):

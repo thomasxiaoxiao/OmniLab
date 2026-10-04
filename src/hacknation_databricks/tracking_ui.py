@@ -70,6 +70,17 @@ def scope_runs_to_source():
     ui.session_state.pop("selected_literature_paths", None)
 
 
+def switch_paper_collection():
+    examples = seed_examples()
+    sources = (
+        examples
+        if ui.session_state.get("paper_collection") == "Example papers"
+        else {label: path for label, path in available_sources().items() if label not in examples}
+    )
+    ui.session_state["paper_source"] = next(iter(sources), None)
+    scope_runs_to_source()
+
+
 def runs_for_source(runs, digest):
     if not digest:
         return runs
@@ -316,6 +327,11 @@ def render_sidebar() -> Path | None:
             ),
             None,
         )
+        ui.session_state["paper_collection"] = (
+            "Example papers"
+            if ui.session_state["paper_source"] in seed_examples()
+            else "Your papers"
+        )
         scope_runs_to_source()
     with ui.sidebar:
         markup('<div class="brand"><b>◈</b> OmniLab</div>')
@@ -363,18 +379,32 @@ def render_run_setup() -> None:
         _, issues = source_library(source_root())
         for issue in issues:
             ui.warning(issue)
-        sources = available_sources()
+        examples = seed_examples()
+        all_sources = available_sources()
+        collection = ui.segmented_control(
+            "Paper collection",
+            ["Example papers", "Your papers"],
+            default="Example papers" if examples else "Your papers",
+            key="paper_collection",
+            on_change=switch_paper_collection,
+        )
+        sources = (
+            examples
+            if collection == "Example papers"
+            else {label: path for label, path in all_sources.items() if label not in examples}
+        )
         if ui.session_state.get("paper_source") not in sources:
             ui.session_state.pop("paper_source", None)
         source = ui.selectbox(
             "Paper", list(sources), key="paper_source", on_change=scope_runs_to_source
         )
-        ui.caption("Choose Percolation or AstroSat, or add your own paper below.")
+        ui.caption("Choose an example paper or add your own.")
         render_sources()
         if source:
             ui.session_state["selected_seed_path"] = str(sources[source].resolve())
         else:
             ui.session_state.pop("selected_seed_path", None)
+            ui.session_state.pop("source_scope_sha256", None)
         # Discard removed picker state so references cannot carry across papers.
         ui.session_state.pop("selected_literature_paths", None)
         from hacknation_databricks.research.repository_source import repository_links
@@ -402,11 +432,13 @@ def render_run_setup() -> None:
         )
         backend = "omnigent"
         ui.markdown("**Researcher agent:** Codex + Omnigent")
-        ui.markdown("**Experimenter and evaluator:** Codex + Omnigent")
+        ui.markdown("**Experimenter:** Codex + Omnigent")
+        ui.markdown("**Evaluator:** Decision-only model via AnyJev")
         ui.caption(
             "Specialists read the paper and any supplied code, critique directions, "
             "compare tests, generate and run an experiment, "
-            "and use its measurements to choose the next test."
+            "and propose the next test. AnyJev evaluates the measurements and selects "
+            "a bounded next action with zero generated tokens."
         )
         ready = source is not None
         if not ready:
@@ -460,12 +492,12 @@ def render_run_setup() -> None:
             "Control and proposed runs share seeds. Each experiment gets new seeds. "
             "Reader and literature researcher work concurrently, then hand their findings "
             "to the critic. One reviewed direction proceeds through bounded experiments; "
-            "the evaluator explains every continuation or stop."
+            "the researcher records its reasoning and AnyJev selects continuation or stop."
         )
         overrides = {
             "workflow": "repository",
             "allow_paper_implementation": True,
-            "decision_backend": "codex",
+            "decision_backend": "anyjev",
             "repository_url": repository_url.strip(),
             "repository_ref": repository_ref.strip(),
             "max_rounds": rounds,
@@ -796,8 +828,9 @@ def render_environment(journal: Journal) -> None:
         )
         ui.write(
             "This interface uses state, closed choices, evidence and code-controlled gates. "
-            "Omnigent runs parallel researchers and a decision agent. The optional AnyJev "
-            "backend records local option weights; these are not calibrated confidence."
+            "Omnigent runs research and experimenter sessions. AnyJev evaluates bounded "
+            "next actions with a decision-only model. Its local option weights are not "
+            "calibrated confidence. Historical runs retain their recorded backends."
         )
     ui.markdown("**Registered source evidence**")
     for source in journal.sources:

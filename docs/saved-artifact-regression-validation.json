@@ -1,0 +1,85 @@
+{
+  "recorded_at": "2026-10-04T07:21:57.038731+00:00",
+  "scope": "User-requested post-deadline regression repair; zero new agent/model calls; no deployment or archive rewrite.",
+  "causes": [
+    "Initial AstroSat Python responses were 19,279 and 16,988 characters; Percolation responses were 18,981 and 20,081. All exceeded the then-16,000-character schema. Main already raised the limit to 64,000 before this repair; regression coverage now exercises code above the old limit and rejects code above the current one.",
+    "AstroSat retry differed only at measurements.elapsed_seconds: 0.13204975001281127 versus 0.1357692499877885. The numerical outputs and recorded scenes matched.",
+    "Percolation retry reached execution with 19.301 seconds remaining, then timed out. A separate 120-second local check also timed out; the original workload is not validated as feasible.",
+    "Generated implementation.json contains code, while the old UI expected a source manifest. The source-bound file list is in code/provenance.json."
+  ],
+  "changes": [
+    "Display saved schema field and constraint, retained failures, recovered attempts, execution timeout and replay explanations.",
+    "Use generated code/provenance.json in the simulation inspector while preserving historical manifest support and source mismatch checks.",
+    "Compile-check Python before sandbox dispatch. Execute the paired baseline/replay first and reject differences before treatment; retain rejected outputs in execution stdout and preserve requested ordering on success.",
+    "Snapshot each returned JSON object to prevent mutable outputs changing earlier results; retain exact equality for all scientific and scene fields.",
+    "Record deterministic-output guidance, whole-batch time bounds and remaining time at the experimenter request; disable irrelevant repository call profiling only for paper-only implementations."
+  ],
+  "validation": {
+    "full_suite": "288 passed including real OS sandbox probes",
+    "final_targeted_suite": "48 passed",
+    "frontend_check": "passed",
+    "build": "passed with existing bundle size/directive warnings",
+    "ruff": "passed",
+    "original_archive_integrity": {
+      "output/research/20261004T0654-astrosat": [],
+      "output/research/20261004T0700-percolation": [],
+      "output/research/20261004T0700-astrosat": [],
+      "output/research/20261004T0654-percolation": []
+    }
+  },
+  "local_checks": {
+    "astrosat": {
+      "new_model_calls": 0,
+      "repairs": [
+        "Replace nondeterministic wall-clock measurement with execution metadata reference; numerical code and parameters unchanged."
+      ],
+      "source_run": "output/research/20261004T0700-astrosat",
+      "status": "passed",
+      "summary": {
+        "control_mean": 0.0,
+        "difference": 0.0,
+        "interval": [
+          0.0,
+          0.0
+        ],
+        "interval_method": "Paired-seed Student t interval, 95%; exploratory, no sequential or multiple-testing correction.",
+        "meaningful_difference": 0.01,
+        "metric": "Missed reference crossings",
+        "proposed_mean": 0.0,
+        "replay_passed": true,
+        "samples_per_arm": 8,
+        "sanity_passed": true,
+        "units": "fraction of all reference crossings"
+      },
+      "execution_seconds": 1.759351541986689,
+      "jobs_requested": 18,
+      "sandbox": "darwin_seatbelt",
+      "artifacts": "output/simulation-regression/seatbelt/astrosat",
+      "integrity_failures": [],
+      "scene_validation": {
+        "valid_scenes": 18,
+        "missing_scenes": 0
+      }
+    },
+    "percolation": {
+      "new_model_calls": 0,
+      "reason": "Sandbox execution failed (timeout); see saved execution.json",
+      "repairs": [],
+      "source_run": "output/research/20261004T0700-percolation",
+      "status": "failed",
+      "execution_seconds": 120.07139841699973,
+      "jobs_requested": 10,
+      "sandbox": "darwin_seatbelt",
+      "artifacts": "output/simulation-regression/seatbelt/percolation",
+      "integrity_failures": []
+    }
+  },
+  "reproduce_tests": "RUN_SANDBOX_TESTS=1 .venv/bin/pytest tests/test_repository_execution.py tests/test_execution_inspector.py -q",
+  "local_check_script": "output/simulation-regression/check-seatbelt.py (select a fresh output root before repeating; RunStore forbids overwrite)",
+  "limitations": [
+    "Percolation full batch still exceeds 120 seconds. Requires a measured feasible workload or explicitly revised time budget before a new agent run.",
+    "Corrected AstroSat is local validation of saved code, not a new completed Omnigent workflow. Both arms measured zero missed crossings; this is not scientific validation or a discovery claim.",
+    "Original attempts retain failed status. Full source/domain review remains required before real-world use.",
+    "Changes are local; no pull request, deployment or new live run performed."
+  ]
+}
