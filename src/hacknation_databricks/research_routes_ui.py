@@ -24,6 +24,8 @@ def route_ledger(journal):
         branch = branches.get(identity, {})
         if critique.get("decision") == "reject":
             status = "Rejected before execution"
+        elif critique.get("decision") == "defer":
+            status = "Deferred before execution"
         elif repository and identity == selected:
             status = (
                 "Executed"
@@ -81,7 +83,7 @@ def render_research_routes(journal):
     for route in routes:
         with ui.expander(f"{route['title']} · {route['status']}"):
             ui.write(route["hypothesis"])
-            ui.markdown("**Why this route was accepted or rejected**")
+            ui.markdown("**Why this route was accepted, deferred or rejected**")
             ui.write(route["rationale"])
             for risk in route["risks"]:
                 ui.write(f"Limitation: {risk}")

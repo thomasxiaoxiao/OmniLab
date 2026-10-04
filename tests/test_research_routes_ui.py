@@ -1,5 +1,6 @@
 from copy import deepcopy
 
+import pytest
 from test_repository_execution import RepositoryRoles, make_repository_run
 from view_test import ViewTest
 
@@ -8,7 +9,10 @@ from hacknation_databricks.research_routes_ui import route_ledger
 from hacknation_databricks.tracking import load_journal
 
 
-def test_routes_keep_rejected_and_unselected_ideas_and_full_stop_reason(tmp_path):
+@pytest.mark.parametrize("unselected_decision", ["reject", "defer"])
+def test_routes_keep_rejected_and_unselected_ideas_and_full_stop_reason(
+    tmp_path, unselected_decision
+):
     interpretation = "The measured effect remains limited to this numerical model. " * 12
     reason = "Stop because further treatment changes cannot resolve missing external evidence. " * 8
 
@@ -22,7 +26,10 @@ def test_routes_keep_rejected_and_unselected_ideas_and_full_stop_reason(tmp_path
                     candidate.title = identity.capitalize() + " direction"
                     value.directions.append(candidate)
             if role == "repository_critic":
-                for identity, decision in [("secondary", "accept"), ("unsupported", "reject")]:
+                for identity, decision in [
+                    ("secondary", "accept"),
+                    ("unsupported", unselected_decision),
+                ]:
                     critique = deepcopy(value.critiques[0])
                     critique.proposal_id, critique.decision = identity, decision
                     value.critiques.append(critique)
@@ -37,7 +44,11 @@ def test_routes_keep_rejected_and_unselected_ideas_and_full_stop_reason(tmp_path
     routes = {r["id"]: r for r in route_ledger(journal)}
     assert routes["decay"]["status"] == "Executed"
     assert routes["secondary"]["status"] == "Accepted · not selected"
-    assert routes["unsupported"]["status"] == "Rejected before execution"
+    assert routes["unsupported"]["status"] == (
+        "Rejected before execution"
+        if unselected_decision == "reject"
+        else "Deferred before execution"
+    )
     app = ViewTest.from_function(render_repository_result, args=(journal,)).run()
     assert not app.exception
     texts = [n.value for n in app.markdown]
