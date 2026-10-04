@@ -17,6 +17,7 @@ from hacknation_databricks.research.intake import source_root
 from hacknation_databricks.research.models import RunConfig
 from hacknation_databricks.research.sources import read_source
 from hacknation_databricks.research.workflow import run_research
+from hacknation_databricks.seed_catalog import seed_examples
 from hacknation_databricks.source_cache import source_library
 from hacknation_databricks.tracking import (
     POLICY_VERSION,
@@ -50,12 +51,21 @@ def run_root() -> Path:
 
 def available_sources() -> dict[str, Path]:
     registered, _ = source_library(source_root())
-    return {f"{source.title} · {source.sha256[:8]}": Path(source.path) for source in registered}
+    return {
+        **{f"{source.title} · {source.sha256[:8]}": Path(source.path) for source in registered},
+        **seed_examples(),
+    }
 
 
 def scope_runs_to_source():
     """An explicit paper change must not leave another paper's run selected."""
-    source = available_sources().get(ui.session_state.get("seed_source"))
+    source = available_sources().get(
+        ui.session_state.get(
+            "uploaded_source"
+            if ui.session_state.get("paper_input_mode") == "Uploaded paper"
+            else "seed_source"
+        )
+    )
     if source is not None:
         ui.session_state["source_scope_sha256"] = hashlib.sha256(source.read_bytes()).hexdigest()
         ui.session_state["selected_seed_path"] = str(source.resolve())
@@ -163,6 +173,7 @@ def launch_run(
             "goal_max_interval_width",
             "workflow",
             "decision_backend",
+            "allow_paper_implementation",
             "repository_url",
             "repository_ref",
             "code_timeout_seconds",
@@ -298,7 +309,8 @@ def render_sidebar() -> Path | None:
     """Run context only; intake and launch controls live on their own page."""
     imported = ui.session_state.pop("intake_selected", None)
     if imported:
-        ui.session_state["seed_source"] = next(
+        ui.session_state["paper_input_mode"] = "Uploaded paper"
+        ui.session_state["uploaded_source"] = next(
             (
                 label
                 for label, path in available_sources().items()
@@ -356,31 +368,52 @@ def render_run_setup() -> None:
         for issue in issues:
             ui.warning(issue)
         sources = available_sources()
-        if ui.session_state.get("seed_source") not in sources:
-            ui.session_state.pop("seed_source", None)
-        if "seed_source" not in ui.session_state:
-            saved = ui.session_state.get("selected_seed_path")
-            ui.session_state["seed_source"] = next(
-                (label for label, path in sources.items() if str(path.resolve()) == saved),
-                next(iter(sources), None),
-            )
-        source = ui.selectbox(
-            "Seed paper", list(sources), key="seed_source", on_change=scope_runs_to_source
+        examples = seed_examples()
+        mode = ui.selectbox(
+            "Paper source",
+            ["Seed example", "Uploaded paper"],
+            index=0 if examples else 1,
+            key="paper_input_mode",
+            on_change=scope_runs_to_source,
         )
+        if ui.session_state.get("seed_source") not in examples:
+            ui.session_state.pop("seed_source", None)
+        example = ui.selectbox(
+            "Seed paper",
+            list(examples),
+            key="seed_source",
+            on_change=scope_runs_to_source,
+            disabled=mode != "Seed example",
+        )
+        ui.caption("Seed examples are limited to Percolation and AstroSat. Uploads stay separate.")
+        if mode == "Uploaded paper":
+            uploads = {label: path for label, path in sources.items() if label not in examples}
+            if ui.session_state.get("uploaded_source") not in uploads:
+                ui.session_state.pop("uploaded_source", None)
+            source = ui.selectbox(
+                "Uploaded paper",
+                list(uploads),
+                key="uploaded_source",
+                on_change=scope_runs_to_source,
+            )
+        else:
+            source = example
         if source:
             ui.session_state["selected_seed_path"] = str(sources[source].resolve())
+        else:
+            ui.session_state.pop("selected_seed_path", None)
         # Discard removed picker state so references cannot carry across papers.
         ui.session_state.pop("selected_literature_paths", None)
         from hacknation_databricks.research.repository_source import repository_links
 
         links = repository_links(read_source(sources[source])) if source else {}
         repository_url = ui.text_input(
-            "Paper's GitHub repository",
+            "Paper's GitHub repository (optional)",
             value=next(iter(links)) if len(links) == 1 else "",
             key=f"repository-url-{source}",
             placeholder="https://github.com/owner/repository",
             help="Use the implementation cited by the paper, or supply a related "
-            "repository explicitly.",
+            "repository explicitly. Leave blank to implement a scoped test from the paper.",
         )
         repository_ref = ui.text_input(
             "Repository version",
@@ -398,12 +431,19 @@ def render_run_setup() -> None:
         ui.markdown("**Researcher agent:** Codex + Omnigent")
         ui.markdown("**Experimenter and evaluator:** Codex + Omnigent")
         ui.caption(
-            "Specialists read the paper and repository, generate an experiment, "
+            "Specialists read the paper and any supplied code, critique directions, "
+            "compare tests, generate and run an experiment, "
             "and use its measurements to choose the next test."
         )
-        ready = bool(sources) and bool(repository_url.strip())
-        if not sources:
+        ready = source is not None
+        if not ready:
             ui.info("Import a paper above to prepare a run.")
+        ui.caption(
+            "The run will use the linked repository. A failed retrieval stops the run."
+            if repository_url.strip()
+            else "No repository selected: agents will implement a scoped test from the paper. "
+            "They may stop if its evidence or required data cannot support a valid experiment."
+        )
         ui.caption(
             "Offline Python (standard library, NumPy, SciPy) and C17 code can run in "
             "Omnigent's OS sandbox. No network or package installation during experiments."
@@ -449,6 +489,7 @@ def render_run_setup() -> None:
         )
         overrides = {
             "workflow": "repository",
+            "allow_paper_implementation": True,
             "decision_backend": "codex",
             "repository_url": repository_url.strip(),
             "repository_ref": repository_ref.strip(),
@@ -863,7 +904,12 @@ def render_selected_run():
 
 def main() -> None:
     ui.title("Discovery overview")
-    ui.caption("Simulation, result, and next experiment.")
+    ui.write(
+        "Watch how the proposed experiment differs from the original control as the "
+        "simulation advances. Then read the measured result, what it changed in the agents’ "
+        "reasoning, and the next experiment they chose. The animation shows one recorded "
+        "sample per arm; the result summarizes the full test."
+    )
     render_selected_run()
 
 

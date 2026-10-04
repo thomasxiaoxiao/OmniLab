@@ -1,0 +1,29 @@
+{
+  "agent_timeout_seconds": 240,
+  "allow_paper_implementation": true,
+  "code_timeout_seconds": 60,
+  "decision_backend": "codex",
+  "domain": "auto",
+  "finite_size_tolerance": 0.12,
+  "goal_max_interval_width": 0.25,
+  "goal_min_batches": 2,
+  "max_agent_calls": 8,
+  "max_agent_retries": 1,
+  "max_decision_calls": 32,
+  "max_rounds": 2,
+  "max_seconds": 600,
+  "max_simulations": 1000,
+  "max_workers": 1,
+  "minimum_effect": 0.05,
+  "preferred_experiment": null,
+  "repository_ref": "HEAD",
+  "repository_url": "",
+  "research_areas": [],
+  "seed": 1600988201,
+  "sizes": [
+    8,
+    16
+  ],
+  "trials": 8,
+  "workflow": "repository"
+}

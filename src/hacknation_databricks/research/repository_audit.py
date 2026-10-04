@@ -5,7 +5,7 @@ import hashlib
 import json
 import re
 
-from .code_sandbox import SimulationSample
+from .code_sandbox import SimulationSample, paper_implementation
 from .models import RunConfig
 from .process_visualization import checked_process
 from .repository_models import RepositoryBrief, RepositoryPlan, RepositoryReview
@@ -57,6 +57,15 @@ def verify_repository_outputs(directory, report, artifacts):
                 raise ValueError("Experiment claim without results")
             return []
         manifest = read("repository/manifest.json")
+        paper_only = paper_implementation(manifest)
+        if paper_only and (
+            not config.allow_paper_implementation
+            or config.repository_url
+            or report.get("code_origin") != "paper_implementation"
+            or read("implementation.json")["repository_files"]
+            or read("implementation.json").get("c_repository_files")
+        ):
+            raise ValueError("Paper implementation lacks its explicit authorization or provenance")
         if manifest["source_sha256"] != sources[0].sha256:
             raise ValueError("Repository bound to another paper")
         for item in manifest["files"]:

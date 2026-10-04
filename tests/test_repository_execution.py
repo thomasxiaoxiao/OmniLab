@@ -399,7 +399,7 @@ def test_timeout_and_output_limit_kill_child(tmp_path):
     os.environ.get("RUN_SANDBOX_TESTS") != "1",
     reason="Real OS sandbox needs a host that permits sandbox activation",
 )
-@pytest.mark.parametrize("language", ["python", "c", "denials"])
+@pytest.mark.parametrize("language", ["python", "c", "denials", "paper"])
 def test_real_omnigent_sandbox(tmp_path, language, monkeypatch):
     monkeypatch.setenv("SANDBOX_TEST_SECRET", "harmless-env-canary")
     store = RunStore(tmp_path / "archive")
@@ -413,6 +413,20 @@ def test_real_omnigent_sandbox(tmp_path, language, monkeypatch):
         explanation="Use the repository's numerical kernel.",
         repository_files=["kernel.py"],
     )
+    if language == "paper":
+        manifest = {
+            "url": "",
+            "commit": "",
+            "files": [],
+            "origin": "paper_implementation",
+            "source_sha256": read_source(paper).sha256,
+        }
+        implementation = implementation.model_copy(
+            update={
+                "repository_files": [],
+                "python_code": DRIVER.replace("from kernel import advance", KERNEL),
+            }
+        )
     if language == "c":
         c_source = "double advance(double value, double rate) { return value*rate; }\n"
         store.write_text("repository/source/kernel.c", c_source)
@@ -587,3 +601,77 @@ def test_trajectory_units_can_differ_from_summary_metric(tmp_path):
     assert process["y_label"] == "state units"
     assert process["title"] == "Recorded state"
     assert not load_journal(output).issues
+
+
+class PaperRoles(RepositoryRoles):
+    def ask(self, role, payload, contract):
+        value = super().ask(role, payload, contract)
+        if role in {"repository_reader", "repository_experimenter"}:
+            value.repository_files = []
+        if role == "repository_experimenter":
+            value.python_code = DRIVER.replace("from kernel import advance", KERNEL)
+        return value
+
+
+@pytest.mark.parametrize("paper_link", ["", "\nCode: https://github.com/example/science"])
+def test_paper_only_loop_executes_all_roles_and_adapts_without_repository(tmp_path, paper_link):
+    paper = tmp_path / "paper.md"
+    paper.write_text(evidence()["quote"] + paper_link)
+    output = tmp_path / "run"
+    roles_seen = []
+
+    class RecordingPaperRoles(PaperRoles):
+        def ask(self, role, payload, contract):
+            roles_seen.append(role)
+            return super().ask(role, payload, contract)
+
+    def no_repository(*args):
+        pytest.fail("Paper-only experiment must not invent a repository")
+
+    report = run_repository(
+        read_source(paper),
+        output,
+        RunConfig(workflow="repository", allow_paper_implementation=True, max_rounds=2),
+        backend="fixture",
+        roles_factory=RecordingPaperRoles,
+        repository_fetcher=no_repository,
+        code_executor=fixture_execute,
+    )
+    assert report["status"] == "research_stopped", report
+    assert report["code_origin"] == "paper_implementation"
+    assert "repository" not in report
+    assert roles_seen == [
+        "repository_reader",
+        "repository_critic",
+        "repository_planner",
+        "repository_experimenter",
+        "repository_evaluator",
+        "repository_evaluator",
+    ]
+    assert report["rounds"][1]["treatment"] == {"rate": 0.8}
+    assert not verify_artifacts(output)
+    assert load_journal(output).verified
+
+
+def test_supplied_repository_failure_never_switches_to_paper_implementation(tmp_path):
+    paper = tmp_path / "paper.md"
+    paper.write_text(evidence()["quote"])
+
+    def unavailable(*args):
+        raise ValueError("Repository unavailable")
+
+    report = run_repository(
+        read_source(paper),
+        tmp_path / "run",
+        RunConfig(
+            workflow="repository",
+            allow_paper_implementation=True,
+            repository_url="https://github.com/example/science",
+        ),
+        backend="fixture",
+        roles_factory=PaperRoles,
+        repository_fetcher=unavailable,
+    )
+    assert report["status"] == "failed"
+    assert not report["rounds"]
+    assert report["role_calls"] == 0

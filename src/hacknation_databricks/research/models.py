@@ -13,6 +13,7 @@ class RunConfig(Contract):
     workflow: Literal["sequential", "adaptive", "repository"] = "sequential"
     decision_backend: Literal["codex", "anyjev"] = "codex"
     repository_url: str = Field(default="", max_length=300)
+    allow_paper_implementation: bool = False
     repository_ref: str = Field(default="HEAD", max_length=100)
     research_areas: list[str] = Field(default_factory=list, max_length=3)
     code_timeout_seconds: int = Field(default=60, ge=1, le=180)

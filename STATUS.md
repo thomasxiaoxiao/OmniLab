@@ -1,3 +1,56 @@
+# Seed intake and full uploaded-paper launch verified
+
+Updated October 3, 2026, 21:53 PDT; about 2 hours 14 minutes to hard stop
+and 14 minutes to feature freeze. Implementation and live validation are complete;
+final GitHub integration and preview restart are next.
+
+- Seed paper contains only pinned Percolation and AstroSat examples. Uploaded and
+  imported papers use a separate selector; selecting a valid upload enables launch.
+- A repository is optional for UI runs. The same Omnigent specialist workflow can
+  generate a paper-based implementation, with explicit provenance and unchanged
+  sandbox, numerical, budget and replay checks. Supplied repository failures still
+  stop; they never trigger another execution mode.
+- Live HTTP upload and launch of Percolation with no repository completed all five
+  specialist stages: 5 Omnigent sessions, 18 simulation jobs, 222.636 seconds.
+  Run: output/research/20261004T044804-332ed05f. Artifact verification passed and
+  independent archived-code replay matched with zero new model calls.
+- The measured contrast was inconclusive (0.04260; exploratory 95% interval
+  -0.08166 to 0.16686). The evaluator stopped and recommended more independent
+  paired samples. This is a scoped implementation check, not full reproduction.
+- Build, TypeScript/Prettier, Ruff, 264 standard tests and 4 real sandbox checks
+  passed. An additional repository-link-clearing case passed afterward (265 total
+  standard cases). Existing AstroSat/percolation archives still verify.
+- Discovery overview now explains what to watch: original/proposed trajectories,
+  measured result, changed reasoning and the next test. Viewing uses saved evidence.
+- Evidence: docs/paper-intake-validation.json. No task blocker; independent scientific
+  validation remains necessary before real-world use. Prior checkpoints follow.
+
+---
+
+# Omnigent runtime restored; uploaded PyBaMM paper verified
+
+Updated October 3, 2026, 21:39 PDT; about 2 hours 28 minutes to hard stop.
+Requested runtime recovery and paper connection verification are complete.
+
+- Omnigent port 6767 was unreachable; the server and host were absent from PM2.
+  Started both with scripts/research-runtime.sh as omnilab-omnigent-server and
+  omnilab-omnigent-host; saved the PM2 process list for existing startup recovery.
+- Runtime status confirms one online Codex-ready host and existing authentication.
+  Host identity is unchanged; .runtime/research.env records the working endpoint.
+- Latest uploaded Sulzer 2021 PyBaMM PDF is intact in data/sources/9b8917cc70b00d64a89bb040b0a041f37141084d203c47b37763ea66b1817b08/.
+  Source extraction verifies its checksum. All eight pages were sent through the
+  existing Omnigent adapter in one bounded request (120 seconds, no retries).
+- Live session 5bfb870e41454a669e5bd745fd4c8fcb completed and returned an exact
+  page-2 quotation identifying PyBaMM. Request, response, lifecycle events,
+  verification and reproduction script: output/runtime-checks/20261004T043517Z/.
+- This verifies local paper-to-agent connectivity, not a completed battery
+  experiment or scientific validation. No new research result is claimed.
+  Next: resume the desired bounded research run in the local app.
+- Separate Replit deployment still displays missing runtime/authentication and
+  disabled live calls; local recovery does not connect that remote deployment.
+
+---
+
 # Consolidation complete; local testing is live
 
 Updated October 3, 2026, 21:28 PDT; about 2 hours 39 minutes to hard stop

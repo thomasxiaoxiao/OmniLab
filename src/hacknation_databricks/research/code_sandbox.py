@@ -46,6 +46,29 @@ CODE_CAPABILITY = {
 }
 
 
+def paper_implementation(manifest):
+    """An explicit paper-only input has no repository identity or source files."""
+    if manifest.get("origin") != "paper_implementation":
+        return False
+    if manifest["url"] or manifest["commit"] or manifest["files"]:
+        raise ValueError("Paper implementation cannot claim a repository identity")
+    return True
+
+
+def code_capability(paper_only=False):
+    if not paper_only:
+        return CODE_CAPABILITY
+    return {
+        **CODE_CAPABILITY,
+        "libraries": CODE_CAPABILITY["libraries"][:-1],
+        "purpose": "Implement a scoped numerical experiment from the supplied paper's "
+        "equations or algorithm. There is no author repository in this run.",
+        "required": "Use only the supplied paper and supporting evidence; disclose assumptions "
+        "and omitted physics/data. Return actual changing process samples on a strictly "
+        "increasing time/step axis. No fabricated results or claims of author-code reproduction.",
+    }
+
+
 class SimulationSample(DataContract):
     metric: float
     times: list[float] = Field(min_length=2, max_length=120)
@@ -154,6 +177,9 @@ def execute_code(store, implementation, manifest, jobs, *, stage, timeout):
     """Never execute in the repository checkout or expose authentication to the child."""
     from omnigent.sandbox import get_backend
 
+    paper_only = paper_implementation(manifest)
+    if not paper_only and not implementation.repository_files:
+        raise ValueError("Repository experiments must use pinned source files")
     inventory = {item["path"]: item for item in manifest["files"]}
     for name in implementation.repository_files + implementation.c_repository_files:
         safe_repo_path(name)
@@ -216,7 +242,8 @@ def execute_code(store, implementation, manifest, jobs, *, stage, timeout):
             **execution,
             "backend": policy.backend_type,
             "omnigent_version": "0.16.0",
-            "capability": CODE_CAPABILITY,
+            "capability": code_capability(paper_only),
+            "code_origin": "paper_implementation" if paper_only else "repository",
             "jobs": jobs,
             "source_sha256": manifest["source_sha256"],
             "repository_commit": manifest["commit"],
@@ -238,8 +265,10 @@ def execute_code(store, implementation, manifest, jobs, *, stage, timeout):
                 raise ValueError("Simulation changed its parameters or seed")
             trial["output"] = SimulationSample.model_validate(trial["output"]).model_dump()
         observed = set(result["repository_calls"]) & set(implementation.repository_files)
-        if not observed and not (
-            implementation.c_repository_files and result["compiled_library_loaded"]
+        if (
+            not paper_only
+            and not observed
+            and not (implementation.c_repository_files and result["compiled_library_loaded"])
         ):
             raise ValueError("No use of the pinned repository implementation was observed")
         store.write(f"{stage}/trials.json", result)

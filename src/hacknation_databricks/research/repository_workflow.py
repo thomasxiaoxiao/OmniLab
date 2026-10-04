@@ -12,7 +12,7 @@ from scipy.stats import t
 from .agents import AgentBudgetExceeded, AgentUnavailable, OmnigentRoles
 from .artifacts import RunStore, canonical, environment
 from .code_archive import archive_framework
-from .code_sandbox import CODE_CAPABILITY, execute_code
+from .code_sandbox import code_capability, execute_code
 from .process_player import process_html
 from .process_visualization import checked_process
 from .repository_models import (
@@ -116,7 +116,9 @@ def process_from_trials(result, plan, *, provenance, artifact):
     return checked_process(
         {
             "title": plan.trajectory_label or plan.metric,
-            "description": "Recorded process samples from the pinned repository experiment.",
+            "description": "Recorded process samples from a paper-based implementation."
+            if not provenance["repository_url"]
+            else "Recorded process samples from the pinned repository experiment.",
             "x_label": "Recorded time / simulation step",
             "y_label": trajectory_units,
             "timeline_label": "Recorded time / simulation step",
@@ -273,7 +275,7 @@ def run_repository(
     store.write("config.json", config.model_dump())
     store.write("environment.json", environment())
     store.write("sources.json", [s.payload() for s in sources])
-    store.write("capability.json", CODE_CAPABILITY)
+    store.write("capability.json", code_capability())
     archive_framework(output)
     for item in sources:
         store.write_text(f"sources/{item.source_id}.txt", "\n\f\n".join(item.pages))
@@ -285,8 +287,10 @@ def run_repository(
     try:
         check()
         links = repository_links(source)
-        url = config.repository_url or (next(iter(links)) if len(links) == 1 else "")
-        if not url:
+        url = config.repository_url or (
+            next(iter(links)) if len(links) == 1 and not config.allow_paper_implementation else ""
+        )
+        if not url and not config.allow_paper_implementation:
             report.update(
                 status="repository_required",
                 reason="Supply the paper's GitHub repository. No unique repository link "
@@ -294,8 +298,22 @@ def run_repository(
             )
             return report
         with store.stage("repository", parents=[]):
-            manifest = repository_fetcher(source, url, config.repository_ref, store)
-            report["repository"] = {k: v for k, v in manifest.items() if k != "files"}
+            if url:
+                manifest = repository_fetcher(source, url, config.repository_ref, store)
+                report["repository"] = {k: v for k, v in manifest.items() if k != "files"}
+                report["code_origin"] = "repository"
+            else:
+                manifest = {
+                    "url": "",
+                    "commit": "",
+                    "files": [],
+                    "source_sha256": source.sha256,
+                    "origin": "paper_implementation",
+                }
+                store.write("repository/manifest.json", manifest)
+                report["code_origin"] = "paper_implementation"
+        paper_only = report["code_origin"] == "paper_implementation"
+        store.write("capability.json", code_capability(paper_only))
         roles = (roles_factory or OmnigentRoles)(sources, store, config)
         if isinstance(roles, OmnigentRoles):
             roles.deadline = min(roles.deadline, deadline)
@@ -304,7 +322,8 @@ def run_repository(
             "literature": [s.payload() for s in sources[1:]],
             "repository": manifest,
             "research_areas": config.research_areas,
-            "capability": CODE_CAPABILITY,
+            "capability": code_capability(paper_only),
+            "code_origin": report["code_origin"],
         }
         brief, reader_stage = grounded(
             "reader",
@@ -316,6 +335,8 @@ def run_repository(
             [source],
         )
         report["proposals"] = [d.model_dump() for d in brief.directions]
+        if not paper_only and not brief.repository_files:
+            raise ValueError("Repository reader must select source files")
         code = read_repository_files(store, manifest, brief.repository_files)
         store.write(
             "repository/read_files.json",
@@ -404,6 +425,8 @@ def run_repository(
             RepositoryImplementation,
             ["planner"],
         )
+        if not paper_only and not implementation.repository_files:
+            raise ValueError("Repository implementation must use selected source files")
         if not set(implementation.repository_files).issubset(code):
             raise ValueError("Implementation references unread repository files")
         if not set(implementation.c_repository_files).issubset(code):
@@ -421,7 +444,9 @@ def run_repository(
                     *(["code/experiment.c"] if implementation.c_code else []),
                 ],
                 "repository_files": implementation.repository_files,
-                "origin": "Omnigent experimenter generated from pinned repository source",
+                "origin": "Omnigent experimenter implemented from paper evidence"
+                if paper_only
+                else "Omnigent experimenter generated from pinned repository source",
             },
         )
         replicates = next(t.replicates for t in plan.tests if t.id == plan.selected_test_id)

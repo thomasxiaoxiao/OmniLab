@@ -7,12 +7,33 @@ and the next experiment. Evidence and audit details are expandable.
 
 ## Inputs and specialist handoffs
 
-Supply a PDF/Markdown paper and a public `https://github.com/owner/repository` URL.
+Supply a PDF/Markdown paper. The UI's seed menu is fixed to Percolation and AstroSat;
+other uploads/imports remain in the separate Uploaded paper selector. A validated
+paper enables Start bounded run even with no repository URL.
+
+A public `https://github.com/owner/repository` URL is optional in the UI. Without one,
+`allow_paper_implementation: true` explicitly authorizes the same Omnigent reader,
+critic/literature, planner, experimenter and evaluator loop to implement a scoped
+numerical test from the paper's equations or algorithm. Unsupported evidence,
+missing data, invalid contracts and failed experiments still stop honestly. No
+preset kernel or alternate decision backend replaces that process.
+
+Paper-based runs record `code_origin: paper_implementation`, an empty repository
+identity/inventory, original paper evidence, generated code, all sandbox trials,
+and evaluator handoffs. They retain identical sandbox, sanity, replay, budget and
+process checks, but do not require a call to author code that was never supplied.
+The UI labels that distinction. Repository-based runs still require observed use
+of pinned source; download failures never trigger paper-only execution.
+
+The UI prefills a unique paper repository link; clearing it selects a paper-based
+implementation. CLI configuration defaults retain repository-only behavior; the
+explicit flag permits paper-based implementation when no URL is configured.
+
 A unique GitHub link found in the extracted paper can fill the repository field.
 Otherwise the user supplies it. That distinction and the paper content hash are
 recorded; a supplied URL is not presented as an author endorsement. The selected
 project seed remains arXiv:2607.24975v1. No GitHub URL was found in its extracted
-text, so it needs an explicit code source for this workflow.
+text, so the UI uses a paper-based implementation unless a code source is supplied.
 
 GitHub intake resolves the requested branch/tag/ref to a commit, saves the original
 archive, and hashes every file. It rejects traversal, symbolic links, duplicate
@@ -207,3 +228,33 @@ Two-minute walkthrough after a run completes:
 4. **1:35–2:00:** Show artifact verification, exact code replay and earlier rounds
    in the audit history. State whether the hypothesis survived, not just whether
    the program ran. A failed run has no final highlight.
+
+
+## Uploaded-paper launch validation
+
+The [October 3 intake validation](paper-intake-validation.json) uploaded the pinned
+Percolation PDF through the running HTTP upload API, submitted Start bounded run
+without a repository, and verified redirection to the new agent workflow. All five
+Omnigent specialist stages completed in 222.636 seconds, executing 18 sandbox jobs
+(eight paired controls/treatments, sanity and replay). Archive verification passed;
+an independent code replay matched with zero model calls.
+
+The exploratory Manhattan-minus-L-lattice contrast was 0.04260 with a 95% paired
+interval of [-0.08166, 0.16686]. The evaluator stopped because this was inconclusive
+and recommended additional independent seed pairs. A completed workflow does not
+imply a supported hypothesis or force a second experiment.
+
+```bash
+# Start a new bounded live run (new model calls; use a fresh output directory).
+.venv/bin/research run --paper data/papers/2607.24975v1.pdf \
+  --config experiments/paper-intake-validation.json \
+  --output output/research/my-paper-intake-run
+# Inspect/replay the saved validation without new model calls.
+.venv/bin/research verify output/research/20261004T044804-332ed05f
+.venv/bin/research replay-code output/research/20261004T044804-332ed05f \
+  --output output/replays/my-paper-intake-replay
+```
+
+All valid uploads can initiate the workflow. Scientific feasibility remains an
+agent decision: unsupported data/dependencies, weak proposals, invalid evidence,
+failed measurements or finite budgets can stop a run with a recorded reason.

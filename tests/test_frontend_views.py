@@ -121,13 +121,13 @@ def test_navigation_preserves_run_and_seed_without_launching(tmp_path, monkeypat
     assert app.title[0].value == "Source intake"
     assert any(s.label == "Seed paper" for s in app.selectbox)
     app.switch_page("app_pages/sources.py").run()
-    picker = next(s for s in app.selectbox if s.label == "Seed paper")
+    picker = next(s for s in app.selectbox if s.label == "Uploaded paper")
     picker.select(next(v for v in picker.options if "chosen.md" in v)).run()
     assert app.session_state["selected_seed_path"] == str(Path(source.path).resolve())
     for page in ["agents", "overview", "evidence", "sources"]:
         app.switch_page(f"app_pages/{page}.py").run()
         assert not app.exception
-    assert "chosen.md" in next(s.value for s in app.selectbox if s.label == "Seed paper")
+    assert "chosen.md" in next(s.value for s in app.selectbox if s.label == "Uploaded paper")
     assert not (tmp_path / "runs").exists()
 
 

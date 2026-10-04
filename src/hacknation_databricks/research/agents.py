@@ -13,7 +13,7 @@ from .artifacts import RunStore, canonical
 from .models import Contract, RunConfig
 from .sources import Source
 
-PROMPT_VERSION = "research-v5-repository-scalar-or-v4-process"
+PROMPT_VERSION = "research-v5-paper-or-repository-scalar-or-v4-process"
 T = TypeVar("T", bound=Contract)
 
 
@@ -94,7 +94,7 @@ class OmnigentRoles(RoleBackend):
                     "builds the visualization from those recorded samples. Both arms share "
                     "times, with 2 to 120 strictly increasing points. Do not generate HTML "
                     "or a separate spatial-world artifact.",
-                    "scope": "Use a small test executable with the available repository code "
+                    "scope": "Use a small test from the supplied paper or repository code "
                     "and dependencies. Do not add endpoints that the output contract cannot "
                     "measure. A scalar numerical check is sufficient when explicitly scoped.",
                 }
@@ -322,13 +322,17 @@ ROLE_INSTRUCTIONS = {
     "repository_reader": "Read the submitted paper first. Extract up to three falsifiable "
     "directions with short exact page-local quotes from source_id seed ONLY. Supporting "
     "sources can inform feasibility and limitations but cannot be cited as seed-paper evidence. "
-    "Select repository_files from the supplied "
+    "When code_origin is paper_implementation, no repository exists: return repository_files "
+    "as [], identify implementable equations/algorithms and missing inputs in repository_fit, "
+    "and never invent author code. Otherwise select repository_files from the supplied "
     "inventory that contain the relevant numerical implementation and its API examples. "
     "The repository contents have not yet been read: do not invent its API. Prefer a few small "
     "source files (total <=80000 bytes). Explain whether the repository is linked by the paper "
     "or supplied by the user and retain version limitations. No preset simulation catalog exists.",
     "repository_critic": "Critique every supplied direction exactly once. Select an accepted "
-    "proposal only if the actual supplied repository code can test it within the offline Python/C "
+    "proposal only if the actual supplied repository code, or (when code_origin is "
+    "paper_implementation) the paper equations/algorithm with explicit assumptions, "
+    "can test it within the offline Python/C "
     "capability. Inspect the real code and dependencies. Isolating an unchanged numerical "
     "function/method from a larger module using Python ast is supported when excluded dependencies "
     "are not needed on the tested path; disclose that narrower scope. Do not fake missing physics. "
@@ -339,7 +343,10 @@ ROLE_INSTRUCTIONS = {
     "repository_planner": "Preserve the chosen proposal ID and hypothesis verbatim. Design two "
     "tests, screen and precision, with 4 to 32 paired-seed replicates "
     "each, never exceeding budget.trials, and choose within budget. "
-    "Use the actual supplied repository APIs. Define JSON baseline and treatment parameters, a "
+    "Use the actual supplied repository APIs. When code_origin is paper_implementation, "
+    "plan a new implementation of the paper equations/algorithm, disclose its limited scope, "
+    "and name the generated primary_module experiment; never invent repository APIs. "
+    "Define JSON baseline and treatment parameters, a "
     "measurable bounded scalar metric with a short human-readable label and units, "
     "plus trajectory_label and trajectory_units for the recorded values if different from the "
     "summary metric. Preserve fixed-width source inputs verbatim, including whitespace. Define "
@@ -356,6 +363,10 @@ ROLE_INSTRUCTIONS = {
     "(master_seed + round_number*1009 + replicate_index) modulo 2**32; do not invent another "
     "seed schedule. Do not claim full reproduction from a sanity check.",
     "repository_experimenter": "Implement the approved test using the supplied repository code. "
+    "When code_origin is paper_implementation, implement the approved paper-derived equations "
+    "or algorithm directly in python_code (and optional c_code), set repository_files and "
+    "c_repository_files to [], and disclose assumptions and deviations. There are no repository "
+    "imports in that mode; the repository-specific instructions below apply only when supplied. "
     "Return python_code defining simulate(parameters, seed, library) "
     "that returns a JSON-compatible "
     "dict with metric (finite float), times (2..120 increasing floats), and values (same length). "

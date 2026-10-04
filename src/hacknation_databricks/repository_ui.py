@@ -19,6 +19,10 @@ def brief(text, limit=360):
 def render_repository_result(journal):
     report = journal.report
     rounds = report.get("rounds", [])
+    if report.get("code_origin") == "paper_implementation":
+        ui.caption(
+            "This run builds its experiment from the paper. No author repository is supplied."
+        )
     row = final_experiment(report) if journal.sealed else None
     if row:
         envelope = saved_json(journal, row["artifact_prefix"] + "/process.json")
