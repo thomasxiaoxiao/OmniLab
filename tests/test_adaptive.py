@@ -294,7 +294,7 @@ def test_partial_parallel_ui_shows_goal_and_branch_handoffs(tmp_path, monkeypatc
     journal = load_journal(tmp_path / "run")
     nodes = load_activity(journal)
     assert any(n.parents == ["baseline"] for n in nodes if n.role in {"branch_planner", "planner"})
-    assert "Parallel research" in activity_svg(nodes)
+    assert "Evidence → specialist handoffs" in activity_svg(nodes)
 
     def preview(directory):
         from pathlib import Path

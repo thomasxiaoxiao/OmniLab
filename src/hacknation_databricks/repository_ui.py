@@ -6,6 +6,7 @@ from hacknation_databricks.web import components as ui
 
 from .research.process_player import process_html
 from .research.process_visualization import checked_process
+from .research_routes_ui import render_research_routes
 from .research_views import saved_json
 from .run_feedback_ui import render_run_outcome
 
@@ -71,8 +72,12 @@ def render_repository_result(journal):
                 f"across the displayed window (span {max(values) - min(values):.4g} "
                 f"{plan['trajectory_units']})."
             )
-        else:
-            ui.write(numerical_summary)
+        ui.write(numerical_summary)
+        ui.caption(
+            f"{summary['samples_per_arm']} paired seeds per arm · "
+            f"preregistered meaningful difference: {summary['meaningful_difference']:.4g} "
+            f"{summary['units']}."
+        )
         if summary["interval"][0] == summary["interval"][1]:
             ui.caption(
                 "Deterministic repeated result; these repetitions do not estimate uncertainty."
@@ -86,14 +91,21 @@ def render_repository_result(journal):
         decision = row.get("next_decision", {})
         ui.markdown("**What changed**")
         ui.write(
-            brief(
-                decision.get(
-                    "result_interpretation", "The evaluator has not returned a decision yet."
-                )
-            )
+            decision.get("result_interpretation", "The evaluator has not returned a decision yet.")
         )
+        ui.markdown("**Why the agents continued or stopped**")
+        ui.write(decision.get("rationale", "Awaiting the evaluator."))
         ui.markdown("**Next experiment**")
-        ui.write(brief(decision.get("next_experiment", "Awaiting the evaluator.")))
+        ui.write(decision.get("next_experiment", "Awaiting the evaluator."))
+        ui.markdown("**Research question & experimental design**")
+        reader = saved_json(journal, "approved_reader.json") or {}
+        ui.write(reader.get("research_question", plan.get("hypothesis", "")))
+        ui.write(plan.get("hypothesis", ""))
+        ui.write(plan.get("baseline_scope", ""))
+        ui.write(plan.get("controls", ""))
+        ui.markdown("**What remains uncertain**")
+        for limitation in decision.get("limitations", plan.get("limitations", [])):
+            ui.write(limitation)
         if decision:
             executed = any(r["round"] > row["round"] for r in rounds)
             ui.caption(
@@ -123,6 +135,7 @@ def render_repository_result(journal):
             "and an evaluator decision before a result is highlighted."
         )
     render_run_outcome(journal)
+    render_research_routes(journal)
     repository = report.get("repository", {})
     if repository:
         ui.caption(
@@ -132,6 +145,7 @@ def render_repository_result(journal):
     with ui.expander("Paper evidence, plan, and generated code"):
         for name in [
             "approved_reader.json",
+            "approved_literature.json",
             "approved_critic.json",
             "planner.json",
             "implementation.json",

@@ -13,7 +13,7 @@ paper enables Start bounded run even with no repository URL.
 
 A public `https://github.com/owner/repository` URL is optional in the UI. Without one,
 `allow_paper_implementation: true` explicitly authorizes the same Omnigent reader,
-critic/literature, planner, experimenter and evaluator loop to implement a scoped
+literature researcher, critic, planner, experimenter and evaluator loop to implement a scoped
 numerical test from the paper's equations or algorithm. Unsupported evidence,
 missing data, invalid contracts and failed experiments still stop honestly. No
 preset kernel or alternate decision backend replaces that process.
@@ -41,10 +41,17 @@ paths, archives over 12 MB compressed or 30 MB expanded, and more than 2,000 ent
 It does not install the repository or run its setup/build scripts. Original papers
 and repository licenses, when present, remain in the archive.
 
+The reader and literature researcher receive immutable source inputs and run
+concurrently (up to two workers, or serially when max_workers is one). The literature
+researcher assesses known results and missing evidence independently of proposal
+selection. Both validated outputs must complete before the critic starts. These
+are separate recorded Omnigent sessions; the global request and time budgets still
+apply, including repairs. Failure joins both workers before sealing partial results.
+
 The reader receives the complete bounded paper plus repository inventory and
 selects at most three directions and twelve files. Reading is limited to 80,000
 bytes, with an explicit error instead of silent truncation. The critic reads those
-files, checks feasibility and the supplied literature, and selects an accepted
+files, checks feasibility and the independent literature assessment, and selects an accepted
 direction. The planner preserves the hypothesis, compares screen and precision
 tests, and defines controls, a metric, bounds, a sanity expectation, tolerance and
 paired replicates before results exist. The experimenter generates code from the
@@ -53,6 +60,21 @@ treatment or stop. No predefined percolation or Astrosat kernel is dispatched.
 Reader/critic quotations must match the cited source page exactly; one recorded
 correction attempt is allowed within the same call/time budget. Repeated invalid
 evidence stops the run and remains available for inspection.
+
+The Agents page shows observed request concurrency (including runtime waits), a
+dependency graph, and a Routes & decisions tab. Every proposed direction remains
+visible with its critique, accepted/rejected/unselected status, exact supporting
+passages, both candidate tests, and the complete continuation/stop rationale at
+every experiment. v4 archives additionally retain every allocation checkpoint and
+its in-flight branches. A paused route or suggested next test is never labeled as
+executed. Discovery shows full interpretation, experimental scope and limitations.
+
+The player uses shared axes and a consistent cyan control / violet treatment /
+amber highlight palette, dark high-contrast cards, a grid, scrubbing and reduced-motion
+support. These are presentation changes to recorded data. v5 saves scalar samples,
+so it cannot honestly reconstruct spatial lattice frames. The earlier v4 lattice
+animations remain accessible in the run selector; previous runs are shown by default.
+No archived result or original playable export is rewritten.
 Malformed structured responses also get at most one correction per stage, with
 the schema errors saved and the additional session counted against the call
 budget. Failed experiments and numerical checks are never silently retried or

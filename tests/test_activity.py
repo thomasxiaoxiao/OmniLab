@@ -12,6 +12,36 @@ from hacknation_databricks.research.workflow import run_research
 from hacknation_databricks.tracking import load_journal
 
 
+def test_request_overlap_measures_intervals_not_dag_siblings():
+    from hacknation_databricks.research.activity import Activity, request_overlap
+
+    def request(identity, start, end):
+        start = f"2026-10-04T05:00:{start:02d}+00:00"
+        end = f"2026-10-04T05:00:{end:02d}+00:00"
+        return Activity(
+            identity,
+            identity,
+            0,
+            "omnigent",
+            start,
+            call_id=identity,
+            call_status="completed",
+            finished_at=end,
+            events=[{"event": "agent_call_started", "time": start}],
+        )
+
+    assert request_overlap([request("reader", 0, 10), request("literature", 5, 15)]) == {
+        "live": 0,
+        "peak": 2,
+        "overlap_seconds": 5.0,
+    }
+    assert request_overlap([request("reader", 0, 10), request("literature", 10, 15)]) == {
+        "live": 0,
+        "peak": 1,
+        "overlap_seconds": 0.0,
+    }
+
+
 def test_fixture_graph_has_no_invented_omnigent_sessions(tmp_path):
     run_fixture(
         read_source(fixture_source()), tmp_path / "run", RunConfig(sizes=[8, 16], trials=32)

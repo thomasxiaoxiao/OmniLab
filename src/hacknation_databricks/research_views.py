@@ -10,6 +10,12 @@ from hacknation_databricks.research.comparison import synthesis_dataset as synth
 from hacknation_databricks.tracking import Journal, read_artifact
 
 ROLE_LABELS = {
+    "repository_reader": "Paper reader",
+    "repository_literature": "Literature researcher",
+    "repository_critic": "Critic",
+    "repository_planner": "Experiment planner",
+    "repository_experimenter": "Experimenter",
+    "repository_evaluator": "Evaluator",
     "researcher": "Paper researcher",
     "reader": "Reader",
     "consolidator": "Critic / consolidator",

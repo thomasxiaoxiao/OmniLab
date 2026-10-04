@@ -2,9 +2,40 @@
 
 import json
 from dataclasses import asdict, dataclass, field
+from datetime import UTC, datetime
 from html import escape
 
 from hacknation_databricks.tracking import Journal, read_artifact
+
+
+def request_overlap(nodes, *, now=None):
+    """Measure overlapping recorded requests, not inferred model compute utilization."""
+    now = now or datetime.now(UTC).isoformat()
+    edges = []
+    live = 0
+    for node in nodes:
+        if node.kind != "omnigent" or not node.call_id:
+            continue
+        start = next((e["time"] for e in node.events if e["event"] == "agent_call_started"), None)
+        if not start:
+            continue
+        end = node.finished_at or now
+        edges.extend(
+            [
+                (datetime.fromisoformat(start).timestamp(), 1),
+                (datetime.fromisoformat(end).timestamp(), -1),
+            ]
+        )
+        live += node.call_status == "running"
+    active, peak, overlap = 0, 0, 0.0
+    previous = None
+    for stamp, delta in sorted(edges):
+        if previous is not None and active > 1:
+            overlap += stamp - previous
+        active += delta
+        peak = max(peak, active)
+        previous = stamp
+    return {"live": live, "peak": peak, "overlap_seconds": round(overlap, 3)}
 
 
 @dataclass
@@ -428,12 +459,12 @@ def parallel_svg(nodes, selected_key=None):
     height = 60 + len(levels) * 120
     parts = [
         f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {width} {height}" '
-        'role="img" aria-label="Parallel research branches and result-driven decision handoffs" '
+        'role="img" aria-label="Recorded research dependencies and decision handoffs" '
         'style="width:100%;height:auto;font-family:Arial,sans-serif">',
         '<defs><marker id="handoff" markerWidth="7" markerHeight="7" refX="6" refY="3.5" '
         'orient="auto"><path d="M0 0 L7 3.5 L0 7" fill="#6d929b"/></marker></defs>',
         f'<text x="{width / 2}" y="23" text-anchor="middle" font-size="17" '
-        'fill="#183640">Parallel research → partial results → decision → next batch</text>',
+        'fill="#183640">Evidence → specialist handoffs → experiments → decisions</text>',
     ]
     for level in levels:
         row = [n for n in nodes if depth[n.key] == level]

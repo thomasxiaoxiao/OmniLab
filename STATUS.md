@@ -1,3 +1,28 @@
+# Parallel specialist visibility and complete route decisions
+
+Updated October 3, 2026, 22:12 PDT; approximately 1 hour 55 minutes to hard stop.
+Feature freeze has arrived. Active task: verify the requested workflow/presentation
+corrections; no broad experimental-engine rewrite is planned.
+
+- Reader and independent literature researcher now share source inputs concurrently,
+  bounded by two workers and the existing request/time budgets. Both validated
+  handoffs must finish before critique; downstream experimental dependencies remain
+  sequential and only one selected direction executes in the v5 workflow.
+- Agents exposes observed request overlap and separate Live specialists, Routes &
+  decisions, and Artifacts tabs. Route history includes rejected/unselected ideas,
+  both candidate tests, every evaluator explanation and explicit stop outcomes.
+- Discovery displays full interpretations, controls, scope and limitations. The
+  trusted process player has a higher-contrast design; historical lattice views
+  remain available and previous runs are visible by default. Scalar v5 traces are
+  not represented as spatial reconstructions.
+- Focused tests validate concurrent workers, joined failures and route retention.
+  Full checks, browser inspection and a fresh live Omnigent run are in progress.
+  Next: record actual overlap and scientific outcome, finish checks and integrate.
+- Scientific limits: generated tests remain scoped numerical checks; scientific
+  novelty, full reproduction and acceleration multiplier are unverified.
+
+---
+
 # Seed intake and full uploaded-paper launch verified
 
 Updated October 3, 2026, 21:56 PDT; about 2 hours 11 minutes to hard stop

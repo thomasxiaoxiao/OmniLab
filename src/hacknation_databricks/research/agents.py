@@ -13,7 +13,7 @@ from .artifacts import RunStore, canonical
 from .models import Contract, RunConfig
 from .sources import Source
 
-PROMPT_VERSION = "research-v5-paper-or-repository-scalar-or-v4-process"
+PROMPT_VERSION = "research-v5-independent-literature-or-v4-process"
 T = TypeVar("T", bound=Contract)
 
 
@@ -319,6 +319,14 @@ class OmnigentRoles(RoleBackend):
 
 
 ROLE_INSTRUCTIONS = {
+    "repository_literature": "Independently inspect the supplied seed and supporting literature "
+    "while the reader extracts candidate directions. Identify established results, overlap, "
+    "feasibility constraints and missing evidence relevant to research_areas. Cite exact "
+    "page-local passages from the supplied sources. You have no live search tool: report the "
+    "actual retrieval and reading scope. If only the seed is available, explicitly say that "
+    "independent prior-art validation and novelty remain unverified. Do not choose a direction "
+    "or invent a missing repository. Your assessment is handed to the critic with the reader's "
+    "independent directions.",
     "repository_reader": "Read the submitted paper first. Extract up to three falsifiable "
     "directions with short exact page-local quotes from source_id seed ONLY. Supporting "
     "sources can inform feasibility and limitations but cannot be cited as seed-paper evidence. "

@@ -5,6 +5,7 @@ import io
 import os
 import stat
 import sys
+import threading
 import zipfile
 
 import pytest
@@ -85,6 +86,13 @@ class RepositoryRoles:
                 "repository_fit": "A small numerical decay kernel is supplied.",
                 "version_limitations": ["Test fixture"],
                 "repository_files": ["kernel.py"],
+            }
+        elif role == "repository_literature":
+            raw = {
+                "literature_assessment": "Only the supplied source was reviewed.",
+                "search_scope": "Supplied source only; no external search.",
+                "evidence": [evidence()],
+                "missing_evidence": ["Independent comparison"],
             }
         elif role == "repository_critic":
             raw = {
@@ -217,7 +225,47 @@ def test_repository_loop_changes_executed_parameters_and_seals_provenance(tmp_pa
     assert journal.verified, journal.issues
     from hacknation_databricks.research.activity import load_activity
 
-    assert len(load_activity(journal)) == 9
+    assert len(load_activity(journal)) == 10
+
+
+def test_independent_workers_overlap_and_critic_waits_for_both(tmp_path):
+    import json
+
+    barrier = threading.Barrier(2, timeout=5)
+
+    class ConcurrentRoles(RepositoryRoles):
+        def ask(self, role, payload, contract):
+            if role in {"repository_reader", "repository_literature"}:
+                barrier.wait()
+            elif role == "repository_critic":
+                assert payload["brief"]["directions"]
+                assert payload["independent_literature_review"]["evidence"]
+            return super().ask(role, payload, contract)
+
+    output, report = make_repository_run(tmp_path, roles_factory=ConcurrentRoles)
+    assert report["status"] == "research_stopped", report
+    events = [json.loads(line) for line in (output / "events.jsonl").read_text().splitlines()]
+    stages = [(e["event"], e["data"]) for e in events if e["event"].startswith("stage_")]
+    starts = {d["stage"]: i for i, (kind, d) in enumerate(stages) if kind == "stage_started"}
+    ends = {d["stage"]: i for i, (kind, d) in enumerate(stages) if kind == "stage_completed"}
+    assert max(starts["reader"], starts["literature"]) < min(ends["reader"], ends["literature"])
+    assert starts["critic"] > max(ends["reader"], ends["literature"])
+    assert set(stages[starts["critic"]][1]["parents"]) == {"reader", "literature"}
+    assert load_journal(output).verified
+
+
+def test_failed_reader_joins_literature_before_sealing(tmp_path):
+    class FailedReader(RepositoryRoles):
+        def ask(self, role, payload, contract):
+            if role == "repository_reader":
+                raise RuntimeError("Rejected reader fixture")
+            return super().ask(role, payload, contract)
+
+    output, report = make_repository_run(tmp_path, roles_factory=FailedReader)
+    assert report["status"] == "failed"
+    assert (output / "approved_literature.json").is_file()
+    assert not (output / "critic.json").exists()
+    assert load_journal(output).verified
 
 
 def test_process_provenance_ignores_parameter_dictionary_order(tmp_path):
@@ -277,7 +325,7 @@ def test_inexact_evidence_gets_one_recorded_repair(tmp_path, repair_succeeds):
         assert load_journal(output).verified
     else:
         assert report["status"] == "failed"
-        assert report["role_calls"] == 2
+        assert report["role_calls"] == 3
         assert not report["rounds"]
 
 
@@ -302,7 +350,7 @@ def test_structured_contract_gets_only_one_correction(tmp_path, repair_succeeds)
         assert load_journal(output).verified
     else:
         assert report["status"] == "failed"
-        assert report["role_calls"] == 4
+        assert report["role_calls"] == 5
         assert not report["rounds"]
 
 
@@ -640,8 +688,8 @@ def test_paper_only_loop_executes_all_roles_and_adapts_without_repository(tmp_pa
     assert report["status"] == "research_stopped", report
     assert report["code_origin"] == "paper_implementation"
     assert "repository" not in report
-    assert roles_seen == [
-        "repository_reader",
+    assert set(roles_seen[:2]) == {"repository_reader", "repository_literature"}
+    assert roles_seen[2:] == [
         "repository_critic",
         "repository_planner",
         "repository_experimenter",
