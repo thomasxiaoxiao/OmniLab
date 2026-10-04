@@ -280,3 +280,27 @@ imply a supported hypothesis or force a second experiment.
 All valid uploads can initiate the workflow. Scientific feasibility remains an
 agent decision: unsupported data/dependencies, weak proposals, invalid evidence,
 failed measurements or finite budgets can stop a run with a recorded reason.
+
+## Parallel specialist and route visibility validation
+
+The bounded uploaded-paper run `20261004T051223-523d4336` completed two experiments
+with seven Omnigent sessions and 36 sandbox jobs in 181.558 seconds. Reader and
+literature requests overlapped for 30.875 seconds; this includes runtime waits,
+not a measured acceleration multiplier. Both outputs preceded critique.
+
+The first result changed the next treatment from L=16 to L=32 against the fixed
+L=8 baseline. The evaluator then stopped at the two-experiment limit and proposed
+independent confirmation. Both candidate directions and both test options remain
+in the route ledger, including the accepted direction that was not executed.
+Final artifacts verify, and independent replay matched without model calls. See
+[the complete validation record](parallel-routes-validation.json).
+
+```sh
+uv run --locked python -m hacknation_databricks.research.cli verify output/research/20261004T051223-523d4336
+uv run --locked python -m hacknation_databricks.research.cli replay-code output/research/20261004T051223-523d4336 --output output/replays/my-parallel-replay
+```
+
+Choose `20261003T232809Z-percolation` in the run selector for the earlier spatial
+lattice demonstration. Its reconstructed frames use recorded seeds and the
+archived recipe; the view is not new statistical evidence. The v5 run above
+records scalar Monte Carlo running means, not lattice geometry.

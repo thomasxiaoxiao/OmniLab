@@ -1,25 +1,40 @@
-# Parallel specialist visibility and complete route decisions
+# Parallel specialists and complete route decisions verified
 
-Updated October 3, 2026, 22:12 PDT; approximately 1 hour 55 minutes to hard stop.
-Feature freeze has arrived. Active task: verify the requested workflow/presentation
-corrections; no broad experimental-engine rewrite is planned.
+Updated October 3, 2026, 22:16 PDT; approximately 1 hour 51 minutes to hard stop.
+Feature scope is frozen. Active task: finish CI-backed integration and local handoff.
 
-- Reader and independent literature researcher now share source inputs concurrently,
-  bounded by two workers and the existing request/time budgets. Both validated
-  handoffs must finish before critique; downstream experimental dependencies remain
-  sequential and only one selected direction executes in the v5 workflow.
-- Agents exposes observed request overlap and separate Live specialists, Routes &
-  decisions, and Artifacts tabs. Route history includes rejected/unselected ideas,
-  both candidate tests, every evaluator explanation and explicit stop outcomes.
-- Discovery displays full interpretations, controls, scope and limitations. The
-  trusted process player has a higher-contrast design; historical lattice views
-  remain available and previous runs are visible by default. Scalar v5 traces are
-  not represented as spatial reconstructions.
-- Focused tests validate concurrent workers, joined failures and route retention.
-  Full checks, browser inspection and a fresh live Omnigent run are in progress.
-  Next: record actual overlap and scientific outcome, finish checks and integrate.
-- Scientific limits: generated tests remain scoped numerical checks; scientific
-  novelty, full reproduction and acceleration multiplier are unverified.
+- Reader and independent literature researcher now run concurrently and hand both
+  validated outputs to the critic. The live uploaded-paper run recorded two
+  concurrent requests with 30.875 seconds of overlap, including runtime waits.
+  The v5 experimental loop still selects one reviewed direction; dependencies
+  after the independent reviews remain sequential.
+- Run output/research/20261004T051223-523d4336 completed 7 real Omnigent sessions,
+  2 generated-code experiments and 36 sandbox jobs in 181.558 seconds. Source:
+  Percolation, uploaded with no repository. Original bounds: 8 requests, 2 workers,
+  2 experiments, 600 seconds and 1000 simulation jobs. No fallback backend.
+- Round 1 tested L=16 against L=8. Its result prompted L=32 against the fixed L=8
+  baseline in round 2. Final difference was -0.11706 with exploratory 95% interval
+  [-0.16214, -0.07198]. The evaluator stopped at its two-round limit and recommended
+  independently validated confirmation. Quantitative scaling/exponent agreement,
+  universality, the alternative reversal hypothesis and novelty remain untested.
+- All artifacts verify. Independent archived-code replay of round 2 matched exactly,
+  with zero new model calls. Four earlier Percolation/AstroSat archives also verify.
+- Agents now shows measured request concurrency, a dependency graph, and separate
+  Routes & decisions and Artifacts tabs. Every rejected/deferred/unselected route,
+  candidate test, evaluator rationale and stop outcome remains inspectable. Full
+  results include experimental scope, controls, limitations and proposed next work.
+- Browser checks show the earlier lattice reconstruction in the redesigned player.
+  Previous runs are visible by default. Current generated experiments save scalar
+  trajectories; they are not mislabeled as spatial lattice reconstructions.
+- Local full checks passed (269 standard tests before the additional deferred-route
+  case); the two route cases pass. CI on 91ab189 passed the final 270-test suite,
+  frontend/build/Ruff checks; four optional platform sandbox probes remain skipped
+  in CI. Fresh live execution and replay exercised the real macOS sandbox.
+- Evidence: docs/parallel-routes-validation.json and experiments/parallel-routes-validation.json.
+  PR #8 is checked; final evidence commit and merge are next. No runtime blocker.
+  Scientific conclusions require independent numerical and domain validation before
+  real-world use; no comparable baseline establishes an acceleration multiplier.
+
 
 ---
 
