@@ -25,13 +25,15 @@ page = st.navigation(
                 title="Discovery overview",
                 icon=":material/science:",
             ),
-            st.Page("app_pages/agents.py", title="Agents & loops", icon=":material/account_tree:"),
             st.Page(
-                "app_pages/comparison.py",
-                title="Original → follow-up",
-                icon=":material/compare_arrows:",
+                "app_pages/agents.py",
+                title="Agents & execution loops",
+                icon=":material/account_tree:",
             ),
             st.Page("app_pages/synthesis.py", title="Final synthesis", icon=":material/insights:"),
+        ],
+        "Platform": [
+            st.Page("app_pages/policies.py", title="Omnigent & policies", icon=":material/policy:"),
         ],
         "Audit": [
             st.Page(

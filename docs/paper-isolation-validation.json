@@ -1,0 +1,28 @@
+{
+  "validation": "Paper-first isolation; not a completed discovery experiment",
+  "run": "output/validation/paper-isolation-20261004T0010",
+  "source_sha256": "250ba5d15d584ec56115cc9d45465a3df192b488cc6f4575adaba4ccbe71841e",
+  "source_pages": 32,
+  "status": "unsupported_source",
+  "role_calls": 2,
+  "completed_responses": 2,
+  "computed_simulations": 0,
+  "elapsed_seconds": 51.25,
+  "manifest_verified": true,
+  "handoff_audit_verified": true,
+  "first_prompt_has_no_preset_experiment_names": true,
+  "directions": [
+    "When distancing representations cease to be interchangeable",
+    "Sensitivity of rare-event uncertainty to dynamic rescaling",
+    "Regional mobility and importation risk"
+  ],
+  "sessions": [
+    "d6ab65167bd44fdeb00ee92bb8f9c615",
+    "0371364a3cf2432bb43a795b5e35022d"
+  ],
+  "limits": [
+    "No paper-specific epidemiological simulator implemented or executed.",
+    "No discovery-loop completion, scientific result or novelty is claimed.",
+    "Full source evidence and provenance remain in the local immutable run archive."
+  ]
+}

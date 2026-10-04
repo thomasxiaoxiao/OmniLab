@@ -1,36 +1,59 @@
-## Paper-first setup (October 3 update)
+# Paper-specific setup and isolation
 
-Source intake is the first and default navigation page. Its library and seed/literature
-pickers share one content-deduplicated list: the two supplied papers
-(2607.24975v1 and 2111.11268v1), explicitly imported documents, and an explicitly
-configured project source. Arbitrary cached PDFs and generic “Full paper” aliases
-are no longer included.
+Source intake has one seed-paper selection and local run controls. Related literature
+and Extracted text & provenance have been removed from setup. Source originals and
+provenance remain in each run's evidence vault. The UI passes no manually selected
+related sources; automatic retrieval follows only citations in the selected seed.
+The CLI still accepts explicit `--literature` inputs for reproducibility.
 
-There is no Research example selector. New Omnigent UI runs request automatic
-context: a specialist reads the full seed, returns its research question, summary,
-exact supporting passages and a supported tool family. The supervisor validates
-those passages before passing the context to downstream researchers. The original
-request is saved in `requested_config.json`; resolved settings remain in
-`config.json`, with `research_context.json` and the source-stage handoff as evidence.
-Unsupported papers stop before simulation and retain their context and reason.
-This does not add general-purpose experiment generation: executable tools remain
-bounded to the existing percolation and synthetic transit experiments. The auxiliary
-AnyJev path remains explicitly percolation-only; existing CLI configurations remain
-reproducible. Automatic citation retrieval still follows references in the selected
-paper and is separate from the built-in source choices.
+The library contains explicitly imported documents and `RESEARCH_PAPER_PATH` when
+configured. Cached example PDFs are not automatically inserted. An explicit source
+change filters the run selector by the seed's content hash, so another paper's
+artifacts cannot become the selected paper's results.
+
+For automatic-context runs, a paper reader derives source-specific questions and
+up to three directions before any implementation catalog, preset metric or domain
+is supplied. Its `PaperBrief` contract contains no example identifiers. Related
+source readers receive the seed question and their own source only. Their findings
+are saved in `paper_briefs.json`, including unsupported directions.
+
+A separate capability assessment and implementation mapper then check whether an
+existing numerical implementation can answer an unchanged direction. The supervisor
+rejects changes to the direction's title, hypothesis, origin, or supporting evidence.
+If no implementation fits, the run retains its paper-specific findings and stops;
+it never substitutes an example or executes unreviewed generated code. Arbitrary
+paper-specific implementation generation remains unimplemented. Explicit historical
+CLI example configurations retain their original bounded workflow.
+
+New adaptive runs archive framework provenance under `framework/source.zip`.
+`implementation.json` binds the selected experiment files to the seed SHA-256.
+Only the selected scientific kernel and its dependencies are copied into `code/`
+and sent to the numerical validator. The percolation and transit kernels are separate;
+the transit validator no longer receives lattice code. Framework provenance is an
+optional evidence-vault view, not a paper-specific implementation claim. Historical
+sealed archives are unchanged and have no retroactively invented implementation
+manifest. Their shared code is labeled accordingly.
 
 # Source intake and execution visibility
 
 Open the lab with `npm run dev`. The dedicated **Source intake** page accepts
 saved local papers, PDF and Markdown uploads, and arXiv abstract/PDF links.
-Choose the seed and up to three related documents on this page. The seed selection
+Choose the seed on this page. The seed selection
 survives navigation. The sidebar contains the shared run selector, while local
 simulation budgets and the launch action live beside source selection.
 
-The default launch profile is **Quick verification**: 32 trials per group,
-four workers, four batches per direction, 20,000 simulation units and a 20-minute
-wall-clock bound. Advanced budgets remain editable. Omnigent uses the configured
-model and remains the default backend; the simulations execute locally.
+The default launch profile is **Standard exploration**: 128 trials per group,
+six workers, eight batches per direction, 100,000 simulation units and a one-hour
+wall-clock bound. Finite simulation budgets remain editable. Researcher and decision
+agents are fixed to **Codex + Omnigent** and **AnyJev + Omnigent** respectively.
+AnyJev is a local bounded scoring tool following an Omnigent assessment session;
+both outputs are archived. The UI cannot select another agent backend.
+
+**Start bounded run** immediately opens **Agents & execution loops**. It follows
+the preallocated run ID, including preparation before the first artifact exists,
+then refreshes execution steps and downloadable artifacts every five seconds.
+A running banner changes to an explicit finished or stopped outcome. A failed
+preflight cannot display another run's results as the new experiment.
 
 Intake makes no model calls. Accepted originals live unchanged in
 `data/sources/<sha256>/source.pdf` or `source.md`, with a provenance sidecar.
@@ -67,7 +90,7 @@ sources through the same source reader and workflow.
 
 ## Inspect what actually ran
 
-**Agents & loops** projects saved event logs into a Step Functions style state
+**Agents & execution loops** projects saved event logs into a Step Functions style state
 machine. Nodes group repeated specialist roles; decision roles use diamonds.
 Solid arrows count recorded handoffs, including backward transitions. Dashed
 self-loops mean the role was invoked multiple times, possibly in distinct sessions
@@ -97,10 +120,12 @@ recorded stages and artifacts, but missing session IDs remain unavailable.
 
 ## Compare and synthesize
 
-**Original → follow-up** separates the published reference, the local baseline,
-and implemented treatments. Compare each branch's latest cumulative snapshot,
-its sample counts and uncertainty, then inspect the original and follow-up files.
-Cumulative checkpoints are never summed as independent data.
+**Discovery overview** owns the research highlights. It compares the cited
+original-paper result with the agent-selected proposed simulation, then shows the
+local control, uncertainty, decision change, recipe and data for that checkpoint.
+Published asymptotic estimates remain distinct from finite-size measurements.
+The separate Original → follow-up page has been removed. Cumulative checkpoints
+are never summed as independent data.
 
 **Final synthesis** pins the accepted checkpoint when the supervisor accepted a
 goal. Other runs show their latest completed result as provisional or incomplete.
@@ -110,11 +135,10 @@ Charts use recorded simulation measurements; opening a page performs no new
 simulation or inference. Raw dataset links, seeds and verification commands remain
 available.
 
-The paper map uses source titles and concepts from evidence-bearing proposals and
-reviews. Edges distinguish recorded seed citations from shared evidence contexts.
-Sources without evidence passages are labeled accordingly; missing or excluded
-references remain visible in the retrieval audit. Select a paper for exact quotes,
-page numbers, artifact provenance, search scope and missing evidence.
+Final synthesis expands the highlight into measurements, validation, retained
+branch outcomes, elapsed-time measurements and the next experiment. Paper
+exploration is removed from this page; exact supporting passages remain in the
+comparison assumptions and original source artifacts.
 
 **Generated artifacts** distinguishes agent inputs/responses, original sources,
 simulation CSVs, workflow records and reproduction files, with producing steps and
@@ -138,3 +162,24 @@ links and imported the real 16-page
 `2607.24975v1` PDF (73,812 extracted characters), uploaded PDF/Markdown files,
 and confirmed the persistent source selector. The temporary synthetic Markdown
 was removed after verification; the public arXiv source remains cached.
+
+## Inspecting live work and connection failures
+
+The source page shows live exploration progress after launch. The execution timeline
+opens by default; turn off **Follow newest worker step** to inspect an earlier call.
+Worker instructions come from the archived request. Session IDs, usage, schema
+checks and lifecycle events are under **Technical details**. Simulation steps show
+archived Python modules, specifications and actual saved datasets. **Download as
+Parquet** converts the complete selected CSV for export; it does not modify the run.
+
+A saved upload and a working agent runtime are separate checks. Launch checks the
+Omnigent connection before fetching references and retains an actionable error if
+the server or host is unavailable. Start the server and host with
+`bash scripts/research-runtime.sh server` and `bash scripts/research-runtime.sh host`,
+then run `bash scripts/research-runtime.sh status` to record the host. Restarting a
+failed exploration creates a new run; the failed archive remains intact.
+
+The October 3 Covasim upload passed extraction (32 pages). After restoring the
+runtime, its live context worker returned `unsupported_source`: the existing
+percolation and transit tools cannot test epidemiological interventions. General
+paper intake does not imply a general-purpose experiment execution engine.

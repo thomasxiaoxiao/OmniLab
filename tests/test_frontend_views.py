@@ -119,15 +119,15 @@ def test_navigation_preserves_run_and_seed_without_launching(tmp_path, monkeypat
     app = AppTest.from_file(str(UI)).run(timeout=15)
     assert not app.exception
     assert app.title[0].value == "Source intake"
-    assert any(s.label == "Registered source" for s in app.selectbox)
+    assert any(s.label == "Seed paper" for s in app.selectbox)
     app.switch_page("app_pages/sources.py").run()
-    picker = next(s for s in app.selectbox if s.label == "Registered source")
+    picker = next(s for s in app.selectbox if s.label == "Seed paper")
     picker.select(next(v for v in picker.options if "chosen.md" in v)).run()
     assert app.session_state["selected_seed_path"] == str(Path(source.path).resolve())
-    for page in ["agents", "comparison", "synthesis", "evidence", "sources"]:
+    for page in ["agents", "overview", "synthesis", "evidence", "sources"]:
         app.switch_page(f"app_pages/{page}.py").run()
         assert not app.exception
-    assert "chosen.md" in next(s.value for s in app.selectbox if s.label == "Registered source")
+    assert "chosen.md" in next(s.value for s in app.selectbox if s.label == "Seed paper")
     assert not (tmp_path / "runs").exists()
 
 
@@ -141,9 +141,11 @@ def test_adaptive_summary_renders_finalized_snapshot_and_tradeoff(tmp_path, monk
     assert not app.exception
     assert any("Finalized discovery dataset" in item.value for item in app.success)
     assert any("Control false alerts" in frame.value.columns for frame in app.dataframe)
-    app.switch_page("app_pages/comparison.py").run()
+    assert not any(h.value == "Paper exploration" for h in app.subheader)
+    app.switch_page("app_pages/overview.py").run()
     assert not app.exception
-    assert any(s.label == "Follow-up dataset" for s in app.selectbox)
+    assert any(s.label == "Snapshot artifact" for s in app.selectbox)
+    assert any("Original paper · cited result" in m.value for m in app.markdown)
     app.switch_page("app_pages/agents.py").run()
     assert not app.exception
     assert any("0" == m.value for m in app.metric if m.label == "Omnigent sessions")

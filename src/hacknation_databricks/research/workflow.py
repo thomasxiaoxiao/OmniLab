@@ -15,6 +15,7 @@ from statistics import NormalDist
 from . import WORKFLOW_VERSION
 from .agents import AgentBudgetExceeded, AgentUnavailable, OmnigentRoles
 from .artifacts import RunStore, canonical, code_digest, environment
+from .code_archive import archive_framework, archive_implementation
 from .comparison import save_comparisons
 from .decision_roles import AnyJevRoles, DecisionAbstained
 from .models import (
@@ -373,10 +374,8 @@ def run_research(
             provenance = Path(item.path).with_suffix(Path(item.path).suffix + ".json")
             if provenance.is_file():
                 shutil.copyfile(provenance, destination.with_suffix(destination.suffix + ".json"))
-        for module in Path(__file__).parent.glob("*.py"):
-            destination = output / "code" / module.name
-            destination.parent.mkdir(parents=True, exist_ok=True)
-            shutil.copyfile(module, destination)
+        archive_framework(output)
+        archive_implementation(store, source, config.domain, sequential=True)
         lockfile = Path("uv.lock").resolve()
         if not lockfile.is_file():
             lockfile = Path(__file__).resolve().parents[3] / "uv.lock"

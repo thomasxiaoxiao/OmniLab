@@ -307,7 +307,8 @@ def activity_svg(nodes: list[Activity], selected_key: str | None = None) -> str:
             title = node.role.replace("_", " ").capitalize()
             svg.extend(
                 [
-                    f"<g><title>{escape(node.session_id or node.stage)}</title>",
+                    f'<g data-activity-key="{escape(node.key, quote=True)}">'
+                    f"<title>{escape(node.session_id or node.stage)}</title>",
                     f'<rect x="{x}" y="{y + 43}" width="186" height="78" rx="9" '
                     f'fill="{fill}" stroke="{color}" '
                     f'stroke-width="{2.5 if node.key == selected_key else 1}"/>',
@@ -467,6 +468,7 @@ def parallel_svg(nodes, selected_key=None):
             else ("Python simulation" if node.kind == "simulation" else node.kind)
         )
         parts += [
+            f'<g data-activity-key="{escape(node.key, quote=True)}">',
             f'<rect x="{x}" y="{y}" width="210" height="76" rx="10" '
             f'fill="{color}" stroke="#087e80" '
             f'stroke-width="{3 if node.key == selected_key else 1}"/>',
@@ -476,6 +478,6 @@ def parallel_svg(nodes, selected_key=None):
             f'<text x="{x + 12}" y="{y + 54}" font-size="10" fill="#516b76">'
             f"{escape(identity)}</text>",
             f'<text x="{x + 12}" y="{y + 68}" font-size="10" fill="#516b76">'
-            f"{node.status} · {len(node.artifacts)} artifacts</text>",
+            f"{escape(node.status)} · {len(node.artifacts)} artifacts</text></g>",
         ]
     return "".join(parts) + "</svg>"

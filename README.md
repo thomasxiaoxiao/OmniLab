@@ -7,11 +7,27 @@ The current research scope follows `docs/overall-design.md` and `AGENTS.md`.
 brief. Omnigent must orchestrate the live discovery workflow; the earlier housing
 challenge requirements are superseded.
 
+New automatic-context runs derive paper-specific questions and hypotheses before
+seeing any preset implementation. Source changes filter saved runs by paper hash.
+Only the selected numerical kernel reaches the validator; framework snapshots are
+separate provenance. Unsupported papers retain their findings and report the missing
+implementation instead of being forced into an example. See
+[paper isolation and intake](docs/source-intake.md). General-purpose simulation-code
+generation is not implemented.
+
 The default frontend is now the **Omnigent scientific discovery lab**, following
 the research workflow in `docs/overall-design.md`. It records bounded choices,
 execution gates, evidence and implementations from saved research runs. See the
 [decision tracking guide](docs/decision-tracking.md) for controls, enforcement,
 Jev-style contracts and limitations. Run locally with `npm run dev`.
+
+**Omnigent & policies** centralizes the selected run's session context, reported
+usage, immutable resource limits and checkpoint enforcement evidence. The research
+pages explain the framework's contribution at each step. **Next-run controls** saves
+per-profile resource limits for this app session; select that profile in Source
+intake to apply them to a new Omnigent run. These are supervisor limits around the
+existing Omnigent runtime, not edits to native Omnigent policy configuration.
+Archived instructions are shown as instructions, not proof of sandbox enforcement.
 
 Discovery overview now leads with **What changed our next move?** Select a
 checkpoint to compare the prior plan, incoming measurements, Omnigent decision,
@@ -48,11 +64,12 @@ proposed simulated results), `comparison/summary.txt` (one numerical sentence),
 and `comparison/comparison.json` (measurements, uncertainty, saved inputs and source
 references). `comparisons/NNN/` retains the same outputs for each completed
 checkpoint. Runs without measurements export an explicit unavailable result.
-The **Final synthesis** and **Original → follow-up** pages display and download
+The **Discovery overview** and **Final synthesis** pages display and download
 these outputs; older sealed runs derive the view without rewriting their archives.
-**Agents & loops** compares archived specialist prompts and assigned inputs, then
-shows the selected session's exact instructions, returned action/test and recorded
-downstream work. Shared `research-worker` names do not imply identical tasks.
+**Agents & loops** opens each specialist's complete archived prompt, inputs and
+constraints when its timeline box is clicked. Returned actions and downstream work
+appear below; session identities, counts and exports are under Run details and
+exports. Shared `research-worker` names do not imply identical tasks.
 
 The primary **Discovery overview** page shows the hypothesis and source evidence,
 competing screening/precision tests, selected trial budget, measured effect and
@@ -101,7 +118,7 @@ current CLI bundled with ChatGPT on macOS; `OMNIGENT_CODEX_PATH` overrides it.
 Stop the two foreground services with Ctrl-C. Services bind to loopback only.
 `status` saves the server URL and host ID in ignored `.runtime/research.env`.
 
-In the UI select **codex-full-paper**, then **Original → follow-up**. The saved run
+In the UI select **codex-full-paper**, then **Discovery overview**. The saved run
 needs no model call. It contains 4,096 trials plus eight seed replays and an
 **incremental extension** verdict. Full results, boundaries and commands are in
 [the live-run report](docs/codex-live-run.md). The evaluator completes automatically;
@@ -269,23 +286,32 @@ Research source intake and all simulations can run independently of cloud setup.
 
 ## Source intake and agent visibility
 
-**Source intake** is a dedicated page for saved local papers, PDF/Markdown uploads
-and versioned arXiv inputs. Select a seed and up to three related documents there,
-then launch with the small **Quick verification** local simulation profile by
-default. Omnigent remains the default orchestration backend; it uses the configured
-model. The sidebar keeps the selected run consistent across pages.
+**Source intake** accepts saved papers, uploads and versioned arXiv inputs. The UI
+fixes the researcher to **Codex + Omnigent** and the decision agent to **AnyJev +
+Omnigent**. Standard exploration is the default budget profile; finite budget
+controls remain available. Starting a run immediately opens **Agents & execution
+loops**, follows that exact run, refreshes generated files and execution steps,
+and distinguishes starting, running, stopped and completed outcomes.
 
-**Agents & loops** shows a state machine with decision diamonds, actual handoffs
-and dashed self-loops for repeated role invocations. A separate execution timeline
-and session inspector retain every recorded instance. **Original → follow-up**
-compares measurements, uncertainty, source artifacts and generated datasets.
+AnyJev is a local bounded scoring tool following a Codex assessment session in
+Omnigent, not a native hosted Omnigent harness. Both the assessment and final
+selection are archived; ambiguity stops the run for review. The existing CLI
+retains Codex decisions unless its adaptive config sets `decision_backend` to
+`anyjev`. UI users cannot change agent backends. Existing archives keep their
+original runtime identities.
 
-**Final synthesis** presents a measurement paragraph, table and charts for the
-accepted checkpoint (or a labeled provisional snapshot), followed by the paper and
-concept map with exact evidence passages. The supervisor outcome, agent
-recommendation and final evaluator limitations remain distinct. **Generated
-artifacts** filters original inputs, agent responses, local simulation data and
-workflow records. Inspection makes no new model or simulation calls.
+**Discovery overview** owns “What changed our next move?”: the cited original
+paper result beside the proposed simulation, with its recorded recipe, measurements,
+local controls, uncertainty, raw data and next action. The separate comparison page
+has been removed. New runs save `comparisons/NNN/highlights.json` and
+`comparison/highlights.json` alongside existing comparison artifacts; older sealed
+runs render the comparison without rewriting their archives.
+
+**Final synthesis** expands that same scientific comparison into detailed results,
+validation, retained branch outcomes, bottleneck measurements and the next experiment.
+It no longer includes Paper exploration. **Generated artifacts** retains the full
+input, response, simulation and workflow audit. Inspection makes no new model or
+simulation calls.
 
 See [source intake and execution visibility](docs/source-intake.md) for limits,
 commands and verification. The older numerical viewer remains directly runnable

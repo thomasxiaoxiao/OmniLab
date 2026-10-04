@@ -43,10 +43,8 @@ def test_run_button_journal_filter_and_reload(monkeypatch, tmp_path):
     monkeypatch.delenv("OMNIGENT_SERVER_URL", raising=False)
     app = AppTest.from_file(str(UI)).run(timeout=15)
     app.switch_page("app_pages/sources.py").run()
-    next(s for s in app.selectbox if s.label == "Decision backend").select(
-        "AnyJev · local Qwen · decision only"
-    ).run()
-    next(b for b in app.button if b.label == "Start bounded run").click().run(timeout=30)
+    launch_run(fixture_source(), "Quick verification", "anyjev", lambda _: None)
+    app.run(timeout=30)
     assert not app.exception
     runs = list(tmp_path.glob("*/report.json"))
     assert len(runs) == 1

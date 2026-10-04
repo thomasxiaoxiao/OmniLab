@@ -140,7 +140,10 @@ def main(argv: list[str] | None = None) -> int:
         config = (
             RunConfig.model_validate_json(args.config.read_text())
             if args.config
-            else RunConfig(workflow="adaptive" if args.backend == "omnigent" else "sequential")
+            else RunConfig(
+                workflow="adaptive" if args.backend == "omnigent" else "sequential",
+                domain="auto" if args.backend == "omnigent" else "percolation",
+            )
         )
         output = args.output or Path("output/research") / datetime.now(UTC).strftime(
             "%Y%m%dT%H%M%S%fZ"

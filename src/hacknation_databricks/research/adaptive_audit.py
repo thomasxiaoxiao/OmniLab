@@ -9,6 +9,7 @@ from pathlib import Path
 from .adaptive_experiments import summarize_branch
 from .models import (
     InvestmentDecision,
+    PaperBrief,
     PortfolioSelection,
     ResearchContext,
     ResearchDirection,
@@ -32,7 +33,7 @@ def validate_parallel_trace(events):
                 raise ValueError("Stage reused or started after termination")
             if not re.fullmatch(
                 r"sources/seed/context|sources/[a-zA-Z0-9_-]+/"
-                r"(researcher|repair_researcher)|consolidation|baseline|"
+                r"(paper_reader|researcher|repair_researcher)|consolidation|baseline|"
                 r"branches/b\d+_\d+/batches/\d+/[a-z_]+|checkpoints/\d+/(decision|validation)",
                 name,
             ):
@@ -89,6 +90,7 @@ def load_adaptive_journal(directory):
         report = journal.report
         for count, limit in (
             ("role_calls", config.max_agent_calls),
+            ("decision_calls", config.max_decision_calls),
             ("computed_simulations", config.max_simulations),
         ):
             if not isinstance(report.get(count, 0), int) or not 0 <= report.get(count, 0) <= limit:
@@ -99,6 +101,29 @@ def load_adaptive_journal(directory):
         if len(events) > 20000:
             raise ValueError("Event limit exceeded")
         states = validate_parallel_trace(events)
+        if (directory / "paper_briefs.json").exists():
+            briefs = read("paper_briefs.json")
+            for source_id, raw in briefs.items():
+                brief = PaperBrief.model_validate(raw)
+                for direction in brief.directions:
+                    for evidence in direction.evidence:
+                        check_evidence(evidence, [s for s in sources if s.source_id == source_id])
+            if (directory / "research_briefs.json").exists():
+                for source_id, mapped in read("research_briefs.json").items():
+                    original = {d["id"]: d for d in briefs[source_id]["directions"]}
+                    for direction in mapped["directions"]:
+                        if {
+                            k: v for k, v in direction.items() if k != "experiment"
+                        } != original.get(direction["id"]):
+                            raise ValueError("Implementation changed a paper-first direction")
+        if (directory / "implementation.json").exists():
+            implementation = read("implementation.json")
+            seed = next(s for s in sources if s.source_id == "seed")
+            if (
+                implementation["source_sha256"] != seed.sha256
+                or implementation["domain"] != config.domain
+            ):
+                raise ValueError("Implementation belongs to a different source or context")
         if (directory / "research_context.json").exists():
             context = ResearchContext.model_validate(read("research_context.json"))
             for evidence in context.evidence:
@@ -156,6 +181,13 @@ def load_adaptive_journal(directory):
             ):
                 raise ValueError("Decision changed after execution")
             payload = read(f"{prefix}/input.json")
+            if config.decision_backend == "anyjev" and report["backend"] == "omnigent":
+                from .hybrid_roles import verify_investment_handoff
+
+                handoff = read(f"{prefix}/anyjev-handoff.json")
+                verify_investment_handoff(
+                    payload, decision.model_dump(), handoff, read(handoff["decision_artifact"])
+                )
             expected = {
                 "branch_id": item["branch_id"],
                 **recomputed[(item["branch_id"], item["batch"])],

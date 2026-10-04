@@ -1,0 +1,865 @@
+{
+  "audited_at": "2026-10-03T23:48:39.377032+00:00",
+  "runs": [
+    {
+      "run": "output/research/20261003T232809Z-percolation",
+      "status": "goal_achieved",
+      "seed": 202610031,
+      "decision_backend": "anyjev",
+      "goal_achieved": true,
+      "manifest_verified": true,
+      "journal_verified": true,
+      "independent_csv_count_and_interval_audit": true,
+      "baseline_recomputed": true,
+      "manifest_sha256": "42c538088f22ab24b747b2301a5a2fd7f89e3abd4b27f7a14ac14c47da697b33",
+      "baseline": {
+        "checks": [
+          {
+            "ci95": [
+              0.6601292060624501,
+              0.8101320771744039
+            ],
+            "model": "l_lattice",
+            "observed": 0.7421875,
+            "passed": true,
+            "reference": 0.75001,
+            "size": 8
+          },
+          {
+            "ci95": [
+              0.6935716289452745,
+              0.8373685295479476
+            ],
+            "model": "l_lattice",
+            "observed": 0.7734375,
+            "passed": true,
+            "reference": 0.75001,
+            "size": 16
+          },
+          {
+            "ci95": [
+              0.668442772812453,
+              0.816988229238493
+            ],
+            "model": "manhattan",
+            "observed": 0.75,
+            "passed": true,
+            "reference": 0.75001,
+            "size": 8
+          },
+          {
+            "ci95": [
+              0.6189931578757643,
+              0.7754195312906295
+            ],
+            "model": "manhattan",
+            "observed": 0.703125,
+            "passed": true,
+            "reference": 0.75001,
+            "size": 16
+          },
+          {
+            "ci95": [
+              0.6851629806940097,
+              0.8306074589851203
+            ],
+            "model": "random_diode",
+            "observed": 0.765625,
+            "passed": true,
+            "reference": 0.75001,
+            "size": 8
+          },
+          {
+            "ci95": [
+              0.6767870437261757,
+              0.8238136771388623
+            ],
+            "model": "random_diode",
+            "observed": 0.7578125,
+            "passed": true,
+            "reference": 0.75001,
+            "size": 16
+          }
+        ],
+        "claim": "Small-lattice simulation consistency check, not high-precision reproduction.",
+        "finite_size_tolerance": 0.12,
+        "limitation": "Tolerance is an engineering allowance, not a fitted scaling correction.",
+        "numerical": {
+          "passed": true,
+          "seed_replays": 6,
+          "violations": []
+        },
+        "passed": true,
+        "reference": "arXiv:2607.24975v1, Tables I-II; one-axis wrapping"
+      },
+      "accepted_checkpoint": 5,
+      "accepted_measurements": {
+        "branch": "b1_3",
+        "experiment": "resistor_diode",
+        "batch": 2,
+        "cumulative_rows": 2560,
+        "counts": [
+          {
+            "group": "8",
+            "control_events": 501,
+            "control_n": 640,
+            "treatment_events": 639,
+            "treatment_n": 640,
+            "difference": 0.21562499999999996,
+            "difference_interval": [
+              0.14039821493206983,
+              0.2820493083489731
+            ]
+          },
+          {
+            "group": "16",
+            "control_events": 495,
+            "control_n": 640,
+            "treatment_events": 640,
+            "treatment_n": 640,
+            "difference": 0.2265625,
+            "difference_interval": [
+              0.15166640682468446,
+              0.2922096140140924
+            ]
+          }
+        ]
+      },
+      "all_cumulative_audits": [
+        {
+          "branch": "b1_1",
+          "experiment": "random_manhattan",
+          "batch": 1,
+          "cumulative_rows": 512,
+          "counts": [
+            {
+              "group": "8",
+              "control_events": 96,
+              "control_n": 128,
+              "treatment_events": 107,
+              "treatment_n": 128,
+              "difference": 0.0859375,
+              "difference_interval": [
+                -0.1753443666882918,
+                0.3310022635271247
+              ]
+            },
+            {
+              "group": "16",
+              "control_events": 104,
+              "control_n": 128,
+              "treatment_events": 109,
+              "treatment_n": 128,
+              "difference": 0.0390625,
+              "difference_interval": [
+                -0.20222450088410204,
+                0.27297809035629894
+              ]
+            }
+          ]
+        },
+        {
+          "branch": "b1_2",
+          "experiment": "site_percolation",
+          "batch": 1,
+          "cumulative_rows": 512,
+          "counts": [
+            {
+              "group": "8",
+              "control_events": 94,
+              "control_n": 128,
+              "treatment_events": 73,
+              "treatment_n": 128,
+              "difference": -0.1640625,
+              "difference_interval": [
+                -0.4382439046320993,
+                0.1410788288488728
+              ]
+            },
+            {
+              "group": "16",
+              "control_events": 96,
+              "control_n": 128,
+              "treatment_events": 60,
+              "treatment_n": 128,
+              "difference": -0.28125,
+              "difference_interval": [
+                -0.5431109689343073,
+                0.03368512473449048
+              ]
+            }
+          ]
+        },
+        {
+          "branch": "b1_2",
+          "experiment": "site_percolation",
+          "batch": 2,
+          "cumulative_rows": 2560,
+          "counts": [
+            {
+              "group": "8",
+              "control_events": 475,
+              "control_n": 640,
+              "treatment_events": 365,
+              "treatment_n": 640,
+              "difference": -0.171875,
+              "difference_interval": [
+                -0.30179637194509484,
+                -0.03493716110501177
+              ]
+            },
+            {
+              "group": "16",
+              "control_events": 485,
+              "control_n": 640,
+              "treatment_events": 281,
+              "treatment_n": 640,
+              "difference": -0.31875,
+              "difference_interval": [
+                -0.4445885953333214,
+                -0.17989904777778565
+              ]
+            }
+          ]
+        },
+        {
+          "branch": "b1_2",
+          "experiment": "site_percolation",
+          "batch": 3,
+          "cumulative_rows": 6656,
+          "counts": [
+            {
+              "group": "8",
+              "control_events": 1262,
+              "control_n": 1664,
+              "treatment_events": 954,
+              "treatment_n": 1664,
+              "difference": -0.18509615384615385,
+              "difference_interval": [
+                -0.265951200119276,
+                -0.1012979092989107
+              ]
+            },
+            {
+              "group": "16",
+              "control_events": 1245,
+              "control_n": 1664,
+              "treatment_events": 733,
+              "treatment_n": 1664,
+              "difference": -0.3076923076923077,
+              "difference_interval": [
+                -0.3882668315893607,
+                -0.22222519445645628
+              ]
+            }
+          ]
+        },
+        {
+          "branch": "b1_3",
+          "experiment": "resistor_diode",
+          "batch": 1,
+          "cumulative_rows": 512,
+          "counts": [
+            {
+              "group": "8",
+              "control_events": 103,
+              "control_n": 128,
+              "treatment_events": 128,
+              "treatment_n": 128,
+              "difference": 0.1953125,
+              "difference_interval": [
+                0.004584282145189911,
+                0.3491836652157939
+              ]
+            },
+            {
+              "group": "16",
+              "control_events": 102,
+              "control_n": 128,
+              "treatment_events": 128,
+              "treatment_n": 128,
+              "difference": 0.203125,
+              "difference_interval": [
+                0.010064992002296491,
+                0.35785367325312667
+              ]
+            }
+          ]
+        },
+        {
+          "branch": "b1_3",
+          "experiment": "resistor_diode",
+          "batch": 2,
+          "cumulative_rows": 2560,
+          "counts": [
+            {
+              "group": "8",
+              "control_events": 501,
+              "control_n": 640,
+              "treatment_events": 639,
+              "treatment_n": 640,
+              "difference": 0.21562499999999996,
+              "difference_interval": [
+                0.14039821493206983,
+                0.2820493083489731
+              ]
+            },
+            {
+              "group": "16",
+              "control_events": 495,
+              "control_n": 640,
+              "treatment_events": 640,
+              "treatment_n": 640,
+              "difference": 0.2265625,
+              "difference_interval": [
+                0.15166640682468446,
+                0.2922096140140924
+              ]
+            }
+          ]
+        }
+      ],
+      "requests": 19,
+      "completed_responses": 19,
+      "sessions": 19,
+      "stop_requests": 19,
+      "cleanup_unconfirmed": 0,
+      "peak_concurrent_requests": 3,
+      "decision_calls": 6,
+      "decision_usage": {
+        "generated_tokens": 0,
+        "input_tokens": 66783,
+        "prefills": 33
+      },
+      "elapsed_seconds": 404.535,
+      "computed_simulations_including_replays": 20230,
+      "median_result_to_decision_seconds": 82.42750000000001,
+      "acceleration_multiplier": null,
+      "scientific_novelty": "unverified",
+      "validation": {
+        "decision": "supported",
+        "limitations": [
+          "This review uses supplied source pages, code text, summaries and replay reports. I did not read local CSVs, recompute intervals, execute simulations or verify artifact hashes.",
+          "Bonferroni adjustment addresses the declared branches, looks and groups, but Wilson intervals have approximate binomial coverage. The nominal family error rate is not an exact finite-sample guarantee, particularly near saturation.",
+          "Only pooled counts are supplied. Distinct batch seeds and reported replays support reproducibility, but batch-specific effect consistency cannot be assessed from these summaries.",
+          "Control and treatment configurations are independently generated, not paired. Configuration-wise monotonicity follows from adding edges but is not directly tested by these comparisons; replay with the same implementation cannot exclude shared implementation errors.",
+          "The implementation converts each occupied diode independently with probability 0.25; it does not enforce an exactly 25% converted fraction in every realization.",
+          "Only L=8 and L=16 at p=1 are tested. Treatment wrapping is nearly saturated, and 640/640 observed successes does not establish probability one. There is insufficient evidence for infinite-size behavior, critical scaling, universality or global novelty.",
+          "The baseline uses a 0.12 engineering tolerance against an infinite-size wrapping reference. Passing this check is not high-precision reproduction or independent validation of every simulation primitive.",
+          "This supports the narrow numerical gate. Final goal completion remains subject to the supervisor's required independent validation; fresh seed batches and deterministic replays do not constitute replication using an independent implementation."
+        ],
+        "reasoning": "The supplied evidence supports the numerical goal for b1_3's actual finite-size recipe. At L=8, wrapping counts are 639/640 versus 501/640, giving an increase of 0.215625 and a supplied simultaneous difference interval [0.140398, 0.282049]. At L=16, counts are 640/640 versus 495/640, giving an increase of 0.226563 and interval [0.151666, 0.292210]. These differences and interval endpoints agree with the supplied sufficient statistics. Both lower bounds exceed the unchanged minimum effect of 0.05, and both interval widths are below 0.25. Two batches with distinct seeds supply 128+512 observations per arm and size; reported replay checks cover all 2560 trials. Static inspection shows independent arm-specific seeds, random diode orientations, and reverse-edge addition with probability 0.25 at p=1. The winding calculation is restricted to strongly connected components, consistent with the intended observable. The supplied baseline passes its limited consistency criteria. Source grounding establishes an existing model family: seed, page 2 states, \"Such lattices were studied by Redner [35] and Dhar et al. [36] in the form of the random resistor-diode model\". Accordingly, the supported result is increased horizontal wrapping under this specified intervention, not a new model, critical exponent, or universality class. Stop accumulating evidence for this resolved numerical comparison and submit the scoped finding to the supervisor's final artifact validation; broader mechanism or scaling questions require a separately specified experiment."
+      },
+      "latest_decision": {
+        "action": "finalize",
+        "goal_branch_id": "b1_3",
+        "invest": [],
+        "missing_evidence": [
+          "Supervisor confirmation of final artifact validation, including sample provenance, model construction, wrapping semantics and interval calculations; the supplied review did not independently execute these checks.",
+          "Batch-specific effect summaries to assess consistency across independent seed batches.",
+          "Independent implementation evidence to exclude errors shared by simulations and deterministic replays.",
+          "Evidence for larger sizes, critical scaling, universality or scientific novelty; none is established or required for the scoped numerical goal."
+        ],
+        "next_experiment": "Submit branch b1_3 to independent final validation.",
+        "rationale": "Model selected finalize_b1_3: Submit branch b1_3 to independent final validation. L0 option weight 1.000; uncalibrated. See the recorded state and competing options for the decision basis.",
+        "result_interpretation": "The completed third batch resolves b1_2 at both sizes: site-minus-bond horizontal wrapping differences are -0.185096 at L=8, with simultaneous interval [-0.265951, -0.101298], and -0.307692 at L=16, with interval [-0.388267, -0.222225]. Both intervals establish reductions exceeding 0.05 in magnitude and have widths below 0.25. This replaces the previous unresolved assessment of b1_2. b1_3 remains eligible and has a supported validation review: increases are 0.215625 and 0.226563, with intervals [0.140398, 0.282049] and [0.151666, 0.292210], across two batches. b1_1 remains unresolved after one batch; both intervals include zero. No batches remain in flight. The supplied state marks the numerical goal achieved for b1_3; the review supports this scoped finding while reserving final artifact validation for the supervisor. These finite-size results do not establish novelty or universality."
+      }
+    },
+    {
+      "run": "output/research/20261003T232809Z-astrosat-final",
+      "status": "goal_achieved",
+      "seed": 202610032,
+      "decision_backend": "anyjev",
+      "goal_achieved": true,
+      "manifest_verified": true,
+      "journal_verified": true,
+      "independent_csv_count_and_interval_audit": true,
+      "baseline_recomputed": true,
+      "manifest_sha256": "dafb3794ab58dfd6bc293b4b603e528b623ed9004bd90aea0f62cfe5209fb257",
+      "baseline": {
+        "checks": [
+          {
+            "measured": 0.25941368464558606,
+            "passed": true,
+            "quantity": "2 km timing error (s)",
+            "reference": 0.27,
+            "tolerance": 0.015
+          },
+          {
+            "measured": 3.2426710580698255,
+            "passed": true,
+            "quantity": "25 km timing error (s)",
+            "reference": 3.26,
+            "tolerance": 0.03
+          },
+          {
+            "measured": 0.08551602532510652,
+            "passed": true,
+            "quantity": "500 m angular error (deg)",
+            "reference": 0.09,
+            "tolerance": 0.01
+          }
+        ],
+        "claim": "Equation-1 geometry consistency check against rounded published examples.",
+        "limitation": "Does not reproduce the paper's historical satellite population or TLEs.",
+        "numerical": {
+          "passed": true,
+          "seed_replays": 0
+        },
+        "passed": true
+      },
+      "accepted_checkpoint": 5,
+      "accepted_measurements": {
+        "branch": "b1_3",
+        "experiment": "transit_margin_3",
+        "batch": 3,
+        "cumulative_rows": 6656,
+        "counts": [
+          {
+            "group": "fresh",
+            "control_events": 114,
+            "control_n": 840,
+            "treatment_events": 0,
+            "treatment_n": 840,
+            "difference": -0.1357142857142857,
+            "difference_interval": [
+              -0.1845981990387283,
+              -0.0825885957611212
+            ],
+            "nontransits": 2488,
+            "control_false_alerts": 399,
+            "treatment_false_alerts": 1431,
+            "control_false_alert_rate": 0.16036977491961416,
+            "treatment_false_alert_rate": 0.5751607717041801
+          },
+          {
+            "group": "stale",
+            "control_events": 136,
+            "control_n": 883,
+            "treatment_events": 7,
+            "treatment_n": 883,
+            "difference": -0.14609286523216308,
+            "difference_interval": [
+              -0.201309937306328,
+              -0.0865286849132829
+            ],
+            "nontransits": 2445,
+            "control_false_alerts": 366,
+            "treatment_false_alerts": 1418,
+            "control_false_alert_rate": 0.14969325153374233,
+            "treatment_false_alert_rate": 0.5799591002044989
+          }
+        ]
+      },
+      "all_cumulative_audits": [
+        {
+          "branch": "b1_1",
+          "experiment": "transit_margin_1",
+          "batch": 1,
+          "cumulative_rows": 512,
+          "counts": [
+            {
+              "group": "fresh",
+              "control_events": 9,
+              "control_n": 61,
+              "treatment_events": 0,
+              "treatment_n": 61,
+              "difference": -0.14754098360655737,
+              "difference_interval": [
+                -0.3737474411224383,
+                0.1316023115811831
+              ],
+              "nontransits": 195,
+              "control_false_alerts": 27,
+              "treatment_false_alerts": 54,
+              "control_false_alert_rate": 0.13846153846153847,
+              "treatment_false_alert_rate": 0.27692307692307694
+            },
+            {
+              "group": "stale",
+              "control_events": 10,
+              "control_n": 64,
+              "treatment_events": 2,
+              "treatment_n": 64,
+              "difference": -0.125,
+              "difference_interval": [
+                -0.3738698620064012,
+                0.16697933573925486
+              ],
+              "nontransits": 192,
+              "control_false_alerts": 23,
+              "treatment_false_alerts": 53,
+              "control_false_alert_rate": 0.11979166666666667,
+              "treatment_false_alert_rate": 0.2760416666666667
+            }
+          ]
+        },
+        {
+          "branch": "b1_1",
+          "experiment": "transit_margin_1",
+          "batch": 2,
+          "cumulative_rows": 2560,
+          "counts": [
+            {
+              "group": "fresh",
+              "control_events": 46,
+              "control_n": 335,
+              "treatment_events": 4,
+              "treatment_n": 335,
+              "difference": -0.1253731343283582,
+              "difference_interval": [
+                -0.21763063103320013,
+                -0.02351613512314847
+              ],
+              "nontransits": 945,
+              "control_false_alerts": 163,
+              "treatment_false_alerts": 269,
+              "control_false_alert_rate": 0.1724867724867725,
+              "treatment_false_alert_rate": 0.28465608465608466
+            },
+            {
+              "group": "stale",
+              "control_events": 53,
+              "control_n": 378,
+              "treatment_events": 11,
+              "treatment_n": 378,
+              "difference": -0.1111111111111111,
+              "difference_interval": [
+                -0.20751404352254477,
+                -0.007135487711168148
+              ],
+              "nontransits": 902,
+              "control_false_alerts": 122,
+              "treatment_false_alerts": 233,
+              "control_false_alert_rate": 0.1352549889135255,
+              "treatment_false_alert_rate": 0.2583148558758315
+            }
+          ]
+        },
+        {
+          "branch": "b1_1",
+          "experiment": "transit_margin_1",
+          "batch": 3,
+          "cumulative_rows": 6656,
+          "counts": [
+            {
+              "group": "fresh",
+              "control_events": 105,
+              "control_n": 863,
+              "treatment_events": 19,
+              "treatment_n": 863,
+              "difference": -0.0996523754345307,
+              "difference_interval": [
+                -0.15837917444392613,
+                -0.03789266802153246
+              ],
+              "nontransits": 2465,
+              "control_false_alerts": 427,
+              "treatment_false_alerts": 701,
+              "control_false_alert_rate": 0.17322515212981746,
+              "treatment_false_alert_rate": 0.2843813387423935
+            },
+            {
+              "group": "stale",
+              "control_events": 135,
+              "control_n": 933,
+              "treatment_events": 31,
+              "treatment_n": 933,
+              "difference": -0.11146838156484459,
+              "difference_interval": [
+                -0.17422698705998232,
+                -0.045568192545709
+              ],
+              "nontransits": 2395,
+              "control_false_alerts": 368,
+              "treatment_false_alerts": 640,
+              "control_false_alert_rate": 0.15365344467640918,
+              "treatment_false_alert_rate": 0.267223382045929
+            }
+          ]
+        },
+        {
+          "branch": "b1_3",
+          "experiment": "transit_margin_3",
+          "batch": 1,
+          "cumulative_rows": 512,
+          "counts": [
+            {
+              "group": "fresh",
+              "control_events": 8,
+              "control_n": 54,
+              "treatment_events": 0,
+              "treatment_n": 54,
+              "difference": -0.14814814814814814,
+              "difference_interval": [
+                -0.3906006309784066,
+                0.15298481666594704
+              ],
+              "nontransits": 202,
+              "control_false_alerts": 31,
+              "treatment_false_alerts": 110,
+              "control_false_alert_rate": 0.15346534653465346,
+              "treatment_false_alert_rate": 0.5445544554455446
+            },
+            {
+              "group": "stale",
+              "control_events": 14,
+              "control_n": 66,
+              "treatment_events": 1,
+              "treatment_n": 66,
+              "difference": -0.19696969696969696,
+              "difference_interval": [
+                -0.43397101567514956,
+                0.10624922715310395
+              ],
+              "nontransits": 190,
+              "control_false_alerts": 23,
+              "treatment_false_alerts": 116,
+              "control_false_alert_rate": 0.12105263157894737,
+              "treatment_false_alert_rate": 0.6105263157894737
+            }
+          ]
+        },
+        {
+          "branch": "b1_3",
+          "experiment": "transit_margin_3",
+          "batch": 2,
+          "cumulative_rows": 2560,
+          "counts": [
+            {
+              "group": "fresh",
+              "control_events": 49,
+              "control_n": 319,
+              "treatment_events": 0,
+              "treatment_n": 319,
+              "difference": -0.1536050156739812,
+              "difference_interval": [
+                -0.2410582614748888,
+                -0.05382439404548646
+              ],
+              "nontransits": 961,
+              "control_false_alerts": 148,
+              "treatment_false_alerts": 545,
+              "control_false_alert_rate": 0.15400624349635797,
+              "treatment_false_alert_rate": 0.5671175858480749
+            },
+            {
+              "group": "stale",
+              "control_events": 58,
+              "control_n": 341,
+              "treatment_events": 5,
+              "treatment_n": 341,
+              "difference": -0.15542521994134895,
+              "difference_interval": [
+                -0.2531337535302326,
+                -0.046017684579597304
+              ],
+              "nontransits": 939,
+              "control_false_alerts": 133,
+              "treatment_false_alerts": 567,
+              "control_false_alert_rate": 0.14164004259850904,
+              "treatment_false_alert_rate": 0.6038338658146964
+            }
+          ]
+        },
+        {
+          "branch": "b1_3",
+          "experiment": "transit_margin_3",
+          "batch": 3,
+          "cumulative_rows": 6656,
+          "counts": [
+            {
+              "group": "fresh",
+              "control_events": 114,
+              "control_n": 840,
+              "treatment_events": 0,
+              "treatment_n": 840,
+              "difference": -0.1357142857142857,
+              "difference_interval": [
+                -0.1845981990387283,
+                -0.0825885957611212
+              ],
+              "nontransits": 2488,
+              "control_false_alerts": 399,
+              "treatment_false_alerts": 1431,
+              "control_false_alert_rate": 0.16036977491961416,
+              "treatment_false_alert_rate": 0.5751607717041801
+            },
+            {
+              "group": "stale",
+              "control_events": 136,
+              "control_n": 883,
+              "treatment_events": 7,
+              "treatment_n": 883,
+              "difference": -0.14609286523216308,
+              "difference_interval": [
+                -0.201309937306328,
+                -0.0865286849132829
+              ],
+              "nontransits": 2445,
+              "control_false_alerts": 366,
+              "treatment_false_alerts": 1418,
+              "control_false_alert_rate": 0.14969325153374233,
+              "treatment_false_alert_rate": 0.5799591002044989
+            }
+          ]
+        }
+      ],
+      "requests": 18,
+      "completed_responses": 18,
+      "sessions": 18,
+      "stop_requests": 18,
+      "cleanup_unconfirmed": 0,
+      "peak_concurrent_requests": 3,
+      "decision_calls": 6,
+      "decision_usage": {
+        "generated_tokens": 0,
+        "input_tokens": 67176,
+        "prefills": 26
+      },
+      "elapsed_seconds": 362.933,
+      "computed_simulations_including_replays": 26624,
+      "median_result_to_decision_seconds": 65.6685,
+      "acceleration_multiplier": null,
+      "scientific_novelty": "unverified",
+      "validation": {
+        "decision": "supported",
+        "limitations": [
+          "Review used supplied source pages, implementation text, summaries and contingency counts. I did not read raw CSVs, execute simulations, verify hashes or independently reproduce replay checks.",
+          "Independent Gaussian errors and treating quoted distances as standard deviations are experimental assumptions. Seed, page 2 states: \"However, it is not possible to quantify the ac- curacy of any individual TLE as it depends on the accuracy of the underlying observations, which are unknown.\"",
+          "The model fixes zenith geometry, 335 km altitude, a 0.5-degree field and a 30-second exposure, with uniform candidate sampling. It excludes SGP4, actual TLEs, brightness and observational validation.",
+          "Bonferroni addresses multiplicity across the declared family, but Wilson intervals provide approximate coverage. Conservative endpoint subtraction leaves paired information unused.",
+          "Zero observed fresh misses does not establish zero population risk: the supplied treatment recall interval implies a missed-transit upper bound of approximately 0.01563. Seven stale misses remain; their causes were not isolated.",
+          "False-alert rates near 58% describe alerts among simulated nontransits. They do not measure false discovery proportion, lost exposure time or net scientific utility.",
+          "Different guard branches use independent samples. The unresolved b1_1 result and resolved b1_3 result do not themselves demonstrate a statistically established difference between guards; stale-versus-fresh differences also remain untested.",
+          "The baseline is a limited geometry consistency check, not full-paper reproduction. There is insufficient evidence for real-world prediction, an optimal margin, universality or established scientific novelty."
+        ],
+        "reasoning": "The supplied evidence supports the numerical goal for b1_3 under its synthetic recipe. Three distinct seeded batches exceed the two-batch minimum; reported replay checks cover all 6656 candidates. Contingency counts agree with the reported denominators and rates. Fresh-scenario misses decrease from 114/840 to 0/840, with treatment-minus-control difference -0.135714 and simultaneous interval [-0.184598, -0.082589]. Stale-scenario misses decrease from 136/883 to 7/883, with difference -0.146093 and interval [-0.201310, -0.086529]. Both intervals lie below -0.05 and have widths below 0.25, meeting the unchanged criteria. The supplied Bonferroni allocation covers three branches, eight planned looks, two scenarios and four endpoints; subtracting marginal Wilson bounds does not require independence between paired arms, although Wilson coverage is approximate. False-alert rates increase from 399/2488 to 1431/2488 for fresh candidates and from 366/2445 to 1418/2445 for stale candidates. These denominators are nontransits, not all alerts. Alert-set nesting explains the direction; the measured magnitude and cost are the result. Source grounding is explicit: seed, page 2 states, \"The \ufb01eld of view could be expanded by this distance and the results interpreted probabilistically.\" This supports investigating expansion, not the agent-generated Gaussian three-sigma prescription. All three supplied baseline checks pass their stated tolerances, supporting only geometry consistency with rounded examples. This review supports accepting the scoped numerical result; final goal-state recording remains with the supervisor. It does not establish superiority over b1_1, a stale-versus-fresh effect, optimality, operational benefit or scientific novelty."
+      },
+      "latest_decision": {
+        "action": "finalize",
+        "goal_branch_id": "b1_3",
+        "invest": [],
+        "missing_evidence": [
+          "Supervisor confirmation of final artifact validation and acceptance; the supplied independent review did not inspect raw CSVs, verify hashes or execute replay checks.",
+          "Resolution of b1_1 against the 0.05 minimum effect; this is not required to finalize eligible b1_3.",
+          "Real-world error calibration and observational validation of the synthetic assumptions.",
+          "Evidence for operational utility, optimal margins, guard-to-guard superiority, stale-versus-fresh differences, universality or established scientific novelty."
+        ],
+        "next_experiment": "Submit branch b1_3 to independent final validation.",
+        "rationale": "Model selected finalize_b1_3: Submit branch b1_3 to independent final validation. L0 option weight 1.000; uncalibrated. See the recorded state and competing options for the decision basis.",
+        "result_interpretation": "b1_3 meets the declared synthetic numerical criteria after three batches: fresh treatment-minus-control missed-transit rate is -0.135714 with simultaneous interval [-0.184598, -0.082589], width 0.102010, among 840 positive_transits; stale difference is -0.146093 with interval [-0.201310, -0.086529], width 0.114781, among 883 positive_transits. Both intervals lie below -0.05 and widths are below 0.25. Treatment/control false-alert rates are 0.575161/0.160370 among 2488 fresh negative_candidates and 0.579959/0.149693 among 2445 stale negative_candidates. These are alerts among nontransits, not false alerts divided by all alerts. The newly completed third b1_1 batch yields fresh difference -0.099652 with interval [-0.158379, -0.037893] and stale difference -0.111468 with interval [-0.174227, -0.045568]. Both exclude zero but remain unresolved against the required 0.05 reduction. Its treatment/control false-alert rates are 0.284381/0.173225 among 2465 fresh nontransits and 0.267223/0.153653 among 2395 stale nontransits; missed-transit denominators are 863 and 933, respectively. No batches remain in flight. Alert-set nesting predicts the directions; the useful finding is the measured tradeoff, not established operational benefit or scientific novelty."
+      }
+    }
+  ],
+  "active_runs": [
+    "output/research/20261003T232809Z-astrosat-final",
+    "output/research/20261003T232809Z-percolation"
+  ],
+  "previous_runs_archived": 27,
+  "archive": "output/archived-research/20261003T232809Z",
+  "diagnostic_attempts": [
+    {
+      "run": "output/archived-research/20261003T232809Z/20261003T232809Z-astrosat",
+      "status": "interrupted",
+      "reason": null,
+      "simulations_including_replays": 14336,
+      "requests": 14,
+      "completed_responses": 13,
+      "decision_calls": 3,
+      "elapsed_seconds": 245.658,
+      "integrity_and_handoffs_verified": true
+    },
+    {
+      "run": "output/archived-research/20261003T232809Z/20261003T232809Z-astrosat-corrected",
+      "status": "blocked_live_backend",
+      "reason": "Omnigent request failed (ConnectError)",
+      "simulations_including_replays": 10240,
+      "requests": 13,
+      "completed_responses": 11,
+      "decision_calls": 2,
+      "elapsed_seconds": 197.47,
+      "integrity_and_handoffs_verified": true
+    },
+    {
+      "run": "output/archived-research/20261003T232809Z/20261003T232809Z-astrosat-recovered",
+      "status": "research_stopped",
+      "reason": null,
+      "simulations_including_replays": 2048,
+      "requests": 9,
+      "completed_responses": 9,
+      "decision_calls": 2,
+      "elapsed_seconds": 164.2,
+      "integrity_and_handoffs_verified": true
+    }
+  ],
+  "interventions": [
+    {
+      "time": "2026-10-03T23:33:05.351881+00:00",
+      "interrupted_run": "output/archived-research/20261003T232809Z/20261003T232809Z-astrosat",
+      "reason": "Checkpoint 002 interpretation incorrectly labeled false_alert_rate as false alerts divided by all alerts. Actual implementation uses alerts among nontransits divided by negative_candidates.",
+      "evidence": "checkpoints/002/decision.json",
+      "correction": "Explicit domain measurement contract supplied to researchers, consolidator, planners, decision assessments, AnyJev scoring state, and validator. Primary hypotheses must match executed contrasts; cross-guard and scenario comparisons are secondary.",
+      "seed_policy": "Keep original Astrosat seed, 202610032, and unchanged scientific thresholds and simulation code. No favorable seed selection.",
+      "interrupted_manifest_verified": true,
+      "interrupted_journal_verified": true,
+      "interrupted_journal_issues": [],
+      "replacement_run": "output/research/20261003T232809Z-astrosat-corrected",
+      "tests": "24 adaptive, hybrid handoff, and metric-contract tests passed; initial 36 scientific/lifecycle tests passed."
+    },
+    {
+      "time": "2026-10-03T23:38:10.070011+00:00",
+      "reason": "Omnigent request failed (ConnectError)",
+      "status": "blocked_live_backend",
+      "hashes_verified": true,
+      "journal_verified": true,
+      "journal_issues": [],
+      "cleanup_unconfirmed": 1,
+      "recovery": "Restarted the absent local Omnigent server and host; no backend substitution; same scientific config and seed",
+      "replacement_run": "output/research/20261003T232809Z-astrosat-recovered"
+    },
+    {
+      "time": "2026-10-03T23:42:03.941007+00:00",
+      "reason": "AnyJev chose review after the first unresolved batch although Omnigent recommended more sampling and the numerical budget remained available. Missing observational calibration was outside this numerical goal.",
+      "assessment": "invest",
+      "selected": "stop",
+      "correction": "Pass a numerical decision policy distinguishing resolvable sampling uncertainty from nonrepairable evidence defects; clarify stop/review option meanings. Both actions and ambiguity abstention remain available.",
+      "seed": 202610032,
+      "thresholds_unchanged": true,
+      "hashes_verified": true,
+      "journal_verified": true,
+      "replacement_run": "output/research/20261003T232809Z-astrosat-final",
+      "retry_limit": "Final planned Astrosat attempt in this campaign; report any residual failure honestly."
+    }
+  ],
+  "recovered_cleanup": [
+    {
+      "session_id": "6eda7f81f6764f90add6517fb6d7b07a",
+      "interrupt_request": "acknowledged",
+      "stop_request": "acknowledged"
+    }
+  ],
+  "checks": {
+    "initial_science_and_lifecycle_tests": "36 passed",
+    "changed_contract_and_handoff_regressions": "24 passed",
+    "lint": "passed",
+    "format": "passed",
+    "diff_whitespace": "passed",
+    "challenge_pdf_sha256": "ce9276222cae08bd4e088b90c11876e53caaf60ecf5fe87fc35b801a27b96b7d"
+  },
+  "limits": {
+    "scientific_thresholds_and_seed_preserved_across_astrosat_retries": true,
+    "simulation_cache_used": false,
+    "alternate_backend_fallback": false,
+    "native_omnigent_policy_attestation": false,
+    "independent_scientific_replication": false,
+    "publication_or_submission": false,
+    "manual_acceleration_comparison_available": false
+  },
+  "reproduce_audit": ".venv/bin/python output/run-control/20261003T232809Z/audit_results.py output/research/20261003T232809Z-percolation output/research/20261003T232809Z-astrosat-final",
+  "next_scientific_tests": {
+    "percolation": "Predeclare a reverse-edge fraction or occupation-probability sweep across larger lattice sizes; current p=1 treatment is near saturation.",
+    "astrosat": "Compare guard margins on matched candidates with a predeclared missed-transit versus false-alert cost, then validate errors with actual TLEs and observations."
+  },
+  "total_campaign_simulations_including_diagnostic_attempts": 73478
+}

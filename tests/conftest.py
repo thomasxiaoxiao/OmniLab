@@ -1,0 +1,12 @@
+import pytest
+
+from hacknation_databricks.research.cli import fixture_source
+from hacknation_databricks.research.intake import register_upload
+
+
+@pytest.fixture
+def launch_source(monkeypatch, tmp_path):
+    """Supply launch tests with evidence independent of ignored local papers."""
+    root = tmp_path / "sources"
+    monkeypatch.setenv("RESEARCH_SOURCES_DIR", str(root))
+    return register_upload("seed.md", fixture_source().read_bytes(), root)

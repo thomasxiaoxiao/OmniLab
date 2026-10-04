@@ -9,11 +9,12 @@ import hashlib
 import json
 from collections.abc import Callable
 from dataclasses import dataclass
-from math import sqrt
 
 import numpy as np
 from scipy.sparse import csr_matrix
 from scipy.sparse.csgraph import connected_components
+
+from .scientific_statistics import wilson as wilson
 
 MODELS = {"manhattan", "l_lattice", "random_diode", "random_manhattan", "resistor_diode"}
 BENCHMARKS = {"manhattan": 0.697160, "l_lattice": 0.740193, "random_diode": 1.0}
@@ -155,16 +156,6 @@ def simulate(
         if on_trial:
             on_trial(rows[-1])
     return rows
-
-
-def wilson(successes: int, n: int, z: float = 1.96) -> list[float]:
-    if n <= 0:
-        raise ValueError("Need observations for a confidence interval")
-    p = successes / n
-    denominator = 1 + z * z / n
-    center = (p + z * z / (2 * n)) / denominator
-    radius = z * sqrt(p * (1 - p) / n + z * z / (4 * n * n)) / denominator
-    return [max(0.0, center - radius), min(1.0, center + radius)]
 
 
 def summarize(rows: list[dict]) -> list[dict]:

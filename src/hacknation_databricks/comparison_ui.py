@@ -3,7 +3,6 @@
 import json
 from pathlib import Path
 
-import pandas as pd
 import streamlit as st
 
 from hacknation_databricks.research.comparison import synthesis_dataset
@@ -25,37 +24,6 @@ def render_comparison(directory: Path, report: dict) -> None:
     if not report.get("rounds"):
         st.info("The comparison appears once a follow-up and its evaluation finish.")
         return
-    round_result = report["rounds"][-1]
-    checks = round_result["effect"]["checks"]
-    if checks:
-        columns = st.columns(len(checks))
-        for column, check in zip(columns, checks, strict=True):
-            column.metric(
-                f"L = {check['size']} · wrapping probability",
-                f"{check['treatment']:.1%}",
-                delta=f"{100 * check['difference']:+.1f} percentage points",
-            )
-            column.caption(
-                f"Original model: {check['control']:.1%} · conservative effect lower bound: "
-                f"{check['absolute_effect_lower_bound']:.1%}"
-            )
-        frame = pd.DataFrame(
-            [
-                {
-                    "Lattice size": str(c["size"]),
-                    "Original model": c["control"],
-                    "Follow-up": c["treatment"],
-                }
-                for c in checks
-            ]
-        ).set_index("Lattice size")
-        st.bar_chart(
-            frame,
-            stack=False,
-            color=["#62748e", "#0d9488"],
-            y_label="One-axis wrapping probability",
-        )
-        st.caption(round_result["effect"]["interval_method"])
     evaluation = report.get("automated_review")
     if not evaluation:
         st.info(

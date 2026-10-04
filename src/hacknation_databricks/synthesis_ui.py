@@ -1,18 +1,18 @@
 """Scientific summaries derived from recorded datasets and cited paper passages."""
 
 import json
-from pathlib import Path
+import re
 from urllib.parse import urlsplit
 
 import altair as alt
 import pandas as pd
 import streamlit as st
 
+from hacknation_databricks.highlights_ui import render_highlights
 from hacknation_databricks.research.artifacts import canonical
 from hacknation_databricks.research.comparison import comparison_bundle, comparison_svg
 from hacknation_databricks.research_views import (
     dataset_artifacts,
-    latest_datasets,
     measurement_rows,
     paper_dot,
     paper_evidence,
@@ -31,15 +31,15 @@ def render_comparison_outputs(journal: Journal, dataset: dict | None) -> None:
         dataset,
     )
     graphic = comparison_svg(bundle)
-    st.markdown("**Original vs proposed · simulation visualization**")
-    st.image(
-        graphic,
-        width="stretch",
-        alt="Original and proposed simulated rates, differences and uncertainty",
-    )
-    st.markdown("**Difference in one sentence**")
-    st.write(bundle["summary"])
-    st.caption(bundle["provenance"])
+    render_highlights(bundle)
+    with st.expander("Comparison chart and exact numerical summary"):
+        st.image(
+            graphic,
+            width="stretch",
+            alt="Original and proposed simulated rates, differences and uncertainty",
+        )
+        st.write(bundle["summary"])
+        st.caption(bundle["provenance"])
     with st.container(horizontal=True):
         st.download_button(
             "Download simulation visualization",
@@ -59,6 +59,8 @@ def render_comparison_outputs(journal: Journal, dataset: dict | None) -> None:
             file_name=f"{journal.run_id}-comparison.json",
             mime="application/json",
         )
+    if dataset:
+        render_dataset_files(journal, dataset)
     with st.expander("Paper inputs and simulation assumptions"):
         st.json(
             {
@@ -78,14 +80,60 @@ def render_comparison_outputs(journal: Journal, dataset: dict | None) -> None:
 
 def render_research_path(journal: Journal) -> None:
     report = journal.report
+    dataset = synthesis_dataset(report)
+    branch_id = (dataset or {}).get("branch_id") or report.get("goal", {}).get("branch_id")
+    proposal = report.get("branches", {}).get(branch_id, {}).get("proposal") or report.get(
+        "selected_proposal", {}
+    )
+    with st.container(border=True):
+        st.caption("CHOSEN PATH · EXPLORED IDEA")
+        if proposal:
+            st.subheader(proposal["title"])
+            st.write(proposal.get("hypothesis", ""))
+            label = (
+                "Accepted result branch"
+                if report.get("goal", {}).get("achieved")
+                else (
+                    "Most recently measured branch"
+                    if dataset and branch_id
+                    else "Selected direction"
+                )
+            )
+            st.caption(
+                f"{label}{' · ' + branch_id if branch_id else ''} · "
+                + proposal.get("origin", "Source-grounded proposal").replace("_", " ")
+            )
+            evidence = proposal.get("evidence", [])
+            for item in evidence if isinstance(evidence, list) else [evidence]:
+                st.caption(f"{item['source_id']} · page {item['page']}")
+                st.text(item["quote"])
+        else:
+            st.subheader("Explored idea pending")
+            st.caption(
+                "No selected or measured path is recorded yet. Reviewed directions appear below."
+            )
     seed = next((s for s in journal.sources if s["source_id"] == "seed"), None)
     if seed:
         with st.container(border=True):
-            st.caption("RESEARCH STARTS HERE · SEED PAPER")
-            st.subheader(seed.get("title", "Seed paper"))
+            st.markdown("**Source inputs**")
+            st.write(seed.get("title", "Seed paper"))
             st.caption(f"{len(seed.get('pages', []))} text pages · SHA-256 {seed['sha256'][:16]}")
             if urlsplit(seed.get("url", "")).scheme in {"https", "http"}:
                 st.link_button("Open pinned paper", seed["url"], icon=":material/article:")
+            links = {}
+            for page, text in enumerate(seed.get("pages", []), 1):
+                for link in re.findall(
+                    r"https?://(?:github\.com|gitlab\.com|bitbucket\.org)/[\w.-]+/[\w.-]+",
+                    text,
+                ):
+                    links.setdefault(link.rstrip(".,;"), page)
+            for link, page in links.items():
+                st.link_button(
+                    "Code cited by paper · " + link.split("/")[-1], link, icon=":material/code:"
+                )
+                st.caption(f"Repository link extracted from seed paper · page {page}")
+            if not links:
+                st.caption("Code link: no repository URL found in the saved paper text.")
     cols = st.columns(3)
     cols[0].metric("Grounded directions", len(journal.proposals))
     cols[1].metric("Completed result checkpoints", len(report.get("rounds", [])))
@@ -154,7 +202,7 @@ def render_measurements(dataset: dict) -> None:
     )
     left, right = st.columns(2)
     with left:
-        st.markdown("**Original → follow-up**")
+        st.markdown("**Local control and proposed simulation**")
         st.altair_chart(bars, width="stretch", alt=f"Measured control and follow-up {metric}")
     with right:
         st.markdown("**Effect and uncertainty**")
@@ -206,28 +254,58 @@ def render_measurements(dataset: dict) -> None:
 
 def render_dataset_files(journal: Journal, dataset: dict) -> None:
     files = dataset_artifacts(journal, dataset)
-    with st.expander("Dataset, seeds and reproducibility"):
-        st.caption(
-            "These CSVs produced the selected snapshot. Cumulative checkpoints "
-            "are not added together."
+    if "branch_id" in dataset:
+        prefix = f"branches/{dataset['branch_id']}/batches/"
+        candidates = [
+            f"{prefix}{number:02d}/{name}"
+            for number in range(1, dataset["batch"] + 1)
+            for name in ("specification.json", "trials.csv", "checks.json", "cumulative.json")
+        ]
+    else:
+        prefix = f"rounds/{dataset['round']:02d}/"
+        candidates = [prefix + name for name in ("experiment.json", "trials.csv", "checks.json")]
+    files = sorted(
+        set(
+            files
+            + [
+                name
+                for name in candidates
+                if (
+                    name in journal.artifacts
+                    if journal.sealed
+                    else (journal.directory / name).is_file()
+                )
+            ]
         )
-        st.json(
-            {
-                k: journal.config.get(k)
-                for k in ["seed", "sizes", "trials", "max_rounds", "max_simulations"]
-            }
-        )
+    )
+    with st.expander("Proposed simulation artifacts · recipe, data and checks"):
+        st.caption("Files are scoped to this checkpoint; later batches are excluded.")
         if not files:
-            st.info("Raw files are not sealed yet; refresh after this run finishes.")
-        for name in files:
-            st.caption(f"{name} · SHA-256 {journal.artifacts[name]['sha256'][:16]}")
-        if files:
-            name = st.selectbox("Snapshot dataset", files)
+            st.info("No simulation files have been written for this snapshot yet.")
+        else:
+            name = st.selectbox(
+                "Snapshot artifact",
+                files,
+                index=next(
+                    (
+                        i
+                        for i, f in enumerate(files)
+                        if f.endswith("specification.json")
+                        and f"/{dataset.get('batch', 0):02d}/" in f
+                    ),
+                    0,
+                ),
+            )
+            digest = journal.artifacts.get(name, {}).get("sha256")
+            st.caption(f"SHA-256 {digest}" if digest else "Live artifact · manifest not sealed yet")
+            raw = read_artifact(journal.directory, name)
+            if name.endswith(".json"):
+                st.json(json.loads(raw), expanded=False)
             st.download_button(
-                "Download raw simulation data",
-                read_artifact(journal.directory, name),
-                file_name=Path(name).name,
-                mime="text/csv",
+                "Download simulation artifact",
+                raw,
+                file_name=name.replace("/", "-"),
+                mime="text/csv" if name.endswith(".csv") else "application/json",
             )
         st.code(f'research verify "{journal.directory}"', language="bash")
 
@@ -302,10 +380,26 @@ def render_synthesis(journal: Journal) -> None:
             with st.expander("Scientific limitations retained by the evaluator", expanded=False):
                 for limitation in validation.get("limitations", []):
                     st.write("• " + limitation)
-        render_dataset_files(journal, dataset)
     st.divider()
-    st.subheader("Paper exploration")
-    render_papers(journal)
+    st.subheader("Research outcome and remaining validation")
+    baseline = report.get("baseline", {})
+    st.write(baseline.get("claim", "Baseline validation has not completed."))
+    st.caption(baseline.get("limitation", "This is a scoped simulation check."))
+    cols = st.columns(3)
+    cols[0].metric("Completed checkpoints", len(report.get("rounds", [])))
+    cols[1].metric("Computed simulations", report.get("computed_simulations", 0))
+    cols[2].metric("Elapsed time", f"{report.get('elapsed_seconds', 0):.1f} s")
+    st.caption(
+        report.get("acceleration", {}).get("status", "No comparable manual baseline measured")
+    )
+    with st.expander("Other tested directions and retained outcomes"):
+        for key, branch in report.get("branches", {}).items():
+            st.markdown(f"**{key} · {branch['proposal']['title']}**")
+            st.write(
+                f"{branch['batches']} completed batches · {branch['status'].replace('_', ' ')}"
+            )
+            st.write(branch["proposal"]["hypothesis"])
+    st.caption("Scientific novelty and real-world validity require independent validation.")
 
 
 def render_papers(journal: Journal) -> None:
@@ -367,94 +461,3 @@ def render_papers(journal: Journal) -> None:
         file_name=f"{journal.run_id}-paper-evidence.json",
         mime="application/json",
     )
-
-
-def render_comparison_page(journal: Journal) -> None:
-    st.caption(
-        "Compare the published reference, the local baseline and the "
-        "follow-up on their actual scope."
-    )
-    baseline = journal.report.get("baseline", {})
-    left, right = st.columns(2)
-    with left, st.container(border=True):
-        st.caption("ORIGINAL · SOURCE + LOCAL BASELINE")
-        st.markdown("**Baseline check**")
-        st.write(baseline.get("claim", "Baseline has not completed."))
-        st.caption(
-            baseline.get(
-                "limitation", "Published paper results remain distinct from local controls."
-            )
-        )
-        if baseline.get("checks"):
-            st.dataframe(
-                baseline["checks"],
-                hide_index=True,
-                alt="Local baseline checks against published references",
-            )
-    with right, st.container(border=True):
-        st.caption("FOLLOW-UP · AGENT PROPOSAL + LOCAL TEST")
-        proposals = journal.proposals
-        for proposal in proposals:
-            st.markdown(f"**{proposal['title']}**")
-            st.caption(proposal.get("origin", "source-grounded proposal").replace("_", " "))
-        st.write(
-            "Results below compare the local control with the implemented "
-            "treatment. They do not reproduce the entire paper."
-        )
-    datasets = latest_datasets(journal.report)
-    if not datasets:
-        render_comparison_outputs(journal, None)
-        return
-    finalized_branch = journal.report.get("goal", {}).get("branch_id")
-    selected_index = next(
-        (i for i, item in enumerate(datasets) if item.get("branch_id") == finalized_branch), 0
-    )
-    chosen = st.selectbox(
-        "Follow-up dataset",
-        range(len(datasets)),
-        index=selected_index,
-        format_func=lambda i: (
-            f"{datasets[i].get('branch_id', 'Follow-up')} · checkpoint {datasets[i]['round']}"
-        ),
-    )
-    dataset = datasets[chosen]
-    render_comparison_outputs(journal, dataset)
-    with st.expander("Detailed measurements and uncertainty"):
-        render_measurements(dataset)
-    st.subheader("Artifact lineage")
-    originals = [n for n in journal.artifacts if n.startswith(("inputs/", "baseline/"))]
-    if "branch_id" in dataset:
-        prefix = f"branches/{dataset['branch_id']}/"
-    else:
-        prefix = f"rounds/{dataset['round']:02d}/"
-    followups = [n for n in journal.artifacts if n.startswith(prefix)]
-    for column, title, names in zip(
-        st.columns(2),
-        ["Original artifacts", "Follow-up artifacts"],
-        [originals, followups],
-        strict=True,
-    ):
-        with column, st.container(border=True):
-            st.markdown(f"**{title}**")
-            st.caption(f"{len(names)} sealed artifacts")
-            if names:
-                name = st.selectbox(title, sorted(names), key=title)
-                st.caption(f"SHA-256 {journal.artifacts[name]['sha256'][:20]}")
-                st.download_button(
-                    "Download " + title.lower(),
-                    read_artifact(journal.directory, name),
-                    file_name=Path(name).name,
-                )
-                if name.endswith(".json"):
-                    st.json(saved_json(journal, name), expanded=False)
-    review = journal.report.get("automated_review")
-    if review:
-        with st.expander("Reference evaluator: original work versus added value"):
-            st.write(review["rationale"])
-            st.dataframe(
-                [{k: v for k, v in c.items() if k != "evidence"} for c in review["comparisons"]],
-                hide_index=True,
-                alt="Original work, follow-up work and claimed added value",
-            )
-            st.write(review["limitations"])
-    render_dataset_files(journal, dataset)

@@ -158,14 +158,15 @@ def test_multiple_sessions_in_one_stage_are_all_visible(tmp_path):
     ]
 
 
-def test_svg_escapes_labels_and_only_marks_observed_repeats():
+@pytest.mark.parametrize("parallel", [False, True])
+def test_svg_escapes_labels_and_only_marks_observed_repeats(parallel):
     import xml.etree.ElementTree as ET
 
     from hacknation_databricks.research.activity import Activity, activity_svg
 
     nodes = [
         Activity(
-            "rounds/01/validation",
+            'rounds/01/validation" onclick="bad',
             "<script>bad</script>",
             1,
             "omnigent",
@@ -174,7 +175,14 @@ def test_svg_escapes_labels_and_only_marks_observed_repeats():
         ),
         Activity("rounds/02/literature", "literature", 2, "omnigent", "later"),
     ]
+    if parallel:
+        for node in nodes:
+            node.parents = []
     svg = activity_svg(nodes, nodes[0].key)
-    ET.fromstring(svg)
+    root = ET.fromstring(svg)
     assert "<script>" not in svg and "&lt;script&gt;" in svg
-    assert "Repeat recorded" in svg and "Round 3" not in svg
+    boxes = root.findall(".//*[@data-activity-key]")
+    assert [box.attrib["data-activity-key"] for box in boxes] == [n.key for n in nodes]
+    assert all("onclick" not in box.attrib for box in boxes)
+    if not parallel:
+        assert "Repeat recorded" in svg and "Round 3" not in svg

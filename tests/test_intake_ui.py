@@ -30,7 +30,7 @@ def test_source_form_import_updates_library_and_selected_seed(tmp_path, monkeypa
         return imported
 
     monkeypatch.setattr(source_ui, "register_arxiv", fake_import)
-    app = AppTest.from_function(intake_page).run()
+    app = AppTest.from_file(str(TRACKING)).run(timeout=15)
     next(t for t in app.text_input if t.label == "arXiv link or identifier").set_value(
         "https://arxiv.org/abs/2607.24975v1"
     )
@@ -38,8 +38,12 @@ def test_source_form_import_updates_library_and_selected_seed(tmp_path, monkeypa
     assert not app.exception
     assert links == ["https://arxiv.org/abs/2607.24975v1"]
     assert any("Ready:" in s.value for s in app.success)
-    assert app.session_state["intake_selected"] == str(Path(imported.path).resolve())
-    assert any(s.label == "Inspect source" for s in app.selectbox)
+    assert app.session_state["selected_seed_path"] == str(Path(imported.path).resolve())
+    assert sum(s.label == "Seed paper" for s in app.selectbox) == 1
+    assert not any(e.label == "Extracted text & provenance" for e in app.expander)
+    assert not any(s.label == "Related literature" for s in app.multiselect)
+    assert not any(h.value == "Prepare a discovery run" for h in app.subheader)
+    assert not any(s.label == "Inspect sources" for s in app.selectbox)
 
 
 def test_import_error_is_actionable_and_does_not_create_source(tmp_path, monkeypatch):
@@ -70,16 +74,13 @@ def test_uploaded_sources_launch_with_original_identity_and_literature(tmp_path,
     )
     app = AppTest.from_file(str(TRACKING)).run()
     app.switch_page("app_pages/sources.py").run()
-    backend = next(s for s in app.selectbox if s.label == "Decision backend")
-    backend.select(next(s for s in backend.options if "AnyJev" in s)).run()
-    picker = next(s for s in app.selectbox if s.label == "Registered source")
+    picker = next(s for s in app.selectbox if s.label == "Seed paper")
     picker.select(next(s for s in picker.options if "seed.md" in s)).run()
-    related_picker = next(s for s in app.multiselect if s.label == "Related literature")
-    related_picker.select(next(s for s in related_picker.options if "related.md" in s)).run()
-    next(s for s in app.selectbox if s.label == "Decision backend").select(
-        "AnyJev · local Qwen · decision only"
-    ).run()
-    next(b for b in app.button if b.label == "Start bounded run").click().run(timeout=30)
+    assert not any(s.label == "Related literature" for s in app.multiselect)
+    tracking_ui.launch_run(
+        Path(seed.path), "Quick verification", "anyjev", lambda _: None, [Path(related.path)]
+    )
+    app.run(timeout=30)
     assert not app.exception
     directory = next((tmp_path / "runs").glob("*/sources.json")).parent
     source_data = json.loads((directory / "sources.json").read_text())
@@ -89,10 +90,19 @@ def test_uploaded_sources_launch_with_original_identity_and_literature(tmp_path,
     assert (directory / "inputs/seed.md.json").exists()
     app.switch_page("app_pages/agents.py").run()
     assert next(m for m in app.metric if m.label == "Omnigent sessions").value == "0"
-    next(s for s in app.selectbox if s.label == "Inspect execution step").select_index(2).run()
+    # AppTest cannot click a custom SVG; seed the state emitted by its click callback.
+    from hacknation_databricks.research.activity import load_activity
+    from hacknation_databricks.tracking import load_journal
+
+    nodes = load_activity(load_journal(directory))
+    app.session_state[f"execution-selection:{directory.resolve()}"] = nodes[2].key
+    app.run()
     assert not app.exception
+    assert not any(s.label == "Inspect execution step" for s in app.selectbox)
     assert any(
-        "baseline/trials.csv" in s.options for s in app.selectbox if s.label == "Step artifact"
+        "baseline/trials.csv" in [o.content for o in s.proto.options]
+        for s in app.get("button_group")
+        if s.proto.label == "Step artifact"
     )
 
 
@@ -140,7 +150,7 @@ def test_running_validation_without_gate_does_not_crash():
     assert not AppTest.from_function(page).run().exception
 
 
-def test_library_only_includes_two_builtins_and_explicit_imports(tmp_path, monkeypatch):
+def test_library_only_includes_explicit_imports_and_configured_source(tmp_path, monkeypatch):
     from hacknation_databricks.research.intake import library_sources
     from hacknation_databricks.research.sources import Source
 
@@ -171,10 +181,107 @@ def test_library_only_includes_two_builtins_and_explicit_imports(tmp_path, monke
     )
     sources, issues = library_sources(tmp_path / "sources")
     assert not issues
-    assert [Path(s.path).name for s in sources] == [
-        "source.md",
-        "2607.24975v1.pdf",
-        "2111.11268v1.pdf",
-    ]
+    assert [Path(s.path).name for s in sources] == ["source.md"]
     monkeypatch.setenv("RESEARCH_PAPER_PATH", str(papers / "2607.24975v1.pdf"))
-    assert len(library_sources(tmp_path / "sources")[0]) == 3
+    assert len(library_sources(tmp_path / "sources")[0]) == 2
+
+
+@pytest.mark.parametrize("same_source", [True, False])
+def test_source_progress_matches_content_and_keeps_assessment_in_details(
+    tmp_path, monkeypatch, same_source
+):
+    import hashlib
+
+    from hacknation_databricks import activity_ui, source_ui
+    from hacknation_databricks.tracking import Journal
+
+    paper = tmp_path / "paper.md"
+    paper.write_bytes(b"Original seed" if same_source else b"Different paper, same filename")
+    reason = "Archived assessment: these tools cannot test this paper's hypothesis."
+    journal = Journal(
+        "stopped-run",
+        tmp_path / "stopped-run",
+        sources=[
+            {
+                "source_id": "seed",
+                "title": "paper.md",
+                "path": "/old/location/paper.md",
+                "sha256": hashlib.sha256(b"Original seed").hexdigest(),
+            }
+        ],
+        report={"status": "unsupported_source", "reason": reason},
+        sealed=True,
+    )
+    monkeypatch.setattr(source_ui, "load_journal", lambda _: journal)
+    rendered = []
+    monkeypatch.setattr(activity_ui, "render_activity", lambda j: rendered.append(j.run_id))
+
+    def page(path):
+        import streamlit as st
+
+        from hacknation_databricks.source_ui import render_source_progress
+
+        st.session_state["run_selection"] = "stopped-run"
+        st.session_state["selected_seed_path"] = path
+        render_source_progress()
+
+    app = AppTest.from_function(page, args=(str(paper),)).run()
+    assert not app.exception
+    assert not app.warning
+    if same_source:
+        assert any("stopped before simulation" in i.value for i in app.info)
+        details = next(e for e in app.expander if "saved agent assessment" in e.label)
+        assert not details.proto.expanded
+        assert details.text[0].value == reason
+        assert any("stopped-run" in c.value for c in app.caption)
+        assert rendered == ["stopped-run"]
+    else:
+        assert not app.info
+        assert not app.expander
+        assert any("belongs to paper.md" in c.value for c in app.caption)
+        assert not rendered
+    assert journal.report["reason"] == reason
+
+
+def test_stopped_source_overview_does_not_wait_for_experiments():
+    def page():
+        from pathlib import Path
+
+        from hacknation_databricks.discovery_ui import render_discovery
+        from hacknation_databricks.run_feedback_ui import render_run_outcome
+        from hacknation_databricks.tracking import Journal
+
+        journal = Journal(
+            "stopped", Path("."), report={"status": "unsupported_source", "workflow_version": "4"}
+        )
+        render_run_outcome(journal)
+        render_discovery(journal)
+
+    app = AppTest.from_function(page).run()
+    assert not app.exception
+    assert not app.metric  # No "Goal: Open" on a concluded compatibility check.
+    assert any("stopped before simulation" in i.value for i in app.info)
+    assert any("No experiment" in c.value for c in app.caption)
+
+
+def test_runtime_failure_is_distinct_from_unsupported_paper():
+    def page():
+        from pathlib import Path
+
+        from hacknation_databricks.run_feedback_ui import render_run_outcome
+        from hacknation_databricks.tracking import Journal
+
+        render_run_outcome(
+            Journal(
+                "blocked",
+                Path("."),
+                report={"status": "blocked_live_backend", "reason": "ConnectError"},
+            )
+        )
+
+    app = AppTest.from_function(page).run()
+    assert not app.exception
+    assert len(app.warning) == 1
+    assert "agent runtime" in app.warning[0].value
+    assert app.expander[0].text[0].value == "ConnectError"
+    assert not app.expander[0].proto.expanded
