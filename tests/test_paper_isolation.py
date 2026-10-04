@@ -164,3 +164,21 @@ def test_tool_mapper_cannot_rewrite_paper_hypothesis(tmp_path):
     assert not (output / "implementation.json").exists()
     assert (output / "paper_briefs.json").exists()
     assert not verify_artifacts(output)
+
+
+def test_cli_uploaded_paper_defaults_to_paper_first_context(tmp_path, monkeypatch):
+    from hacknation_databricks.research import cli
+
+    paper = tmp_path / "unrelated.md"
+    paper.write_text("A distinct source must not select a preset by default.")
+    seen = {}
+
+    def capture(source, output, config, **kwargs):
+        seen.update(config=config, source=source)
+        return {"status": "unsupported_source"}
+
+    monkeypatch.setattr(cli, "run_research", capture)
+    assert cli.main(["run", "--paper", str(paper), "--no-auto-literature"]) == 2
+    assert seen["config"].domain == "auto"
+    assert seen["config"].workflow == "adaptive"
+    assert seen["source"].path == str(paper)
