@@ -1,9 +1,13 @@
 # Paper-specific setup and isolation
 
-Source intake has one **Paper** selector, initially containing only the pinned
-Percolation and AstroSat examples. A visible drop zone accepts PDF/Markdown papers;
-arXiv imports and uploads join the same selector. Content-identical copies of a
-seed remain one entry. Related literature is retrieved from the selected paper's
+Source intake separates **Example papers** (the pinned Percolation and AstroSat
+papers) from **Your papers**. Your papers always opens a single-paper upload and
+arXiv import directly, without a saved-paper dropdown. Upload a document and click
+**Use uploaded paper**, or import from arXiv, to prepare the run. Previously saved
+documents are never selected automatically. The current session retains the paper
+just uploaded/imported when switching collections; before intake, launch is disabled.
+Content-identical copies of a seed select its existing example entry, with
+import feedback still visible. Related literature is retrieved from the selected paper's
 citations; the CLI also accepts explicit `--literature` inputs.
 
 Changing the paper filters runs by its content hash. Originals and provenance remain

@@ -23,6 +23,7 @@ def test_next_run_policy_reaches_fixed_launch_and_redirects(monkeypatch, tmp_pat
 
     monkeypatch.setattr(tracking_ui, "background_executor", lambda: Executor())
     app = ViewTest.from_file(str(UI)).run(timeout=15)
+    app.session_state["intake_selected"] = launch_source.path
     app.switch_page("app_pages/policies.py").run()
     assert not app.exception
     app.segmented_control[0].set_value("Next-run controls").run()

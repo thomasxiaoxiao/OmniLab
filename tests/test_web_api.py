@@ -88,7 +88,7 @@ def test_form_upload_preserves_original_bytes_and_clears_form(client, tmp_path):
         client,
         view,
         values={control(view, "PDF or Markdown")["widget"]: [upload.json()["token"]]},
-        action=control(view, "Add files to library")["widget"],
+        action=control(view, "Use uploaded paper")["widget"],
     )
     assert response.status_code == 200
     after = response.json()
@@ -96,7 +96,8 @@ def test_form_upload_preserves_original_bytes_and_clears_form(client, tmp_path):
     digest = hashlib.sha256(content).hexdigest()
     assert (tmp_path / "sources" / digest / "source.md").read_bytes() == content
     assert control(after, "PDF or Markdown")["value"] == []
-    assert digest[:8] in control(after, "Paper")["options"][0]
+    assert not any(n.get("label") == "Paper" for n in nodes(after))
+    assert not control(after, "Start bounded run")["disabled"]
 
 
 def test_uploads_are_session_scoped_and_type_size_bounded(client):
@@ -117,6 +118,9 @@ def test_uploads_are_session_scoped_and_type_size_bounded(client):
     token = client.post(
         "/api/upload", params=params, content=b"A valid source.", headers=headers
     ).json()["token"]
+    assert (
+        event(client, view, values={control(view, "PDF or Markdown")["widget"]: [token, token]})
+    ).status_code == 400
     with TestClient(server.app) as other:
         foreign = other.get("/api/view").json()
         assert (
@@ -152,6 +156,7 @@ def test_policy_persists_and_exact_launch_identity_survives_redirect(
 
     monkeypatch.setattr(tracking_ui, "background_executor", lambda: Executor())
     view = client.get("/api/view?page=policies").json()
+    next(iter(server._sessions.values())).state["intake_selected"] = launch_source.path
     view = event(client, view, values={control(view, "Policy workspace")["widget"]: 1}).json()
     view = event(client, view, values={control(view, "Policy profile")["widget"]: 1}).json()
     view = event(
@@ -268,7 +273,7 @@ def test_tabs_sharing_a_cookie_have_independent_state_and_revisions(client):
     )
 
 
-def test_upload_without_code_enables_workflow_in_the_single_paper_selector(client, monkeypatch):
+def test_upload_without_code_enables_workflow_without_a_paper_selector(client, monkeypatch):
     from hacknation_databricks import tracking_ui
 
     submitted = []
@@ -280,7 +285,7 @@ def test_upload_without_code_enables_workflow_in_the_single_paper_selector(clien
 
     monkeypatch.setattr(tracking_ui, "background_executor", lambda: Executor())
     view = client.get("/api/view").json()
-    seeds = control(view, "Paper")["options"]
+    assert not any(n.get("label") == "Paper" for n in nodes(view))
     content = b"Compare decay rates with a reproducible numerical model."
     token = client.post(
         "/api/upload",
@@ -292,12 +297,9 @@ def test_upload_without_code_enables_workflow_in_the_single_paper_selector(clien
         client,
         view,
         values={control(view, "PDF or Markdown")["widget"]: [token]},
-        action=control(view, "Add files to library")["widget"],
+        action=control(view, "Use uploaded paper")["widget"],
     ).json()
-    options = control(view, "Paper")["options"]
-    assert options[: len(seeds)] == seeds
-    assert len(options) == len(seeds) + 1
-    assert sum(n.get("label") == "Paper" for n in nodes(view)) == 1
+    assert not any(n.get("label") == "Paper" for n in nodes(view))
     assert not any(
         n.get("label") in {"Seed paper", "Uploaded paper", "Paper source"} for n in nodes(view)
     )

@@ -38,6 +38,13 @@ def label(role: str) -> str:
     return ROLE_LABELS.get(role, role.replace("_", " ").capitalize())
 
 
+def next_experiment_summary(text: str) -> str:
+    """Bound legacy overview prose without rewriting the sealed agent decision."""
+    words = text.split()
+    summary = " ".join(words[:20]) + ("…" if len(words) > 20 else "")
+    return textwrap.shorten(summary, width=140, placeholder="…")
+
+
 def dot_label(value: str, width: int = 34) -> str:
     return json.dumps("\n".join(textwrap.wrap(value, width)), ensure_ascii=False)
 

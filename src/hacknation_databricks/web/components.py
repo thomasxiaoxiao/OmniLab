@@ -548,7 +548,7 @@ def apply_event(session, values, action=None):
         elif kind == "file_uploader":
             if (
                 not isinstance(value, list)
-                or len(value) > 10
+                or len(value) > (10 if node.get("multiple") else 1)
                 or any(not isinstance(t, str) or t not in session.uploads for t in value)
             ):
                 raise ValueError("Invalid upload")

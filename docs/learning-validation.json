@@ -1,0 +1,402 @@
+{
+  "recorded_at": "2026-10-04T08:26:14.480666+00:00",
+  "status": "verified_six_exact_replays_and_live_result_driven_followups",
+  "cleanup": {
+    "kept": "20261004-postevent-percolation-01",
+    "archived": [
+      {
+        "run_id": "20261004-postevent-astrosat-01",
+        "path": "/Users/thomas/workspace/hacknation-databricks/output/archived-research/20261004T080907Z-cleanup/20261004-postevent-astrosat-01",
+        "manifest_sha256": "974ca6801586e70f7fe029cb857b1b01ada6a35a1f36ca9d3195f6c7c684e73f",
+        "verified": true
+      },
+      {
+        "run_id": "20261004-postevent-percolation-02",
+        "path": "/Users/thomas/workspace/hacknation-databricks/output/archived-research/20261004T080907Z-cleanup/20261004-postevent-percolation-02",
+        "manifest_sha256": "7236f5064e29f413105ae87d09625c1a82a720438ee747d078deed073f9dd7f8",
+        "verified": true
+      },
+      {
+        "run_id": "20261004T0654-astrosat",
+        "path": "/Users/thomas/workspace/hacknation-databricks/output/archived-research/20261004T080907Z-cleanup/20261004T0654-astrosat",
+        "manifest_sha256": "4d4baa63298f019797d863e4b1b060efd012ed737ef4064db6f610db393fae17",
+        "verified": true
+      },
+      {
+        "run_id": "20261004T0654-percolation",
+        "path": "/Users/thomas/workspace/hacknation-databricks/output/archived-research/20261004T080907Z-cleanup/20261004T0654-percolation",
+        "manifest_sha256": "9dd09bef037934368d5858d9b8877d02a93b704d7695a35b21ff95edd07777e0",
+        "verified": true
+      },
+      {
+        "run_id": "20261004T0700-astrosat",
+        "path": "/Users/thomas/workspace/hacknation-databricks/output/archived-research/20261004T080907Z-cleanup/20261004T0700-astrosat",
+        "manifest_sha256": "a7a01acc59ca5e4c9f2c26b451b449b7dfd897899112b2af5f60f7d6aed40631",
+        "verified": true
+      },
+      {
+        "run_id": "20261004T0700-percolation",
+        "path": "/Users/thomas/workspace/hacknation-databricks/output/archived-research/20261004T080907Z-cleanup/20261004T0700-percolation",
+        "manifest_sha256": "e048a1ce04f78f71c1c5de188be8fb3fe9725f26318ed895403e1184dc2ebe3e",
+        "verified": true
+      }
+    ],
+    "reason": "User requested only postevent-percolation-01 in the results list; original evidence preserved unchanged."
+  },
+  "root_causes": [
+    "The old dimming outcome equals -2.5*log10(q); geometry cancels and q was derived from the 1.3-mag target. Repeated seeds supplied only floating-point variation.",
+    "The planner selected this implementation check as the main experiment and deferred its unresolved classification question outside the executable metric/parameter contract.",
+    "The assessor received the main summary but not additional executed quality/secondary measurements. The first validation run confirmed this missing handoff in its recorded limitations.",
+    "A prose request for concise summaries coexisted with a 1500-character contract and unbounded overview display."
+  ],
+  "changes": [
+    "New plans must describe an unresolved outcome and one or two distinct complete follow-up parameter objects; declared verification-only primary tests receive bounded correction.",
+    "Researchers receive bounded per-trial diagnostics with omissions disclosed; AnyJev receives the interpretation and hash-bound diagnostic provenance. Audits reconstruct these from raw output.",
+    "New next_experiment responses enforce one sentence, at most 20 words and 140 characters, with one correction attempt. A real overlength rejection and successful repair occurred in astrosat-live-01 round 3.",
+    "The overview shortens historical summaries without changing sealed artifacts; full original text remains expandable.",
+    "Omnigent worker model configuration is unchanged. Local port 8000 is PM2-managed and has loaded the current files; its health revision still names the base Git commit."
+  ],
+  "tests": "RUN_SANDBOX_TESTS=1 npm run check: 315 passed, no skips; frontend/build/Ruff/process checks passed.",
+  "test_log": "output/learning-validation/final-checks.log",
+  "old_outcome_diagnosis": "output/learning-validation/old-astrosat-diagnosis.json",
+  "browser": "Verified the only results-list entry is 20261004-postevent-percolation-01, including when previous runs are shown. Concise overview preview and full-text expander verified.",
+  "screenshot": "output/learning-validation/concise-next-step.jpg",
+  "runs": [
+    {
+      "path": "output/learning-validation/astrosat-live-01",
+      "status": "research_stopped",
+      "role_calls": 9,
+      "decision_calls": 3,
+      "simulation_jobs": 50,
+      "elapsed_seconds": 428.414,
+      "diagnostic_handoff": false,
+      "verified": true,
+      "comparisons": [
+        {
+          "round": 1,
+          "summary": {
+            "control_mean": 0.5015572998510108,
+            "difference": -0.07878452475964207,
+            "interval": [
+              -0.08567512291508404,
+              -0.07189392660420009
+            ],
+            "interval_method": "Paired-seed Student t interval, 95%; exploratory, no sequential or multiple-testing correction.",
+            "meaningful_difference": 0.02,
+            "metric": "Search evaluation burden",
+            "proposed_mean": 0.4227727750913688,
+            "replay_passed": true,
+            "samples_per_arm": 4,
+            "sanity_passed": true,
+            "units": "dimensionless; E/(E+1000), lower is better"
+          },
+          "arms": {
+            "control": {
+              "metrics": [
+                0.5012468827930174,
+                0.5012468827930174,
+                0.5014955134596212,
+                0.5022399203583873
+              ]
+            },
+            "proposed": {
+              "metrics": [
+                0.41690962099125367,
+                0.42196531791907516,
+                0.4275901545506583,
+                0.42462600690448793
+              ]
+            }
+          },
+          "action": "precision",
+          "next_experiment": "Run eight fresh paired seeds with unchanged arms, recording crossing recovery, endpoint errors, reference agreement, and evaluation burden.",
+          "summary_words": 18,
+          "summary_characters": 139,
+          "replay": "output/learning-validation/replay-01-1/replay.json",
+          "replay_status": "matched"
+        },
+        {
+          "round": 2,
+          "summary": {
+            "control_mean": 0.5018677477407214,
+            "difference": -0.08064420237890847,
+            "interval": [
+              -0.09010533332943266,
+              -0.07118307142838429
+            ],
+            "interval_method": "Paired-seed Student t interval, 95%; exploratory, no sequential or multiple-testing correction.",
+            "meaningful_difference": 0.02,
+            "metric": "Search evaluation burden",
+            "proposed_mean": 0.42122354536181295,
+            "replay_passed": true,
+            "samples_per_arm": 8,
+            "sanity_passed": true,
+            "units": "dimensionless; E/(E+1000), lower is better"
+          },
+          "arms": {
+            "control": {
+              "metrics": [
+                0.5014955134596212,
+                0.5022399203583873,
+                0.5022399203583873,
+                0.5017438963627304,
+                0.5022399203583873,
+                0.50199203187251,
+                0.5017438963627304,
+                0.5012468827930174
+              ]
+            },
+            "proposed": {
+              "metrics": [
+                0.4269340974212034,
+                0.4363021420518602,
+                0.4189424753050552,
+                0.4363021420518602,
+                0.4189424753050552,
+                0.4186046511627907,
+                0.4068801897983393,
+                0.4068801897983393
+              ]
+            }
+          },
+          "action": "followup",
+          "next_experiment": "Reduce adaptive leaf duration to 0.01 seconds and compare paired evaluation costs, crossing recovery, and endpoint errors.",
+          "summary_words": 17,
+          "summary_characters": 122,
+          "replay": "output/learning-validation/replay-01-2/replay.json",
+          "replay_status": "matched"
+        },
+        {
+          "round": 3,
+          "summary": {
+            "control_mean": 0.5018057140018122,
+            "difference": 0.014844072175638802,
+            "interval": [
+              -0.0006969467223092961,
+              0.0303850910735869
+            ],
+            "interval_method": "Paired-seed Student t interval, 95%; exploratory, no sequential or multiple-testing correction.",
+            "meaningful_difference": 0.02,
+            "metric": "Search evaluation burden",
+            "proposed_mean": 0.5166497861774509,
+            "replay_passed": true,
+            "samples_per_arm": 8,
+            "sanity_passed": true,
+            "units": "dimensionless; E/(E+1000), lower is better"
+          },
+          "arms": {
+            "control": {
+              "metrics": [
+                0.5022399203583873,
+                0.5024875621890548,
+                0.5017438963627304,
+                0.5014955134596212,
+                0.5017438963627304,
+                0.5017438963627304,
+                0.5014955134596212,
+                0.5014955134596212
+              ]
+            },
+            "proposed": {
+              "metrics": [
+                0.5381062355658198,
+                0.5376791493296348,
+                0.5155038759689923,
+                0.5283018867924528,
+                0.5253915519696251,
+                0.49520444220090865,
+                0.5034756703078451,
+                0.4895354772843287
+              ]
+            }
+          },
+          "action": "stop",
+          "next_experiment": "Compare 10-second and 20-second adaptive maximum intervals at fixed 0.01-second leaves, measuring crossing accuracy and evaluation cost.",
+          "summary_words": 17,
+          "summary_characters": 136,
+          "replay": "output/learning-validation/replay-01-3/replay.json",
+          "replay_status": "matched"
+        }
+      ]
+    },
+    {
+      "path": "output/learning-validation/astrosat-live-02",
+      "status": "research_stopped",
+      "role_calls": 8,
+      "decision_calls": 3,
+      "simulation_jobs": 34,
+      "elapsed_seconds": 385.126,
+      "diagnostic_handoff": true,
+      "verified": true,
+      "comparisons": [
+        {
+          "round": 1,
+          "summary": {
+            "control_mean": 1.0,
+            "difference": 0.0,
+            "interval": [
+              0.0,
+              0.0
+            ],
+            "interval_method": "Paired-seed Student t interval, 95%; exploratory, no sequential or multiple-testing correction.",
+            "meaningful_difference": 0.01,
+            "metric": "Timely transit recall",
+            "proposed_mean": 1.0,
+            "replay_passed": true,
+            "samples_per_arm": 4,
+            "sanity_passed": true,
+            "units": "fraction of all reference transits"
+          },
+          "arms": {
+            "control": {
+              "metrics": [
+                1.0,
+                1.0,
+                1.0,
+                1.0
+              ],
+              "position_evaluations": 4008,
+              "reference_events": 72,
+              "timely_events": 72,
+              "false_positive_events": 0
+            },
+            "proposed": {
+              "metrics": [
+                1.0,
+                1.0,
+                1.0,
+                1.0
+              ],
+              "position_evaluations": 10313,
+              "reference_events": 72,
+              "timely_events": 72,
+              "false_positive_events": 0
+            }
+          },
+          "action": "followup",
+          "next_experiment": "Increase adaptive leaves to 1.0 second and compare paired accuracy and search evaluation costs against the unchanged baseline.",
+          "summary_words": 18,
+          "summary_characters": 126,
+          "replay": "output/learning-validation/replay-02-1/replay.json",
+          "replay_status": "matched"
+        },
+        {
+          "round": 2,
+          "summary": {
+            "control_mean": 1.0,
+            "difference": 0.0,
+            "interval": [
+              0.0,
+              0.0
+            ],
+            "interval_method": "Paired-seed Student t interval, 95%; exploratory, no sequential or multiple-testing correction.",
+            "meaningful_difference": 0.01,
+            "metric": "Timely transit recall",
+            "proposed_mean": 1.0,
+            "replay_passed": true,
+            "samples_per_arm": 4,
+            "sanity_passed": true,
+            "units": "fraction of all reference transits"
+          },
+          "arms": {
+            "control": {
+              "metrics": [
+                1.0,
+                1.0,
+                1.0,
+                1.0
+              ],
+              "position_evaluations": 4008,
+              "reference_events": 72,
+              "timely_events": 72,
+              "false_positive_events": 0
+            },
+            "proposed": {
+              "metrics": [
+                1.0,
+                1.0,
+                1.0,
+                1.0
+              ],
+              "position_evaluations": 5602,
+              "reference_events": 72,
+              "timely_events": 72,
+              "false_positive_events": 0
+            }
+          },
+          "action": "followup",
+          "next_experiment": "Increase adaptive leaves to 5 seconds and compare accuracy and search evaluations against the unchanged nested baseline.",
+          "summary_words": 17,
+          "summary_characters": 120,
+          "replay": "output/learning-validation/replay-02-2/replay.json",
+          "replay_status": "matched"
+        },
+        {
+          "round": 3,
+          "summary": {
+            "control_mean": 1.0,
+            "difference": 0.0,
+            "interval": [
+              0.0,
+              0.0
+            ],
+            "interval_method": "Paired-seed Student t interval, 95%; exploratory, no sequential or multiple-testing correction.",
+            "meaningful_difference": 0.01,
+            "metric": "Timely transit recall",
+            "proposed_mean": 1.0,
+            "replay_passed": true,
+            "samples_per_arm": 4,
+            "sanity_passed": true,
+            "units": "fraction of all reference transits"
+          },
+          "arms": {
+            "control": {
+              "metrics": [
+                1.0,
+                1.0,
+                1.0,
+                1.0
+              ],
+              "position_evaluations": 4007,
+              "reference_events": 71,
+              "timely_events": 71,
+              "false_positive_events": 0
+            },
+            "proposed": {
+              "metrics": [
+                1.0,
+                1.0,
+                1.0,
+                1.0
+              ],
+              "position_evaluations": 3937,
+              "reference_events": 71,
+              "timely_events": 71,
+              "false_positive_events": 0
+            }
+          },
+          "action": "stop",
+          "next_experiment": "Compare 10-second and 5-second adaptive leaves against the unchanged baseline on fresh paired seeds, retaining all accuracy gates.",
+          "summary_words": 18,
+          "summary_characters": 130,
+          "replay": "output/learning-validation/replay-02-3/replay.json",
+          "replay_status": "matched"
+        }
+      ]
+    }
+  ],
+  "limitations": [
+    "These are synthetic circular-orbit algorithm tests, not historical AstroSat reproduction, operational validation or a novelty claim.",
+    "The final run retained timely recall but missed its 20% evaluation-cost reduction target: final counts were 4007 baseline versus 3937 proposed, about 1.75% fewer.",
+    "The plan contract enforces structure and rejects declared identities; scientific informativeness still requires specialist and domain judgment.",
+    "No comparable manual discovery baseline exists, so an acceleration multiplier remains unverified.",
+    "Both validation runs are outside output/research so cleanup remains intact. No push or public deployment was performed."
+  ],
+  "totals": {
+    "comparisons": 6,
+    "omnigent_specialist_calls": 17,
+    "anyjev_decisions": 6,
+    "simulation_jobs_including_pilots": 84,
+    "independent_exact_replays": 6
+  }
+}

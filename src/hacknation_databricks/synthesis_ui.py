@@ -336,7 +336,13 @@ def render_synthesis(journal: Journal) -> None:
         or "No result-driven interpretation has been recorded yet."
     )
     ui.markdown("**Next experiment**")
-    ui.write(decision.get("next_experiment", "No next experiment has been recorded."))
+    from hacknation_databricks.research_views import next_experiment_summary
+
+    next_experiment = decision.get("next_experiment", "No next experiment has been recorded.")
+    ui.write(next_experiment_summary(next_experiment))
+    if next_experiment_summary(next_experiment) != next_experiment:
+        with ui.expander("Full recorded next experiment"):
+            ui.write(next_experiment)
     from hacknation_databricks.run_feedback_ui import render_run_outcome
 
     render_run_outcome(journal)

@@ -100,8 +100,14 @@ def render_research_routes(journal):
         plan = saved_json(journal, "planner.json") or {}
         if plan:
             with ui.expander("Tests considered & selection rationale", expanded=True):
+                rounds = report.get("rounds", [])
+                precision_executed = any(
+                    row.get("next_decision", {}).get("action") == "precision" for row in rounds[:-1]
+                )
                 for test in plan.get("tests", []):
                     state = "Selected" if test["id"] == plan["selected_test_id"] else "Not selected"
+                    if test["id"] == "precision" and precision_executed:
+                        state = "Executed after screening"
                     ui.markdown(
                         f"**{test['id'].capitalize()} · {state} · {test['replicates']} pairs**"
                     )

@@ -6,19 +6,25 @@ import json
 import re
 
 from .agent_visualization import agent_process
+from .assessment_evidence import assessment_evidence
 from .code_sandbox import SimulationSample, paper_implementation
+from .experiment_history import reject_repeated_direction
 from .legacy_audit import process_from_trials, validate_process_variation
 from .models import RunConfig
 from .process_visualization import checked_process
 from .repository_decisions import decision_state, verify_handoff
 from .repository_models import (
+    AgentRepositoryDecision,
+    AgentRepositoryPlan,
+    ExplorationRepositoryPlan,
+    ExplorationRepositoryReview,
     RepositoryBrief,
     RepositoryDecision,
     RepositoryLiterature,
     RepositoryPlan,
     RepositoryReview,
 )
-from .repository_workflow import summarize_trials
+from .repository_workflow import summarize_trials, validate_trials
 from .sources import Source, check_evidence
 
 
@@ -68,9 +74,38 @@ def verify_repository_outputs(directory, report, artifacts):
                     check_evidence(evidence, sources[:1])
         if "approved_critic.json" in artifacts or report.get("selected_proposal"):
             name = "approved_critic.json" if "approved_critic.json" in artifacts else "critic.json"
-            review = RepositoryReview.model_validate(read(name))
+            review_type = (
+                ExplorationRepositoryReview if report.get("scenario_contract") else RepositoryReview
+            )
+            review = review_type.model_validate(read(name))
             for evidence in review.evidence:
                 check_evidence(evidence, sources)
+            if report.get("scenario_contract"):
+                history = read("prior-experiments.json")
+                if history["source_sha256"] != sources[0].sha256:
+                    raise ValueError("History belongs to another paper")
+                if review.selected_proposal_id and config.exploration_mode == "new_direction":
+                    selected = next(
+                        d for d in brief.directions if d.id == review.selected_proposal_id
+                    )
+                    reject_repeated_direction(selected, history)
+        preflights = report.get("preflight_attempts", [])
+        preflight_jobs = sum(p["reserved_jobs"] for p in preflights)
+        if (
+            preflight_jobs != report.get("preflight_simulations", 0)
+            or preflight_jobs > report["computed_simulations"]
+            or len(preflights) > config.max_code_repairs + 1
+        ):
+            raise ValueError("Invalid preflight budget")
+        for i, pilot in enumerate(preflights):
+            if pilot["prefix"] != f"preflight/{i:02d}" or pilot["reserved_jobs"] != 4:
+                raise ValueError("Invalid preflight history")
+            if pilot["status"] == "failed":
+                read(pilot["prefix"] + "/failure.json")
+            elif pilot["status"] == "passed":
+                read(pilot["prefix"] + "/feasibility.json")
+            elif pilot["status"] != "running" or report["status"] != "interrupted":
+                raise ValueError("Invalid preflight outcome")
         if not report["rounds"]:
             if report["acceptance"]["followup_implemented"]:
                 raise ValueError("Experiment claim without results")
@@ -93,17 +128,75 @@ def verify_repository_outputs(directory, report, artifacts):
                 != item["sha256"]
             ):
                 raise ValueError("Repository source inventory does not match sealed code")
-        plan = RepositoryPlan.model_validate(read("planner.json"))
-        computed_jobs = 0
+        plan_type = AgentRepositoryPlan if report.get("learning_contract") else RepositoryPlan
+        if report.get("scenario_contract"):
+            plan_type = ExplorationRepositoryPlan
+        plan = plan_type.model_validate(read("planner.json"))
+        if (
+            report.get("scenario_contract")
+            and config.required_sweep
+            and plan.sweep != config.required_sweep
+        ):
+            raise ValueError("Executed plan changed the requested sweep")
+        for pilot in preflights:
+            if pilot["status"] == "passed":
+                feasibility = read(pilot["prefix"] + "/feasibility.json")
+                pilot_result = read(pilot["prefix"] + "/trials.json")
+                pilot_execution = read(pilot["prefix"] + "/execution.json")
+                implementation = read(pilot["prefix"] + "/implementation.json")
+                jobs = [
+                    {"arm": arm, "seed": (config.seed + 1009) % 2**32, "parameters": parameters}
+                    for arm, parameters in [
+                        ("control", plan.baseline),
+                        ("proposed", plan.treatment),
+                        ("sanity", plan.sanity),
+                        ("replay", plan.baseline),
+                    ]
+                ]
+                if pilot_execution["jobs"] != jobs or len(pilot_result["trials"]) != 4:
+                    raise ValueError("Preflight did not execute approved jobs")
+                for trial, job in zip(pilot_result["trials"], jobs, strict=True):
+                    if {k: trial[k] for k in job} != job:
+                        raise ValueError("Preflight changed parameters or seeds")
+                    SimulationSample.model_validate(trial["output"])
+                validate_trials(pilot_result, plan)
+                if (
+                    pilot_execution["returncode"]
+                    or pilot_execution["failure"]
+                    or not feasibility["sanity_passed"]
+                    or not feasibility["replay_passed"]
+                    or implementation != read("implementation.json")
+                ):
+                    raise ValueError("Preflight accepted a failed or different implementation")
+                if pilot_execution["backend"] != "fixture" and any(
+                    pilot_execution[key + "_sha256"]
+                    != hashlib.sha256(implementation[key + "_code"].encode()).hexdigest()
+                    for key in ("python", "c")
+                ):
+                    raise ValueError("Preflight executed different code")
+            else:
+                read(pilot["prefix"] + "/failure.json")
+        if preflights and preflights[-1]["status"] != "passed":
+            raise ValueError("Accepted experiment without passed preflight")
+        computed_jobs = preflight_jobs
         if any(test.replicates > min(config.trials, 32) for test in plan.tests):
             raise ValueError("Plan exceeds the paired-replicate budget")
-        for row in report["rounds"]:
+        n = next(t.replicates for t in plan.tests if t.id == plan.selected_test_id)
+        precision_n = next(t.replicates for t in plan.tests if t.id == "precision")
+        for number, row in enumerate(report["rounds"], 1):
+            if row["round"] != number:
+                raise ValueError("Experiment rounds must be consecutive")
+            if number > 1:
+                previous = report["rounds"][number - 2]
+                if previous["next_decision"]["action"] == "precision":
+                    if not report.get("precision_continuation") or precision_n <= n:
+                        raise ValueError("Unapproved or repeated precision test")
+                    n = precision_n
             prefix = row["artifact_prefix"]
             if prefix != f"rounds/{row['round']:02d}":
                 raise ValueError("Invalid result path")
             result = read(prefix + "/trials.json")
             spec = read(prefix + "/specification.json")
-            n = next(t.replicates for t in plan.tests if t.id == plan.selected_test_id)
             expected_seeds = [(config.seed + row["round"] * 1009 + i) % 2**32 for i in range(n)]
             if (
                 spec["seeds"] != expected_seeds
@@ -122,8 +215,18 @@ def verify_repository_outputs(directory, report, artifacts):
                 {"arm": "replay", "seed": expected_seeds[0], "parameters": plan.baseline},
             ]
             computed_jobs += len(expected_jobs)
+            diagnostics = None
+            if report.get("diagnostic_handoff"):
+                diagnostics = assessment_evidence(result, prefix + "/trials.json")
+                if diagnostics != read(prefix + "/assessment-evidence.json"):
+                    raise ValueError("Researcher diagnostics differ from measured trials")
             if row.get("next_decision") and report.get("evaluator_backend") == "anyjev":
-                assessment = RepositoryDecision.model_validate(read(prefix + "/assessment.json"))
+                decision_type = (
+                    AgentRepositoryDecision
+                    if report.get("learning_contract")
+                    else RepositoryDecision
+                )
+                assessment = decision_type.model_validate(read(prefix + "/assessment.json"))
                 state = decision_state(
                     plan,
                     row["treatment"],
@@ -133,7 +236,13 @@ def verify_repository_outputs(directory, report, artifacts):
                         "rounds": config.max_rounds - row["round"],
                         "simulations": config.max_simulations - computed_jobs,
                         "jobs_per_round": len(expected_jobs),
+                        **(
+                            {"current_replicates": n, "precision_replicates": precision_n}
+                            if report.get("precision_continuation")
+                            else {}
+                        ),
                     },
+                    diagnostics=diagnostics,
                 )
                 if state != read(prefix + "/evaluation-input.json"):
                     raise ValueError("Evaluator input changed measured evidence or budget")
@@ -148,6 +257,8 @@ def verify_repository_outputs(directory, report, artifacts):
             expected_treatment = (
                 plan.treatment
                 if row["round"] == 1
+                else report["rounds"][row["round"] - 2]["treatment"]
+                if report["rounds"][row["round"] - 2]["next_decision"]["action"] == "precision"
                 else (report["rounds"][row["round"] - 2]["next_decision"]["next_treatment"])
             )
             if row["treatment"] != expected_treatment:
@@ -247,7 +358,7 @@ def verify_repository_outputs(directory, report, artifacts):
 
 
 def load_repository_journal(directory):
-    from hacknation_databricks.tracking import Journal, read_artifact
+    from hacknation_databricks.tracking import Journal, artifact_path, read_artifact
 
     journal = Journal(directory.name, directory)
     try:
@@ -271,12 +382,21 @@ def load_repository_journal(directory):
                     finished
                     or stage in states
                     or not re.fullmatch(
-                        r"repository|reader|reader_repair|literature|literature_repair|critic|critic_repair|planner|implementation|rounds/\d+/(experiment|assessment|decision)",
+                        r"repository|reader|reader_repair|literature|literature_repair|critic|critic_repair|planner|implementation|preflight/\d+/(experiment|repair)|rounds/\d+/(experiment|assessment|decision)",
                         stage,
                     )
                 ):
                     raise ValueError("Unknown or repeated stage")
-                if any(states.get(p) != "completed" for p in data["parents"]):
+                allowed = (
+                    {"completed", "failed"}
+                    if stage.startswith("preflight/") and stage.endswith("/repair")
+                    else {"completed"}
+                )
+                if "failed" in allowed and data["parents"] != [
+                    stage.rsplit("/", 1)[0] + "/experiment"
+                ]:
+                    raise ValueError("Repair must follow its failed feasibility check")
+                if any(states.get(p) not in allowed for p in data["parents"]):
                     raise ValueError("Handoff precedes its inputs")
                 states[stage] = "running"
             elif kind in {"stage_completed", "stage_failed"}:
@@ -293,9 +413,14 @@ def load_repository_journal(directory):
             if not finished:
                 raise ValueError("Unfinished sealed run")
             for name, item in journal.artifacts.items():
-                raw = read_artifact(directory, name)
-                if len(raw) != item["bytes"] or hashlib.sha256(raw).hexdigest() != item["sha256"]:
+                path = artifact_path(directory, name)
+                if path.stat().st_size != item["bytes"]:
                     raise ValueError("Artifact changed")
+                # Preview limits must not quarantine valid larger simulation evidence.
+                # Stream integrity checks without allocating each full artifact in memory.
+                with path.open("rb") as stream:
+                    if hashlib.file_digest(stream, "sha256").hexdigest() != item["sha256"]:
+                        raise ValueError("Artifact changed")
             journal.issues.extend(
                 verify_repository_outputs(directory, journal.report, journal.artifacts)
             )

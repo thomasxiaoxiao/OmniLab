@@ -119,15 +119,14 @@ def test_navigation_preserves_run_and_seed_without_launching(tmp_path, monkeypat
     app = ViewTest.from_file(str(UI)).run(timeout=15)
     assert not app.exception
     assert app.title[0].value == "Source intake"
-    assert any(s.label == "Paper" for s in app.selectbox)
+    assert not any(s.label == "Paper" for s in app.selectbox)
+    app.session_state["intake_selected"] = source.path
     app.switch_page("app_pages/sources.py").run()
-    picker = next(s for s in app.selectbox if s.label == "Paper")
-    picker.select(next(v for v in picker.options if "chosen.md" in v)).run()
     assert app.session_state["selected_seed_path"] == str(Path(source.path).resolve())
     for page in ["agents", "overview", "evidence", "sources"]:
         app.switch_page(f"app_pages/{page}.py").run()
         assert not app.exception
-    assert "chosen.md" in next(s.value for s in app.selectbox if s.label == "Paper")
+    assert any(c.value == "Ready to use: chosen.md" for c in app.caption)
     assert not (tmp_path / "runs").exists()
 
 

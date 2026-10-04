@@ -20,6 +20,8 @@ from hacknation_databricks.research.workflow import run_research
 from hacknation_databricks.seed_catalog import seed_examples
 from hacknation_databricks.source_cache import source_library
 from hacknation_databricks.tracking import (
+    MAX_ARTIFACT_BYTES,
+    MAX_ARTIFACT_DOWNLOAD_BYTES,
     POLICY_VERSION,
     STEP_BY_KEY,
     STEPS,
@@ -67,6 +69,14 @@ def scope_runs_to_source():
     if source is not None:
         ui.session_state["source_scope_sha256"] = hashlib.sha256(source.read_bytes()).hexdigest()
         ui.session_state["selected_seed_path"] = str(source.resolve())
+        collection = ui.session_state.get("paper_collection")
+        if collection:
+            ui.session_state.setdefault("paper_selections", {})[collection] = ui.session_state[
+                "paper_source"
+            ]
+    else:
+        ui.session_state.pop("selected_seed_path", None)
+        ui.session_state.pop("source_scope_sha256", None)
     ui.session_state.pop("selected_literature_paths", None)
 
 
@@ -77,7 +87,14 @@ def switch_paper_collection():
         if ui.session_state.get("paper_collection") == "Example papers"
         else {label: path for label, path in available_sources().items() if label not in examples}
     )
-    ui.session_state["paper_source"] = next(iter(sources), None)
+    if ui.session_state.get("paper_collection") == "Your papers":
+        remembered = ui.session_state.get("uploaded_paper_source")
+        ui.session_state["paper_source"] = remembered if remembered in sources else None
+    else:
+        remembered = ui.session_state.get("paper_selections", {}).get("Example papers")
+        ui.session_state["paper_source"] = (
+            remembered if remembered in sources else next(iter(sources), None)
+        )
     scope_runs_to_source()
 
 
@@ -332,6 +349,8 @@ def render_sidebar() -> Path | None:
             if ui.session_state["paper_source"] in seed_examples()
             else "Your papers"
         )
+        if ui.session_state["paper_collection"] == "Your papers":
+            ui.session_state["uploaded_paper_source"] = ui.session_state["paper_source"]
         scope_runs_to_source()
     with ui.sidebar:
         markup('<div class="brand"><b>◈</b> OmniLab</div>')
@@ -371,45 +390,17 @@ def render_sidebar() -> Path | None:
 
 
 def render_run_setup() -> None:
-    from hacknation_databricks.source_ui import render_sources
+    from hacknation_databricks.source_ui import render_paper_selection
 
     source_column, budget_column = ui.columns([1.15, 1], gap="large")
     with source_column, ui.container(border=True):
         ui.markdown("**01 · Source paper**")
-        _, issues = source_library(source_root())
-        for issue in issues:
-            ui.warning(issue)
-        examples = seed_examples()
-        all_sources = available_sources()
-        collection = ui.segmented_control(
-            "Paper collection",
-            ["Example papers", "Your papers"],
-            default="Example papers" if examples else "Your papers",
-            key="paper_collection",
-            on_change=switch_paper_collection,
-        )
-        sources = (
-            examples
-            if collection == "Example papers"
-            else {label: path for label, path in all_sources.items() if label not in examples}
-        )
-        if ui.session_state.get("paper_source") not in sources:
-            ui.session_state.pop("paper_source", None)
-        source = ui.selectbox(
-            "Paper", list(sources), key="paper_source", on_change=scope_runs_to_source
-        )
-        ui.caption("Choose an example paper or add your own.")
-        render_sources()
-        if source:
-            ui.session_state["selected_seed_path"] = str(sources[source].resolve())
-        else:
-            ui.session_state.pop("selected_seed_path", None)
-            ui.session_state.pop("source_scope_sha256", None)
+        source = render_paper_selection()
         # Discard removed picker state so references cannot carry across papers.
         ui.session_state.pop("selected_literature_paths", None)
         from hacknation_databricks.research.repository_source import repository_links
 
-        links = repository_links(read_source(sources[source])) if source else {}
+        links = repository_links(read_source(source)) if source else {}
         repository_url = ui.text_input(
             "Paper's GitHub repository (optional)",
             value=next(iter(links)) if len(links) == 1 else "",
@@ -518,7 +509,7 @@ def render_run_setup() -> None:
             ui.session_state.pop("research_launch_error", None)
             progress_messages = SimpleQueue()
             arguments = (
-                sources[source],
+                source,
                 profile,
                 backend,
                 progress_messages.put,
@@ -798,8 +789,12 @@ def render_artifacts(journal: Journal) -> None:
     )
     selected = ui.selectbox("Inspect artifact", names)
     try:
-        raw = read_artifact(journal.directory, selected)
-        if selected.endswith(".json"):
+        raw = read_artifact(journal.directory, selected, max_bytes=MAX_ARTIFACT_DOWNLOAD_BYTES)
+        if len(raw) > MAX_ARTIFACT_BYTES:
+            ui.info(
+                "Large verified artifact: preview omitted. Download contains the complete file."
+            )
+        elif selected.endswith(".json"):
             ui.json(json.loads(raw), expanded=False)
         elif selected.endswith((".txt", ".csv", ".jsonl", ".py")):
             ui.code(raw[:20000].decode("utf-8", errors="replace"), language=None)

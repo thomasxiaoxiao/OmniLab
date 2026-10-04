@@ -20,6 +20,14 @@ SEED_PAPERS = (
 )
 
 
+def source_display_name(source):
+    """Recognize pinned papers even when a replay input was named seed.pdf."""
+    return next(
+        (label for label, _, digest in SEED_PAPERS if source.get("sha256") == digest),
+        source.get("title") or "Seed paper",
+    )
+
+
 def seed_examples():
     registered, _ = source_library(source_root())
     by_hash = {source.sha256: Path(source.path) for source in registered}

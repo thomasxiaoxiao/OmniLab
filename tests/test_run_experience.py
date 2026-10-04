@@ -26,6 +26,7 @@ def test_launch_follows_exact_run_then_reports_completion(monkeypatch, tmp_path,
     from test_adaptive import make_run
 
     from hacknation_databricks import tracking_ui
+    from hacknation_databricks.research.intake import register_upload, source_root
 
     monkeypatch.setenv("RESEARCH_RUNS_DIR", str(tmp_path))
     future = Future()
@@ -37,12 +38,16 @@ def test_launch_follows_exact_run_then_reports_completion(monkeypatch, tmp_path,
             return future
 
     monkeypatch.setattr(tracking_ui, "background_executor", lambda: Executor())
+    make_run(tmp_path)
+    # The completed fixture must carry the same evidence as the explicitly uploaded source.
+    source = register_upload("launch.md", (tmp_path / "paper.txt").read_bytes(), source_root())
     app = ViewTest.from_file(str(UI)).run(timeout=15)
+    app.session_state["intake_selected"] = source.path
+    app.run()
     next(b for b in app.button if b.label == "Start bounded run").click().run()
     assert app.title[0].value == "Agents & execution loops"
     assert any("Run starting" in i.value for i in app.info)
     name = submitted["run_name"]
-    make_run(tmp_path)
     directory = tmp_path / name
     (tmp_path / "run").rename(directory)
     # Another completed run must not steal the newly launched run's selection.
@@ -72,6 +77,8 @@ def test_preflight_failure_never_displays_previous_experiment(monkeypatch, tmp_p
 
     monkeypatch.setattr(tracking_ui, "background_executor", lambda: Executor())
     app = ViewTest.from_file(str(UI)).run(timeout=15)
+    app.session_state["intake_selected"] = launch_source.path
+    app.run()
     next(b for b in app.button if b.label == "Start bounded run").click().run()
     future.set_exception(ValueError("Omnigent is unavailable"))
     app.switch_page("app_pages/agents.py").run(timeout=15)

@@ -1,0 +1,27 @@
+{
+  "updated_at": "2026-10-04T09:29:25.483453+00:00",
+  "retained_run": "output/research/20261004T085900Z-demo-percolation",
+  "retained_manifest_sha256": "88b94439c265eb9274b87b8ce20b39151691b2d5db352dd0efec1fce5fac0e0d",
+  "archived_runs": [
+    {
+      "run_id": "20261004-postevent-percolation-01",
+      "from": "output/research/20261004-postevent-percolation-01",
+      "to": "output/archived-research/20261004T092925Z-percolation-only/20261004-postevent-percolation-01",
+      "manifest_sha256": "7fb4ecd7b9e261b0661ca56c347d392c83f2bc1800a0149e39302d13441b1fdb",
+      "files_verified": 56
+    },
+    {
+      "run_id": "20261004T084900Z-demo-astrosat",
+      "from": "output/research/20261004T084900Z-demo-astrosat",
+      "to": "output/archived-research/20261004T092925Z-percolation-only/20261004T084900Z-demo-astrosat",
+      "manifest_sha256": "2b0b8b2c84c312f008bf62086495f7aa6b2b40c752237003bb8fa9d1be7d6e1d",
+      "files_verified": 86
+    }
+  ],
+  "all_file_hashes_unchanged": true,
+  "visible_run_count_at_cleanup": 1,
+  "subsequent_active_run": {
+    "run_id": "20261004T093126-1f75c0c8",
+    "note": "Started after cleanup; preserved without interruption. Browser selector contains this new run and the retained Percolation run."
+  }
+}

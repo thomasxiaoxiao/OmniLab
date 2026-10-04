@@ -105,6 +105,7 @@ class RepositoryRoles:
                     }
                 ],
                 "selected_proposal_id": "decay",
+                "history_assessment": "No earlier scenario is supplied in this isolated fixture.",
                 "literature_assessment": "Only the supplied source was reviewed.",
                 "search_scope": "Supplied source only; no external search.",
                 "evidence": [evidence()],
@@ -113,6 +114,13 @@ class RepositoryRoles:
         elif role == "repository_planner":
             raw = {
                 "proposal_id": "decay",
+                "history_difference": "Isolated synthetic fixture with no prior scenario.",
+                "comparison": {
+                    "baseline_label": "Fixed state",
+                    "proposed_label": "Decaying state",
+                    "difference": "Only the proposed state decays each step.",
+                    "held_constant": "Initial state and observation times match.",
+                },
                 "visualization_options": [
                     "Position over time in a shared coordinate system",
                     "Metric time series as a secondary summary",
@@ -147,6 +155,19 @@ class RepositoryRoles:
                 "controls": "Same seed and initial state for both arms.",
                 "meaningful_difference": 0.1,
                 "limitations": ["Test fixture only"],
+                "learning_design": {
+                    "verification_only": False,
+                    "unresolved_question": "Exercise result-driven continuation in a fixture.",
+                    "outcome_rationale": "Synthetic fixture, not a claim of scientific learning. "
+                    "Changing rate exercises the measured-result handoff.",
+                    "followups": [
+                        {
+                            "question": "Does another parameter value execute through the handoff?",
+                            "treatment": {"rate": 0.8},
+                            "expected_learning": "Verify continuation with synthetic evidence.",
+                        }
+                    ],
+                },
             }
         elif role == "repository_experimenter":
             raw = {
@@ -234,6 +255,7 @@ def make_repository_run(tmp_path, **kwargs):
         roles_factory=kwargs.get("roles_factory", RepositoryRoles),
         repository_fetcher=fixture_repository,
         code_executor=kwargs.get("code_executor", fixture_execute),
+        history_roots=kwargs.get("history_roots"),
     )
     return output, report
 
@@ -243,14 +265,15 @@ def test_repository_loop_changes_executed_parameters_and_seals_provenance(tmp_pa
     assert report["status"] == "research_stopped"
     assert report["rounds"][0]["treatment"] == {"rate": 0.9}
     assert report["rounds"][1]["treatment"] == {"rate": 0.8}
-    assert report["computed_simulations"] == 20
+    assert report["computed_simulations"] == 24
+    assert report["preflight_simulations"] == 4
     assert not report["acceptance"]["live_agents_executed"]
     assert not verify_artifacts(output)
     journal = load_journal(output)
     assert journal.verified, journal.issues
     from hacknation_databricks.research.activity import load_activity
 
-    assert len(load_activity(journal)) == 10
+    assert len(load_activity(journal)) == 11
 
 
 def test_independent_workers_overlap_and_critic_waits_for_both(tmp_path):
@@ -300,6 +323,8 @@ def test_process_provenance_ignores_parameter_dictionary_order(tmp_path):
             if role == "repository_planner":
                 for field in ["baseline", "treatment", "sanity"]:
                     setattr(value, field, {"z_offset": 0, **getattr(value, field)})
+                for followup in value.learning_design.followups:
+                    followup.treatment = {"z_offset": 0, **followup.treatment}
             if role == "repository_evaluator" and value.next_treatment:
                 value.next_treatment = {"z_offset": 0, **value.next_treatment}
             return value
@@ -572,7 +597,7 @@ def test_repository_result_page_displays_recorded_simulation(tmp_path):
     output, _ = make_repository_run(tmp_path)
     view = render(Session(), lambda: render_repository_result(load_journal(output)))
     main = view["main"]
-    assert main[0]["type"] == "iframe"
+    assert any("How the scenarios differ" in item.get("value", "") for item in main)
     assert sum(item["type"] == "iframe" for item in main) == 1
     assert any("Final state:" in item.get("value", "") for item in main)
     assert not any(item.get("label") == "Experiment" for item in main)
@@ -800,12 +825,12 @@ def test_invalid_scene_keeps_measurements_and_informs_evaluator(tmp_path):
 def test_new_plan_requires_visual_choices_and_gets_no_preset_catalog(tmp_path):
     from pydantic import ValidationError
 
-    from hacknation_databricks.research.repository_models import AgentRepositoryPlan
+    from hacknation_databricks.research.repository_models import ExplorationRepositoryPlan
 
     class PlanChoices(RepositoryRoles):
         def ask(self, role, payload, contract):
             if role == "repository_planner":
-                assert contract is AgentRepositoryPlan
+                assert contract is ExplorationRepositoryPlan
                 assert payload["scene_schema"]["properties"]["frames"]["maxItems"] == 120
                 assert not payload["output_schema"]["additionalProperties"]
                 assert "measurements" in payload["output_schema"]["properties"]
@@ -901,3 +926,112 @@ def simulate(parameters, seed, library):
         result = execute_code(store, implementation, manifest, jobs, stage="test", timeout=10)
         assert [t["arm"] for t in result["trials"]] == ["control", "proposed", "replay"]
         assert result["trials"][0]["output"] == result["trials"][2]["output"]
+
+
+def test_failed_pilot_is_repaired_before_comparison(tmp_path):
+    repairs = []
+
+    class RepairRoles(RepositoryRoles):
+        def ask(self, role, payload, contract):
+            if "sandbox_failure" in payload:
+                repairs.append(payload)
+                assert payload["sandbox_failure"]["execution_failure"] == "timeout"
+                assert "Preserve" in payload["repair"]
+            return super().ask(role, payload, contract)
+
+    def executor(store, implementation, manifest, jobs, *, stage, timeout):
+        if stage == "preflight/00":
+            store.write(
+                stage + "/execution.json", {"failure": "timeout", "stderr": "pilot timed out"}
+            )
+            raise RuntimeError("Sandbox execution failed (timeout)")
+        return fixture_execute(store, implementation, manifest, jobs, stage=stage, timeout=timeout)
+
+    output, report = make_repository_run(
+        tmp_path, roles_factory=RepairRoles, code_executor=executor
+    )
+    assert report["status"] == "research_stopped"
+    assert len(repairs) == 1
+    assert report["preflight_simulations"] == 8
+    assert report["computed_simulations"] == 28
+    assert len(report["rounds"]) == 2
+    assert (output / "preflight/00/failure.json").is_file()
+    assert (output / "preflight/00/implementation.json").is_file()
+    assert (output / "preflight/01/implementation.json").is_file()
+    assert load_journal(output).verified
+
+
+def test_unrepairable_pilot_stops_with_finite_budget(tmp_path):
+    stages = []
+
+    def broken(*args, **kwargs):
+        stages.append(kwargs["stage"])
+        raise ValueError("Baseline replay mismatch")
+
+    output, report = make_repository_run(tmp_path, code_executor=broken)
+    assert stages == ["preflight/00", "preflight/01", "preflight/02"]
+    assert report["status"] == "failed"
+    assert report["preflight_simulations"] == report["computed_simulations"] == 12
+    assert not report["rounds"]
+    assert load_journal(output).verified
+
+
+@pytest.mark.skipif(os.environ.get("RUN_SANDBOX_TESTS") != "1", reason="Requires real OS sandbox")
+def test_real_sandbox_baseline_and_two_proposed_experiments(tmp_path):
+    output, report = make_repository_run(tmp_path, code_executor=execute_code)
+    assert report["status"] == "research_stopped", report
+    assert len(report["rounds"]) == 2
+    assert all(
+        r["summary"]["replay_passed"] and r["summary"]["sanity_passed"] for r in report["rounds"]
+    )
+    assert report["rounds"][0]["summary"]["difference"] < 0
+    assert load_journal(output).verified
+
+
+def test_preflight_audit_rejects_changed_measurements(tmp_path):
+    import json
+
+    from hacknation_databricks.research.repository_audit import verify_repository_outputs
+
+    output, report = make_repository_run(tmp_path)
+    artifacts = json.loads((output / "manifest.json").read_text())["artifacts"]
+    path = output / "preflight/00/trials.json"
+    result = json.loads(path.read_text())
+    result["trials"][-1]["output"]["metric"] = 1.5
+    path.write_text(json.dumps(result))
+    assert verify_repository_outputs(output, report, artifacts)
+
+
+@pytest.mark.skipif(os.environ.get("RUN_SANDBOX_TESTS") != "1", reason="Requires real OS sandbox")
+def test_sanity_failure_identifies_job_and_preserves_completed_trials(tmp_path):
+    import json
+
+    store = RunStore(tmp_path / "failed-sanity")
+    manifest = {
+        "origin": "paper_implementation",
+        "url": "",
+        "commit": "",
+        "files": [],
+        "source_sha256": "a" * 64,
+    }
+    implementation = RepositoryImplementation(
+        python_code="""def simulate(parameters, seed, library):
+    if parameters['sanity']:
+        raise ValueError('Diagnostic grid rejected')
+    return {'metric': 1., 'times': [0., 1.], 'values': [0., 1.]}
+""",
+        repository_files=[],
+        explanation="Failure attribution fixture.",
+    )
+    jobs = [
+        {"arm": arm, "seed": 42, "parameters": {"sanity": arm == "sanity"}}
+        for arm in ("control", "proposed", "sanity", "replay")
+    ]
+    with pytest.raises(RuntimeError):
+        execute_code(store, implementation, manifest, jobs, stage="pilot", timeout=10)
+    audit = json.loads((store.directory / "pilot/execution.json").read_text())
+    failed = json.loads(audit["stdout"])
+    assert failed["failed_job"] == {"index": 2, "arm": "sanity", "seed": 42}
+    assert {t["arm"] for t in failed["partial_trials"]} == {"control", "proposed", "replay"}
+    assert "arm=sanity" in audit["stderr"]
+    assert not (store.directory / "pilot/trials.json").exists()

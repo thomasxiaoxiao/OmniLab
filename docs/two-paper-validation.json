@@ -1,0 +1,689 @@
+{
+  "verified_at": "2026-10-04T09:12:41.038260+00:00",
+  "scope": "Post-event local repair and two-paper demonstration. No worker-model change, public deployment or scientific novelty claim.",
+  "root_causes": [
+    "The old Percolation plan contained only p=0.60..0.80; five-frame autoplay made its deliberate window appear cut off.",
+    "AstroSat scenario selection lacked previous same-source experiment history.",
+    "The first full-range attempt omitted p=0.55 from its sanity grid; code repairs lacked failed-job attribution.",
+    "The viewer wrongly applied a 20 MiB structured-preview limit during integrity verification of valid 50 MB raw trial artifacts."
+  ],
+  "runs": [
+    {
+      "paper": "percolation",
+      "run_id": "20261004T085900Z-demo-percolation",
+      "directory": "output/research/20261004T085900Z-demo-percolation",
+      "manifest_sha256": "88b94439c265eb9274b87b8ce20b39151691b2d5db352dd0efec1fce5fac0e0d",
+      "source_sha256": "ec1c1fbd4d1a05ed60875020ea2f103def25cc012bf100ebfe82991a147bd8bb",
+      "status": "research_stopped",
+      "verified_journal": true,
+      "role_calls": 9,
+      "decision_calls": 3,
+      "simulation_jobs": 50,
+      "preflight_jobs": 4,
+      "elapsed_seconds": 377.808,
+      "selected_direction": {
+        "evidence": [
+          {
+            "page": 13,
+            "quote": "The work described here could be extended in a num- ber of directions.",
+            "source_id": "seed"
+          },
+          {
+            "page": 3,
+            "quote": "This means that every site has two ingoing and two outgoing bonds",
+            "source_id": "seed"
+          },
+          {
+            "page": 10,
+            "quote": "as a fraction of the total sizeL 2 of the system",
+            "source_id": "seed"
+          }
+        ],
+        "hypothesis": "The random-street ensemble changes the ensemble mean largest-SCC fraction relative to alternating Manhattan streets at matched sizes. Independently sample a fair direction for each whole row and column, hold orientations fixed throughout each realization, and share occupation uniforms on corresponding geometric bonds between arms. Use probabilities [0,0.05,0.1,0.15,0.2,0.25,0.3,0.35,0.4,0.45,0.5,0.55,0.6,0.65,0.7,0.75,0.8,0.85,0.9,0.95,1] in every parameter object, including sanity. Measure largest-SCC size divided by L^2 at each probability. Each arm returns its own direct endpoint; paired differences and uncertainty are evaluated afterward. An unresolved contrast is inconclusive. Any follow-up retains identical fixed sizes in both arms and can use an approved larger replicate count. This tests finite-size connectivity, not universality or critical exponents.",
+        "id": "random_street_full_sweep",
+        "origin": "user_suggestion",
+        "title": "Corrected full-sweep comparison of alternating and random streets"
+      },
+      "comparison": {
+        "baseline_label": "Alternating streets",
+        "difference": "The baseline alternates neighboring street directions. The proposed method samples one direction independently for each entire row and column; its direction probability is explicit in each treatment object.",
+        "held_constant": "Periodic sizes 16 and 32, geometric bonds, paired occupation uniforms, exact 21-point probability grid, SCC algorithm, normalization, scalar weighting and scene coordinates.",
+        "proposed_label": "Random whole streets"
+      },
+      "sweep": {
+        "label": "Bond occupation probability p",
+        "lower": 0.0,
+        "parameter": "probabilities",
+        "upper": 1.0
+      },
+      "history_entries": 10,
+      "rounds": [
+        {
+          "artifact_prefix": "rounds/01",
+          "next_decision": {
+            "action": "precision",
+            "limitations": [
+              "Four seed pairs provide limited uncertainty estimation; reported intervals are exploratory without sequential or multiple-testing correction.",
+              "All nine trials omit raw_by_size from this view. Raw curves, partitions, occupation uniforms and size-specific invariant checks remain unverified here, although scalar and size-specific means are supplied.",
+              "Replay and sanity passed according to the supervisor summary; trial replay fields alone do not establish execution.",
+              "Visualization status is ready, but actual frames, geometry, serialized byte counts and endpoint memberships were not supplied for inspection.",
+              "Remaining budget supports the planned job count, but measured pilot throughput and batch runtimes are absent; compliance with runtime limits is unverified.",
+              "Equal weighting across two sizes and 21 probabilities can conceal opposing curve differences; scalar equivalence would not establish curve equivalence.",
+              "Reference [40] and broader literature evidence remain insufficient to establish model equivalence or novelty; these small finite systems do not establish thresholds, exponents, universality or real-world validity.",
+              "The directional-bias hypothesis remains untested; completion of the fair-street comparison cannot support it."
+            ],
+            "next_experiment": "Run eight fresh paired realizations with unchanged arms to improve precision of the full-sweep contrast.",
+            "next_treatment": null,
+            "rationale": "Model selected precision: Run eight fresh paired realizations with unchanged arms to improve precision of the full-sweep contrast. L0 option weight 1.000; uncalibrated. See the recorded state and competing options for the decision basis.",
+            "result_interpretation": "The fair-street comparison remains inconclusive: its exploratory paired interval crosses zero and extends below -0.02, establishing neither a meaningful contrast nor practical equivalence. Mixed paired effects suggest sampling uncertainty warrants the larger unchanged-arm test before changing directional bias. Supervisor-reported sanity and replay passed; all nine supplied trials report finite outputs and five successful small-graph SCC checks."
+          },
+          "round": 1,
+          "summary": {
+            "control_mean": 0.31730143229166663,
+            "difference": -0.004080636160714288,
+            "interval": [
+              -0.025460460955319338,
+              0.017299188633890763
+            ],
+            "interval_method": "Paired-seed Student t interval, 95%; exploratory, no sequential or multiple-testing correction.",
+            "meaningful_difference": 0.02,
+            "metric": "Mean full-sweep largest-SCC fraction",
+            "proposed_mean": 0.31322079613095233,
+            "replay_passed": true,
+            "samples_per_arm": 4,
+            "sanity_passed": true,
+            "units": "dimensionless"
+          },
+          "treatment": {
+            "occupation_enabled": true,
+            "orientation": "random_streets",
+            "positive_direction_probability": 0.5,
+            "probabilities": [
+              0,
+              0.05,
+              0.1,
+              0.15,
+              0.2,
+              0.25,
+              0.3,
+              0.35,
+              0.4,
+              0.45,
+              0.5,
+              0.55,
+              0.6,
+              0.65,
+              0.7,
+              0.75,
+              0.8,
+              0.85,
+              0.9,
+              0.95,
+              1
+            ],
+            "scene_size": 16,
+            "sizes": [
+              16,
+              32
+            ]
+          }
+        },
+        {
+          "artifact_prefix": "rounds/02",
+          "next_decision": {
+            "action": "followup",
+            "limitations": [
+              "The current 95% paired interval [0.0008968646414814051, 0.021285055001375744] is exploratory, without sequential or multiple-testing correction; eight pairs provide limited uncertainty estimation.",
+              "Scalar samples and size-specific means are supplied for every trial, but omitted raw_by_size arrays prevent independent verification of partitions, occupation pairing, endpoint connectivity and curve monotonicity.",
+              "Supervisor-reported replay passed; the individual trial replay fields only describe a required check and do not independently demonstrate execution.",
+              "All trials report 21 frames and at most 256 frame glyphs; occupied arms report 544 geometry glyphs and sanity reports zero. Actual scenes, endpoint memberships and serialized byte counts were not supplied for inspection.",
+              "Equal averaging across 21 probabilities and two sizes can conceal opposing effects. These grid points are not independent replicates, and scalar equivalence would not establish curve equivalence.",
+              "The biased follow-up estimates a separate contrast against alternating streets. Comparing its estimate with the earlier fair-street estimate does not supply the planned direct paired bias-versus-fair test.",
+              "Pilot throughput, batch runtime and a comparable acceleration baseline are absent; budget availability alone does not establish runtime compliance or measured acceleration.",
+              "Reference [40] and broader prior-art evidence remain insufficient to establish model equivalence or novelty. Two small finite sizes do not establish thresholds, critical exponents, universality or real-world validity."
+            ],
+            "next_experiment": "Test direction probability 0.75 against alternating streets using eight fresh pairs, retaining the grid, sizes and endpoint.",
+            "next_treatment": {
+              "occupation_enabled": true,
+              "orientation": "random_streets",
+              "positive_direction_probability": 0.75,
+              "probabilities": [
+                0,
+                0.05,
+                0.1,
+                0.15,
+                0.2,
+                0.25,
+                0.3,
+                0.35,
+                0.4,
+                0.45,
+                0.5,
+                0.55,
+                0.6,
+                0.65,
+                0.7,
+                0.75,
+                0.8,
+                0.85,
+                0.9,
+                0.95,
+                1
+              ],
+              "scene_size": 16,
+              "sizes": [
+                16,
+                32
+              ]
+            },
+            "rationale": "Model selected followup: Test direction probability 0.75 against alternating streets using eight fresh pairs, retaining the grid, sizes and endpoint. L0 option weight 1.000; uncalibrated. See the recorded state and competing options for the decision basis.",
+            "result_interpretation": "The fresh eight-pair comparison suggests a small positive fair-street effect, but its exploratory interval crosses the 0.02 meaningful-effect boundary. It establishes neither a meaningful contrast nor practical equivalence. Six paired differences are positive and two negative; size-specific effects also vary. With the precision test exhausted, the planned directional-bias treatment offers a distinct remaining question. The bias hypothesis remains untested."
+          },
+          "round": 2,
+          "summary": {
+            "control_mean": 0.3039463588169643,
+            "difference": 0.011090959821428575,
+            "interval": [
+              0.0008968646414814051,
+              0.021285055001375744
+            ],
+            "interval_method": "Paired-seed Student t interval, 95%; exploratory, no sequential or multiple-testing correction.",
+            "meaningful_difference": 0.02,
+            "metric": "Mean full-sweep largest-SCC fraction",
+            "proposed_mean": 0.3150373186383929,
+            "replay_passed": true,
+            "samples_per_arm": 8,
+            "sanity_passed": true,
+            "units": "dimensionless"
+          },
+          "treatment": {
+            "occupation_enabled": true,
+            "orientation": "random_streets",
+            "positive_direction_probability": 0.5,
+            "probabilities": [
+              0,
+              0.05,
+              0.1,
+              0.15,
+              0.2,
+              0.25,
+              0.3,
+              0.35,
+              0.4,
+              0.45,
+              0.5,
+              0.55,
+              0.6,
+              0.65,
+              0.7,
+              0.75,
+              0.8,
+              0.85,
+              0.9,
+              0.95,
+              1
+            ],
+            "scene_size": 16,
+            "sizes": [
+              16,
+              32
+            ]
+          }
+        },
+        {
+          "artifact_prefix": "rounds/03",
+          "next_decision": {
+            "action": "stop",
+            "limitations": [
+              "The eight-pair Student-t interval [-0.006001451482727342, 0.01350005639344163] is exploratory, without sequential or multiple-testing correction; practical equivalence applies only under the stated scalar criterion.",
+              "All 17 trials omit raw_by_size. Scalar samples and size-specific means are supplied, but partitions, occupation pairing, degree and bond checks, endpoint connectivity and monotonicity cannot be independently verified from this view.",
+              "Replay passed according to the supervisor summary; individual trial replay fields state a requirement rather than documenting execution.",
+              "Visualization is reported ready, but actual frames, endpoint memberships, geometry and serialized byte counts were not supplied for inspection.",
+              "Equal weighting across two sizes and 21 probabilities can conceal opposing effects. Size-specific contrasts vary; scalar equivalence does not establish curve equivalence or finite-size convergence.",
+              "Earlier fair-street results and current biased-street results use different seed batches. Their numerical difference does not establish a direct bias effect, and the fair-street meaningful-effect classification remains inconclusive.",
+              "Supplied source evidence quotes seed page 3: \"every site has two ingoing and two outgoing bonds\" and page 10: \"as a fraction of the total sizeL 2 of the system\". These support construction and normalization, not quantitative reproduction. Reference [40] and broader literature evidence are insufficient to establish model equivalence, novelty, thresholds or universality.",
+              "Pilot throughput, batch runtimes and a comparable acceleration baseline are absent. Runtime compliance, acceleration and real-world validity remain unverified."
+            ],
+            "next_experiment": "Later, directly pair random streets at direction probabilities 0.75 and 0.5, retaining sizes, grid and endpoint.",
+            "next_treatment": null,
+            "rationale": "Model selected stop: Later, directly pair random streets at direction probabilities 0.75 and 0.5, retaining sizes, grid and endpoint. L0 option weight 1.000; uncalibrated. See the recorded state and competing options for the decision basis.",
+            "result_interpretation": "The executed 0.75-biased treatment supports exploratory practical equivalence to alternating streets for the full-sweep scalar: its paired interval lies wholly within [-0.02, 0.02]. Three paired differences are positive and five negative. This does not establish curve equivalence or show that bias reduces connectivity relative to fair random streets. The planned biased follow-up is now executed; the next scientific question requires a direct biased-versus-fair comparison."
+          },
+          "round": 3,
+          "summary": {
+            "control_mean": 0.31029692150297616,
+            "difference": 0.003749302455357144,
+            "interval": [
+              -0.006001451482727342,
+              0.01350005639344163
+            ],
+            "interval_method": "Paired-seed Student t interval, 95%; exploratory, no sequential or multiple-testing correction.",
+            "meaningful_difference": 0.02,
+            "metric": "Mean full-sweep largest-SCC fraction",
+            "proposed_mean": 0.31404622395833337,
+            "replay_passed": true,
+            "samples_per_arm": 8,
+            "sanity_passed": true,
+            "units": "dimensionless"
+          },
+          "treatment": {
+            "occupation_enabled": true,
+            "orientation": "random_streets",
+            "positive_direction_probability": 0.75,
+            "probabilities": [
+              0,
+              0.05,
+              0.1,
+              0.15,
+              0.2,
+              0.25,
+              0.3,
+              0.35,
+              0.4,
+              0.45,
+              0.5,
+              0.55,
+              0.6,
+              0.65,
+              0.7,
+              0.75,
+              0.8,
+              0.85,
+              0.9,
+              0.95,
+              1
+            ],
+            "scene_size": 16,
+            "sizes": [
+              16,
+              32
+            ]
+          }
+        }
+      ],
+      "replays": [
+        {
+          "new_model_calls": 0,
+          "round": 1,
+          "source_run": "output/research/20261004T085900Z-demo-percolation",
+          "status": "matched"
+        },
+        {
+          "new_model_calls": 0,
+          "round": 2,
+          "source_run": "output/research/20261004T085900Z-demo-percolation",
+          "status": "matched"
+        },
+        {
+          "new_model_calls": 0,
+          "round": 3,
+          "source_run": "output/research/20261004T085900Z-demo-percolation",
+          "status": "matched"
+        }
+      ]
+    },
+    {
+      "paper": "astrosat",
+      "run_id": "20261004T084900Z-demo-astrosat",
+      "directory": "output/research/20261004T084900Z-demo-astrosat",
+      "manifest_sha256": "2b0b8b2c84c312f008bf62086495f7aa6b2b40c752237003bb8fa9d1be7d6e1d",
+      "source_sha256": "e56bf525c71437be590c99f6cb4697cb41442f05c5836d7f555c34851eca0ebf",
+      "status": "research_stopped",
+      "verified_journal": true,
+      "role_calls": 8,
+      "decision_calls": 3,
+      "simulation_jobs": 34,
+      "preflight_jobs": 4,
+      "elapsed_seconds": 363.877,
+      "selected_direction": {
+        "evidence": [
+          {
+            "page": 2,
+            "quote": "The cross-track error is more critical as it determines whether the object will pass through the \ufb01eld or not.",
+            "source_id": "seed"
+          },
+          {
+            "page": 2,
+            "quote": "The \ufb01eld of view could be expanded by this distance and the results interpreted probabilistically.",
+            "source_id": "seed"
+          }
+        ],
+        "hypothesis": "Expanding the screening field to account for prescribed cross-track uncertainty will reduce missed actual crossings relative to nominal-field screening, while increasing false alerts. Compare identical synthetic circular trajectories and perturbed realizations across field sizes and ranges. Measure missed crossings divided by all actual crossings, and false alerts divided by all alerts; report undefined ratios when denominators vanish. Include predicted near misses that perturb into the field. Test bounded offsets first; only interpret probabilities after explicitly specifying an assumed error distribution. The hypothesis is unsupported if missed-crossing rates do not decrease. This concerns orbital uncertainty, not search-cadence accuracy.",
+        "id": "cross_track_screening",
+        "origin": "agent_hypothesis",
+        "title": "Uncertainty-aware screening for small fields"
+      },
+      "comparison": {
+        "baseline_label": "Nominal-field screening",
+        "difference": "The proposed method expands the angular screening boundary using a prescribed displacement allowance and margin rule. Actual trajectories and the science field remain identical; padding changes alerts rather than physical motion.",
+        "held_constant": "Circular dynamics, observer, science fields, nominal-track population, physical perturbations, observation window, paired seeds, continuous event classification and endpoint denominators.",
+        "proposed_label": "Uncertainty-padded screening"
+      },
+      "sweep": null,
+      "history_entries": 12,
+      "rounds": [
+        {
+          "artifact_prefix": "rounds/01",
+          "next_decision": {
+            "action": "followup",
+            "limitations": [
+              "Four paired seeds support an exploratory Student t interval without sequential or multiple-testing correction; they do not establish universality.",
+              "Stratum counts, boundary-near cases and raw case pairing were omitted from diagnostics and cannot be marked verified. Scene readiness is reported, but scene coordinates were not supplied for inspection.",
+              "Fresh seeds in subsequent rounds make cross-round treatment comparisons descriptive; each round retains a paired comparison against the unchanged baseline.",
+              "Uniform bounded perturbations, boundary-enriched sampling and central controls determine these synthetic frequencies; insufficient evidence supports operational error probabilities.",
+              "Polar, near-zenith circular geometry omits general observing geometries, SGP4, measured ephemerides, illumination, photometry and shutter response.",
+              "Numerical recovery does not establish scientific yield, shutter protection, novelty or acceleration. Source provenance and broader literature coverage remain insufficiently verified.",
+              "Earlier statements that geometry, contracts and simulation outputs were absent are superseded by the supplied plan, implementation and diagnostics; independent artifact validation remains limited to reported supervisor checks."
+            ],
+            "next_experiment": "Test altitude-specific 0.25 km padding against the unchanged baseline to measure recovery and false-alert burden.",
+            "next_treatment": {
+              "altitudes_km": [
+                335,
+                550,
+                1200
+              ],
+              "central_controls_per_stratum": 1,
+              "classification_tolerance_rad": 1e-10,
+              "closest_time_halfwidth_seconds": 3,
+              "earth_mu_km3_s2": 398600.4418,
+              "earth_radius_km": 6371,
+              "error_bound_km": 0.5,
+              "field_radii_deg": [
+                0.025,
+                0.1,
+                0.5
+              ],
+              "margin_rule": "per_altitude",
+              "padding_km": 0.25,
+              "population_margin_km": 1,
+              "random_cases_per_stratum": 128,
+              "recorded_samples": 81,
+              "window_seconds": [
+                -10,
+                10
+              ]
+            },
+            "rationale": "Model selected followup: Test altitude-specific 0.25 km padding against the unchanged baseline to measure recovery and false-alert burden. L0 option weight 1.000; uncalibrated. See the recorded state and competing options for the decision basis.",
+            "result_interpretation": "Partial global padding recovered most missed crossings but increased alert burden in every paired seed. Mean FN/(TP+FN) fell from 0.11618 to 0.01180; the treatment-minus-control interval [-0.12560, -0.08316] exceeds the preregistered 0.02 improvement criterion in magnitude, subject to exploratory inference. Across the four seeds, remaining misses were 10, 5, 4 and 9; additional false alerts were 191, 180, 206 and 191. FP/(TP+FP) increased in every pair, from 0.111\u20130.142 to 0.291\u20130.325. This shifts the next question toward whether altitude-specific padding preserves useful recovery with less alert burden. It does not establish that altitude-specific padding is better."
+          },
+          "round": 1,
+          "summary": {
+            "control_mean": 0.11618205386519724,
+            "difference": -0.10438193440451993,
+            "interval": [
+              -0.12560360456014993,
+              -0.08316026424888992
+            ],
+            "interval_method": "Paired-seed Student t interval, 95%; exploratory, no sequential or multiple-testing correction.",
+            "meaningful_difference": 0.02,
+            "metric": "Missed actual crossings",
+            "proposed_mean": 0.011800119460677303,
+            "replay_passed": true,
+            "samples_per_arm": 4,
+            "sanity_passed": true,
+            "units": "fraction of all actual crossings"
+          },
+          "treatment": {
+            "altitudes_km": [
+              335,
+              550,
+              1200
+            ],
+            "central_controls_per_stratum": 1,
+            "classification_tolerance_rad": 1e-10,
+            "closest_time_halfwidth_seconds": 3,
+            "earth_mu_km3_s2": 398600.4418,
+            "earth_radius_km": 6371,
+            "error_bound_km": 0.5,
+            "field_radii_deg": [
+              0.025,
+              0.1,
+              0.5
+            ],
+            "margin_rule": "global_min_altitude",
+            "padding_km": 0.25,
+            "population_margin_km": 1,
+            "random_cases_per_stratum": 128,
+            "recorded_samples": 81,
+            "window_seconds": [
+              -10,
+              10
+            ]
+          }
+        },
+        {
+          "artifact_prefix": "rounds/02",
+          "next_decision": {
+            "action": "followup",
+            "limitations": [
+              "All eight supplied comparison trials and the sanity trial report zero nesting violations, full-bound misses and displacement-bound excess; radius errors are at most 3.638e-12 km against the reported 1e-8 km tolerance. Minimum sampled-minus-continuous angle is zero throughout. These are supplied diagnostics, not independently executed checks.",
+              "The sanity trial reports zero FN, FP, displacement and zero-error disagreements. Zero-error disagreements are null in nonzero-error trials and cannot be marked passed there. Replay and sanity passed according to the supervisor summary; independent replay was not performed here.",
+              "Strata, boundary-near counts and raw cases were omitted from the supplied diagnostics. Their quality gates and case-level pairing remain unverified. Scene readiness is reported, but returned coordinates, frame validity and cross-arm bounds were not inspected.",
+              "The four-seed Student t interval is exploratory without sequential or multiple-testing correction. Preserve primary FN/(TP+FN) and secondary FP/(TP+FP); numerical primary success does not establish superiority over global padding or support shutter-protection hypotheses.",
+              "Uniform bounded perturbations, boundary-enriched sampling and central controls determine these synthetic frequencies. Random-only results also show recovery and increased false-alert fractions, but neither population estimates operational probabilities.",
+              "Polar, near-zenith circular geometry omits general observing geometries, calibrated TLE errors, SGP4, illumination, photometry, shutter response and scientific yield.",
+              "Earlier claims that geometry, thresholds and simulation outputs were absent are superseded by the supplied plan and measurements. Source provenance, broader literature coverage, novelty, real-world reliability and an acceleration multiplier remain insufficiently established."
+            ],
+            "next_experiment": "Increase altitude-specific padding to 0.5 km and measure full-bound alert burden against the unchanged baseline.",
+            "next_treatment": {
+              "altitudes_km": [
+                335,
+                550,
+                1200
+              ],
+              "central_controls_per_stratum": 1,
+              "classification_tolerance_rad": 1e-10,
+              "closest_time_halfwidth_seconds": 3,
+              "earth_mu_km3_s2": 398600.4418,
+              "earth_radius_km": 6371,
+              "error_bound_km": 0.5,
+              "field_radii_deg": [
+                0.025,
+                0.1,
+                0.5
+              ],
+              "margin_rule": "per_altitude",
+              "padding_km": 0.5,
+              "population_margin_km": 1,
+              "random_cases_per_stratum": 128,
+              "recorded_samples": 81,
+              "window_seconds": [
+                -10,
+                10
+              ]
+            },
+            "rationale": "Model selected followup: Increase altitude-specific padding to 0.5 km and measure full-bound alert burden against the unchanged baseline. L0 option weight 1.000; uncalibrated. See the recorded state and competing options for the decision basis.",
+            "result_interpretation": "Altitude-specific partial padding reduced FN/(TP+FN) in every paired seed, but left 16, 11, 16 and 14 misses while adding 86, 81, 75 and 79 false alerts. FP/(TP+FP) also increased in every pair. The mean primary reduction was 0.08435; the exploratory treatment-minus-control interval [-0.11262, -0.05608] lies below -0.02. This supports recovery within the sampled synthetic population. Earlier global-padding results used different seeds and do not establish altitude-specific superiority. Remaining misses motivate measuring the alert burden of full-bound altitude-specific padding."
+          },
+          "round": 2,
+          "summary": {
+            "control_mean": 0.10754214750552515,
+            "difference": -0.08434825395662901,
+            "interval": [
+              -0.112618299938207,
+              -0.05607820797505102
+            ],
+            "interval_method": "Paired-seed Student t interval, 95%; exploratory, no sequential or multiple-testing correction.",
+            "meaningful_difference": 0.02,
+            "metric": "Missed actual crossings",
+            "proposed_mean": 0.023193893548896137,
+            "replay_passed": true,
+            "samples_per_arm": 4,
+            "sanity_passed": true,
+            "units": "fraction of all actual crossings"
+          },
+          "treatment": {
+            "altitudes_km": [
+              335,
+              550,
+              1200
+            ],
+            "central_controls_per_stratum": 1,
+            "classification_tolerance_rad": 1e-10,
+            "closest_time_halfwidth_seconds": 3,
+            "earth_mu_km3_s2": 398600.4418,
+            "earth_radius_km": 6371,
+            "error_bound_km": 0.5,
+            "field_radii_deg": [
+              0.025,
+              0.1,
+              0.5
+            ],
+            "margin_rule": "per_altitude",
+            "padding_km": 0.25,
+            "population_margin_km": 1,
+            "random_cases_per_stratum": 128,
+            "recorded_samples": 81,
+            "window_seconds": [
+              -10,
+              10
+            ]
+          }
+        },
+        {
+          "artifact_prefix": "rounds/03",
+          "next_decision": {
+            "action": "stop",
+            "limitations": [
+              "All eight comparison trials and the sanity trial report zero full-bound misses, nesting violations and displacement-bound excess. Radius errors are at most 3.638e-12 km against the reported 1e-8 km tolerance; minimum sampled-minus-continuous angle is zero throughout. These are supplied diagnostics, not independently executed validation.",
+              "The sanity trial reports zero FN, FP, displacement and zero-error disagreements. Zero-error disagreements are null in nonzero-error trials and are unverified there. The supervisor reports replay and sanity passed; independent replay was not performed here.",
+              "Strata, raw cases and boundary-near counts were omitted from the diagnostic payload, so their quality gates and case-level pairing remain unverified. Scene readiness is reported, but coordinates, frames and consistent bounds were not supplied for inspection.",
+              "Primary FN/(TP+FN) and secondary FP/(TP+FP) retain distinct denominators. Random-only results also show zero treatment misses and increased false-alert fractions; neither endpoint measures shutter protection or scientific yield.",
+              "The four-seed Student t interval is exploratory without sequential or multiple-testing correction. Guaranteed full-bound containment and finite-sample numerical success do not establish novelty, universality or the untested superiority of altitude-specific margins.",
+              "Uniform bounded plane rotations, boundary-enriched sampling and central controls determine these frequencies. Polar, near-zenith circular geometry omits calibrated orbital errors, general observing geometries, SGP4, illumination, photometry and instrument response.",
+              "Earlier claims that geometry, thresholds and simulation outputs were absent are superseded by the supplied plan, implementation and diagnostics. Independent source provenance, broader literature coverage, operational validation and an acceleration comparison remain insufficiently established."
+            ],
+            "next_experiment": "Compare global and altitude-specific 0.5 km padding on identical cases to isolate differences in recovery and alert burden.",
+            "next_treatment": null,
+            "rationale": "Model selected stop: Compare global and altitude-specific 0.5 km padding on identical cases to isolate differences in recovery and alert burden. L0 option weight 1.000; uncalibrated. See the recorded state and competing options for the decision basis.",
+            "result_interpretation": "Full-bound altitude-specific padding recovered every actual crossing in all four paired seeds, while adding 209, 211, 213 and 222 false alerts. FP/(TP+FP) increased from 0.103\u20130.119 to 0.308\u20130.331. Recovery here is an expected containment result; the measured learning is its substantial alert burden. This shifts the next question toward a same-population comparison of global and altitude-specific margins, whose relative burden remains unresolved by fresh-seed cross-round comparisons."
+          },
+          "round": 3,
+          "summary": {
+            "control_mean": 0.10280580863883651,
+            "difference": -0.10280580863883651,
+            "interval": [
+              -0.10733840128362224,
+              -0.09827321599405078
+            ],
+            "interval_method": "Paired-seed Student t interval, 95%; exploratory, no sequential or multiple-testing correction.",
+            "meaningful_difference": 0.02,
+            "metric": "Missed actual crossings",
+            "proposed_mean": 0.0,
+            "replay_passed": true,
+            "samples_per_arm": 4,
+            "sanity_passed": true,
+            "units": "fraction of all actual crossings"
+          },
+          "treatment": {
+            "altitudes_km": [
+              335,
+              550,
+              1200
+            ],
+            "central_controls_per_stratum": 1,
+            "classification_tolerance_rad": 1e-10,
+            "closest_time_halfwidth_seconds": 3,
+            "earth_mu_km3_s2": 398600.4418,
+            "earth_radius_km": 6371,
+            "error_bound_km": 0.5,
+            "field_radii_deg": [
+              0.025,
+              0.1,
+              0.5
+            ],
+            "margin_rule": "per_altitude",
+            "padding_km": 0.5,
+            "population_margin_km": 1,
+            "random_cases_per_stratum": 128,
+            "recorded_samples": 81,
+            "window_seconds": [
+              -10,
+              10
+            ]
+          }
+        }
+      ],
+      "replays": [
+        {
+          "new_model_calls": 0,
+          "round": 1,
+          "source_run": "output/research/20261004T084900Z-demo-astrosat",
+          "status": "matched"
+        },
+        {
+          "new_model_calls": 0,
+          "round": 2,
+          "source_run": "output/research/20261004T084900Z-demo-astrosat",
+          "status": "matched"
+        },
+        {
+          "new_model_calls": 0,
+          "round": 3,
+          "source_run": "output/research/20261004T084900Z-demo-astrosat",
+          "status": "matched"
+        }
+      ]
+    }
+  ],
+  "successful_totals": {
+    "comparisons": 6,
+    "omnigent_role_calls": 17,
+    "anyjev_decisions": 6,
+    "simulation_jobs": 84
+  },
+  "retained_failed_attempt": {
+    "directory": "output/demo-validation/failed-runs/20261004T084900Z-demo-percolation",
+    "status": "failed",
+    "role_calls": 8,
+    "simulation_jobs": 12,
+    "elapsed_seconds": 536.575,
+    "accepted_comparisons": 0
+  },
+  "raw_checks": {
+    "percolation_graphs": 1680,
+    "percolation_case_pairs": 20,
+    "astrosat_case_pairs": 13932,
+    "passed": true
+  },
+  "viewer_check": {
+    "journal_verified": true,
+    "download_bytes": 50071039,
+    "download_sha256": "10ab72bc9fe3d7c61f2d73cf91bf1d0742e80a0190104eec48f10ae2bdf33111",
+    "source": "output/research/20261004T085900Z-demo-percolation/rounds/03/trials.json",
+    "exact_sealed_bytes": true
+  },
+  "checks": {
+    "passed": 325,
+    "skipped": 0,
+    "command": "RUN_SANDBOX_TESTS=1 npm run check",
+    "log": "output/demo-validation/final-checks.log",
+    "final_inspector_targeted_checks": {
+      "passed": 50,
+      "skipped": 1,
+      "deselected": 7,
+      "scope": "Preview/download regression, repository, and tracking UI checks; real sandbox probes were already included in the 325-test full run."
+    }
+  },
+  "limitations": [
+    "Exploratory intervals, small seed batches and finite lattices; no full paper reproduction or novelty proof.",
+    "AstroSat uses synthetic bounded errors and idealized circular geometry, not calibrated orbital data. Full-bound recovery is containment; alert burden is the measured learning.",
+    "Fresh seeds between rounds prevent a causal comparison of different proposed settings across rounds.",
+    "No comparable manual baseline establishes an acceleration multiplier."
+  ],
+  "browser_verification": {
+    "both_results_visible": true,
+    "latest_only_selector": [
+      "20261004T085900Z-demo-percolation",
+      "20261004T084900Z-demo-astrosat"
+    ],
+    "percolation_initial_frame": "p=0, frame 1/21, no occupied bonds, largest SCC=1/256",
+    "percolation_playback_end": "p=1, frame 21/21, 512/512 bonds, largest SCC=256/256",
+    "left_paused_at_p_zero": true,
+    "screenshots": [
+      "output/demo-validation/percolation-p0.png",
+      "output/demo-validation/percolation-p1.png",
+      "output/demo-validation/astrosat-result.png"
+    ]
+  }
+}

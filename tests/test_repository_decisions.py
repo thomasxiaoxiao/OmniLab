@@ -14,7 +14,9 @@ from hacknation_databricks.research.sources import read_source
 from hacknation_databricks.tracking import load_journal
 
 
-def decision_run(tmp_path, monkeypatch, *, answer="followup", error=None, **limits):
+def decision_run(
+    tmp_path, monkeypatch, *, answer="followup", error=None, precision=False, **limits
+):
     seen, closed, roles = [], [], []
 
     class Worker:
@@ -46,7 +48,12 @@ def decision_run(tmp_path, monkeypatch, *, answer="followup", error=None, **limi
         def ask(self, role, payload, contract):
             roles.append(role)
             assert role != "repository_evaluator"
-            return super().ask(role, payload, contract)
+            value = super().ask(role, payload, contract)
+            if precision and role == "repository_assessor" and value.action == "followup":
+                value.action = "precision"
+                value.next_treatment = None
+                value.next_experiment = "Run the preregistered eight-pair precision test."
+            return value
 
     monkeypatch.setattr("hacknation_databricks.research.decision_roles.DecisionProcess", Worker)
     paper = tmp_path / "paper.md"
@@ -148,3 +155,29 @@ def test_live_workflow_rejects_codex_evaluator_before_spending_calls(tmp_path):
     with pytest.raises(ValueError, match="decision_backend='anyjev'"):
         run_repository(None, tmp_path / "run", RunConfig(workflow="repository"))
     assert not (tmp_path / "run").exists()
+
+
+def test_precision_runs_more_fresh_pairs_without_changing_arms(tmp_path, monkeypatch):
+    output, report, seen, _ = decision_run(
+        tmp_path, monkeypatch, precision=True, answer="precision"
+    )
+    assert len(report["rounds"]) == 2
+    assert report["rounds"][0]["next_decision"]["action"] == "precision"
+    assert [r["summary"]["samples_per_arm"] for r in report["rounds"]] == [4, 8]
+    assert report["rounds"][0]["treatment"] == report["rounds"][1]["treatment"]
+    first = json.loads((output / "rounds/01/specification.json").read_text())
+    second = json.loads((output / "rounds/02/specification.json").read_text())
+    assert set(first["seeds"]).isdisjoint(second["seeds"])
+    assert report["computed_simulations"] == 4 + 10 + 18
+    assert "precision" in seen[0]["choices"]
+    assert "precision" not in seen[1]["choices"]
+    assert load_journal(output).verified
+
+
+def test_precision_cannot_exceed_simulation_budget(tmp_path, monkeypatch):
+    _, report, seen, _ = decision_run(
+        tmp_path, monkeypatch, precision=True, answer="precision", max_simulations=16
+    )
+    assert len(report["rounds"]) == 1
+    assert "precision" not in seen[0]["choices"]
+    assert report["next_decision"]["action"] == "stop"
