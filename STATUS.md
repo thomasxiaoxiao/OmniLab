@@ -1,7 +1,9 @@
 # Fresh seed runs and simplified intake
 
-Updated October 04, 2026, 00:01 PDT; about six minutes remain to hard stop.
-Active task: verify the two fresh bounded runs, then integrate the tested changes.
+Updated October 04, 2026, 00:03 PDT; about four minutes remain to hard stop.
+Integration: [PR #12](https://github.com/thomasxiaoxiao/OmniLab/pull/12).
+Final local run state and artifact checks: `output/seed-refresh-final.json`.
+Next step: inspect those terminal results and test the UI at http://127.0.0.1:8000/.
 
 - One Paper selector now contains the two seeds and user uploads. The drag-and-drop
   uploader is visible, with duplicate seed uploads deduplicated by content hash.
@@ -15,8 +17,10 @@ Active task: verify the two fresh bounded runs, then integrate the tested change
   after 347.813 and 350.665 seconds respectively: both agent repairs still exceeded
   the 16,000-character code contract. All failures are preserved; no simulations ran.
 - Generated Python/C limits now allow 64,000 characters each. Fresh retries
-  `20261004T0700-percolation` and `20261004T0700-astrosat` are running with 300-second
-  wall-clock budgets. No completed numerical result or larger-scale speed claim yet.
+  `20261004T0700-percolation` and `20261004T0700-astrosat` started with 300-second
+  wall-clock budgets; both reached the experimenter. Their terminal reports and the
+  final local state file retain actual outcomes, including any timeout or failure.
+  A larger-scale speed claim requires completed measurements.
 - Full checks: 279 tests passed, four optional sandbox probes skipped; frontend,
   build and Ruff checks passed.
 - Blocker: production contains no preset scientific engines, but test-only kernels
