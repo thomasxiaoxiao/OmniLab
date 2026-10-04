@@ -39,6 +39,8 @@ def render_repository_result(journal):
                 "proposed": treatment,
             }
             process["provenance"]["pre_experiment_limitations"] = process["limitations"]
+            if agent_scene:
+                process["description"] += " Scope notes below were recorded before code execution."
             if not agent_scene:
                 for arm, parameters in [("original", baseline), ("proposed", treatment)]:
                     process[arm]["description"] = brief(

@@ -26,7 +26,7 @@ slider.setAttribute('aria-label', data.timeline_label);
 const worlds = ['original','proposed'].map(key => {
   const card = root.querySelector('[data-world='+key+']');
   card.querySelector('h2').textContent = data[key].label;
-  card.querySelector('p').textContent = data[key].description;
+  card.querySelector('[data-world-description]').textContent = data[key].description;
   card.querySelector('canvas').setAttribute('aria-label',data[key].label+': '+data.description);
   return {world:data[key],card,ctx:card.querySelector('canvas').getContext('2d')};
 });
@@ -119,9 +119,10 @@ def process_html(process, *, scalar_axes=False):
     )
     payload = payload.replace("&", "\\u0026").replace("<", "\\u003c").replace(">", "\\u003e")
     cards = "".join(
-        f'<section data-world="{key}"><h2></h2><p></p>'
+        f'<section data-world="{key}"><h2></h2>'
         '<canvas width="600" height="410" role="img"></canvas>'
-        "<p data-caption></p></section>"
+        "<p data-caption></p><details><summary>Scene scope</summary>"
+        "<p data-world-description></p></details></section>"
         for key in ("original", "proposed")
     )
     return (
@@ -154,7 +155,8 @@ def process_html(process, *, scalar_axes=False):
         '<div class="controls"><button data-play>Play</button><button data-reset>Reset</button>'
         '<input type="range" min="0" value="0" step="1"></div><output data-step></output>'
         f'<div class="worlds">{cards}</div><p class="note" data-selection></p>'
-        '<p class="note" data-limits></p><details><summary>Recorded inputs and provenance</summary>'
+        '<details><summary>Scope and limitations</summary><p class="note" data-limits></p>'
+        "</details><details><summary>Recorded inputs and provenance</summary>"
         "<pre></pre></details><noscript>Enable JavaScript to play the saved simulation states. "
         "The companion process.json contains all states and provenance.</noscript></main>"
         f'<script type="application/json" id="process-data">{payload}</script>'

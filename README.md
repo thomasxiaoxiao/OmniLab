@@ -85,6 +85,9 @@ unavailable while valid numerical results proceed to evaluation. No fallback
 animation is manufactured. Scene validation and exact replay establish provenance
 and consistency, not correctness of the scientific model.
 
+See the [measured live validation](docs/agent-owned-scenes-validation.json) and
+[two-minute demo](docs/agent-owned-scenes-demo.md).
+
 Old preset kernels, recipes and domain adapters have moved to `tests/legacy/` and
 are excluded from the wheel. Old workflow configurations are rejected by the live
 gateway. Historical archives remain inspectable without rerunning their built-in
