@@ -33,7 +33,7 @@ CODE_CAPABILITY = {
     "grounded in the submitted paper and repository.",
     "limits": {
         "network": False,
-        "output_bytes": 4_000_000,
+        "output_bytes": 32_000_000,
         "writable": "disposable scratch only",
         "package_installation": False,
         "shell_commands_from_agent": False,
@@ -125,7 +125,7 @@ def sandbox_policy(inputs, scratch):
     return policy
 
 
-def run_bounded(argv, *, cwd, env, timeout, output_limit=4_000_000):
+def run_bounded(argv, *, cwd, env, timeout, output_limit=32_000_000):
     """Drain both pipes with a combined byte limit and kill the process group on every exit."""
     process = subprocess.Popen(
         argv,

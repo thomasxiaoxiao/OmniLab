@@ -1,3 +1,31 @@
+# Fresh seed runs and simplified intake
+
+Updated October 04, 2026, 00:01 PDT; about six minutes remain to hard stop.
+Active task: verify the two fresh bounded runs, then integrate the tested changes.
+
+- One Paper selector now contains the two seeds and user uploads. The drag-and-drop
+  uploader is visible, with duplicate seed uploads deduplicated by content hash.
+- Agents may choose larger informative numerical systems and full or explicitly
+  aggregated scenes. Combined experiment stdout is bounded at 32 MB; the fresh
+  profile allows 120 seconds per execution and 600 seconds per complete run.
+- Nine previous runs and replay directories were moved unchanged to the persistent
+  archive `/Users/thomas/workspace/omnilab-archives/20261004T065338Z`. The active
+  artifact root contains the two fresh attempts and their retries.
+- Initial attempts `20261004T0654-percolation` and `20261004T0654-astrosat` stopped
+  after 347.813 and 350.665 seconds respectively: both agent repairs still exceeded
+  the 16,000-character code contract. All failures are preserved; no simulations ran.
+- Generated Python/C limits now allow 64,000 characters each. Fresh retries
+  `20261004T0700-percolation` and `20261004T0700-astrosat` are running with 300-second
+  wall-clock budgets. No completed numerical result or larger-scale speed claim yet.
+- Full checks: 279 tests passed, four optional sandbox probes skipped; frontend,
+  build and Ruff checks passed.
+- Blocker: production contains no preset scientific engines, but test-only kernels
+  remain in tests/legacy. Automatic approval review rejected removing their broader
+  dependent regression suite. The concrete retirement proposal awaits user approval
+  in docs/legacy-retirement-plan.md. Existing coverage is intact.
+
+---
+
 # Agent-owned simulations and scenes verified
 
 Updated October 03, 2026, 23:25 PDT; about 41 minutes remain to hard stop.

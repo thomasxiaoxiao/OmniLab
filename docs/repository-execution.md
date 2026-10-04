@@ -7,8 +7,9 @@ and the next experiment. Evidence and audit details are expandable.
 
 ## Inputs and specialist handoffs
 
-Supply a PDF/Markdown paper. The UI's seed menu is fixed to Percolation and AstroSat;
-other uploads/imports remain in the separate Uploaded paper selector. A validated
+Supply a PDF/Markdown paper. The Paper selector starts with Percolation and AstroSat;
+other uploads/imports join the same selector through the visible drag-and-drop intake.
+Content-identical seed uploads are deduplicated by SHA-256. A validated
 paper enables Start bounded run even with no repository URL.
 
 A public `https://github.com/owner/repository` URL is optional in the UI. Without one,
@@ -164,8 +165,13 @@ The run records `process_validation: agent_recorded_scene_v1`; older scalar v5
 archives retain their original read-only validation rules. Trusted player HTML is
 regenerated from validated data; arbitrary archived/model HTML is never executed.
 This proves traceability, not correct physics. Independent numerical and domain
-validation is still required. The recommended 32 KB scene size is a prompt preference;
-actual limits include bounded glyph/frame counts and the sandbox output-byte cap.
+validation is still required. Agents choose the largest informative numerical size
+within the time budget and may use disclosed aggregation to keep larger systems
+legible. Shared static geometry avoids repeated glyphs across frames. Limits include
+bounded glyph/frame counts, a 32 MB total sandbox output cap and 64,000-character
+limits for each generated Python/C implementation.
+`experiments/seed-refresh.json` provides a ten-minute run budget, two-minute execution
+timeout, two rounds and at most two simultaneous specialist requests per run.
 Only the latest attempt per paper appears by default, even when it failed. History
 is opt-in. A sealed, evaluated terminal run highlights exactly its final experiment;
 earlier rounds appear in an audit table rather than repeated result panels.

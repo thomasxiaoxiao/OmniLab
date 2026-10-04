@@ -117,8 +117,8 @@ class AgentRepositoryPlan(RepositoryPlan):
 
 
 class RepositoryImplementation(Contract):
-    python_code: str = Field(min_length=50, max_length=16000)
-    c_code: str = Field(default="", max_length=16000)
+    python_code: str = Field(min_length=50, max_length=64000)
+    c_code: str = Field(default="", max_length=64000)
     c_repository_files: list[str] = Field(default_factory=list, max_length=8)
     explanation: str = Field(min_length=10, max_length=4000)
     repository_files: list[str] = Field(max_length=12)
