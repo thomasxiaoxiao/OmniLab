@@ -1,5 +1,16 @@
 # Research workflow implementation
 
+## Paper-first automatic context
+
+The UI reads each paper into a domain-independent `PaperBrief` before capability
+selection. No preset catalog or metric is present in this reader's payload/schema.
+Only a later mapper sees available implementations, and it cannot change a proposed
+hypothesis to fit a tool. Unmatched research is retained without simulation.
+The source-bound `implementation.json` identifies the kernel/dependencies supplied
+to the validator; the full framework snapshot lives separately in
+`framework/source.zip`. Historical archives remain immutable. This isolates
+existing tools; it does not implement arbitrary generated scientific programs.
+
 ## Current adaptive execution
 
 The UI now fixes Codex + Omnigent for research and AnyJev + Omnigent for decisions.

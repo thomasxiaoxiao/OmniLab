@@ -15,7 +15,6 @@ def _load(root: str, signature: tuple):
 
 def source_library(root: Path):
     files = list(root.glob("*/source.*"))
-    files.extend(Path("data/papers").glob("*.pdf*"))
     configured = os.environ.get("RESEARCH_PAPER_PATH")
     if configured:
         files.extend([Path(configured), Path(configured + ".json")])

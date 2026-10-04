@@ -142,13 +142,17 @@ def render_artifacts(journal, artifacts):
 
 
 def render_simulation(journal, node):
-    st.caption("Python executed the approved test. Code below is archived with this run.")
-    names = set(journal.artifacts)
-    # A live run has no manifest yet; only look within its archived code directory.
-    names.update(f"code/{p.name}" for p in (journal.directory / "code").glob("*.py"))
-    relevant = {"simulation.py", "experiments.py", "adaptive_experiments.py"}
-    code = sorted(n for n in names if n.startswith("code/") and Path(n).name in relevant)
-    with st.expander("Simulation code used", expanded=True):
+    st.caption("Experiment implementation bound to this run's source paper.")
+    manifest_path = journal.directory / "implementation.json"
+    code = []
+    if manifest_path.is_file():
+        implementation = json.loads(read_artifact(journal.directory, "implementation.json"))
+        seed = next((s for s in journal.sources if s.get("source_id") == "seed"), {})
+        if implementation.get("source_sha256") != seed.get("sha256"):
+            st.error("Implementation source does not match this paper.")
+            return
+        code = implementation.get("files", [])
+    with st.expander("Paper-specific simulation implementation", expanded=True):
         if code:
             selected = st.segmented_control("Archived implementation", code, default=code[0])
             if selected is None:
@@ -157,7 +161,11 @@ def render_simulation(journal, node):
             st.code(raw.decode("utf-8"), language="python", height=360)
             st.download_button("Download simulation code", raw, file_name=Path(selected).name)
         else:
-            st.info("This run did not archive simulation code.")
+            st.info(
+                "This historical run has no source-bound implementation manifest. Its shared "
+                "framework snapshot remains in Generated artifacts; it is not presented as "
+                "paper-specific simulation code."
+            )
     render_artifacts(journal, node.artifacts)
 
 

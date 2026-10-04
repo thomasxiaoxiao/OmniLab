@@ -23,12 +23,14 @@ from .adaptive_experiments import (
 )
 from .agents import AgentBudgetExceeded, AgentUnavailable, OmnigentRoles
 from .artifacts import RunStore, environment
+from .code_archive import archive_framework, archive_implementation
 from .comparison import save_comparisons
 from .decision_roles import DecisionAbstained
 from .hybrid_roles import NUMERICAL_DECISION_POLICY, HybridOmnigentRoles
 from .models import (
     BranchPlan,
     InvestmentDecision,
+    PaperBrief,
     PortfolioSelection,
     ResearchBrief,
     ResearchContext,
@@ -89,6 +91,7 @@ def run_adaptive(
     catalog = {}
     context = None
     context_parents = []
+    paper_briefs = {}
     report = {
         "workflow_version": "4",
         "workflow": "adaptive",
@@ -158,7 +161,7 @@ def run_adaptive(
             progress(message)
 
     def ask(stage, role, payload, contract, parents):
-        if config.domain in MEASUREMENT_CONTRACTS:
+        if role != "paper_reader" and config.domain in MEASUREMENT_CONTRACTS:
             payload["measurement_contract"] = MEASUREMENT_CONTRACTS[config.domain]
         with store.stage(stage, parents=parents):
             result = roles.ask(role, payload, contract)
@@ -167,25 +170,37 @@ def run_adaptive(
 
     def research(item):
         stage = f"sources/{item.source_id}/researcher"
+        paper_brief = paper_briefs.get(item.source_id)
+        role = "implementation_mapper" if paper_brief else "researcher"
+        payload = {
+            "source": item.payload(),
+            "experiment_catalog": catalog,
+            "seed_question": context.research_question if context else source.title,
+            "research_context": context.model_dump() if context else None,
+            "domain": config.domain,
+            "retrieval_scope": retrieval_report,
+        }
+        if paper_brief:
+            payload["paper_first_directions"] = paper_brief.model_dump()
         brief = ask(
             stage,
-            "researcher",
-            {
-                "source": item.payload(),
-                "experiment_catalog": catalog,
-                "seed_question": context.research_question if context else source.title,
-                "research_context": context.model_dump() if context else None,
-                "domain": config.domain,
-                "retrieval_scope": retrieval_report,
-            },
+            role,
+            payload,
             ResearchBrief,
             context_parents,
         )
 
         def validate_brief(candidate):
+            originals = (
+                {d.id: d.model_dump() for d in paper_brief.directions} if paper_brief else {}
+            )
             for direction in candidate.directions:
                 if direction.experiment not in catalog:
                     raise ValueError("Researcher selected outside the domain catalog")
+                if paper_brief and direction.model_dump(exclude={"experiment"}) != originals.get(
+                    direction.id
+                ):
+                    raise ValueError("Implementation fit changed a paper-first direction")
                 for evidence in direction.evidence:
                     check_evidence(evidence, [item])
 
@@ -204,10 +219,9 @@ def run_adaptive(
             stage = f"sources/{item.source_id}/repair_researcher"
             brief = ask(
                 stage,
-                "researcher",
+                role,
                 {
-                    "source": item.payload(),
-                    "experiment_catalog": catalog,
+                    **payload,
                     "rejected_brief": brief.model_dump(),
                     "repair": "One correction attempt. Every quote must be an exact contiguous "
                     "substring on its stated 1-based source page. Use short complete passages. "
@@ -234,10 +248,7 @@ def run_adaptive(
             sidecar = Path(item.path).with_suffix(Path(item.path).suffix + ".json")
             if sidecar.exists():
                 shutil.copyfile(sidecar, destination.with_suffix(destination.suffix + ".json"))
-        for module in Path(__file__).parent.glob("*.py"):
-            destination = output / "code" / module.name
-            destination.parent.mkdir(parents=True, exist_ok=True)
-            shutil.copyfile(module, destination)
+        archive_framework(output)
         lockfile = Path(__file__).resolve().parents[3] / "uv.lock"
         if lockfile.exists():
             shutil.copyfile(lockfile, output / "uv.lock")
@@ -263,12 +274,39 @@ def run_adaptive(
             budget.started + config.max_seconds, time.monotonic() + project_deadline - time.time()
         )
         if config.domain == "auto":
+            # Establish scientific intent before any specialist sees preset tools.
+            def read_paper(item):
+                brief = ask(
+                    f"sources/{item.source_id}/paper_reader",
+                    "paper_reader",
+                    {
+                        "source": item.payload(),
+                        "seed_question": paper_briefs["seed"].research_question
+                        if item.source_id != "seed"
+                        else None,
+                        "retrieval_scope": retrieval_report,
+                    },
+                    PaperBrief,
+                    ["sources/seed/paper_reader"] if item.source_id != "seed" else [],
+                )
+                for direction in brief.directions:
+                    for evidence in direction.evidence:
+                        check_evidence(evidence, [item])
+                return brief
+
+            paper_briefs["seed"] = read_paper(source)
+            with ThreadPoolExecutor(max_workers=config.max_workers) as pool:
+                futures = {pool.submit(read_paper, item): item for item in sources[1:]}
+                for future in as_completed(futures):
+                    item = futures[future]
+                    paper_briefs[item.source_id] = future.result()
+            store.write("paper_briefs.json", {k: v.model_dump() for k, v in paper_briefs.items()})
             context = ask(
                 "sources/seed/context",
                 "research_context",
-                {"source": source.payload()},
+                {"source": source.payload(), "paper_brief": paper_briefs["seed"].model_dump()},
                 ResearchContext,
-                [],
+                [f"sources/{item.source_id}/paper_reader" for item in sources],
             )
             for evidence in context.evidence:
                 check_evidence(evidence, [source])
@@ -339,6 +377,7 @@ def run_adaptive(
             return report
         if len({b["experiment"] for b in branches.values()}) != len(branches):
             raise ValueError("Consolidator must merge duplicate experiment directions")
+        implementation_paths = archive_implementation(store, source, config.domain)
         report["proposals"] = list(branches.values())
         store.write("proposals.json", {"proposals": list(branches.values())})
         for key, branch in branches.items():
@@ -650,12 +689,10 @@ def run_adaptive(
                                     config.domain, all_rows[goal_key], config
                                 ),
                                 "comparison_branches": report["branches"],
-                                "implementation": (
-                                    output / "code/adaptive_experiments.py"
-                                ).read_text(),
-                                "simulation_primitives": (
-                                    output / "code/simulation.py"
-                                ).read_text(),
+                                "implementation": {
+                                    name: (output / name).read_text()
+                                    for name in implementation_paths
+                                },
                                 "scope_instruction": (
                                     "Judge the numerical goal for the actual recipe. Separate "
                                     "broader untested proposal claims from that limited result. "

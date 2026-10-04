@@ -57,6 +57,31 @@ class ResearchContext(Contract):
     evidence: list[Evidence] = Field(min_length=1, max_length=3)
 
 
+class PaperDirection(Contract):
+    id: str = Field(pattern=r"^[a-z][a-z0-9_]{0,39}$")
+    title: str = Field(min_length=5, max_length=200)
+    hypothesis: str = Field(min_length=10, max_length=1200)
+    origin: Literal["paper_suggestion", "agent_hypothesis"]
+    evidence: list[Evidence] = Field(min_length=1, max_length=4)
+
+
+class PaperBrief(Contract):
+    """Paper-first research; no preset domain, metric, or experiment choices."""
+
+    research_question: str = Field(min_length=10, max_length=1500)
+    summary: str = Field(min_length=10, max_length=3000)
+    directions: list[PaperDirection] = Field(max_length=3)
+    search_scope: str = Field(min_length=10, max_length=1200)
+    missing_evidence: list[str] = Field(max_length=8)
+
+    @field_validator("directions")
+    @classmethod
+    def unique_directions(cls, values):
+        if len({value.id for value in values}) != len(values):
+            raise ValueError("Paper direction IDs must be unique")
+        return values
+
+
 class Proposal(Contract):
     id: str = Field(pattern=r"^[a-z][a-z0-9_]{0,39}$")
     title: str = Field(min_length=5, max_length=200)

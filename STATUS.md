@@ -1,3 +1,39 @@
+# Paper-specific context and implementation isolation
+
+Updated October 3, 2026, 17:08 PDT; about 6 hours 59 minutes to hard stop
+and 4 hours 59 minutes to feature freeze.
+
+- Removed Related literature and Extracted text & provenance from setup. Old
+  picker state is discarded, cached example papers are no longer auto-injected,
+  and explicit paper changes filter visible runs by the seed content hash.
+- Automatic-context runs now derive paper-specific questions and directions before
+  seeing implementation catalogs or metric contracts. A later mapper cannot rewrite
+  the hypothesis, origin or evidence to fit a preset. Unsupported findings remain
+  inspectable; unknown experiment families no longer default to percolation.
+- Split the scientific kernels and their shared statistical utilities. New run
+  implementations are bound to the seed hash; validators receive only the selected
+  kernel/dependencies. Whole-framework provenance lives in a separate archive.
+  Historical sealed runs are unchanged; their shared source snapshots are not
+  labeled as paper-specific implementations.
+- Live non-example check: the uploaded 32-page Covasim paper completed two Omnigent
+  sessions in 51.25 seconds, retained three paper-specific directions and correctly
+  stopped as unsupported with zero simulations. Its first request contains no
+  preset experiment names. Manifest and handoff audit pass. This is evidence of
+  context isolation, not a completed scientific discovery loop. Details and session
+  IDs: `docs/paper-isolation-validation.json`.
+- Validation: 207 tests pass; lint, formatting and JavaScript syntax pass. Both
+  earlier research archives still pass hashes, raw-count and interval audits.
+  The initial clean-checkout CI failure and temporary-source test repair are
+  retained below and in PR #5.
+- Active task: platform refactor validated locally; integration status is recorded
+  at https://github.com/thomasxiaoxiao/hacknation-databricks/pull/5. Next scientific
+  step for the Covasim paper is a suitable, validated epidemiological implementation.
+  General-purpose paper-specific code generation is not implemented; neither the
+  old simulations nor this reading check establish its hypotheses or real-world
+  validity. No new scientific novelty or acceleration multiplier is claimed.
+
+---
+
 # Latest platform consolidation: clean-checkout test repair
 
 Updated October 3, 2026, 16:59 PDT; about 7 hours 8 minutes to hard stop

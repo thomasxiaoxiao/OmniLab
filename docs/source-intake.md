@@ -1,42 +1,44 @@
-## Consolidated setup (October 3 update)
+# Paper-specific setup and isolation
 
-Source intake now has one seed-paper selection and one related-literature selection
-beside the runtime budget and launch action. **Add papers · upload or arXiv** opens
-optional import tabs inside that setup. Successful imports select the imported seed;
-**Extracted text & provenance** inspects that same selected seed, with its original
-download. The separate source-inspection picker and duplicate setup heading are removed.
+Source intake has one seed-paper selection and local run controls. Related literature
+and Extracted text & provenance have been removed from setup. Source originals and
+provenance remain in each run's evidence vault. The UI passes no manually selected
+related sources; automatic retrieval follows only citations in the selected seed.
+The CLI still accepts explicit `--literature` inputs for reproducibility.
 
-## Paper-first setup (October 3 update)
+The library contains explicitly imported documents and `RESEARCH_PAPER_PATH` when
+configured. Cached example PDFs are not automatically inserted. An explicit source
+change filters the run selector by the seed's content hash, so another paper's
+artifacts cannot become the selected paper's results.
 
-Source intake is the first and default navigation page. Its library and seed/literature
-pickers share one content-deduplicated list: the two supplied papers
-(2607.24975v1 and 2111.11268v1), explicitly imported documents, and an explicitly
-configured project source. Arbitrary cached PDFs and generic “Full paper” aliases
-are no longer included.
+For automatic-context runs, a paper reader derives source-specific questions and
+up to three directions before any implementation catalog, preset metric or domain
+is supplied. Its `PaperBrief` contract contains no example identifiers. Related
+source readers receive the seed question and their own source only. Their findings
+are saved in `paper_briefs.json`, including unsupported directions.
 
-There is no Research example selector. New Omnigent UI runs request automatic
-context: a specialist reads the full seed, returns its research question, summary,
-exact supporting passages and a supported tool family. The supervisor validates
-those passages before passing the context to downstream researchers. The original
-request is saved in `requested_config.json`; resolved settings remain in
-`config.json`, with `research_context.json` and the source-stage handoff as evidence.
-Unsupported papers stop before simulation and retain their context and reason.
-The source page shows a concise outcome with the original assessment under
-**Why this run stopped**. Progress is shown only when the selected run's seed hash
-matches the prepared paper; another paper's run cannot supply its feedback.
-Run views identify the archived paper, and unsupported runs do not show an open
-goal or suggest that simulation results are still pending. Run archives remain intact.
-This does not add general-purpose experiment generation: executable tools remain
-bounded to the existing percolation and synthetic transit experiments. The auxiliary
-AnyJev path remains explicitly percolation-only; existing CLI configurations remain
-reproducible. Automatic citation retrieval still follows references in the selected
-paper and is separate from the built-in source choices.
+A separate capability assessment and implementation mapper then check whether an
+existing numerical implementation can answer an unchanged direction. The supervisor
+rejects changes to the direction's title, hypothesis, origin, or supporting evidence.
+If no implementation fits, the run retains its paper-specific findings and stops;
+it never substitutes an example or executes unreviewed generated code. Arbitrary
+paper-specific implementation generation remains unimplemented. Explicit historical
+CLI example configurations retain their original bounded workflow.
+
+New adaptive runs archive framework provenance under `framework/source.zip`.
+`implementation.json` binds the selected experiment files to the seed SHA-256.
+Only the selected scientific kernel and its dependencies are copied into `code/`
+and sent to the numerical validator. The percolation and transit kernels are separate;
+the transit validator no longer receives lattice code. Framework provenance is an
+optional evidence-vault view, not a paper-specific implementation claim. Historical
+sealed archives are unchanged and have no retroactively invented implementation
+manifest. Their shared code is labeled accordingly.
 
 # Source intake and execution visibility
 
 Open the lab with `npm run dev`. The dedicated **Source intake** page accepts
 saved local papers, PDF and Markdown uploads, and arXiv abstract/PDF links.
-Choose the seed and up to three related documents on this page. The seed selection
+Choose the seed on this page. The seed selection
 survives navigation. The sidebar contains the shared run selector, while local
 simulation budgets and the launch action live beside source selection.
 

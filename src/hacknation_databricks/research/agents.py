@@ -302,9 +302,22 @@ class OmnigentRoles(RoleBackend):
 
 
 ROLE_INSTRUCTIONS = {
+    "paper_reader": "Read all supplied pages and derive the paper's research question, "
+    "assumptions and up to three falsifiable follow-up directions solely from this source. "
+    "No example experiments, implementation catalog or other run is supplied or assumed. "
+    "Separate explicit paper suggestions from new hypotheses. Cite exact page-local passages. "
+    "For a related source, discuss only directions relevant to the supplied seed question. "
+    "Do not infer measurements or results not in the source. State actual reading scope and gaps.",
+    "implementation_mapper": "Assess whether any supplied implementation can test an already "
+    "recorded paper-first direction without changing its scientific question. Copy the chosen "
+    "direction's id, title, hypothesis, origin and evidence exactly; only attach an experiment "
+    "identifier. Do not invent directions to fit tools or substitute the implementation's "
+    "hypothesis for the paper's hypothesis. Return no directions and explain the implementation "
+    "gap when no faithful match exists. A topic resemblance alone is insufficient.",
     "research_context": "Read the supplied seed paper and derive its research question and "
     "scientific context from its full text. Cite exact page-local passages. Do not infer context "
-    "from a filename or a configured example. Then assess whether the available local tools "
+    "from a filename or a configured example. Preserve the supplied paper-first questions and "
+    "directions without rewriting them. Then assess whether the available local tools "
     "can test this paper: percolation supports directed-lattice connectivity and wrapping; "
     "astrosat supports synthetic satellite-transit positional uncertainty and guard margins. "
     "These are tool capabilities, not assumptions about the paper. Select unsupported when "

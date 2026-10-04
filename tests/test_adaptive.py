@@ -24,7 +24,7 @@ class AdaptiveFixture(RoleBackend):
     def ask(self, role, payload, contract):
         with self._call_lock:
             self.calls += 1
-        if role == "researcher":
+        if role in {"researcher", "implementation_mapper", "paper_reader"}:
             source = payload["source"]
             result = {
                 "directions": [
@@ -47,6 +47,16 @@ class AdaptiveFixture(RoleBackend):
                 "search_scope": "Read the full supplied fixture source",
                 "missing_evidence": [],
             }
+            if role == "paper_reader":
+                assert "experiment_catalog" not in payload
+                assert "measurement_contract" not in payload
+                assert "domain" not in payload
+                result.update(
+                    research_question="How does uncertainty affect transit detection?",
+                    summary="The source motivates checking uncertainty in transit detection.",
+                )
+                for direction in result["directions"]:
+                    direction.pop("experiment")
         elif role == "consolidator":
             result = {
                 "critiques": [
@@ -379,8 +389,11 @@ def test_validator_gets_replay_evidence_and_objections_return_to_decision(tmp_pa
     assert len(set(versions)) == len(versions)
     for review in reviews:
         assert review["recipe"] and review["sufficient_statistics"]
-        assert "def transit_batch" in review["implementation"]
-        assert "def simulate" in review["simulation_primitives"]
+        code = "\n".join(review["implementation"].values())
+        assert "def transit_batch" in code
+        assert "def simulate" not in code
+        assert "percolation" not in code
+        assert "simulation_primitives" not in review
         assert len(review["batch_artifacts"]) == review["measurements"]["batches"]
         for artifact in review["batch_artifacts"]:
             assert artifact["replay_checks"]
@@ -394,7 +407,8 @@ def test_paper_context_routes_tools_or_stops_without_simulation(tmp_path, domain
     class ContextFixture(AdaptiveFixture):
         def ask(self, role, payload, contract):
             if role == "research_context":
-                assert set(payload) == {"source"}
+                assert set(payload) == {"source", "paper_brief"}
+                assert payload["paper_brief"]["directions"]
                 self.calls += 1
                 return contract.model_validate(
                     {
@@ -407,7 +421,7 @@ def test_paper_context_routes_tools_or_stops_without_simulation(tmp_path, domain
                         ],
                     }
                 )
-            if role == "researcher":
+            if role == "implementation_mapper":
                 assert payload["research_context"]["domain"] == domain
                 assert payload["seed_question"].startswith("How does")
             return super().ask(role, payload, contract)
@@ -436,8 +450,10 @@ def test_paper_context_routes_tools_or_stops_without_simulation(tmp_path, domain
 
 
 def test_invented_context_evidence_stops_before_research_and_simulation(tmp_path):
-    class InvalidContext(RoleBackend):
+    class InvalidContext(AdaptiveFixture):
         def ask(self, role, payload, contract):
+            if role == "paper_reader":
+                return super().ask(role, payload, contract)
             assert role == "research_context"
             self.calls += 1
             return contract.model_validate(
@@ -470,6 +486,6 @@ def test_invented_context_evidence_stops_before_research_and_simulation(tmp_path
     report = json.loads((directory / "report.json").read_text())
     assert report["status"] == "failed"
     assert report["computed_simulations"] == 0
-    assert report["role_calls"] == 1
+    assert report["role_calls"] == 2
     assert not (directory / "candidates.json").exists()
     assert not verify_artifacts(directory)

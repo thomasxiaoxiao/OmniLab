@@ -7,6 +7,14 @@ The current research scope follows `docs/overall-design.md` and `AGENTS.md`.
 brief. Omnigent must orchestrate the live discovery workflow; the earlier housing
 challenge requirements are superseded.
 
+New automatic-context runs derive paper-specific questions and hypotheses before
+seeing any preset implementation. Source changes filter saved runs by paper hash.
+Only the selected numerical kernel reaches the validator; framework snapshots are
+separate provenance. Unsupported papers retain their findings and report the missing
+implementation instead of being forced into an example. See
+[paper isolation and intake](docs/source-intake.md). General-purpose simulation-code
+generation is not implemented.
+
 The default frontend is now the **Omnigent scientific discovery lab**, following
 the research workflow in `docs/overall-design.md`. It records bounded choices,
 execution gates, evidence and implementations from saved research runs. See the

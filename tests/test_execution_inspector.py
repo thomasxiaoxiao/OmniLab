@@ -2,9 +2,14 @@ from streamlit.testing.v1 import AppTest
 
 
 def test_simulation_inspector_shows_archived_code_and_csv(tmp_path):
+    import json
+
     (tmp_path / "code").mkdir()
     (tmp_path / "code/simulation.py").write_text("# archived implementation\nx = 1\n")
     (tmp_path / "trials.csv").write_text("seed,value\n42,0.5\n43,0.7\n")
+    (tmp_path / "implementation.json").write_text(
+        json.dumps({"source_sha256": "paper-hash", "files": ["code/simulation.py"]})
+    )
 
     def page(directory):
         from pathlib import Path
@@ -14,7 +19,10 @@ def test_simulation_inspector_shows_archived_code_and_csv(tmp_path):
         from hacknation_databricks.tracking import Journal
 
         render_simulation(
-            Journal("test", Path(directory)), SimpleNamespace(artifacts=["trials.csv"])
+            Journal(
+                "test", Path(directory), sources=[{"source_id": "seed", "sha256": "paper-hash"}]
+            ),
+            SimpleNamespace(artifacts=["trials.csv"]),
         )
 
     app = AppTest.from_function(page, args=(str(tmp_path),)).run()

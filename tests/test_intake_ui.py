@@ -40,7 +40,8 @@ def test_source_form_import_updates_library_and_selected_seed(tmp_path, monkeypa
     assert any("Ready:" in s.value for s in app.success)
     assert app.session_state["selected_seed_path"] == str(Path(imported.path).resolve())
     assert sum(s.label == "Seed paper" for s in app.selectbox) == 1
-    assert any("Evidence from imported paper." in t.value for t in app.text)
+    assert not any(e.label == "Extracted text & provenance" for e in app.expander)
+    assert not any(s.label == "Related literature" for s in app.multiselect)
     assert not any(h.value == "Prepare a discovery run" for h in app.subheader)
     assert not any(s.label == "Inspect sources" for s in app.selectbox)
 
@@ -75,8 +76,7 @@ def test_uploaded_sources_launch_with_original_identity_and_literature(tmp_path,
     app.switch_page("app_pages/sources.py").run()
     picker = next(s for s in app.selectbox if s.label == "Seed paper")
     picker.select(next(s for s in picker.options if "seed.md" in s)).run()
-    related_picker = next(s for s in app.multiselect if s.label == "Related literature")
-    related_picker.select(next(s for s in related_picker.options if "related.md" in s)).run()
+    assert not any(s.label == "Related literature" for s in app.multiselect)
     tracking_ui.launch_run(
         Path(seed.path), "Quick verification", "anyjev", lambda _: None, [Path(related.path)]
     )
@@ -150,7 +150,7 @@ def test_running_validation_without_gate_does_not_crash():
     assert not AppTest.from_function(page).run().exception
 
 
-def test_library_only_includes_two_builtins_and_explicit_imports(tmp_path, monkeypatch):
+def test_library_only_includes_explicit_imports_and_configured_source(tmp_path, monkeypatch):
     from hacknation_databricks.research.intake import library_sources
     from hacknation_databricks.research.sources import Source
 
@@ -181,13 +181,9 @@ def test_library_only_includes_two_builtins_and_explicit_imports(tmp_path, monke
     )
     sources, issues = library_sources(tmp_path / "sources")
     assert not issues
-    assert [Path(s.path).name for s in sources] == [
-        "source.md",
-        "2607.24975v1.pdf",
-        "2111.11268v1.pdf",
-    ]
+    assert [Path(s.path).name for s in sources] == ["source.md"]
     monkeypatch.setenv("RESEARCH_PAPER_PATH", str(papers / "2607.24975v1.pdf"))
-    assert len(library_sources(tmp_path / "sources")[0]) == 3
+    assert len(library_sources(tmp_path / "sources")[0]) == 2
 
 
 @pytest.mark.parametrize("same_source", [True, False])

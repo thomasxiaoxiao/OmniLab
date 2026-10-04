@@ -1,6 +1,7 @@
 """Omnigent scientific discovery lab: bounded controls and an inspectable decision journal."""
 
 import fcntl
+import hashlib
 import html
 import json
 import os
@@ -125,6 +126,29 @@ def run_root() -> Path:
 def available_sources() -> dict[str, Path]:
     registered, _ = source_library(source_root())
     return {f"{source.title} · {source.sha256[:8]}": Path(source.path) for source in registered}
+
+
+def scope_runs_to_source():
+    """An explicit paper change must not leave another paper's run selected."""
+    source = available_sources().get(st.session_state.get("seed_source"))
+    if source is not None:
+        st.session_state["source_scope_sha256"] = hashlib.sha256(source.read_bytes()).hexdigest()
+        st.session_state["selected_seed_path"] = str(source.resolve())
+    st.session_state.pop("selected_literature_paths", None)
+
+
+def runs_for_source(runs, digest):
+    if not digest:
+        return runs
+    matching = []
+    for directory in runs:
+        try:
+            sources = json.loads((directory / "sources.json").read_text())
+            if any(s.get("source_id") == "seed" and s.get("sha256") == digest for s in sources):
+                matching.append(directory)
+        except (OSError, ValueError, TypeError, AttributeError):
+            continue
+    return matching
 
 
 def run_profiles(backend="omnigent"):
@@ -326,10 +350,23 @@ def render_launch_monitor():
 
 def render_sidebar() -> Path | None:
     """Run context only; intake and launch controls live on their own page."""
+    imported = st.session_state.pop("intake_selected", None)
+    if imported:
+        st.session_state["seed_source"] = next(
+            (
+                label
+                for label, path in available_sources().items()
+                if str(path.resolve()) == imported
+            ),
+            None,
+        )
+        scope_runs_to_source()
     with st.sidebar:
         markup('<div class="brand"><b>◈</b> Omnigent lab</div>')
         st.caption("SCIENTIFIC DISCOVERY")
-        runs = discover_runs(run_root())
+        runs = runs_for_source(
+            discover_runs(run_root()), st.session_state.get("source_scope_sha256")
+        )
         names = [path.name for path in runs]
         chosen = st.session_state.pop("new_run", None)
         if chosen in names:
@@ -353,23 +390,17 @@ def render_sidebar() -> Path | None:
 
 
 def render_run_setup() -> None:
-    from hacknation_databricks.source_ui import render_source_details, render_sources
+    from hacknation_databricks.source_ui import render_sources
 
     source_column, budget_column = st.columns([1.15, 1], gap="large")
     with source_column, st.container(border=True):
-        st.markdown("**01 · Seed and related papers**")
+        st.markdown("**01 · Source paper**")
         with st.expander("Add papers · upload or arXiv", expanded=False):
             render_sources()
         _, issues = source_library(source_root())
         for issue in issues:
             st.warning(issue)
         sources = available_sources()
-        imported = st.session_state.pop("intake_selected", None)
-        if imported:
-            st.session_state["seed_source"] = next(
-                (label for label, path in sources.items() if str(path.resolve()) == imported),
-                next(iter(sources), None),
-            )
         if st.session_state.get("seed_source") not in sources:
             st.session_state.pop("seed_source", None)
         if "seed_source" not in st.session_state:
@@ -378,25 +409,13 @@ def render_run_setup() -> None:
                 (label for label, path in sources.items() if str(path.resolve()) == saved),
                 next(iter(sources), None),
             )
-        source = st.selectbox("Seed paper", list(sources), key="seed_source")
+        source = st.selectbox(
+            "Seed paper", list(sources), key="seed_source", on_change=scope_runs_to_source
+        )
         if source:
             st.session_state["selected_seed_path"] = str(sources[source].resolve())
-        literature = st.multiselect(
-            "Related literature",
-            [label for label in sources if label != source],
-            max_selections=3,
-            default=[
-                label
-                for label, path in sources.items()
-                if label != source
-                and str(path.resolve()) in st.session_state.get("selected_literature_paths", [])
-            ],
-        )
-        st.session_state["selected_literature_paths"] = [
-            str(sources[label].resolve()) for label in literature
-        ]
-        if source:
-            render_source_details(sources[source])
+        # Discard removed picker state so references cannot carry across papers.
+        st.session_state.pop("selected_literature_paths", None)
     with budget_column, st.container(border=True):
         st.markdown("**02 · Runtime and local budget**")
         profile = st.selectbox(
@@ -482,7 +501,7 @@ def render_run_setup() -> None:
                 profile,
                 backend,
                 progress_messages.put,
-                [sources[label] for label in literature],
+                [],
                 {**overrides, "seed": seed if seed is not None else secrets.randbits(32)},
             )
             name = datetime.now(UTC).strftime("%Y%m%dT%H%M%S") + "-" + uuid4().hex[:8]
@@ -713,6 +732,18 @@ def render_artifacts(journal: Journal) -> None:
     if not names:
         st.info("The manifest is not sealed yet. Refresh after the run finishes.")
         return
+    implementation_files = set()
+    if "implementation.json" in names:
+        implementation_files = set(
+            json.loads(read_artifact(journal.directory, "implementation.json")).get("files", [])
+        )
+    if not st.checkbox("Include framework provenance", value=False):
+        names = [
+            name
+            for name in names
+            if not name.startswith("framework/")
+            and (not name.startswith("code/") or name in implementation_files)
+        ]
     from hacknation_databricks.research.activity import load_activity
     from hacknation_databricks.research_views import artifact_origin, label
 
