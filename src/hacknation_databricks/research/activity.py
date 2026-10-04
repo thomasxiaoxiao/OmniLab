@@ -44,7 +44,7 @@ def load_activity(journal: Journal) -> list[Activity]:
         for line in read_artifact(journal.directory, "events.jsonl").splitlines()
         if line.strip()
     ]
-    if journal.report.get("workflow_version") == "4":
+    if journal.report.get("workflow_version") in {"4", "5"}:
         return parallel_activity(journal, events)
     backend = journal.report.get("backend", "unknown")
     nodes: list[Activity] = []
@@ -343,7 +343,11 @@ def parallel_activity(journal, events):
                 stage,
                 role,
                 batch,
-                "simulation" if role in {"baseline", "experiment"} else journal.report["backend"],
+                "simulation"
+                if role in {"baseline", "experiment"}
+                else "source"
+                if role == "repository"
+                else journal.report["backend"],
                 event["time"],
                 parents=data.get("parents", []),
             )

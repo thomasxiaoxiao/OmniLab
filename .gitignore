@@ -24,3 +24,6 @@ mlruns/
 # Locally installed editor skill links
 .agents/skills/
 .claude/skills/
+
+# Generated React bundle (npm run build)
+src/hacknation_databricks/web/static/

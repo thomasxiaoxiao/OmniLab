@@ -1,4 +1,4 @@
-"""Omnigent scientific discovery lab: bounded controls and an inspectable decision journal."""
+"""OmniLab scientific discovery lab: bounded controls and an inspectable decision journal."""
 
 import fcntl
 import hashlib
@@ -13,10 +13,6 @@ from queue import SimpleQueue
 from urllib.parse import urlsplit
 from uuid import uuid4
 
-import streamlit as st
-
-from hacknation_databricks.discovery_ui import render_discovery
-from hacknation_databricks.research.decision_runtime import runtime_status
 from hacknation_databricks.research.intake import source_root
 from hacknation_databricks.research.models import RunConfig
 from hacknation_databricks.research.sources import read_source
@@ -33,78 +29,7 @@ from hacknation_databricks.tracking import (
     load_journal,
     read_artifact,
 )
-
-CSS = """
-<style>
-:root { --ink:#182b35; --muted:#697984; --line:#e1e7ea; --teal:#087e80; }
-.stApp { background:#f6f8fa; color:var(--ink); }
-.block-container { max-width:1500px; padding-top:3.7rem; padding-bottom:3rem; }
-[data-testid="stSidebar"] { background:#edf2f4; border-right:1px solid var(--line); }
-[data-testid="stSidebar"] .block-container { padding-top:1.6rem; }
-h1,h2,h3 { color:var(--ink); letter-spacing:-.035em; }
-h1 { font-size:2.6rem!important; font-weight:650!important; padding-top:0!important; }
-h3 { font-size:1.2rem!important; }
-.eyebrow { color:var(--teal); font-size:.7rem; font-weight:750; letter-spacing:.17em;
-           text-transform:uppercase; margin-bottom:.6rem; }
-.brand { font-size:1.35rem; font-weight:750; letter-spacing:-.05em; margin-bottom:.1rem; }
-.brand b { color:var(--teal); }
-.brand-sub { color:var(--muted); font-size:.75rem; margin-bottom:2rem; }
-.context { color:var(--muted); font-size:.88rem; margin-bottom:1.2rem; }
-.pill { display:inline-block; border:1px solid #bcdedb; background:#eaf6f3; color:#22675d;
-        border-radius:6px; font-size:.66rem; font-weight:700; letter-spacing:.05em;
-        padding:4px 8px; max-width:100%; box-sizing:border-box; }
-.pill.review,.pill.blocked { background:#fff4df; color:#966320; border-color:#eedabb; }
-.pill.running { background:#e9effc; color:#3d5c9e; border-color:#ccd7ee; }
-.pill.pending { background:#f0f3f5; color:#71808a; border-color:#dce4e9; }
-.stat { background:white; border:1px solid var(--line); border-radius:10px; padding:18px 20px; }
-.stat-label { color:var(--muted); font-size:.73rem; }
-.stat-value { font-size:1.75rem; font-weight:650; letter-spacing:-.05em; margin:4px 0; }
-.stat-detail { color:var(--muted); font-size:.72rem; }
-.path { display:flex; gap:8px; margin:22px 0 24px; }
-.node { flex:1; min-width:0; border-top:3px solid #d9e1e6; padding:11px 9px 8px;
-        background:#eef2f5; border-radius:0 0 5px 5px; }
-.node.recorded { border-top-color:var(--teal); background:#eaf3f3; }
-.node.review,.node.blocked { border-top-color:#c68a37; background:#faf2e7; }
-.node.running { border-top-color:#567ac0; background:#eef2fc; }
-.node-index { font-size:.62rem; color:var(--muted); font-weight:700; margin-bottom:5px; }
-.node-label { font-size:.72rem; font-weight:600; }
-.decision { padding:17px 20px; border:1px solid var(--line); border-left:3px solid var(--teal);
-            border-radius:8px; background:white; margin-top:10px; }
-.decision.review,.decision.blocked { border-left-color:#c68a37; }
-.decision.running { border-left-color:#567ac0; }
-.decision-top { display:flex; align-items:center; justify-content:space-between; gap:12px; }
-.decision-meta { color:var(--muted); font-size:.69rem; letter-spacing:.025em; }
-.decision-title { font-size:1.02rem; font-weight:650; margin:8px 0 6px; }
-.decision-body { color:#64747e; font-size:.82rem; line-height:1.55; }
-.small-label { color:var(--muted); font-size:.68rem; text-transform:uppercase;
-               letter-spacing:.09em; font-weight:650; margin-bottom:8px; }
-.gate { padding:20px; background:#172f38; color:#f2f7f8; border-radius:10px; margin-bottom:18px; }
-.gate .small-label { color:#9ab7bf; }
-.gate-title { font-size:1.3rem; font-weight:600; margin:5px 0 10px; }
-.gate-detail { font-size:.81rem; line-height:1.6; color:#c2d2d8; }
-.criterion { display:flex; gap:8px; font-size:.76rem; padding:8px 0;
-             border-bottom:1px solid #ffffff19; }
-.criterion .yes { color:#80d8b8; } .criterion .no { color:#f0bf79; }
-.policy-box { background:white; padding:19px; border:1px solid var(--line); border-radius:9px; }
-.policy-row { font-size:.78rem; padding:8px 0; color:#4f626c; border-bottom:1px solid #edf1f3; }
-.proposal { border:1px solid var(--line); border-radius:8px; background:white; padding:18px;
-            height:100%; min-height:165px; }
-.proposal h4 { font-size:.95rem; margin:8px 0; color:var(--ink); }
-.proposal p { font-size:.78rem; color:var(--muted); line-height:1.5; }
-[data-testid="stTabs"] [data-baseweb="tab-list"] { gap:25px; border-bottom:1px solid var(--line); }
-[data-testid="stTabs"] [data-baseweb="tab"] { font-size:.83rem; }
-[data-testid="stTabs"] [aria-selected="true"] { color:var(--teal)!important; }
-[data-testid="stTabs"] [data-baseweb="tab-highlight"] { background-color:var(--teal)!important; }
-[data-testid="stBaseButton-primary"] { background:var(--teal); border-color:var(--teal); }
-[data-testid="stExpander"] { background:white; border-radius:7px; }
-[data-testid="stButton"] button, [data-testid="stDownloadButton"] button { border-radius:7px; }
-[data-testid="stAlert"] { border-radius:8px; }
-@media(max-width:800px) {
-  .path { flex-wrap:wrap; } .node { flex:1 1 25%; }
-  .block-container { padding-top:4rem; } h1 { font-size:2rem!important; }
-}
-</style>
-"""
+from hacknation_databricks.web import components as ui
 
 
 def esc(value: object) -> str:
@@ -112,7 +37,7 @@ def esc(value: object) -> str:
 
 
 def markup(value: str) -> None:
-    st.markdown(value, unsafe_allow_html=True)
+    ui.markdown(value, unsafe_allow_html=True)
 
 
 def run_root() -> Path:
@@ -130,11 +55,11 @@ def available_sources() -> dict[str, Path]:
 
 def scope_runs_to_source():
     """An explicit paper change must not leave another paper's run selected."""
-    source = available_sources().get(st.session_state.get("seed_source"))
+    source = available_sources().get(ui.session_state.get("seed_source"))
     if source is not None:
-        st.session_state["source_scope_sha256"] = hashlib.sha256(source.read_bytes()).hexdigest()
-        st.session_state["selected_seed_path"] = str(source.resolve())
-    st.session_state.pop("selected_literature_paths", None)
+        ui.session_state["source_scope_sha256"] = hashlib.sha256(source.read_bytes()).hexdigest()
+        ui.session_state["selected_seed_path"] = str(source.resolve())
+    ui.session_state.pop("selected_literature_paths", None)
 
 
 def runs_for_source(runs, digest):
@@ -149,6 +74,22 @@ def runs_for_source(runs, digest):
         except (OSError, ValueError, TypeError, AttributeError):
             continue
     return matching
+
+
+def latest_runs_by_paper(runs):
+    """Keep the newest attempt per paper, including failed attempts; never hide a failure."""
+    seen, latest = set(), []
+    for directory in runs:
+        identity = str(directory)
+        try:
+            sources = json.loads(read_artifact(directory, "sources.json"))
+            identity = next(s["sha256"] for s in sources if s.get("source_id") == "seed")
+        except (OSError, ValueError, TypeError, KeyError, AttributeError, StopIteration):
+            pass
+        if identity not in seen:
+            latest.append(directory)
+            seen.add(identity)
+    return latest
 
 
 def run_profiles(backend="omnigent"):
@@ -220,6 +161,11 @@ def launch_run(
             "max_simulations",
             "seed",
             "goal_max_interval_width",
+            "workflow",
+            "decision_backend",
+            "repository_url",
+            "repository_ref",
+            "code_timeout_seconds",
         }
         if not set(overrides) <= allowed:
             raise ValueError("Unknown budget override")
@@ -306,53 +252,53 @@ def launch_run(
     return directory
 
 
-@st.cache_resource
+@ui.cache_resource
 def background_executor():
     return ThreadPoolExecutor(max_workers=1, thread_name_prefix="research-ui")
 
 
-@st.fragment(run_every=3)
+@ui.fragment(run_every=3)
 def render_launch_monitor():
-    if st.session_state.get("research_launch_error"):
-        st.error(st.session_state["research_launch_error"])
-    future = st.session_state.get("research_future")
+    if ui.session_state.get("research_launch_error"):
+        ui.error(ui.session_state["research_launch_error"])
+    future = ui.session_state.get("research_future")
     if future is None:
         return
     if future.done():
-        st.session_state.pop("research_future")
+        ui.session_state.pop("research_future")
         try:
             directory = future.result()
-            st.session_state["new_run"] = directory.name
+            ui.session_state["new_run"] = directory.name
         except Exception as exc:
-            active = st.session_state.get("research_active_run")
+            active = ui.session_state.get("research_active_run")
             if active and (run_root() / active / "report.json").is_file():
-                st.session_state["new_run"] = active
-            st.session_state["research_launch_error"] = (
+                ui.session_state["new_run"] = active
+            ui.session_state["research_launch_error"] = (
                 str(exc)
                 if isinstance(exc, ValueError)
                 else f"Run stopped ({type(exc).__name__}); inspect retained artifacts."
             )
-        st.rerun()
+        ui.rerun()
     else:
-        messages = st.session_state.get("research_progress")
+        messages = ui.session_state.get("research_progress")
         if messages is not None:
             while not messages.empty():
-                st.session_state["research_progress_latest"] = messages.get_nowait()
-        st.info(st.session_state.get("research_progress_latest", "Preparing paper research…"))
-        st.caption("Worker steps and saved results refresh automatically every five seconds.")
-        if not st.session_state.get("following_live_run"):
-            name = st.session_state.get("research_active_run")
+                ui.session_state["research_progress_latest"] = messages.get_nowait()
+        ui.info(ui.session_state.get("research_progress_latest", "Preparing paper research…"))
+        ui.caption("Worker steps and saved results refresh automatically every five seconds.")
+        if not ui.session_state.get("following_live_run"):
+            name = ui.session_state.get("research_active_run")
             if name and (run_root() / name / "report.json").is_file():
-                st.session_state["new_run"] = name
-                st.session_state["following_live_run"] = True
-                st.rerun()
+                ui.session_state["new_run"] = name
+                ui.session_state["following_live_run"] = True
+                ui.rerun()
 
 
 def render_sidebar() -> Path | None:
     """Run context only; intake and launch controls live on their own page."""
-    imported = st.session_state.pop("intake_selected", None)
+    imported = ui.session_state.pop("intake_selected", None)
     if imported:
-        st.session_state["seed_source"] = next(
+        ui.session_state["seed_source"] = next(
             (
                 label
                 for label, path in available_sources().items()
@@ -361,140 +307,167 @@ def render_sidebar() -> Path | None:
             None,
         )
         scope_runs_to_source()
-    with st.sidebar:
-        markup('<div class="brand"><b>◈</b> Omnigent lab</div>')
-        st.caption("SCIENTIFIC DISCOVERY")
+    with ui.sidebar:
+        markup('<div class="brand"><b>◈</b> OmniLab</div>')
+        ui.caption("SCIENTIFIC DISCOVERY")
         runs = runs_for_source(
-            discover_runs(run_root()), st.session_state.get("source_scope_sha256")
+            discover_runs(run_root()), ui.session_state.get("source_scope_sha256")
         )
+        active_name = ui.session_state.get("research_active_run")
+        if active_name and (
+            ui.session_state.get("research_future") is not None
+            or ui.session_state.get("run_selection") == active_name
+            or ui.session_state.get("new_run") == active_name
+        ):
+            runs.sort(key=lambda path: path.name != active_name)
+        if not ui.checkbox("Show previous runs", key="show_previous_runs"):
+            runs = latest_runs_by_paper(runs)
         names = [path.name for path in runs]
-        chosen = st.session_state.pop("new_run", None)
+        chosen = ui.session_state.pop("new_run", None)
         if chosen in names:
-            st.session_state["run_selection"] = chosen
-        if st.session_state.get("run_selection") not in names:
-            st.session_state.pop("run_selection", None)
-        selected = st.selectbox(
+            ui.session_state["run_selection"] = chosen
+        if ui.session_state.get("run_selection") not in names:
+            ui.session_state.pop("run_selection", None)
+        selected = ui.selectbox(
             "Exploration run",
             names,
             key="run_selection",
             placeholder="No recorded runs yet",
         )
-        if st.button("Refresh artifacts", width="stretch", icon=":material/refresh:"):
-            st.rerun()
+        if ui.button("Refresh artifacts", width="stretch", icon=":material/refresh:"):
+            ui.rerun()
         render_launch_monitor()
-        st.divider()
-        st.caption("Seed paper → grounded proposals → bounded tests → updated decision")
-        st.caption("Research prototype · scientific conclusions require further validation.")
-        st.caption(f"Deployed revision: {os.environ.get('APP_REVISION', 'development')}")
+        ui.divider()
+        ui.caption("Seed paper → grounded proposals → bounded tests → updated decision")
+        ui.caption("Research prototype · scientific conclusions require further validation.")
+        ui.caption(f"Deployed revision: {os.environ.get('APP_REVISION', 'development')}")
     return run_root() / selected if selected else None
 
 
 def render_run_setup() -> None:
     from hacknation_databricks.source_ui import render_sources
 
-    source_column, budget_column = st.columns([1.15, 1], gap="large")
-    with source_column, st.container(border=True):
-        st.markdown("**01 · Source paper**")
-        with st.expander("Add papers · upload or arXiv", expanded=False):
+    source_column, budget_column = ui.columns([1.15, 1], gap="large")
+    with source_column, ui.container(border=True):
+        ui.markdown("**01 · Source paper**")
+        with ui.expander("Add papers · upload or arXiv", expanded=False):
             render_sources()
         _, issues = source_library(source_root())
         for issue in issues:
-            st.warning(issue)
+            ui.warning(issue)
         sources = available_sources()
-        if st.session_state.get("seed_source") not in sources:
-            st.session_state.pop("seed_source", None)
-        if "seed_source" not in st.session_state:
-            saved = st.session_state.get("selected_seed_path")
-            st.session_state["seed_source"] = next(
+        if ui.session_state.get("seed_source") not in sources:
+            ui.session_state.pop("seed_source", None)
+        if "seed_source" not in ui.session_state:
+            saved = ui.session_state.get("selected_seed_path")
+            ui.session_state["seed_source"] = next(
                 (label for label, path in sources.items() if str(path.resolve()) == saved),
                 next(iter(sources), None),
             )
-        source = st.selectbox(
+        source = ui.selectbox(
             "Seed paper", list(sources), key="seed_source", on_change=scope_runs_to_source
         )
         if source:
-            st.session_state["selected_seed_path"] = str(sources[source].resolve())
+            ui.session_state["selected_seed_path"] = str(sources[source].resolve())
         # Discard removed picker state so references cannot carry across papers.
-        st.session_state.pop("selected_literature_paths", None)
-    with budget_column, st.container(border=True):
-        st.markdown("**02 · Runtime and local budget**")
-        profile = st.selectbox(
+        ui.session_state.pop("selected_literature_paths", None)
+        from hacknation_databricks.research.repository_source import repository_links
+
+        links = repository_links(read_source(sources[source])) if source else {}
+        repository_url = ui.text_input(
+            "Paper's GitHub repository",
+            value=next(iter(links)) if len(links) == 1 else "",
+            key=f"repository-url-{source}",
+            placeholder="https://github.com/owner/repository",
+            help="Use the implementation cited by the paper, or supply a related "
+            "repository explicitly.",
+        )
+        repository_ref = ui.text_input(
+            "Repository version",
+            value="HEAD",
+            help="A commit, tag, or branch; the run saves the resolved commit.",
+        )
+    with budget_column, ui.container(border=True):
+        ui.markdown("**02 · Runtime and local budget**")
+        profile = ui.selectbox(
             "Environment profile",
             ["Quick verification", "Standard exploration", "Extended exploration"],
             index=1,
         )
         backend = "omnigent"
-        st.markdown("**Researcher agent:** Codex + Omnigent")
-        st.markdown("**Decision agent:** AnyJev + Omnigent")
-        st.caption(
-            "Fixed for this release. Codex sessions assess the evidence in Omnigent; "
-            "AnyJev selects bounded next actions from that assessment and the measurements."
+        ui.markdown("**Researcher agent:** Codex + Omnigent")
+        ui.markdown("**Experimenter and evaluator:** Codex + Omnigent")
+        ui.caption(
+            "Specialists read the paper and repository, generate an experiment, "
+            "and use its measurements to choose the next test."
         )
-        runtime = runtime_status()
-        ready = bool(sources) and runtime["ready"]
-        if not runtime["ready"]:
-            st.info(
-                "Prepare the local decision model with `research prepare-model` after `uv sync`."
-            )
+        ready = bool(sources) and bool(repository_url.strip())
         if not sources:
-            st.info("Import a paper above to prepare a run.")
-        st.caption(
-            "The researcher reads the seed paper to establish its question and context. "
-            "Local experiment tools support percolation and transit uncertainty; "
-            "unsupported papers stop before simulation."
+            ui.info("Import a paper above to prepare a run.")
+        ui.caption(
+            "Offline Python (standard library, NumPy, SciPy) and C17 code can run in "
+            "Omnigent's OS sandbox. No network or package installation during experiments."
         )
         settings = run_profiles(backend)[profile]
-        policy_draft = st.session_state.get("omnigent_policy_drafts", {}).get(profile, {})
+        policy_draft = ui.session_state.get("omnigent_policy_drafts", {}).get(profile, {})
         if policy_draft:
             settings = RunConfig.model_validate({**settings.model_dump(), **policy_draft})
-            st.caption("Saved next-run policy applied. You can adjust its limits below.")
-        st.caption(
-            f"Launch limits: {settings.trials} trials/group · {settings.max_workers} workers · "
-            f"{settings.max_rounds} batches/direction · {settings.max_seconds // 60} minutes"
+            ui.caption("Saved next-run policy applied. You can adjust its limits below.")
+        ui.caption(
+            f"Launch limits: up to {min(settings.trials, 32)} paired replicates · "
+            f"{settings.max_rounds} experiments · {settings.max_seconds // 60} minutes"
         )
-        with st.expander("Adjust local simulation budget", expanded=False):
-            rounds = st.number_input("Maximum batches per direction", 2, 32, settings.max_rounds)
-            workers = st.number_input("Concurrent workers / agents", 1, 16, settings.max_workers)
-            trials = st.number_input("Initial trials per group", 8, 4096, settings.trials, step=8)
-            seconds = st.number_input(
+        with ui.expander("Adjust local simulation budget", expanded=False):
+            rounds = ui.number_input("Maximum experiments", 2, 32, settings.max_rounds)
+            trials = ui.number_input(
+                "Maximum paired replicates", 8, 32, min(settings.trials, 32), step=8
+            )
+            code_timeout = ui.number_input(
+                "Code execution limit per experiment (seconds)",
+                1,
+                180,
+                settings.code_timeout_seconds,
+            )
+            seconds = ui.number_input(
                 "Wall-clock limit (seconds)", 60, 21600, settings.max_seconds, step=60
             )
-            calls = st.number_input(
+            calls = ui.number_input(
                 "Agent request budget", 8, 512, settings.max_agent_calls, step=8
             )
-            simulations = st.number_input(
+            simulations = ui.number_input(
                 "Simulation budget including replays",
                 1000,
                 1000000,
                 settings.max_simulations,
                 step=1000,
             )
-            interval_width = st.number_input(
-                "Goal: maximum interval width", 0.05, 0.5, 0.25, step=0.05
-            )
-            pinned = st.checkbox("Use a specific master seed", value=False)
-            seed = st.number_input("Master seed", 0, 2**32 - 1, 20261003) if pinned else None
-        st.caption(
-            "Independent seed streams for every branch and batch. The master seed is saved. "
-            "Decisions follow each result; the loop ends at its goal or declared limits."
+            pinned = ui.checkbox("Use a specific master seed", value=False)
+            seed = ui.number_input("Master seed", 0, 2**32 - 1, 20261003) if pinned else None
+        ui.caption(
+            "Control and proposed runs share seeds. Each experiment gets new seeds. "
+            "Specialists run in sequence; the evaluator chooses the next test or stops."
         )
         overrides = {
+            "workflow": "repository",
+            "decision_backend": "codex",
+            "repository_url": repository_url.strip(),
+            "repository_ref": repository_ref.strip(),
             "max_rounds": rounds,
-            "max_workers": workers,
+            "max_workers": 1,
             "trials": trials,
+            "code_timeout_seconds": code_timeout,
             "max_seconds": seconds,
             "max_agent_calls": calls,
             "max_simulations": simulations,
-            "goal_max_interval_width": interval_width,
         }
-        if st.button(
+        if ui.button(
             "Start bounded run",
             type="primary",
             width="stretch",
             icon=":material/play_arrow:",
-            disabled=not ready or st.session_state.get("research_future") is not None,
+            disabled=not ready or ui.session_state.get("research_future") is not None,
         ):
-            st.session_state.pop("research_launch_error", None)
+            ui.session_state.pop("research_launch_error", None)
             progress_messages = SimpleQueue()
             arguments = (
                 sources[source],
@@ -505,17 +478,17 @@ def render_run_setup() -> None:
                 {**overrides, "seed": seed if seed is not None else secrets.randbits(32)},
             )
             name = datetime.now(UTC).strftime("%Y%m%dT%H%M%S") + "-" + uuid4().hex[:8]
-            st.session_state["research_active_run"] = name
-            st.session_state["research_progress"] = progress_messages
-            st.session_state["research_progress_latest"] = "Checking Omnigent connection…"
-            st.session_state["following_live_run"] = False
-            st.session_state["research_future"] = background_executor().submit(
+            ui.session_state["research_active_run"] = name
+            ui.session_state["research_progress"] = progress_messages
+            ui.session_state["research_progress_latest"] = "Checking Omnigent connection…"
+            ui.session_state["following_live_run"] = False
+            ui.session_state["research_future"] = background_executor().submit(
                 launch_run, *arguments, run_name=name
             )
-            st.switch_page("app_pages/agents.py")
-        st.caption(
-            "Source and citation researchers propose parallel work. A decision agent reallocates "
-            "simulation batches as partial evidence arrives."
+            ui.switch_page("app_pages/agents.py")
+        ui.caption(
+            "The run preserves paper evidence, repository code, agent handoffs, "
+            "measurements, and the reason for each next step."
         )
 
 
@@ -550,7 +523,7 @@ def render_stats(journal: Journal) -> None:
             "Hard stop at the configured budget",
         ),
     ]
-    for col, (label, value, detail) in zip(st.columns(4), stats, strict=True):
+    for col, (label, value, detail) in zip(ui.columns(4), stats, strict=True):
         with col:
             markup(
                 f'<div class="stat"><div class="stat-label">{esc(label)}</div>'
@@ -596,58 +569,58 @@ def render_gate(journal: Journal) -> None:
 
 def render_inspector(record: Decision, journal: Journal) -> None:
     spec = STEP_BY_KEY[record.step]
-    with st.expander(f"Inspect {record.id} · state, choices & evidence", expanded=False):
-        left, right = st.columns(2)
+    with ui.expander(f"Inspect {record.id} · state, choices & evidence", expanded=False):
+        left, right = ui.columns(2)
         with left:
-            st.markdown("**State → decision**")
-            st.caption(f"{spec.role} · {record.stage} · {record.timestamp}")
+            ui.markdown("**State → decision**")
+            ui.caption(f"{spec.role} · {record.stage} · {record.timestamp}")
             contract = decision_contract(record)
             for key, question in contract["questions"].items():
-                st.markdown(f"**{key.replace('_', ' ').capitalize()}** · `choice`")
-                st.caption(question["instructions"])
+                ui.markdown(f"**{key.replace('_', ' ').capitalize()}** · `choice`")
+                ui.caption(question["instructions"])
                 weights = (contract["probabilities"] or {}).get(key) or {}
                 for option, description in question["criteria"].items():
                     selected = contract["answers"].get(key) == option
                     score = f" · {weights[option]:.1%}" if option in weights else ""
-                    st.write(f"{'●' if selected else '○'} {option}{score} — {description}")
-            st.caption(contract["provenance"])
+                    ui.write(f"{'●' if selected else '○'} {option}{score} — {description}")
+            ui.caption(contract["provenance"])
         with right:
-            st.markdown("**Execution gate**")
-            st.write(spec.gate)
-            st.markdown("**Bounded environment**")
-            st.write(spec.boundary)
-            st.markdown("**Implementation**")
-            st.code(spec.implementation, language=None, wrap_lines=True)
-        st.markdown("**Evidence attached to this decision**")
+            ui.markdown("**Execution gate**")
+            ui.write(spec.gate)
+            ui.markdown("**Bounded environment**")
+            ui.write(spec.boundary)
+            ui.markdown("**Implementation**")
+            ui.code(spec.implementation, language=None, wrap_lines=True)
+        ui.markdown("**Evidence attached to this decision**")
         for name in record.evidence:
             digest = journal.artifacts.get(name, {}).get("sha256", "unsealed")
-            st.caption(f"{name} · SHA-256 {digest[:16]}")
+            ui.caption(f"{name} · SHA-256 {digest[:16]}")
         if record.step == "reader":
             for proposal in record.facts.get("proposals", []):
                 evidence = proposal["evidence"]
-                st.text(
+                ui.text(
                     f"{proposal['title']} · source {evidence['source_id']} · "
                     f"source-local page {evidence['page']}"
                 )
-                st.text("“" + evidence["quote"] + "”")
+                ui.text("“" + evidence["quote"] + "”")
         if record.step == "validation":
             for limitation in record.facts.get("review", {}).get("limitations", []):
-                st.write("• " + limitation)
-        st.json({"contract": contract, "observed_evidence": record.facts}, expanded=False)
+                ui.write("• " + limitation)
+        ui.json({"contract": contract, "observed_evidence": record.facts}, expanded=False)
 
 
 def render_journal(journal: Journal) -> None:
-    left, right = st.columns([2.2, 1], gap="large")
+    left, right = ui.columns([2.2, 1], gap="large")
     with left:
-        st.subheader("Decision journal")
-        st.caption("What was decided, why it was allowed, and what changed.")
-        filters = st.columns([1.4, 1])
+        ui.subheader("Decision journal")
+        ui.caption("What was decided, why it was allowed, and what changed.")
+        filters = ui.columns([1.4, 1])
         with filters[0]:
-            query = st.text_input(
+            query = ui.text_input(
                 "Search decisions", placeholder="Search rationale, step or artifact…"
             )
         with filters[1]:
-            state_filter = st.selectbox("Show", ["All decisions", "Needs attention", "Recorded"])
+            state_filter = ui.selectbox("Show", ["All decisions", "Needs attention", "Recorded"])
         records = [
             d
             for d in journal.decisions
@@ -659,7 +632,7 @@ def render_journal(journal: Journal) -> None:
             )
         ]
         if not records:
-            st.info("No decisions match this filter.")
+            ui.info("No decisions match this filter.")
         for record in reversed(records):
             spec = STEP_BY_KEY[record.step]
             label = "NEEDS REVIEW" if record.status == "review" else record.status.upper()
@@ -674,10 +647,10 @@ def render_journal(journal: Journal) -> None:
             )
             render_inspector(record, journal)
     with right:
-        st.subheader("Control boundary")
-        st.caption("Policy determines where this run can go.")
+        ui.subheader("Control boundary")
+        ui.caption("Policy determines where this run can go.")
         render_gate(journal)
-        st.download_button(
+        ui.download_button(
             "Export decision ledger",
             journal.export(),
             file_name=f"{journal.run_id}-decisions.json",
@@ -688,11 +661,11 @@ def render_journal(journal: Journal) -> None:
 
 
 def render_implementations(journal: Journal) -> None:
-    st.subheader("Directions & implementations")
-    st.caption("A proposal becomes executable only after critique and a matching plan.")
+    ui.subheader("Directions & implementations")
+    ui.caption("A proposal becomes executable only after critique and a matching plan.")
     if not journal.proposals:
-        st.info("No source-backed proposals have been recorded yet.")
-    columns = st.columns(max(1, len(journal.proposals)))
+        ui.info("No source-backed proposals have been recorded yet.")
+    columns = ui.columns(max(1, len(journal.proposals)))
     for column, proposal in zip(columns, journal.proposals, strict=False):
         planned = any(
             d.step == "planner" and d.facts.get("proposal_id") == proposal["id"]
@@ -705,39 +678,39 @@ def render_implementations(journal: Journal) -> None:
                 f"<h4>{esc(proposal['title'])}</h4><p>{esc(proposal['hypothesis'])}</p>"
                 f'<div class="decision-meta">{esc(proposal["experiment"])}</div></div>'
             )
-    st.write("")
+    ui.write("")
     for record in journal.decisions:
         if record.step in {"planner", "experiment", "baseline"}:
-            with st.container(border=True):
-                st.markdown(f"**{record.id} · {STEP_BY_KEY[record.step].title}**")
-                st.write(record.choice)
-                st.caption(STEP_BY_KEY[record.step].implementation)
-                st.json(record.facts, expanded=False)
-    st.subheader("Allowed transition path")
+            with ui.container(border=True):
+                ui.markdown(f"**{record.id} · {STEP_BY_KEY[record.step].title}**")
+                ui.write(record.choice)
+                ui.caption(STEP_BY_KEY[record.step].implementation)
+                ui.json(record.facts, expanded=False)
+    ui.subheader("Allowed transition path")
     for index, step in enumerate(STEPS):
-        st.markdown(f"**{index + 1:02d} · {step.title}** — {step.gate}")
-        st.caption("Allowed: " + " / ".join(step.choices))
-    st.info(
+        ui.markdown(f"**{index + 1:02d} · {step.title}** — {step.gate}")
+        ui.caption("Allowed: " + " / ".join(step.choices))
+    ui.info(
         "After validation, the engine can finish its automated assessment or repeat literature → "
         "plan → experiment → validation for the same proposal within the round budget."
     )
 
 
 def render_artifacts(journal: Journal) -> None:
-    st.subheader("Evidence vault")
-    st.caption(
+    ui.subheader("Evidence vault")
+    ui.caption(
         "Original run artifacts remain unchanged. Downloads come from the selected run only."
     )
     names = sorted(journal.artifacts)
     if not names:
-        st.info("The manifest is not sealed yet. Refresh after the run finishes.")
+        ui.info("The manifest is not sealed yet. Refresh after the run finishes.")
         return
     implementation_files = set()
     if "implementation.json" in names:
         implementation_files = set(
             json.loads(read_artifact(journal.directory, "implementation.json")).get("files", [])
         )
-    if not st.checkbox("Include framework provenance", value=False):
+    if not ui.checkbox("Include framework provenance", value=False):
         names = [
             name
             for name in names
@@ -750,7 +723,7 @@ def render_artifacts(journal: Journal) -> None:
     nodes = load_activity(journal)
     producers = {name: label(node.role) for node in nodes for name in node.artifacts}
     origins = {name: artifact_origin(name) for name in names}
-    counts = st.columns(3)
+    counts = ui.columns(3)
     counts[0].metric(
         "Agent responses", sum(value == "Agent response" for value in origins.values())
     )
@@ -758,9 +731,9 @@ def render_artifacts(journal: Journal) -> None:
         "Simulation data files", sum(value == "Simulation data" for value in origins.values())
     )
     counts[2].metric("Sealed artifacts", len(names))
-    category = st.selectbox("Artifact origin", ["All origins", *sorted(set(origins.values()))])
+    category = ui.selectbox("Artifact origin", ["All origins", *sorted(set(origins.values()))])
     names = [name for name in names if category == "All origins" or origins[name] == category]
-    st.dataframe(
+    ui.dataframe(
         [
             {
                 "Artifact": name,
@@ -775,81 +748,81 @@ def render_artifacts(journal: Journal) -> None:
         width="stretch",
         alt="Generated artifacts with origin and recorded producing step",
     )
-    selected = st.selectbox("Inspect artifact", names)
+    selected = ui.selectbox("Inspect artifact", names)
     try:
         raw = read_artifact(journal.directory, selected)
         if selected.endswith(".json"):
-            st.json(json.loads(raw), expanded=False)
+            ui.json(json.loads(raw), expanded=False)
         elif selected.endswith((".txt", ".csv", ".jsonl", ".py")):
-            st.code(raw[:20000].decode("utf-8", errors="replace"), language=None)
+            ui.code(raw[:20000].decode("utf-8", errors="replace"), language=None)
             if len(raw) > 20000:
-                st.caption("Preview limited to 20 KB. Download contains the complete artifact.")
-        st.download_button(
+                ui.caption("Preview limited to 20 KB. Download contains the complete artifact.")
+        ui.download_button(
             "Download artifact", raw, file_name=Path(selected).name, icon=":material/download:"
         )
     except (OSError, ValueError, KeyError):
-        st.error("This artifact could not be safely read. The run needs review.")
+        ui.error("This artifact could not be safely read. The run needs review.")
 
 
 def render_environment(journal: Journal) -> None:
-    st.subheader("Pinned environment")
-    st.caption("Inputs, limits and implementation identity are recorded before the first decision.")
-    left, right = st.columns(2)
+    ui.subheader("Pinned environment")
+    ui.caption("Inputs, limits and implementation identity are recorded before the first decision.")
+    left, right = ui.columns(2)
     with left:
-        st.markdown("**Run contract**")
-        st.json(journal.config)
+        ui.markdown("**Run contract**")
+        ui.json(journal.config)
     with right:
-        st.markdown("**Implementation identity**")
-        st.json(journal.environment)
-        st.caption(f"Viewer policy: {POLICY_VERSION}")
-        st.markdown(
+        ui.markdown("**Implementation identity**")
+        ui.json(journal.environment)
+        ui.caption(f"Viewer policy: {POLICY_VERSION}")
+        ui.markdown(
             "[Jev decision pattern · official documentation](https://docs.typesafe.ai/introduction)"
         )
-        st.write(
+        ui.write(
             "This interface uses state, closed choices, evidence and code-controlled gates. "
             "Omnigent runs parallel researchers and a decision agent. The optional AnyJev "
             "backend records local option weights; these are not calibrated confidence."
         )
-    st.markdown("**Registered source evidence**")
+    ui.markdown("**Registered source evidence**")
     for source in journal.sources:
-        with st.container(border=True):
-            st.text(source.get("title", source["source_id"]))
-            st.caption(f"{source['source_id']} · {source['kind']} · SHA-256 {source['sha256']}")
+        with ui.container(border=True):
+            ui.text(source.get("title", source["source_id"]))
+            ui.caption(f"{source['source_id']} · {source['kind']} · SHA-256 {source['sha256']}")
             url = source.get("url", "")
             if urlsplit(url).scheme in {"http", "https"}:
-                st.link_button("Open source", url)
+                ui.link_button("Open source", url)
             if source["kind"] == "curated_excerpt":
-                st.warning(
+                ui.warning(
                     "Curated excerpt only. Page numbers refer to the excerpt, not the PDF. "
                     "This run does not demonstrate automated full-paper extraction."
                 )
 
 
-def selected_journal(context="Research", *, compact=False) -> Journal | None:
-    if st.session_state.get("research_future") is not None and not st.session_state.get(
+def selected_journal(context="Research", *, compact=False, show_outcome=True) -> Journal | None:
+    if ui.session_state.get("research_future") is not None and not ui.session_state.get(
         "following_live_run"
     ):
-        st.info("Run starting · checking the runtime and preparing source artifacts.")
-        st.caption("This page updates automatically as the new run produces evidence.")
+        ui.info("Run starting · checking the runtime and preparing source artifacts.")
+        ui.caption("This page updates automatically as the new run produces evidence.")
         return None
-    active = st.session_state.get("research_active_run")
+    active = ui.session_state.get("research_active_run")
     if (
-        st.session_state.get("research_launch_error")
+        ui.session_state.get("research_launch_error")
         and active
         and not (run_root() / active / "report.json").is_file()
     ):
-        st.error("Run could not start · see the runtime error in the sidebar. No experiment ran.")
+        ui.error("Run could not start · see the runtime error in the sidebar. No experiment ran.")
         return None
-    selected = st.session_state.get("run_selection")
+    selected = ui.session_state.get("run_selection")
     if not selected:
-        st.info("No runs have been recorded. Open Source intake to choose a seed and start a run.")
+        ui.info("No runs have been recorded. Open Source intake to choose a seed and start a run.")
         return None
     journal = load_journal(run_root() / selected)
     if journal.issues:
-        st.error("Evidence verification failed. This run is quarantined from the decision views.")
+        ui.error("Evidence verification failed. This run is quarantined from the decision views.")
         for issue in journal.issues:
-            st.write(issue)
-        st.download_button(
+            ui.write(issue)
+        ui.download_button(
             "Download diagnostic ledger",
             journal.export(),
             file_name="decision-ledger-diagnostic.json",
@@ -858,45 +831,44 @@ def selected_journal(context="Research", *, compact=False) -> Journal | None:
         return None
     backend = journal.report.get("backend", "unknown")
     if not compact:
-        st.caption(
+        ui.caption(
             f"{journal.run_id} · {backend.upper()} · "
             f"{journal.report.get('status', 'running').replace('_', ' ')} · "
             f"{'Artifacts verified' if journal.verified else 'Unsealed live snapshot'}"
         )
     if backend != "omnigent":
-        st.info("Auxiliary run: no live Omnigent collaboration is claimed for this backend.")
+        ui.info("Auxiliary run: no live Omnigent collaboration is claimed for this backend.")
     from hacknation_databricks.policy_ui import render_policy_context
     from hacknation_databricks.run_feedback_ui import render_run_outcome
 
     seed = next((s for s in journal.sources if s.get("source_id") == "seed"), {})
     if seed and not compact:
-        st.text(f"Run paper: {seed.get('title', 'Seed paper')}")
-    render_run_outcome(journal)
+        ui.text(f"Run paper: {seed.get('title', 'Seed paper')}")
+    if show_outcome:
+        render_run_outcome(journal)
     if not compact:
         render_policy_context(journal, context)
     return journal
 
 
-@st.fragment(run_every=5)
+@ui.fragment(run_every=5)
 def render_selected_run():
-    journal = selected_journal()
+    journal = selected_journal(compact=True, show_outcome=False)
     if journal is None:
         return
-    from hacknation_databricks.synthesis_ui import render_research_path
+    from hacknation_databricks.synthesis_ui import render_synthesis
 
-    render_research_path(journal)
-    render_discovery(journal)
+    render_synthesis(journal)
 
 
 def main() -> None:
-    st.title("Discovery overview")
-    st.caption("Follow a seed paper from grounded directions to the next scientific decision.")
+    ui.title("Discovery overview")
+    ui.caption("Simulation, result, and next experiment.")
     render_selected_run()
 
 
 if __name__ == "__main__":
     # Supports direct developer previews as well as the multipage entrypoint.
-    st.set_page_config(page_title="Omnigent lab", layout="wide")
-    markup(CSS)
+    ui.set_page_config(page_title="OmniLab", layout="wide")
     render_sidebar()
     main()

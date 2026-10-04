@@ -285,7 +285,7 @@ def test_project_deadline_stops_live_work_but_preserves_offline_fixtures(tmp_pat
 
 
 def test_partial_parallel_ui_shows_goal_and_branch_handoffs(tmp_path, monkeypatch):
-    from streamlit.testing.v1 import AppTest
+    from view_test import ViewTest
 
     from hacknation_databricks.research.activity import activity_svg, load_activity
 
@@ -304,7 +304,7 @@ def test_partial_parallel_ui_shows_goal_and_branch_handoffs(tmp_path, monkeypatc
 
         render_discovery(load_journal(Path(directory)))
 
-    app = AppTest.from_function(preview, args=(str(tmp_path / "run"),)).run(timeout=15)
+    app = ViewTest.from_function(preview, args=(str(tmp_path / "run"),)).run(timeout=15)
     assert not app.exception and not app.error
     assert any(m.label == "Goal" and m.value == "Achieved" for m in app.metric)
     assert RunConfig().max_workers == 6

@@ -1,0 +1,20 @@
+{
+  "workflow": "repository",
+  "domain": "auto",
+  "repository_url": "https://github.com/james-m-osborn/astrosat",
+  "repository_ref": "e65cd9a22d57c146f390b758822f3e37d16be9ad",
+  "seed": 20261004,
+  "trials": 8,
+  "max_rounds": 2,
+  "max_workers": 1,
+  "max_agent_calls": 10,
+  "max_agent_retries": 0,
+  "agent_timeout_seconds": 180,
+  "max_seconds": 900,
+  "max_simulations": 40,
+  "code_timeout_seconds": 60,
+  "research_areas": [
+    "Fresh physical model sensitivity check inspired by the paper's phase-function assumption, using the actual pinned AstroSat code and REAL ephem orbital propagation and Sun geometry on the supplied historical reference TLE. Evaluate a changing light curve across the supplied first-pass peak window. Do not replace real astronomy objects with mocks or repeat a scalar brightness identity. The provided IRIDIUM orbit is a scoped reference input, not the paper's historical Starlink dataset. Derive at most three hypotheses from the seed paper, choose one feasible test, and state limitations plainly.",
+    "Preregister a window and keep all requested samples. The setup probe found the peak +/-60 seconds sunlit/above-horizon. A shorter window can allow paired seeded timing perturbations within those bounds; any jitter is a synthetic sensitivity assumption, not observational uncertainty. Every seed should correspond to an explicit varied input; do not pretend unused seeds are independent replicates. Both arms share relative sample times. Define an executable analytical sanity test (for example identical-model differences) without replacing measured trajectories. Do not silently skip invalid outputs or constrain the implementation only to the initial two settings."
+  ]
+}

@@ -1,3 +1,4 @@
+# Deprecated: historical theme reference only. React styles live in frontend/src/styles.css.
 [theme]
 base = "light"
 primaryColor = "#0f766e"

@@ -2,6 +2,7 @@
 
 import json
 import textwrap
+import time
 from html import escape
 
 
@@ -40,7 +41,10 @@ def comparison_bundle(report, config, sources, read_json, dataset=None):
             recipe_path = f"rounds/{dataset['round']:02d}/experiment.json"
             recipe = read_json(recipe_path) or {}
     effect = (dataset or {}).get("effect", {})
-    metric = effect.get("metric", "horizontal wrapping rate")
+    domain = report.get("domain", config.get("domain", "percolation"))
+    metric = effect.get(
+        "metric", "horizontal wrapping rate" if domain == "percolation" else "recorded metric"
+    )
     checks = []
     for check in effect.get("checks", []):
         interval = check.get("difference_interval")
@@ -87,12 +91,16 @@ def comparison_bundle(report, config, sources, read_json, dataset=None):
     evidence = evidence if isinstance(evidence, list) else [evidence]
     scope = (
         "Synthetic sensitivity study; no historical satellite forecast or observational validation."
-        if report.get("domain", config.get("domain")) == "astrosat"
+        if domain == "astrosat"
         else "Finite-size simulation at fixed parameters; "
         "no full-paper reproduction or universality claim."
+        if domain == "percolation"
+        else "Scoped simulation only; scientific and real-world validity "
+        "require independent validation."
     )
     result = {
         "schema_version": 1,
+        "domain": domain,
         "status": "measured" if checks else "unavailable",
         "run_status": report.get("status", "unrecorded"),
         "branch_id": branch if dataset else None,
@@ -215,27 +223,63 @@ def comparison_svg(bundle: dict) -> str:
 
 
 def save_comparisons(store, report, config, sources):
-    """Seal a pair for every completed checkpoint plus the selected final result."""
+    """Enforce and seal process + numerical comparisons at every terminal path."""
+    from .process_player import process_html
+    from .process_visualization import build_process, enforce_process_output
 
     def read_json(name):
         path = store.directory / name
         return json.loads(path.read_text()) if path.is_file() else None
 
-    outputs = {}
+    outputs, prepared, processes = {}, {}, {}
+    started = time.monotonic()
     for dataset in [*report.get("rounds", []), None]:
         prefix = f"comparisons/{dataset['round']:03d}" if dataset else "comparison"
         bundle = comparison_bundle(report, config, sources, read_json, dataset)
-        from .highlights import research_highlights
-
-        store.write(f"{prefix}/highlights.json", research_highlights(bundle))
-        store.write(f"{prefix}/comparison.json", bundle)
-        store.write_text(f"{prefix}/simulation.svg", comparison_svg(bundle))
-        store.write_text(f"{prefix}/summary.txt", bundle["summary"] + "\n")
+        checkpoint = bundle["checkpoint"]
+        if checkpoint not in processes:
+            processes[checkpoint] = build_process(
+                bundle,
+                lambda name: (store.directory / name).read_bytes(),
+                run_id=store.directory.name,
+            )
+        process = processes[checkpoint]
+        prepared[prefix] = bundle, process
         outputs[prefix] = {
             "highlight": f"{prefix}/highlights.json",
             "visualization": f"{prefix}/simulation.svg",
             "summary": f"{prefix}/summary.txt",
             "measurements": f"{prefix}/comparison.json",
             "status": bundle["status"],
+            "process_status": process["status"],
+            "process_data": f"{prefix}/process.json",
+            "process_visualization": f"{prefix}/process.html"
+            if process["status"] == "ready"
+            else None,
         }
+    enforce_process_output(report, outputs)
+    for prefix, (bundle, process) in prepared.items():
+        from .highlights import research_highlights
+
+        bundle["run_status"] = report["status"]
+        store.write(f"{prefix}/highlights.json", research_highlights(bundle))
+        store.write(f"{prefix}/comparison.json", bundle)
+        store.write_text(f"{prefix}/simulation.svg", comparison_svg(bundle))
+        store.write_text(f"{prefix}/summary.txt", bundle["summary"] + "\n")
+        # Compact states stay within the viewer's artifact-size limit even for
+        # large lattice geometry. The ordinary report remains human-readable.
+        store.write_text(
+            f"{prefix}/process.json", json.dumps(process, allow_nan=False, separators=(",", ":"))
+        )
+        if process["status"] == "ready":
+            store.write_text(f"{prefix}/process.html", process_html(process["process"]))
     report["comparison_artifacts"] = outputs
+    report["visualization_compute"] = {
+        "elapsed_seconds": round(time.monotonic() - started, 3),
+        "replayed_trials": sum(
+            p.get("process", {}).get("replayed_trials", 0) for p in processes.values()
+        ),
+        "new_statistical_trials": 0,
+        "scope": "Bounded rendering/reconstruction of saved trials; "
+        "separate from research sampling.",
+    }

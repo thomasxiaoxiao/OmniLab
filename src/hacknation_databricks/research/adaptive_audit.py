@@ -235,7 +235,10 @@ def load_adaptive_journal(directory):
                     },
                 )
             )
-        if report["goal"]["achieved"] != any(c["goal_accepted"] for c in report["checkpoints"]):
+        expected_goal = any(c["goal_accepted"] for c in report["checkpoints"])
+        if "output_contract" in report:
+            expected_goal &= report["output_contract"]["passed"]
+        if report["goal"]["achieved"] != expected_goal:
             raise ValueError("False goal completion")
         if (directory / "manifest.json").exists():
             journal.artifacts = read("manifest.json")["artifacts"]
@@ -250,6 +253,10 @@ def load_adaptive_journal(directory):
                 raw = read_artifact(directory, name)
                 if len(raw) != item["bytes"] or hashlib.sha256(raw).hexdigest() != item["sha256"]:
                     journal.issues.append(f"Artifact changed: {name}")
+            if not journal.issues:
+                from .process_visualization import verify_process_outputs
+
+                journal.issues.extend(verify_process_outputs(directory, report, journal.artifacts))
     except (OSError, ValueError, KeyError, TypeError, AttributeError):
         journal.issues.append("Parallel run failed contract, evidence or handoff verification.")
     return journal

@@ -1,0 +1,328 @@
+{
+  "updated_at": "2026-10-04T02:53:01.235189+00:00",
+  "scope": "Consolidated overview and repository-derived Python/C experiments through Omnigent.",
+  "software_checks": {
+    "pytest": {
+      "passed": 241,
+      "skipped": 3,
+      "elapsed_seconds": 33.73
+    },
+    "real_macos_sandbox_probes": {
+      "passed": 3,
+      "elapsed_seconds": 0.79,
+      "checks": [
+        "Python repository calls",
+        "C17 compilation and ctypes execution",
+        "outside-file read/write and network denied; inherited secret absent"
+      ]
+    },
+    "post_render_adjustment_tests": {
+      "passed": 33,
+      "skipped": 3,
+      "elapsed_seconds": 4.24
+    },
+    "ruff_check": "passed",
+    "ruff_format": "passed",
+    "git_diff_check": "passed",
+    "browser": "Overview and source intake inspected at localhost:8000; only one overview navigation entry; measured comparison renders before result and next experiment."
+  },
+  "repository": {
+    "archive_sha256": "9c614797bc5f240077459753e17da18e9b8d60f74aca6f7ce00c43f1e3895e9c",
+    "commit": "e65cd9a22d57c146f390b758822f3e37d16be9ad",
+    "licenses": [],
+    "origin": "paper",
+    "paper_page": 1,
+    "requested_ref": "e65cd9a22d57c146f390b758822f3e37d16be9ad",
+    "retrieved_at": "2026-10-04T02:46:15.613074+00:00",
+    "source_sha256": "e56bf525c71437be590c99f6cb4697cb41442f05c5836d7f555c34851eca0ebf",
+    "url": "https://github.com/james-m-osborn/astrosat"
+  },
+  "live_runs": [
+    {
+      "path": "output/research-archive/20261004T0312Z-astrosat-withdrawn/omnigent-repository-astrosat-validation",
+      "status": "failed",
+      "artifact_verification_passed": true,
+      "scientific_loop_accepted": false,
+      "role_calls": 4,
+      "requested_simulations": 10,
+      "completed_experiments": 0,
+      "elapsed_seconds": 186.842,
+      "outcome": "Generated seed whitelist rejected the supervisor seed; execution failure retained.",
+      "sessions": [
+        "4fe223b791bd4fa0ac5b834c7c24fa1b",
+        "6e5fc957d64d4c3db5322c50078ad65b",
+        "aa5c725b3d35403b92840561e84caa95",
+        "cf995a2115894bb7b5dec93bb6cf5d8f"
+      ],
+      "runner_stop_events": 4
+    },
+    {
+      "path": "output/research-archive/20261004T0312Z-astrosat-withdrawn/omnigent-repository-astrosat-seed-contract",
+      "status": "failed",
+      "artifact_verification_passed": true,
+      "scientific_loop_accepted": false,
+      "role_calls": 1,
+      "requested_simulations": 0,
+      "completed_experiments": 0,
+      "elapsed_seconds": 33.856,
+      "outcome": "Reader quote did not match its cited page; no experiment accepted.",
+      "sessions": [
+        "1b42732bfde74774a466d466f35814f3"
+      ],
+      "runner_stop_events": 1
+    },
+    {
+      "path": "output/research-archive/20261004T0312Z-astrosat-withdrawn/omnigent-repository-astrosat-grounded",
+      "status": "failed",
+      "artifact_verification_passed": true,
+      "scientific_loop_accepted": false,
+      "role_calls": 4,
+      "requested_simulations": 0,
+      "completed_experiments": 0,
+      "elapsed_seconds": 250.84,
+      "outcome": "Generated program exceeded the 16000-character source contract; no execution attempted.",
+      "sessions": [
+        "42df2ef1a0a242b8a400834094b184a6",
+        "7c8bf21ccd1847a7bb72e8ee6263bcd6",
+        "996e0c0e7c1c42afbff9a9db2ecd7166",
+        "e7646598458a4514b28505cb7afe730b"
+      ],
+      "runner_stop_events": 4
+    },
+    {
+      "path": "output/research-archive/20261004T0312Z-astrosat-withdrawn/omnigent-repository-astrosat-brightness",
+      "status": "failed",
+      "artifact_verification_passed": true,
+      "scientific_loop_accepted": false,
+      "role_calls": 4,
+      "requested_simulations": 10,
+      "completed_experiments": 0,
+      "elapsed_seconds": 170.746,
+      "outcome": "Code executed, but prose-only sanity parameters produced the wrong sanity value; results rejected.",
+      "sessions": [
+        "2a7093a2c5f149948541fa79c713c341",
+        "5cc74172ebb34def9edac6a3b8900759",
+        "af7003e78ac14806b9e833b5433902e8",
+        "f427a7dfeed740b7af1caa4a6ddb679b"
+      ],
+      "runner_stop_events": 4
+    },
+    {
+      "path": "output/research-archive/20261004T0312Z-astrosat-withdrawn/omnigent-repository-astrosat-explicit-parameters",
+      "status": "failed",
+      "artifact_verification_passed": true,
+      "scientific_loop_accepted": false,
+      "role_calls": 4,
+      "requested_simulations": 0,
+      "completed_experiments": 0,
+      "elapsed_seconds": 149.243,
+      "outcome": "Planner put a source-file description in the package list; invalid contract retained.",
+      "sessions": [
+        "73f0bc4628264c23a337e0b9cfd30e25",
+        "79860e77303848c398bd4485c7fa38c5",
+        "8ba12509e451480e92ab5994a6aff665",
+        "fad3252b2ae64b97911575fc0923bf17"
+      ],
+      "runner_stop_events": 4
+    },
+    {
+      "path": "output/research-archive/20261004T0312Z-astrosat-withdrawn/omnigent-repository-astrosat-contract-repair",
+      "status": "research_stopped",
+      "artifact_verification_passed": true,
+      "scientific_loop_accepted": true,
+      "role_calls": 6,
+      "requested_simulations": 20,
+      "completed_experiments": 2,
+      "elapsed_seconds": 191.055,
+      "outcome": "Two measured experiments completed; evaluator stopped for source clarification and observational validation.",
+      "sessions": [
+        "2ad558eef6b4462bac9329c55279b35a",
+        "2d51b489f96c4602a1fcafcb2ba857ee",
+        "43509f42e76144769711e511558e4686",
+        "883029009b7c4fd79a96b3cf7b521210",
+        "e25e3a7461ca44dba78cedfcfbf9c64e",
+        "f4d0be2552aa4e3a9e198fc0a3c02f5d"
+      ],
+      "runner_stop_events": 6
+    }
+  ],
+  "accepted_run": {
+    "path": "output/research-archive/20261004T0312Z-astrosat-withdrawn/omnigent-repository-astrosat-contract-repair",
+    "status": "research_stopped",
+    "acceptance": {
+      "baseline_simulations": true,
+      "followup_implemented": true,
+      "full_paper_reproduction": false,
+      "live_agents_executed": true,
+      "simulated_world_comparison": true
+    },
+    "experiments": [
+      {
+        "artifact_prefix": "rounds/01",
+        "next_decision": {
+          "action": "followup",
+          "limitations": [
+            "Interpretation relies on the supplied supervisor summary; raw samples and validation artifacts were not independently inspected in this session.",
+            "No measurement_contract was supplied; the declared endpoint remains the mean of all 16 retained magnitudes per invocation, with four paired invocations per arm.",
+            "Sanity and replay passes support the prescribed arithmetic check and repeatability, not package integration, orbital propagation or physical accuracy.",
+            "The reported 95% paired Student t interval is exploratory, lacks sequential or multiple-testing correction, and provides no observational uncertainty estimate for repeated deterministic states.",
+            "Attributing cross_section changes to albedo assumes fixed area; the 0.30 multiplier represents a 70% reduction, distinct from a 30% reduction.",
+            "The 0.30 endpoint remains a prediction until executed; neither endpoint tests diffuse-phase physics.",
+            "Literature coverage is insufficient to resolve the paper's magnitude-change sign or author intent; rendered equations and Mallama (2021) require independent inspection.",
+            "These numerical checks do not establish scientific novelty, universality, real-world validity or discovery acceleration."
+          ],
+          "next_experiment": "Test cross_section=0.0225 against the unchanged baseline to measure whether the 0.30 multiplier produces the predicted 1.307197-mag dimming.",
+          "next_treatment": {
+            "cross_section": 0.0225,
+            "eclipsed": false,
+            "observer_elevation_m": 100,
+            "orbital_altitude_m": 1000000,
+            "phase_model": "none",
+            "range_m": 1000000,
+            "satellite_alt_rad": 1.5707963267948966,
+            "satellite_az_rad": 0,
+            "satellite_dec_rad": 0,
+            "satellite_ra_rad": 0,
+            "search_radius_deg": 15,
+            "steps": 16,
+            "sun_alt_rad": 0,
+            "target_dec_deg": 0,
+            "target_ra_deg": 0
+          },
+          "rationale": "The supplied round-1 summary reports control 6.192346841520751 mag, treatment 6.579601741485113 mag, and paired difference 0.38725489996436124 mag, with sanity and replay checks passing. The difference matches -2.5 log10(0.70) and falls approximately 0.912745 mag below +1.3. The exploratory paired interval collapses to the measured difference because these evaluations are deterministic; it does not establish observational precision. Source ID seed, page 2: \"Therefore, here we reduce the albedo by 30% to re\ufb02ect this.\" This result redirects the remaining round from repeating the 0.70 calculation to testing the distinct 0.30 endpoint. Set cross_section to 0.0225, holding the baseline, metric, thresholds and other parameters fixed. The analytic prediction is +1.307197 mag relative to baseline; execution can check this alternative numerical interpretation but cannot establish author intent.",
+          "result_interpretation": "The measured 0.70 multiplier dims the prescribed satellite by 0.387255 mag, matching the logarithmic prediction rather than the proposed 1.3-mag interpretation."
+        },
+        "round": 1,
+        "summary": {
+          "control_mean": 6.192346841520751,
+          "difference": 0.38725489996436124,
+          "interval": [
+            0.38725489996436124,
+            0.38725489996436124
+          ],
+          "interval_method": "Paired-seed Student t interval, 95%; exploratory, no sequential or multiple-testing correction.",
+          "meaningful_difference": 0.05,
+          "metric": "Mean retained V magnitude",
+          "proposed_mean": 6.579601741485113,
+          "replay_passed": true,
+          "samples_per_arm": 4,
+          "sanity_passed": true,
+          "units": "mag"
+        },
+        "treatment": {
+          "cross_section": 0.0525,
+          "eclipsed": false,
+          "observer_elevation_m": 100,
+          "orbital_altitude_m": 1000000,
+          "phase_model": "none",
+          "range_m": 1000000,
+          "satellite_alt_rad": 1.5707963267948966,
+          "satellite_az_rad": 0,
+          "satellite_dec_rad": 0,
+          "satellite_ra_rad": 0,
+          "search_radius_deg": 15,
+          "steps": 16,
+          "sun_alt_rad": 0,
+          "target_dec_deg": 0,
+          "target_ra_deg": 0
+        }
+      },
+      {
+        "artifact_prefix": "rounds/02",
+        "next_decision": {
+          "action": "stop",
+          "limitations": [
+            "Interpretation relies on supplied supervisor summaries; raw samples, source files and validation artifacts were not independently inspected in this session.",
+            "No measurement_contract was supplied; the declared metric remains the mean of all 16 retained magnitudes per invocation, with four paired invocations per arm.",
+            "The exploratory 95% paired Student t interval has no sequential or multiple-testing correction and does not estimate observational uncertainty from repeated deterministic states.",
+            "The 0.30 multiplier is now reported as executed, superseding earlier descriptions of it as prediction-only; attribution to albedo still requires fixed area.",
+            "Sanity and replay passes do not validate package integration, orbital propagation, historical figures or observational accuracy.",
+            "Literature coverage is insufficient to resolve the magnitude-change sign or author intent; rendered equations and Mallama (2021) still require independent inspection.",
+            "Both executed endpoints use Fmodel=None; numerical agreement provides no evidence for the deferred diffuse-phase hypothesis.",
+            "These limited numerical checks establish neither scientific novelty nor universality, real-world validity or measured discovery acceleration."
+          ],
+          "next_experiment": "After clarifying the source equations and calibration, compare both albedo multipliers against independent brightness observations at validated geometries.",
+          "next_treatment": null,
+          "rationale": "Round 2 reports control 6.192346841520751 mag and treatment 7.499543704721595 mag, with paired difference 1.3071968632008435 mag. This matches -2.5 log10(0.30) and is approximately 0.007197 mag above +1.3; the declared 0.05 meaningful-difference threshold is not an equivalence test. Round 1 measured +0.387255 mag for the 0.70 multiplier. Source ID seed, page 2: \"Therefore, here we reduce the albedo by 30% to re\ufb02ect this.\" Together, the results distinguish reduction by 30% from reduction to 30% under the fixed-area assumption, without resolving author intent. Reported sanity and replay passes support prescribed arithmetic consistency and repeatability. The exploratory paired interval [1.3071968632008435, 1.3071968632008435] collapses because the evaluations are deterministic. This result redirects the decision from further albedo arithmetic to source clarification and independent physical validation; stop because no rounds remain.",
+          "result_interpretation": "The reported 0.30 multiplier dims the prescribed satellite by 1.307197 mag, matching its logarithmic prediction and approaching the stated 1.3-mag interpretation."
+        },
+        "round": 2,
+        "summary": {
+          "control_mean": 6.192346841520751,
+          "difference": 1.3071968632008435,
+          "interval": [
+            1.3071968632008435,
+            1.3071968632008435
+          ],
+          "interval_method": "Paired-seed Student t interval, 95%; exploratory, no sequential or multiple-testing correction.",
+          "meaningful_difference": 0.05,
+          "metric": "Mean retained V magnitude",
+          "proposed_mean": 7.499543704721595,
+          "replay_passed": true,
+          "samples_per_arm": 4,
+          "sanity_passed": true,
+          "units": "mag"
+        },
+        "treatment": {
+          "cross_section": 0.0225,
+          "eclipsed": false,
+          "observer_elevation_m": 100,
+          "orbital_altitude_m": 1000000,
+          "phase_model": "none",
+          "range_m": 1000000,
+          "satellite_alt_rad": 1.5707963267948966,
+          "satellite_az_rad": 0,
+          "satellite_dec_rad": 0,
+          "satellite_ra_rad": 0,
+          "search_radius_deg": 15,
+          "steps": 16,
+          "sun_alt_rad": 0,
+          "target_dec_deg": 0,
+          "target_ra_deg": 0
+        }
+      }
+    ],
+    "decision_timing": {
+      "bottleneck": "Repository result to next scientific decision",
+      "multiplier": null,
+      "observed_decision_seconds": [
+        19.344951167004183,
+        17.56150704200263
+      ],
+      "status": "No comparable manual baseline measured"
+    },
+    "code_scope": "Generated Python uses the hash-checked, unchanged AstroSat.process_satellite method extracted via AST. Prescribed input states and Fmodel=None; no orbital propagation or missing astronomy dependencies are simulated."
+  },
+  "replays": [
+    {
+      "path": "output/replays/omnigent-repository-astrosat-round-1",
+      "new_model_calls": 0,
+      "round": 1,
+      "source_run": "output/research-archive/20261004T0312Z-astrosat-withdrawn/omnigent-repository-astrosat-contract-repair",
+      "status": "matched",
+      "artifact_verification_passed": true
+    },
+    {
+      "path": "output/replays/omnigent-repository-astrosat-round-2",
+      "new_model_calls": 0,
+      "round": 2,
+      "source_run": "output/research-archive/20261004T0312Z-astrosat-withdrawn/omnigent-repository-astrosat-contract-repair",
+      "status": "matched",
+      "artifact_verification_passed": true
+    }
+  ],
+  "limitations": [
+    "The live scientific validation exercised Python; C execution was verified with a numerical repository fixture.",
+    "Deterministic prescribed states yield zero-width sampling intervals; these do not quantify observational or model uncertainty.",
+    "No independent literature search in this bounded run; no full paper reproduction, scientific novelty or acceleration multiplier is established.",
+    "macOS resident-memory and per-job process-count caps are not enforced. Linux sandbox behavior was not executed on this macOS host.",
+    "No production deployment, public submission or publication performed.",
+    "The original percolation project seed remains unchanged and needs an explicit GitHub code source for repository execution."
+  ],
+  "disposition": {
+    "status": "withdrawn_from_active_results",
+    "at": "2026-10-04T03:12:00Z",
+    "reason": "User rejected prescribed-state scalar identities as scientific process simulations. Six prior attempts are archived unchanged; their former accepted numerical check is historical only.",
+    "archive_index": "output/research-archive/20261004T0312Z-astrosat-withdrawn/archive-index.json"
+  }
+}

@@ -103,7 +103,7 @@ class RunStore:
     def seal(self) -> None:
         entries = {}
         for path in sorted(self.directory.rglob("*")):
-            if path.is_file() and path.name != "manifest.json":
+            if path.is_file() and path != self.directory / "manifest.json":
                 entries[str(path.relative_to(self.directory))] = {
                     "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
                     "bytes": path.stat().st_size,
@@ -112,7 +112,9 @@ class RunStore:
 
 
 def environment() -> dict:
-    packages = {name: version(name) for name in ["numpy", "scipy", "pypdf", "omnigent", "anyjev"]}
+    packages = {
+        name: version(name) for name in ["numpy", "scipy", "ephem", "pypdf", "omnigent", "anyjev"]
+    }
     try:
         packages["mlx-lm"] = version("mlx-lm")
     except PackageNotFoundError:
@@ -145,4 +147,18 @@ def verify_artifacts(directory: Path) -> list[str]:
             failures.append(f"Unsafe manifest path: {name}")
         elif not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest() != item["sha256"]:
             failures.append(f"Hash mismatch: {name}")
+    if not failures and "report.json" in manifest["artifacts"]:
+        from .repository_audit import verify_repository_outputs
+
+        failures.extend(
+            verify_repository_outputs(
+                directory,
+                json.loads((directory / "report.json").read_text()),
+                manifest["artifacts"],
+            )
+        )
+        from .process_visualization import verify_process_outputs
+
+        report = json.loads((directory / "report.json").read_text())
+        failures.extend(verify_process_outputs(directory, report, manifest["artifacts"]))
     return failures

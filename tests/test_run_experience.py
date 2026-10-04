@@ -6,7 +6,7 @@ from concurrent.futures import Future
 from pathlib import Path
 
 import pytest
-from streamlit.testing.v1 import AppTest
+from view_test import ViewTest
 
 from hacknation_databricks.research.agents import OmnigentRoles
 from hacknation_databricks.research.artifacts import RunStore, canonical
@@ -28,7 +28,6 @@ def test_launch_follows_exact_run_then_reports_completion(monkeypatch, tmp_path,
     from hacknation_databricks import tracking_ui
 
     monkeypatch.setenv("RESEARCH_RUNS_DIR", str(tmp_path))
-    monkeypatch.setattr(tracking_ui, "runtime_status", lambda: {"ready": True})
     future = Future()
     submitted = {}
 
@@ -38,7 +37,7 @@ def test_launch_follows_exact_run_then_reports_completion(monkeypatch, tmp_path,
             return future
 
     monkeypatch.setattr(tracking_ui, "background_executor", lambda: Executor())
-    app = AppTest.from_file(str(UI)).run(timeout=15)
+    app = ViewTest.from_file(str(UI)).run(timeout=15)
     next(b for b in app.button if b.label == "Start bounded run").click().run()
     assert app.title[0].value == "Agents & execution loops"
     assert any("Run starting" in i.value for i in app.info)
@@ -65,7 +64,6 @@ def test_preflight_failure_never_displays_previous_experiment(monkeypatch, tmp_p
 
     make_run(tmp_path)
     monkeypatch.setenv("RESEARCH_RUNS_DIR", str(tmp_path))
-    monkeypatch.setattr(tracking_ui, "runtime_status", lambda: {"ready": True})
     future = Future()
 
     class Executor:
@@ -73,7 +71,7 @@ def test_preflight_failure_never_displays_previous_experiment(monkeypatch, tmp_p
             return future
 
     monkeypatch.setattr(tracking_ui, "background_executor", lambda: Executor())
-    app = AppTest.from_file(str(UI)).run(timeout=15)
+    app = ViewTest.from_file(str(UI)).run(timeout=15)
     next(b for b in app.button if b.label == "Start bounded run").click().run()
     future.set_exception(ValueError("Omnigent is unavailable"))
     app.switch_page("app_pages/agents.py").run(timeout=15)

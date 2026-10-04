@@ -1,0 +1,101 @@
+{
+  "purpose": "Input availability only, before scientific plan; no brightness outcomes computed",
+  "ephem_version": "4.2.1",
+  "reference_url": "https://rhodesmill.org/pyephem/quick.html",
+  "reference_html_sha256": "ab9fc38315d4d9f2b5a4aa8f0d16923c1eea4de9daa0497ce07167444472058f",
+  "tle": [
+    "IRIDIUM 80 [+]",
+    "1 25469U 98051C   09119.61415140 -.00000218  00000-0 -84793-4 0  4781",
+    "2 25469  86.4029 183.4052 0002522  86.7221 273.4294 14.34215064557061"
+  ],
+  "observer": {
+    "latitude": "42:21:30.4",
+    "longitude": "-71:03:35.2",
+    "elevation_m": 15.338847999999999,
+    "pressure_mbar": 0
+  },
+  "reference_start_utc": "2009-05-01T00:00:00Z",
+  "first_pass_peak_utc": "2009-05-01T00:26:32.950313Z",
+  "rise_utc": "2009-05-01T00:22:32.807408Z",
+  "set_utc": "2009-05-01T00:30:33.262101Z",
+  "samples": [
+    {
+      "seconds_from_peak": -60,
+      "altitude_deg": 4.033423072831168,
+      "range_m": 2838997.0,
+      "eclipsed": false
+    },
+    {
+      "seconds_from_peak": -50,
+      "altitude_deg": 4.129643789650545,
+      "range_m": 2830034.75,
+      "eclipsed": false
+    },
+    {
+      "seconds_from_peak": -40,
+      "altitude_deg": 4.2089431396880395,
+      "range_m": 2822717.25,
+      "eclipsed": false
+    },
+    {
+      "seconds_from_peak": -30,
+      "altitude_deg": 4.271011629996884,
+      "range_m": 2817058.5,
+      "eclipsed": false
+    },
+    {
+      "seconds_from_peak": -20,
+      "altitude_deg": 4.315602946880135,
+      "range_m": 2813070.25,
+      "eclipsed": false
+    },
+    {
+      "seconds_from_peak": -10,
+      "altitude_deg": 4.3425377978720805,
+      "range_m": 2810760.0,
+      "eclipsed": false
+    },
+    {
+      "seconds_from_peak": 0,
+      "altitude_deg": 4.351706899946,
+      "range_m": 2810133.0,
+      "eclipsed": false
+    },
+    {
+      "seconds_from_peak": 10,
+      "altitude_deg": 4.343073540835103,
+      "range_m": 2811191.0,
+      "eclipsed": false
+    },
+    {
+      "seconds_from_peak": 20,
+      "altitude_deg": 4.316671017711596,
+      "range_m": 2813932.75,
+      "eclipsed": false
+    },
+    {
+      "seconds_from_peak": 30,
+      "altitude_deg": 4.272605625394435,
+      "range_m": 2818353.25,
+      "eclipsed": false
+    },
+    {
+      "seconds_from_peak": 40,
+      "altitude_deg": 4.211052814367927,
+      "range_m": 2824445.0,
+      "eclipsed": false
+    },
+    {
+      "seconds_from_peak": 50,
+      "altitude_deg": 4.132255483234429,
+      "range_m": 2832196.75,
+      "eclipsed": false
+    },
+    {
+      "seconds_from_peak": 60,
+      "altitude_deg": 4.036520136732945,
+      "range_m": 2841595.0,
+      "eclipsed": false
+    }
+  ]
+}

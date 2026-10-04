@@ -42,7 +42,7 @@ class Source:
         return (
             evidence.source_id == self.source_id
             and 1 <= evidence.page <= len(self.pages)
-            and normalize(evidence.quote) in self.pages[evidence.page - 1]
+            and normalize(evidence.quote) in normalize(self.pages[evidence.page - 1])
         )
 
 
@@ -58,8 +58,10 @@ def read_source(path: Path, source_id: str = "seed", url: str = "") -> Source:
             raise ValueError("Expected an unencrypted PDF with at most 100 pages")
         pages = tuple(normalize(p.extract_text() or "") for p in reader.pages)
     else:
-        pages = tuple(normalize(p) for p in raw.decode("utf-8").split("\f"))
-    if not any(pages):
+        # Plain-text references can contain fixed-width scientific inputs (e.g. TLEs)
+        # and executable examples. Preserve whitespace; normalize only quote matching.
+        pages = tuple(raw.decode("utf-8").split("\f"))
+    if not any(normalize(page) for page in pages):
         raise ValueError("No source text; scanned PDFs need an explicit OCR step")
     if sum(map(len, pages)) > MAX_SOURCE_CHARACTERS:
         raise ValueError("Source exceeds context budget; no text was silently truncated")
@@ -129,7 +131,7 @@ def _arxiv_bytes(url: str, limit: int) -> bytes:
             url,
             timeout=30,
             follow_redirects=False,
-            headers={"User-Agent": "HackNationResearch/0.1 (public paper intake)"},
+            headers={"User-Agent": "OmniLab/0.1 (public paper intake)"},
         ) as response:
             if response.is_redirect:
                 url = urljoin(url, response.headers["location"])

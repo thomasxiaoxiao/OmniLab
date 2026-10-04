@@ -33,4 +33,4 @@ jobs:
       - name: Verify production environment
         run: |
           uv sync --locked --no-dev --no-editable
-          .venv/bin/python -c 'from hacknation_databricks.__main__ import main; assert callable(main)'
+          .venv/bin/python -c 'from omnilab.__main__ import main; assert callable(main)'

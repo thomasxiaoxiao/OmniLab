@@ -3,8 +3,8 @@
 import json
 
 import pytest
-from streamlit.testing.v1 import AppTest
 from test_adaptive import make_run
+from view_test import ViewTest
 
 from hacknation_databricks.checkpoint_views import checkpoint_story
 from hacknation_databricks.research.activity import Activity, load_activity
@@ -115,7 +115,7 @@ def test_checkpoint_ui_selects_acceptance_and_can_inspect_earlier_evidence(journ
         "from hacknation_databricks.checkpoint_ui import render_checkpoint_story\n"
         f"render_checkpoint_story(load_journal(Path({str(journal.directory)!r})))\n"
     )
-    app = AppTest.from_string(script).run(timeout=15)
+    app = ViewTest.from_string(script).run(timeout=15)
     assert not app.exception
     accepted = next(c["checkpoint"] for c in journal.report["checkpoints"] if c["goal_accepted"])
     picker = next(s for s in app.selectbox if s.label == "Decision checkpoint")

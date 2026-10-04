@@ -1,3 +1,346 @@
+# Main consolidation and local testing
+
+Updated October 3, 2026, 21:25 PDT; about 2 hours 42 minutes to hard stop
+and 42 minutes to feature freeze. Active task: integrate and launch for testing.
+
+- All prior local/remote feature branches are already ancestors of `main`; no
+  open pull requests or additional worktrees were found. Outstanding source work
+  is consolidated on `codex/omnilab-rebrand` for a checked pull request into main.
+- Includes the React/FastAPI migration, OmniLab branding, generated repository
+  experiments, process visualizations, fresh AstroSat evidence and related tests.
+  The retired Streamlit theme now lives in documentation. The shared `npm run check`
+  also enforces frontend formatting/type checks in CI.
+- Newly verified: production build, frontend checks, Ruff and 259 tests pass;
+  the three optional real Omnigent sandbox checks separately pass (Python, C,
+  denied access). The current AstroSat archive verifies without failures.
+  The challenge PDF still matches its recorded SHA-256.
+- Next: merge after GitHub CI, then start a persistent local test instance at
+  http://127.0.0.1:8000 and verify rendered pages. Remote CI and merge are pending
+  at this checkpoint; no new live model call or scientific result is claimed.
+- Scientific limitations remain unchanged: exploratory simulations are not a full
+  paper reproduction, observational validation, novelty proof or measured speedup.
+  Historical Replit private publication remains unverified and separate.
+
+---
+
+# OmniLab rebrand complete
+
+Updated October 3, 2026, 21:15 PDT; about 2 hours 52 minutes to hard stop
+and 52 minutes to feature freeze. Active task complete: project rebrand.
+
+- GitHub repository renamed and verified as `thomasxiaoxiao/OmniLab`; its description
+  now describes scientific discovery, and local origin fetch/push URLs are updated.
+- OmniLab appears in the browser title, sidebar, loading state, API metadata,
+  Python/Node package metadata, paper retrieval identifier and current setup docs.
+  New UI launch command: `python -m omnilab`; `npm run dev` uses it too.
+- Existing PM2 processes renamed to `omnilab-app` and `omnilab-cd`, verified online,
+  and saved. The installed login service is now `com.omnilab.pm2`; its previous
+  plist is preserved in `.runtime/rebrand/`. The controller uses the host process
+  declaration, including legacy-module support for old rollback releases.
+- Build, TypeScript/Prettier, Ruff and 259 tests passed; 3 optional sandbox tests
+  skipped. Browser title and visible sidebar branding verified on port 8505.
+- Preserved Omnigent's official platform name, immutable research evidence, legacy
+  Python import namespace and existing checkout path. No scientific claims changed.
+  The source edits remain uncommitted alongside the earlier migration and research
+  work on `codex/omnilab-rebrand`; no new remote code release is claimed.
+- Next: review the branded preview. Separate historical Replit publication work
+  remains as documented below; no paid Replit Agent request was made for this task.
+
+---
+
+# React migration complete; existing research UI preserved
+
+Updated October 3, 2026, 21:09 PDT; about 2 hours 58 minutes to hard stop
+and 58 minutes to feature freeze. This UI migration task is complete.
+
+- React 19, TypeScript and Vite now render the existing five-page interface.
+  FastAPI serves the original Python scientific projections and launch callbacks.
+  Streamlit is removed from runtime dependencies, imports, tests and launch commands.
+- Preserved source intake, profile budgets, policy forms, run selection, evidence
+  cards, agent graph selection, charts, simulation playback and artifact downloads.
+  Streamlit's framework deployment/menu chrome is retired. Manual visual checks
+  establish component/layout parity, not pixel identity across every browser.
+- Verification: production build, TypeScript/Prettier, Ruff and 259 tests pass;
+  three optional sandbox checks skipped. Browser checks cover all five pages,
+  uploads, policy propagation, graph selection, playback, downloads and narrow
+  layouts. The wheel includes the frontend assets. Dev startup and shutdown work.
+- `npm ci`, `uv sync --locked`, then `npm run dev` starts the UI on port 8000.
+  A production-style local preview is running on port 8505. Setup, architecture,
+  limitations and measured verification are in `docs/react-ui.md` and
+  `docs/react-ui-validation.json`.
+- The service enforces per-view session isolation, typed registered controls,
+  action tokens, stale-action rejection, bounded uploads and sandboxed playback.
+  It remains a local single-worker prototype; multi-user authentication is absent.
+- Existing scientific artifacts and concurrent research changes were preserved.
+  This task produced no new scientific result or live model run. Prior scientific
+  limitations and external validation requirements remain unchanged. Publication
+  and any separate Replit deployment work are outside this migration checkpoint.
+- Next human step: review the local React interface and use the documented startup
+  command. No blocker remains for this migration; prior checkpoints follow.
+
+---
+
+# AstroSat reset complete; fresh orbital experiment verified
+
+Updated October 3, 2026, 20:49 PDT; about 3 hours 18 minutes to hard stop
+and 1 hour 18 minutes to feature freeze. This task's reset, experiment and result
+presentation are complete. Separate React migration work continues independently.
+
+- Six old `omnigent-repository-astrosat-*` attempts are archived unchanged and
+  removed from the active list. Three stopped fresh setup/handoff attempts are also
+  retained outside active results. No failures were erased or represented as success.
+- Fresh run `output/research/omnigent-astrosat-orbital-20261004T0335Z` completed six
+  live Omnigent sessions, two experiments and 36 requested simulation jobs in
+  204.024 seconds. Actual PyEphem propagation and the unchanged pinned AstroSat
+  method produced all recorded samples. Final status: `research_stopped`.
+- The nominal model difference spans 0.20061179 mag across 61 samples in 90 seconds.
+  The first experiment prompted removal of assumed timing jitter; the second
+  confirmed variation persists. Both rounds passed sanity checks and exact replay.
+- This uses a historical IRIDIUM reference orbit, not the paper's Starlink dataset.
+  It establishes scoped model sensitivity only. Independent vector-based phase-angle
+  validation and observed photometry remain future scientific work. Repeated nominal
+  runs do not estimate uncertainty. Novelty and acceleration remain unverified.
+- The React preview at `http://127.0.0.1:8505/overview` was visually checked: one
+  current AstroSat run, one final visualization first, concise magnitude summary,
+  and collapsed earlier experiments. Screenshot: `docs/images/astrosat-final-orbital.jpg`.
+- Verification: 247 tests passed before the concurrent migration; 46 focused
+  repository/intake tests passed after adapting to its view interface. Three real
+  macOS Python/C/access-denial probes passed separately. Run and both replay archives
+  pass verification. These counts are scoped snapshots, not a claim about later edits.
+- Reproduction and limitations: `docs/astrosat-orbital-validation.md` and its JSON
+  record. No publication or production deployment was performed for this task.
+
+---
+
+# AstroSat reset and fresh orbital experiment in progress
+
+Updated October 3, 2026, 20:36 PDT; about 3 hours 31 minutes to hard stop
+and 1 hour 31 minutes to feature freeze. Active task: replace withdrawn AstroSat
+scalar checks with a real repository-driven orbital experiment.
+
+- Six recent `omnigent-repository-astrosat-*` runs were moved unchanged to
+  `output/research-archive/20261004T0312Z-astrosat-withdrawn/`. Every archive still
+  passes hash and handoff verification. They are no longer active results.
+- The overview defaults to one run per paper, with history optional. A sealed
+  terminal run highlights only its last evaluated experiment. Failed and partial
+  attempts receive no final highlight. Following a newly launched run retains its
+  selection even if another run finishes concurrently.
+- Added pinned PyEphem 4.2.1 for actual satellite/Sun geometry. Inputs come from
+  the official PyEphem reference, near the historical TLE epoch; original source,
+  checksums and a geometry-only availability probe are retained. This is not the
+  paper's original Starlink dataset or observational validation.
+- Fresh attempts exposed an unavailable local Omnigent service, an unclear reader
+  citation boundary, and an overly long implementation explanation. No scientific
+  results were accepted from these attempts. The service is restored. Fixed-width
+  text input preservation and separate trajectory units were also corrected before
+  the latest retry. No scientific thresholds or numerical checks were relaxed.
+- Current live attempt: `output/research/omnigent-astrosat-orbital-20261004T0335Z`.
+  Next: inspect generated implementation, verify actual execution and exact replay,
+  and inspect the single final result in the local overview. Report failure honestly
+  if no valid experiment completes.
+- Latest completed focused checks: 46 passed, 3 optional sandbox checks skipped;
+  actual macOS Python/C/access-denial probes separately passed all 3. Full suite
+  rerun is in progress. Other project checkpoints below are preserved.
+
+---
+
+# Replit production command corrected; private publication pending
+
+Updated October 3, 2026, 20:19 PDT; about 3 hours 48 minutes to hard stop
+and 1 hour 48 minutes to feature freeze. Active task: finish private deployment.
+
+- Replit's production command now selects the existing `start` entry. Agent
+  reports its saved configuration check and bounded startup health check passed
+  (HTTP 200 / `ok`). The original Streamlit preview loads with live model calls
+  disabled. No application rewrite, dependency upgrade or inference was performed.
+- The existing deployment's saved visibility is still Public. The connector can
+  read this setting but cannot save private visibility. Direct browser attempts
+  failed with inaccessible controls/unavailable windows; the earlier Invite only
+  form selection was not persisted. Do not claim private deployment is complete.
+- Two narrowly scoped Agent requests were made after the user's new request:
+  production configuration correction, then private-access/publication completion.
+  The latter stopped without publishing. No additional paid diagnostic questions
+  were issued. Charges for these requests have not been independently measured.
+- Next: user saves Invite only under Publishing settings and starts Republish;
+  verify the resulting deployment through read-only status metadata. The old
+  failed status is not evidence of a retry with the corrected production command.
+- Codex/Omnigent authentication and a local Qwen connection remain absent on
+  Replit. The provider integrations are provisioned, but live two-tier execution
+  and account-wide dollar shutdown enforcement remain unverified.
+- Details: `docs/replit-integration.md`. Prior checkpoints below are historical.
+
+---
+
+# Replit deployment correction in progress
+
+Updated October 3, 2026, 19:56 PDT; about 4 hours 11 minutes to hard stop
+and 2 hours 11 minutes to feature freeze. Active task: fix deployment configuration.
+
+- Deployment `35530e18-7120-4a61-8996-a271a61406fe` failed at the production
+  command security check: its artifact configured `run dev` for production.
+  No successful live Replit deployment is claimed.
+- Stopped Replit Agent and removed its queued deployment-debug request. The user
+  reports three $0.20 charges; billing attribution remains unverified. Direct UI
+  edits now replace paid Agent debugging. A production start entry was saved using
+  the existing Streamlit launcher; the artifact command still needs changing.
+- Selected Invite only in the deployment form. The user now explicitly requests
+  a successful deployment of the existing project, preserving private access and
+  included-credit-only spending. No upgrade or auto-reload was enabled.
+- Agent reports repository import at `d525e91fac65aa1f764c42f4d707917910b4e237`,
+  both managed providers provisioned and 37 offline tests passing. Live inference
+  remains disabled. Codex/Omnigent authentication and a local Qwen bridge are still
+  absent on Replit; provisioned providers do not prove working two-tier routing.
+- Next: finish the minimal artifact command edit, check production startup, and
+  publish privately. Browser changes await Replit being selected; auto-review
+  blocked reading an unrelated Gmail window after Chrome changed focus.
+- Details: `docs/replit-integration.md`. Prior checkpoints below are historical.
+
+---
+
+# Replit integration in progress
+
+Updated October 3, 2026, 19:44 PDT; about 4 hours 23 minutes to hard stop
+and 2 hours 23 minutes to feature freeze. Active task: verify Replit integration.
+
+- User confirmed the signed-in Core account, a new private repository app, and
+  included credits only. Browser showed $20 remaining and auto-reload off; no
+  purchase, upgrade or billing-setting change was made.
+- Replit is connected. App `c50d44bc-1f3e-4bcd-b5f5-9cc19bbf59cb` exists and has
+  never been published. Initial setup created only a starter scaffold; a correction
+  request is importing the real repository and adding provider/usage controls.
+  Import, privacy, managed OpenAI/Claude access and enforced guards are unverified.
+- Codex remains the intended complex tier; local Qwen + AnyJev remains the quick
+  decision tier. Local Codex login succeeds with ChatGPT; all 11 pinned Qwen files
+  pass verification. Nineteen existing decision/Omnigent tests pass in 2.30 seconds.
+  No new scientific inference was performed by this integration task.
+- Next: verify the remote changes, actual imported commit, provider provisioning,
+  usage guards and private visibility. Blockers include the missing remote Codex
+  login/local-worker connection; MLX cannot run unchanged on Replit Linux. The new
+  local repository workflow currently bypasses AnyJev. No working remote two-tier
+  loop, cost savings or account dollar shutdown enforcement is claimed.
+- Details and the reusable app link: `docs/replit-integration.md`. Existing local
+  uncommitted implementation work is not automatically included in a GitHub import.
+
+---
+
+# Repository execution verified locally
+
+Updated October 3, 2026, 19:53 PDT; about 4 hours 14 minutes to hard stop
+and 2 hours 14 minutes to feature freeze. Active task: complete locally.
+Next step: review the development preview and supply a GitHub source for any new
+paper that does not contain one. No deployment or submission was performed.
+
+- Discovery overview and Final synthesis are consolidated. Recorded visualizations
+  appear first; result, what changed and next experiment follow in plain language.
+  Full parameters, evidence, generated code and decisions remain expandable.
+- New UI/default Omnigent runs pin the supplied public GitHub repository, read its
+  actual code, and generate a bounded Python/C experiment. Missing code and failed
+  checks stop execution without a preset fallback. Supported code is Python 3.12
+  with standard library/NumPy/SciPy and C17 shared libraries called through ctypes.
+- Live run `omnigent-repository-astrosat-contract-repair` completed **six real
+  Omnigent sessions, two experiments and 20 requested simulation jobs** in
+  **191.055 seconds**. All six runners recorded cleanup. It used unchanged,
+  hash-checked upstream `AstroSat.process_satellite` code at commit
+  `e65cd9a22d57c146f390b758822f3e37d16be9ad`, isolated via AST with prescribed states.
+  Round 1 measured +0.387255 mag for a 0.70 cross-section multiplier. The evaluator
+  requested a 0.30 multiplier, which measured +1.307197 mag in round 2, then stopped
+  for source clarification and independent physical validation. Both experiments'
+  sanity checks passed, and both separately archived sandbox replays matched exactly
+  with **zero model calls**. The sealed run, handoffs and replay manifests verify.
+- Verification: **241 tests passed, 3 opt-in sandbox tests skipped** in the normal
+  suite. Those **3 real macOS sandbox probes passed separately** (Python, compiled C,
+  network/filesystem denial and clean environment). After the final scalar-chart
+  layout adjustment, **33 focused tests passed**. Ruff, formatting, whitespace and
+  player JavaScript checks pass. Browser inspection confirmed the merged navigation,
+  source controls, readable scalar plots and concise summary. Validation details:
+  `docs/repository-execution-validation.json`.
+- Five unsuccessful live attempts remain sealed with raw outputs. They exposed
+  seed-contract, quotation, response-size, sanity-parameter and dependency-format
+  issues. Source/schema corrections are now bounded and recorded; failed scientific
+  checks are never accepted by relaxing a tolerance. Artifact verification also
+  handles parameter dictionary order without changing the recorded measurements.
+- Result-to-decision times were **19.345 and 17.562 seconds**. There is no comparable
+  manual baseline, so acceleration is unverified. This deterministic brightness
+  check is not orbital propagation, full paper reproduction or observational
+  validation; zero-width sampling intervals do not measure model uncertainty.
+  The original percolation seed remains unchanged and still needs a GitHub source.
+  macOS memory/process-count caps remain unenforced, and Linux was not tested here.
+
+---
+
+# Repository-derived experiments and consolidated overview
+
+Updated October 3, 2026, 19:35 PDT; about 4 hours 32 minutes to hard stop
+and 2 hours 32 minutes to feature freeze. Active task: final verification.
+
+- Consolidated Discovery overview and Final synthesis. The overview leads with
+  playable simulation outputs and keeps the result, change, and next experiment
+  brief; detailed measurements, sources, validation and audit history expand below.
+- Added a repository workflow for new UI/default CLI runs. Omnigent specialists
+  read a paper and pinned public GitHub code, critique directions, compare tests,
+  generate Python/C, execute through Omnigent's OS sandbox, and evaluate real
+  outputs. No preset scientific kernel is selected by this path. Existing explicit
+  v3/v4 configurations and sealed archives remain available.
+- Real macOS Omnigent sandbox probes passed for Python repository calls, compiled
+  C, blocked network/outside-file access and a clean child environment. The initial
+  full regression run passed 232 tests; final added audit/replay checks are running.
+- Two live validation failures were retained: a generated seed whitelist conflicted
+  with supervisor seeds, and another reader supplied a non-exact quote. The seed
+  execution contract is now explicit; source quotations get at most one recorded
+  repair. A third live run uses the same saved Astrosat paper and pinned repository.
+  No new completed scientific loop is claimed until that run and its artifacts pass.
+- macOS memory/process-count limits remain unenforced; this is a local bounded
+  numerical prototype, not a hostile multi-tenant service. No new scientific novelty,
+  full orbital reproduction, acceleration multiplier, deployment or submission is claimed.
+
+---
+
+# Required simulated-world comparisons
+
+Updated October 3, 2026, 18:04 PDT; about 6 hours 3 minutes to hard stop
+and 4 hours 3 minutes to feature freeze. Active task: complete locally.
+
+- Both workflow finalizers now require a validated, playable original/proposed
+  process comparison for every completed checkpoint and the selected final result.
+  Missing or invalid process outputs prevent successful completion while retaining
+  numerical results, failed-output records and the sealed archive. The CLI and UI
+  auditors validate the new gate and required artifacts; old archives keep their
+  original contracts.
+- Added a paper-independent data contract, trusted offline player and adapter
+  registry. Percolation reconstructs the first saved sample per arm and animates
+  lattice construction, recomputing/highlighting the largest SCC at each step.
+  Final SCC size and winding measurements agree with saved trials. Astrosat shows
+  saved nominal/true local transit paths and the original/expanded alert boundary.
+  Original and proposed worlds share axes and synchronized playback/scrubbing.
+- Final synthesis and Discovery overview display the process before the numerical
+  highlights. New runs seal `process.html` and `process.json`; historical runs get
+  clearly labeled reconstructions without archive mutation. Sources, recipe/raw
+  input hashes, selected records and renderer code hash accompany the visualization.
+- Verification: **223 tests pass in 28.34 seconds**; Ruff lint and format pass for
+  106 files; player/PM2 JavaScript syntax and whitespace checks pass. Failure tests
+  cover absent adapters, renderer exceptions, malformed states, unsafe markup,
+  altered topology and removed exports. A third scenario fixture verifies that
+  the same contract/player/gate work without either example's scientific model.
+  A maximum-size L=128 pair rendered in 0.759 seconds with a 13,561,400-byte envelope,
+  within the explicit 18 MB limit. These are software tests, not scientific evidence.
+- Browser checks verified both saved examples, connectivity highlighting, play,
+  pause, reset and keyboard scrubbing; no browser errors. Both prior scientific
+  run manifests still verify, and the challenge PDF hash is unchanged. Local
+  playable exports are in `output/process-visualization-check/`.
+- The `npm run check` wrapper hit the sandbox's uv cache restriction, then uv's
+  macOS system-configuration panic with a writable cache. The equivalent checks
+  completed using the existing `.venv` directly; dependencies were not changed.
+- No new live Omnigent requests or new scientific campaign were run. Simulated
+  visuals illustrate recorded samples, not aggregate improvement. Percolation's
+  construction order is not physical time or a probability sweep; Astrosat remains
+  simplified synthetic geometry, not an SGP4 prediction or observational validation.
+  New papers still need a validated scientific implementation and process adapter;
+  automatic arbitrary-paper simulation generation is not implemented. No external
+  blocker or human action is needed for these local changes. Real-world scientific
+  use still requires independent replication and observational calibration.
+
+---
+
 # Paper-specific context and implementation isolation
 
 Updated October 3, 2026, 17:08 PDT; about 6 hours 59 minutes to hard stop

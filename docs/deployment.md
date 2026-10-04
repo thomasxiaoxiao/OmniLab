@@ -5,7 +5,7 @@
 The initial deployment target is the local Mac. It serves only on loopback.
 It is not a public demo link, and cannot serve while the machine is asleep or off.
 
-Run `uv sync --locked`, `npm ci`, and copy `.env.example` to `.env` on a new host.
+Run `npm ci`, `npm run build`, `uv sync --locked`, and copy `.env.example` to `.env` on a new host.
 Authenticate `gh auth login`, then configure Git HTTPS authentication with
 `gh auth setup-git` if needed. Push the repository to GitHub,
 and run `npm run deploy` followed by `npm run cd:start` and `npm run save`.
@@ -18,13 +18,17 @@ needed for this pull-based deployment.
 
 ## Configuration
 
-The app loads the host checkout's `.env`, including `APP_HOST` and `APP_PORT`.
+The React/FastAPI app loads the host checkout's `.env`, including `APP_HOST` and `APP_PORT`.
+The release builder compiles React before installing the Python wheel; no Node
+process is required to serve a built release. `npm start` also rebuilds the UI.
 After edits, use `npm start`. If the port changes, set `DEPLOY_HEALTH_URL` to its
 `/_stcore/health` URL when starting the worker (or in its login service environment),
 then run `npm run cd:start` to refresh the worker environment.
 
-The deployment controller and npm/PM2 tools run from the host checkout. Application
-code and each release's app process declaration run from the selected release.
+The deployment controller, npm/PM2 tools and process declaration run from the host
+checkout. Application code runs from the selected release. The process declaration
+uses the `omnilab` launcher for new releases and the historical Python launcher
+for older rollback releases. Process names are `omnilab-app` and `omnilab-cd`.
 After changing deployment scripts or npm dependencies, update the host checkout
 with a normal fast-forward pull, run `npm ci`, and restart the deployment worker.
 Do not overwrite a checkout with uncommitted work.
@@ -43,8 +47,8 @@ For this Mac, a generated LaunchAgent can use the absolute Node executable and
 It runs after login and does not keep the Mac awake.
 
 To disable login startup, run
-`launchctl bootout gui/$(id -u)/com.hacknation.databricks.pm2` and remove
-`~/Library/LaunchAgents/com.hacknation.databricks.pm2.plist`. Stop the worker and
+`launchctl bootout gui/$(id -u)/com.omnilab.pm2` and remove
+`~/Library/LaunchAgents/com.omnilab.pm2.plist`. Stop the worker and
 app separately with the npm commands if desired.
 
 ## Failures and rollback

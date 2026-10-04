@@ -1,27 +1,49 @@
 {
-  "name": "hacknation-databricks-ops",
+  "name": "omnilab",
   "version": "0.1.0",
   "private": true,
-  "description": "PM2 process management for the uv-managed Python application",
+  "description": "React scientific discovery lab with a FastAPI research service",
   "engines": {
     "node": ">=22"
   },
   "scripts": {
-    "setup": "uv sync --locked",
-    "dev": "uv run --locked streamlit run src/hacknation_databricks/ui.py --server.address 127.0.0.1 --server.port 8000 --browser.gatherUsageStats false",
-    "check": "uv run --locked ruff check . && uv run --locked ruff format --check . && uv run --locked pytest && node --check ecosystem.config.js",
-    "start": "bash scripts/pm2.sh startOrRestart ecosystem.config.js --only hacknation-app --update-env",
-    "stop": "bash scripts/pm2.sh stop hacknation-app",
+    "setup": "uv sync --locked && npm run build",
+    "dev": "node scripts/dev.mjs",
+    "check": "npm run check:frontend && npm run build && uv run --locked ruff check . && uv run --locked ruff format --check . && uv run --locked pytest && node --check ecosystem.config.js",
+    "start": "npm run build && bash scripts/pm2.sh startOrRestart ecosystem.config.js --only omnilab-app --update-env",
+    "stop": "bash scripts/pm2.sh stop omnilab-app",
     "status": "bash scripts/pm2.sh status",
-    "logs": "bash scripts/pm2.sh logs hacknation-app",
+    "logs": "bash scripts/pm2.sh logs omnilab-app",
     "deploy": "uv run --no-sync python scripts/deploy.py --once",
-    "cd:start": "bash scripts/pm2.sh startOrRestart ecosystem.config.js --only hacknation-cd --update-env",
-    "cd:stop": "bash scripts/pm2.sh stop hacknation-cd",
-    "cd:logs": "bash scripts/pm2.sh logs hacknation-cd",
+    "cd:start": "bash scripts/pm2.sh startOrRestart ecosystem.config.js --only omnilab-cd --update-env",
+    "cd:stop": "bash scripts/pm2.sh stop omnilab-cd",
+    "cd:logs": "bash scripts/pm2.sh logs omnilab-cd",
     "save": "bash scripts/pm2.sh save",
-    "startup": "python3 scripts/install_launchagent.py"
+    "startup": "python3 scripts/install_launchagent.py",
+    "build": "tsc --project frontend/tsconfig.json && vite build --config frontend/vite.config.ts",
+    "check:frontend": "tsc --project frontend/tsconfig.json && prettier --check frontend scripts/dev.mjs",
+    "format:frontend": "prettier --write frontend scripts/dev.mjs"
   },
   "devDependencies": {
-    "pm2": "7.0.4"
+    "@types/node": "26.6.4",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "pm2": "7.0.4",
+    "prettier": "3.9.9",
+    "typescript": "7.0.2",
+    "vite": "8.3.2"
+  },
+  "dependencies": {
+    "@fontsource/source-sans-3": "5.3.0",
+    "@viz-js/viz": "3.31.0",
+    "dompurify": "3.4.16",
+    "lucide-react": "1.51.0",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "react-markdown": "10.1.0",
+    "remark-gfm": "4.0.1",
+    "vega": "6.4.0",
+    "vega-embed": "7.3.0",
+    "vega-lite": "6.4.3"
   }
 }

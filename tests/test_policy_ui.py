@@ -1,7 +1,7 @@
 from concurrent.futures import Future
 from pathlib import Path
 
-from streamlit.testing.v1 import AppTest
+from view_test import ViewTest
 
 ROOT = Path(__file__).resolve().parents[1]
 UI = ROOT / "src/hacknation_databricks/ui.py"
@@ -11,7 +11,6 @@ def test_next_run_policy_reaches_fixed_launch_and_redirects(monkeypatch, tmp_pat
     from hacknation_databricks import tracking_ui
 
     monkeypatch.setenv("RESEARCH_RUNS_DIR", str(tmp_path))
-    monkeypatch.setattr(tracking_ui, "runtime_status", lambda: {"ready": True})
     launched = []
     monkeypatch.setattr(
         tracking_ui, "launch_run", lambda *args, **kwargs: launched.append((args, kwargs))
@@ -23,7 +22,7 @@ def test_next_run_policy_reaches_fixed_launch_and_redirects(monkeypatch, tmp_pat
             return Future()
 
     monkeypatch.setattr(tracking_ui, "background_executor", lambda: Executor())
-    app = AppTest.from_file(str(UI)).run(timeout=15)
+    app = ViewTest.from_file(str(UI)).run(timeout=15)
     app.switch_page("app_pages/policies.py").run()
     assert not app.exception
     app.segmented_control[0].set_value("Next-run controls").run()
@@ -47,7 +46,7 @@ def test_saved_policy_evidence_is_read_only(monkeypatch, tmp_path):
 
     make_run(tmp_path)
     monkeypatch.setenv("RESEARCH_RUNS_DIR", str(tmp_path))
-    app = AppTest.from_file(str(UI)).run(timeout=15)
+    app = ViewTest.from_file(str(UI)).run(timeout=15)
     app.switch_page("app_pages/policies.py").run(timeout=15)
     assert not app.exception
     assert any(m.label == "Recorded Omnigent sessions" for m in app.metric)

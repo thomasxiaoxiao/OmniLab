@@ -14,7 +14,7 @@ from pathlib import Path
 
 ROOT = Path(os.environ.get("PROJECT_ROOT", Path(__file__).resolve().parents[1]))
 RUNTIME = ROOT / ".runtime"
-APP_NAME = "hacknation-app"
+APP_NAME = "omnilab-app"
 
 
 def run(*args: str, cwd: Path = ROOT, env: dict | None = None) -> str:
@@ -81,7 +81,7 @@ def activate(release: dict) -> None:
             "bash",
             str(ROOT / "scripts/pm2.sh"),
             "start",
-            str(Path(release["path"]) / "ecosystem.config.js"),
+            str(ROOT / "ecosystem.config.js"),
             "--only",
             APP_NAME,
             "--update-env",
@@ -152,6 +152,8 @@ def deploy(health_url: str) -> None:
     env = dict(os.environ)
     env.pop("VIRTUAL_ENV", None)
     env.pop("UV_PROJECT_ENVIRONMENT", None)
+    run("npm", "ci", "--ignore-scripts", cwd=release, env=env)
+    run("npm", "run", "build", cwd=release, env=env)
     run("uv", "sync", "--locked", "--no-dev", "--no-editable", cwd=release, env=env)
     candidate = {"revision": revision, "path": str(release)}
     promote(candidate, previous, health_url)
