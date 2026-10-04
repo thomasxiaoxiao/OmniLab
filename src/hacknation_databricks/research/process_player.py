@@ -101,6 +101,13 @@ root.querySelector('[data-reset]').addEventListener('click',()=>{pause();index=0
 slider.addEventListener('input',()=>{pause();index=Number(slider.value);render();});
 document.addEventListener('visibilitychange',()=>{if(document.hidden)pause();});
 window.addEventListener('pagehide',pause);
+// Fit the sandboxed frame to its content, including stacked mobile cards and provenance.
+const sizeObserver=new ResizeObserver(()=>{
+  window.parent.postMessage({type:'omnigent-player-height',
+    height:Math.ceil(root.getBoundingClientRect().height+48)},'*');
+});
+sizeObserver.observe(root);
+window.addEventListener('pagehide',()=>sizeObserver.disconnect());
 render();if(!reduced)start();
 """
 
