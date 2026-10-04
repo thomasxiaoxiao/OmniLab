@@ -1,0 +1,30 @@
+{
+  "recorded_at": "2026-10-04T05:46:00Z",
+  "scope": "Live browser refresh regression; isolated UI fixtures, no model calls or new scientific experiments",
+  "browser_checks": {
+    "original_bug_reproduced": "An unsubmitted arXiv draft on Source intake suppressed polling after navigation to Agents; an appended critic step remained absent.",
+    "automatic_step_update": "With the fix and the same unsubmitted draft, reader completion and the new running critic appeared without clicking Refresh or navigating.",
+    "inspection_preserved": "Selecting the completed reader disabled Follow newest step while the Live update indicator continued.",
+    "completion": "Final sealed outcome arrived automatically; the live indicator disappeared while Artifacts remained selected and Latest artifacts remained expanded.",
+    "draft_preserved": "Returning to Source intake retained the exact unsubmitted text: draft remains while agents run.",
+    "screenshot": "output/ui-validation/live-refresh-fixture.jpg"
+  },
+  "automated_checks": {
+    "command": "npm run check",
+    "passed": 273,
+    "skipped": 4,
+    "skipped_scope": "Optional real platform sandbox probes; unrelated to live view polling",
+    "regressions": [
+      "Startup polls before the first artifact exists",
+      "Fresh-view polling needs no launching-session future",
+      "Appended steps appear while inspected selection stays fixed",
+      "Polling continues during final artifact writes",
+      "Sealed success and backend-stop outcomes end polling",
+      "Sealing during render retains one final refresh"
+    ]
+  },
+  "limitations": [
+    "Browsers may throttle timers in background tabs; visibility, focus and online events request immediate catch-up.",
+    "No new live Omnigent or scientific validation claim is made by these UI fixtures."
+  ]
+}
