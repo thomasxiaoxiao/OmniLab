@@ -1,15 +1,12 @@
 {
-  "workflow": "adaptive",
-  "domain": "percolation",
-  "seed": 20261003,
-  "sizes": [8, 16],
-  "trials": 128,
-  "max_rounds": 8,
-  "max_workers": 6,
-  "max_seconds": 3600,
-  "agent_timeout_seconds": 240,
-  "max_agent_calls": 96,
-  "max_simulations": 100000,
-  "goal_min_batches": 2,
-  "goal_max_interval_width": 0.25
+  "workflow": "repository",
+  "domain": "auto",
+  "allow_paper_implementation": true,
+  "trials": 8,
+  "max_rounds": 4,
+  "max_workers": 2,
+  "max_seconds": 900,
+  "agent_timeout_seconds": 180,
+  "max_agent_calls": 16,
+  "max_simulations": 1000
 }

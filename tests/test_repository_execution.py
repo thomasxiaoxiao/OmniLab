@@ -113,6 +113,13 @@ class RepositoryRoles:
         elif role == "repository_planner":
             raw = {
                 "proposal_id": "decay",
+                "visualization_options": [
+                    "Position over time in a shared coordinate system",
+                    "Metric time series as a secondary summary",
+                ],
+                "visualization_plan": "Show the computed position of each decay state on shared "
+                "axes so the "
+                "faster approach is visible.",
                 "hypothesis": direction["hypothesis"],
                 "tests": [
                     {
@@ -177,6 +184,24 @@ def fixture_execute(store, implementation, manifest, jobs, *, stage, timeout):
         }
         for j in jobs
     ]
+    import json
+
+    plan_path = store.directory / "planner.json"
+    plan = json.loads(plan_path.read_text()) if plan_path.exists() else {}
+    for row in trials:
+        row["output"]["scene"] = {
+            "title": plan.get("trajectory_label") or "Recorded decay position",
+            "description": "Computed decay positions in a software fixture, not physical evidence.",
+            "x_label": "Horizontal position",
+            "y_label": plan.get("trajectory_units") or "state",
+            "timeline_label": "Step",
+            "bounds": [-1, 1, 0, 2],
+            "geometry": [{"kind": "line", "x": 0, "y": 0, "x2": 0, "y2": 1}],
+            "frames": [
+                {"caption": str(v), "glyphs": [{"kind": "circle", "x": 0, "y": v, "radius": 0.05}]}
+                for v in row["output"]["values"]
+            ],
+        }
     result = {"trials": trials, "repository_calls": ["kernel.py"], "compiled_library_loaded": False}
     store.write(stage + "/trials.json", result)
     store.write(
@@ -554,21 +579,23 @@ def test_repository_result_page_displays_recorded_simulation(tmp_path):
     assert any("Earlier experiments" in item.get("label", "") for item in main)
 
 
-def test_constant_trajectories_remain_diagnostics_without_final_highlight(tmp_path):
+def test_flat_results_without_scenes_are_retained_without_manufactured_visualization(tmp_path):
     def flat_execute(store, *args, **kwargs):
         result = fixture_execute(store, *args, **kwargs)
         for trial in result["trials"]:
             trial["output"]["values"] = [trial["output"]["metric"]] * 4
+            trial["output"].pop("scene")
         store.write(kwargs["stage"] + "/trials.json", result)
         return result
 
     output, report = make_repository_run(tmp_path, code_executor=flat_execute)
-    assert report["status"] == "failed"
-    assert "constant" in report["reason"]
-    assert report["final_experiment"] is None
-    assert not report["rounds"]
-    assert (output / "rounds/01/trials.json").is_file()
-    assert not (output / "comparison/process.json").exists()
+    import json
+
+    assert report["status"] == "research_stopped"
+    assert report["rounds"] and report["final_experiment"] == 2
+    assert not report["acceptance"]["simulated_world_comparison"]
+    assert json.loads((output / "comparison/process.json").read_text())["status"] == "unavailable"
+    assert not (output / "comparison/process.html").exists()
     assert not load_journal(output).issues
 
 
@@ -723,3 +750,96 @@ def test_supplied_repository_failure_never_switches_to_paper_implementation(tmp_
     assert report["status"] == "failed"
     assert not report["rounds"]
     assert report["role_calls"] == 0
+
+
+def test_static_agent_scene_is_valid_without_manufacturing_motion(tmp_path):
+    def static_execute(store, *args, **kwargs):
+        import copy
+
+        result = fixture_execute(store, *args, **kwargs)
+        for trial in result["trials"]:
+            scene = trial["output"]["scene"]
+            scene["frames"] = [copy.deepcopy(scene["frames"][0]) for _ in scene["frames"]]
+        store.write(kwargs["stage"] + "/trials.json", result)
+        return result
+
+    output, report = make_repository_run(tmp_path, code_executor=static_execute)
+    assert report["status"] == "research_stopped"
+    assert report["acceptance"]["simulated_world_comparison"]
+    assert not load_journal(output).issues
+
+
+def test_invalid_scene_keeps_measurements_and_informs_evaluator(tmp_path):
+    statuses = []
+
+    def invalid_scene(store, *args, **kwargs):
+        result = fixture_execute(store, *args, **kwargs)
+        for trial in result["trials"]:
+            trial["output"]["scene"]["frames"] = []
+        store.write(kwargs["stage"] + "/trials.json", result)
+        return result
+
+    class SceneAwareEvaluator(RepositoryRoles):
+        def ask(self, role, payload, contract):
+            if role == "repository_evaluator":
+                statuses.append(payload["visualization"]["status"])
+                assert payload["summary"]["sanity_passed"]
+            return super().ask(role, payload, contract)
+
+    output, report = make_repository_run(
+        tmp_path, code_executor=invalid_scene, roles_factory=SceneAwareEvaluator
+    )
+    assert report["status"] == "research_stopped"
+    assert statuses == ["invalid", "invalid"]
+    assert report["acceptance"]["baseline_simulations"]
+    assert not report["acceptance"]["simulated_world_comparison"]
+    assert not (output / "comparison/process.html").exists()
+    assert not load_journal(output).issues
+
+
+def test_new_plan_requires_visual_choices_and_gets_no_preset_catalog(tmp_path):
+    from pydantic import ValidationError
+
+    from hacknation_databricks.research.repository_models import AgentRepositoryPlan
+
+    class PlanChoices(RepositoryRoles):
+        def ask(self, role, payload, contract):
+            if role == "repository_planner":
+                assert contract is AgentRepositoryPlan
+                assert payload["scene_schema"]["properties"]["frames"]["maxItems"] == 120
+                assert not payload["output_schema"]["additionalProperties"]
+                assert "measurements" in payload["output_schema"]["properties"]
+                assert not {"sizes", "domain", "preferred_experiment"} & payload["budget"].keys()
+            result = super().ask(role, payload, contract)
+            if role == "repository_planner":
+                invalid = result.model_dump()
+                invalid["visualization_options"] = ["Only one choice"]
+                with pytest.raises(ValidationError):
+                    contract.model_validate(invalid)
+            return result
+
+    _, report = make_repository_run(tmp_path, roles_factory=PlanChoices)
+    assert report["status"] == "research_stopped"
+
+
+@pytest.mark.parametrize("workflow", ["sequential", "adaptive"])
+def test_product_gateway_rejects_retired_preset_workflows(tmp_path, workflow):
+    from hacknation_databricks.research.workflow import run_research
+
+    with pytest.raises(ValueError, match="Preset experiment workflows are retired"):
+        run_research(None, tmp_path / "run", RunConfig(workflow=workflow))
+    assert not (tmp_path / "run").exists()
+
+
+def test_product_package_has_no_preset_simulation_modules():
+    from importlib.util import find_spec
+
+    for module in (
+        "simulation",
+        "astrosat_experiments",
+        "percolation_experiments",
+        "adaptive_experiments",
+        "process_adapters",
+        "adaptive",
+    ):
+        assert find_spec("hacknation_databricks.research." + module) is None

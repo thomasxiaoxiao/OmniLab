@@ -5,7 +5,9 @@ import hashlib
 import json
 import re
 
+from .agent_visualization import agent_process
 from .code_sandbox import SimulationSample, paper_implementation
+from .legacy_audit import process_from_trials, validate_process_variation
 from .models import RunConfig
 from .process_visualization import checked_process
 from .repository_models import (
@@ -14,7 +16,7 @@ from .repository_models import (
     RepositoryPlan,
     RepositoryReview,
 )
-from .repository_workflow import process_from_trials, summarize_trials, validate_process_variation
+from .repository_workflow import summarize_trials
 from .sources import Source, check_evidence
 
 
@@ -142,36 +144,59 @@ def verify_repository_outputs(directory, report, artifacts):
                 )
                 if execution["c_sha256"] != expected_c:
                     raise ValueError("Executed C differs from the archived program")
-            process = checked_process(read(prefix + "/process.json")["process"])
-            if prefix + "/process.html" not in artifacts:
-                raise ValueError("Missing playable export")
-            for reference in process["provenance"]["artifacts"]:
-                if artifacts.get(reference["path"], {}).get("sha256") != reference["sha256"]:
-                    raise ValueError("Process input hash changed")
-            provenance = process["provenance"]
-            if (
-                provenance["source_sha256"] != sources[0].sha256
-                or provenance["repository_commit"] != manifest["commit"]
-                or provenance["repository_url"] != manifest["url"]
-            ):
-                raise ValueError("Process refers to another paper or repository")
-            expected_process = process_from_trials(
-                result, plan, provenance=provenance, artifact=prefix + "/trials.json"
-            )
-            # Early v5 captions used Python dict repr before JSON sorted its keys.
-            # Compare the recorded parameter values, not their insertion order.
-            for world, arm in [("original", "control"), ("proposed", "proposed")]:
-                trial = next(t for t in result["trials"] if t["arm"] == arm)
-                caption = process[world]["description"]
-                heading = f"Recorded seed {trial['seed']}: "
+            if report.get("process_validation") == "agent_recorded_scene_v1":
+                raw_name = prefix + "/trials.json"
+                expected = agent_process(
+                    result,
+                    plan,
+                    artifact=raw_name,
+                    provenance={
+                        "run_id": directory.name,
+                        "source_sha256": sources[0].sha256,
+                        "repository_url": manifest["url"],
+                        "repository_commit": manifest["commit"],
+                        "artifacts": [{"path": raw_name, "sha256": artifacts[raw_name]["sha256"]}],
+                    },
+                )
+                if expected != read(prefix + "/process.json"):
+                    raise ValueError("Visualization differs from agent-emitted scene data")
+                if expected["status"] == "ready" and prefix + "/process.html" not in artifacts:
+                    raise ValueError("Missing agent scene export")
+            else:
+                process = checked_process(read(prefix + "/process.json")["process"])
+                if prefix + "/process.html" not in artifacts:
+                    raise ValueError("Missing playable export")
+                for reference in process["provenance"]["artifacts"]:
+                    if artifacts.get(reference["path"], {}).get("sha256") != reference["sha256"]:
+                        raise ValueError("Process input hash changed")
+                provenance = process["provenance"]
                 if (
-                    not caption.startswith(heading)
-                    or ast.literal_eval(caption[len(heading) :]) != trial["parameters"]
+                    provenance["source_sha256"] != sources[0].sha256
+                    or provenance["repository_commit"] != manifest["commit"]
+                    or provenance["repository_url"] != manifest["url"]
                 ):
-                    raise ValueError("Process caption does not match the recorded parameters")
-                expected_process[world]["description"] = caption
-            if expected_process != process:
-                raise ValueError("Visualization does not match recorded trajectories")
+                    raise ValueError("Process refers to another paper or repository")
+                expected_process = process_from_trials(
+                    result, plan, provenance=provenance, artifact=prefix + "/trials.json"
+                )
+                # Early v5 captions used Python dict repr before JSON sorted its keys.
+                # Compare the recorded parameter values, not their insertion order.
+                for world, arm in [("original", "control"), ("proposed", "proposed")]:
+                    trial = next(t for t in result["trials"] if t["arm"] == arm)
+                    caption = process[world]["description"]
+                    heading = f"Recorded seed {trial['seed']}: "
+                    if (
+                        not caption.startswith(heading)
+                        or ast.literal_eval(caption[len(heading) :]) != trial["parameters"]
+                    ):
+                        raise ValueError("Process caption does not match the recorded parameters")
+                    expected_process[world]["description"] = caption
+                if expected_process != process:
+                    raise ValueError("Visualization does not match recorded trajectories")
+        if report.get("process_validation") == "agent_recorded_scene_v1":
+            ready = read("comparison/process.json")["status"] == "ready"
+            if report["acceptance"]["simulated_world_comparison"] != ready:
+                raise ValueError("Visualization availability was misreported")
         if read("comparison/process.json") != read(
             report["rounds"][-1]["artifact_prefix"] + "/process.json"
         ):

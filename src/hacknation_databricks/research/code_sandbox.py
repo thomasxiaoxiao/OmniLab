@@ -27,7 +27,8 @@ CODE_CAPABILITY = {
         "pinned repository source",
     ],
     "interface": "simulate(parameters: dict, seed: int, library: str | None) -> "
-    "{metric: float, times: list[float], values: list[float]}",
+    "{metric: float, times: list[float], values: list[float], scene?: recorded scene data, "
+    "measurements?: additional computed results and metadata}",
     "purpose": "Offline numerical simulations, algorithms, and parameter sweeps "
     "grounded in the submitted paper and repository.",
     "limits": {
@@ -39,8 +40,8 @@ CODE_CAPABILITY = {
     },
     "required": "Call repository Python functions or compile and load repository C sources. "
     "Return recorded process samples on a strictly increasing "
-    "time/step axis; no HTML or fabricated states. A repeated constant is not a process "
-    "simulation: at least one arm must record changing computed states. Repeating an "
+    "time/step axis, plus agent-designed scene data when meaningful; no HTML or fabricated states. "
+    "Flat computed results are valid. Repeating an "
     "identical deterministic input with different unused seeds does not create "
     "independent evidence.",
 }
@@ -64,7 +65,8 @@ def code_capability(paper_only=False):
         "purpose": "Implement a scoped numerical experiment from the supplied paper's "
         "equations or algorithm. There is no author repository in this run.",
         "required": "Use only the supplied paper and supporting evidence; disclose assumptions "
-        "and omitted physics/data. Return actual changing process samples on a strictly "
+        "and omitted physics/data. Return actual computed samples and an "
+        "evidence-grounded scene on a strictly "
         "increasing time/step axis. No fabricated results or claims of author-code reproduction.",
     }
 
@@ -73,6 +75,9 @@ class SimulationSample(DataContract):
     metric: float
     times: list[float] = Field(min_length=2, max_length=120)
     values: list[float] = Field(min_length=2, max_length=120)
+    # Scene failures are reported separately and cannot erase valid numerical results.
+    scene: dict | None = None
+    measurements: dict | None = None
 
     @model_validator(mode="after")
     def coherent(self):
@@ -263,7 +268,9 @@ def execute_code(store, implementation, manifest, jobs, *, stage, timeout):
         for job, trial in zip(jobs, result["trials"], strict=True):
             if {k: trial[k] for k in job} != job:
                 raise ValueError("Simulation changed its parameters or seed")
-            trial["output"] = SimulationSample.model_validate(trial["output"]).model_dump()
+            trial["output"] = SimulationSample.model_validate(trial["output"]).model_dump(
+                exclude_none=True
+            )
         observed = set(result["repository_calls"]) & set(implementation.repository_files)
         if (
             not paper_only

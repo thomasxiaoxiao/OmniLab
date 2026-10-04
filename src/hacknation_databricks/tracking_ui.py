@@ -907,10 +907,11 @@ def render_selected_run():
 def main() -> None:
     ui.title("Discovery overview")
     ui.write(
-        "Watch how the proposed experiment differs from the original control as the "
-        "simulation advances. Then read the measured result, what it changed in the agents’ "
-        "reasoning, and the next experiment they chose. The animation shows one recorded "
-        "sample per arm; the result summarizes the full test."
+        "When a recorded scene is available, watch how the proposed experiment's pattern or "
+        "trajectory differs from the original control. Read the agents' visualization choice, "
+        "the measured result, and why they continued or stopped. The scene shows the first "
+        "planned sample per arm; the result summarizes the full test. Flat or missing scenes "
+        "are reported without adding artificial motion."
     )
     render_selected_run()
 

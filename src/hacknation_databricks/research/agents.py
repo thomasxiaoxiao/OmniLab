@@ -13,7 +13,7 @@ from .artifacts import RunStore, canonical
 from .models import Contract, RunConfig
 from .sources import Source
 
-PROMPT_VERSION = "research-v5-independent-literature-or-v4-process"
+PROMPT_VERSION = "research-v5-agent-owned-simulation-and-scenes"
 T = TypeVar("T", bound=Contract)
 
 
@@ -89,14 +89,29 @@ class OmnigentRoles(RoleBackend):
                 "data": payload,
                 "output_schema": contract.model_json_schema(),
                 "final_output_requirement": {
-                    "format": "Recorded scalar trajectory",
-                    "data": "The experimenter returns metric, times, and values. The supervisor "
-                    "builds the visualization from those recorded samples. Both arms share "
-                    "times, with 2 to 120 strictly increasing points. Do not generate HTML "
-                    "or a separate spatial-world artifact.",
-                    "scope": "Use a small test from the supplied paper or repository code "
-                    "and dependencies. Do not add endpoints that the output contract cannot "
-                    "measure. A scalar numerical check is sufficient when explicitly scoped.",
+                    "format": "Agent-designed recorded simulation scene",
+                    "data": "The experimenter writes the numerical simulation AND its scene "
+                    "generation in python_code. "
+                    "simulate returns metric, times, values, and optional scene matching the "
+                    "supplied scene_schema. "
+                    "The UI only draws returned coordinates and frames; it has no paper-"
+                    "specific adapter. "
+                    "Choose a physically intuitive spatial or mechanistic view when supported"
+                    " by the source. "
+                    "Compare control and proposed mechanisms on consistent axes and real "
+                    "computed time steps. "
+                    "Use a scalar plot only if it is the scientifically appropriate "
+                    "representation, and explain why.",
+                    "scope": "Explore up to three source-grounded directions early. Compare "
+                    "visualization options "
+                    "and follow-up tests by expected learning, physical interpretability, "
+                    "evidence and cost. "
+                    "Do not optimize for attractive outcomes. Flat, negative, failed or "
+                    "missing outputs are valid. "
+                    "Never invent motion or change the experiment merely to animate it. If "
+                    "scene generation is "
+                    "unsupported, omit scene and state the limitation; numerical results will"
+                    " remain visible.",
                 }
                 if role.startswith("repository_")
                 else VISUALIZATION_REQUIREMENT,
@@ -348,7 +363,14 @@ ROLE_INSTRUCTIONS = {
     "exact page-local quotes. Report the actual search scope and missing evidence; the seed alone "
     "does not establish novelty. Reject infeasible proposals instead "
     "of substituting another model.",
-    "repository_planner": "Preserve the chosen proposal ID and hypothesis verbatim. Design two "
+    "repository_planner": "Compare at least two visualization_options and record "
+    "visualization_plan, "
+    "including the selected representation, physical state variables/units, "
+    "mapping to visible geometry, "
+    "what a viewer should watch, and limitations. Prefer interpretable physical or mechanistic "
+    "simulations over metric-only comparisons when grounded in evidence. A spatial view is not "
+    "mandatory if misleading; justify a plot or unavailable visualization instead. "
+    "Preserve the chosen proposal ID and hypothesis verbatim. Design two "
     "tests, screen and precision, with 4 to 32 paired-seed replicates "
     "each, never exceeding budget.trials, and choose within budget. "
     "Use the actual supplied repository APIs. When code_origin is paper_implementation, "
@@ -377,12 +399,22 @@ ROLE_INSTRUCTIONS = {
     "imports in that mode; the repository-specific instructions below apply only when supplied. "
     "Return python_code defining simulate(parameters, seed, library) "
     "that returns a JSON-compatible "
-    "dict with metric (finite float), times (2..120 increasing floats), and values (same length). "
+    "dict with metric (finite float), times (2..120 increasing floats), values (same length), "
+    "and optional scene matching scene_schema. Return only fields in output_schema; "
+    "put additional computed per-cell results and metadata in the optional measurements object. "
+    "Implement the planner-selected scene in"
+    " your code from actual "
+    "computed states: coordinates, links, particles or trajectories as appropriate to the paper. "
+    "The generic player draws only your scene; no built-in domain simulation is available. "
+    "Keep each scene below 32 KB, preferably 8 to 24 frames and a small illustrative system. "
+    "Frames correspond to times; each has caption and glyphs. Put static geometry in geometry. "
+    "Lines/arrows need x,y,x2,y2; circles need x,y,radius. Choose the representation yourself. "
+    "If a faithful scene is impossible, omit it and explain instead of manufacturing one. "
     "Control and proposed must share times. Values must be actual computed trajectory samples, "
     "not hand-written illustrative data. Use the supplied seed argument and accept every uint32 "
     "seed, including sanity checks/replays; do not hardcode a seed whitelist. "
-    "Do not repeat a constant to imitate a process. At least one arm must have changing "
-    "computed states; all replicate variation must have an explicit experimental meaning. "
+    "Flat or negative results are valid; never add artificial motion, noise, or a fabricated "
+    "trajectory to satisfy presentation expectations. All variation needs scientific meaning. "
     "Use supplied supporting-source inputs and real available dependencies for the physical model. "
     "Keep run size bounded. Import "
     "and call functions from the repository (root and src are on sys.path), or select .c source "

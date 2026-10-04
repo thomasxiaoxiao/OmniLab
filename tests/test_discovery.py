@@ -4,11 +4,11 @@ import json
 
 import pytest
 from fixture_roles import FixtureRoles
+from legacy.workflow import run_research
 
 from hacknation_databricks.research.cli import fixture_source
 from hacknation_databricks.research.models import RunConfig
 from hacknation_databricks.research.sources import read_source
-from hacknation_databricks.research.workflow import run_research
 from hacknation_databricks.tracking import load_journal
 
 

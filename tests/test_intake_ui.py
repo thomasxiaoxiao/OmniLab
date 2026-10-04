@@ -59,6 +59,10 @@ def test_import_error_is_actionable_and_does_not_create_source(tmp_path, monkeyp
 
 
 def test_uploaded_sources_launch_with_original_identity_and_literature(tmp_path, monkeypatch):
+    # Exercise historical archive rendering with an explicitly test-only engine.
+    from legacy.workflow import run_research as historical_fixture
+
+    monkeypatch.setattr("hacknation_databricks.tracking_ui.run_research", historical_fixture)
     from fixture_roles import DecisionWorkerFixture
 
     from hacknation_databricks import tracking_ui

@@ -4,15 +4,15 @@ import time
 from concurrent.futures import ThreadPoolExecutor
 
 import pytest
-
-from hacknation_databricks.research.adaptive import run_adaptive
-from hacknation_databricks.research.adaptive_audit import validate_parallel_trace
-from hacknation_databricks.research.adaptive_experiments import (
+from legacy.adaptive import run_adaptive
+from legacy.adaptive_experiments import (
     ASTROSAT_RECIPES,
     astrosat_baseline,
     seed_for,
     transit_batch,
 )
+
+from hacknation_databricks.research.adaptive_audit import validate_parallel_trace
 from hacknation_databricks.research.agents import OmnigentRoles, RoleBackend
 from hacknation_databricks.research.artifacts import RunStore, verify_artifacts
 from hacknation_databricks.research.models import Contract, RunConfig
@@ -274,7 +274,7 @@ def test_simulation_budget_never_oversubscribed(tmp_path):
 
 
 def test_project_deadline_stops_live_work_but_preserves_offline_fixtures(tmp_path, monkeypatch):
-    monkeypatch.setattr("hacknation_databricks.research.adaptive.PROJECT_DEADLINE", 0)
+    monkeypatch.setattr("legacy.adaptive.PROJECT_DEADLINE", 0)
     paper = tmp_path / "paper.txt"
     paper.write_text("Expand the field of view to account for cross-track uncertainty.")
     report = run_adaptive(read_source(paper), tmp_path / "late", RunConfig())

@@ -1,0 +1,134 @@
+{
+  "recorded_at": "2026-10-04T06:20:21.510251+00:00",
+  "scope": "Agent-owned simulations and scenes; preset engines removed from the shipped application",
+  "pull_request": "https://github.com/thomasxiaoxiao/OmniLab/pull/11",
+  "local_checks": {
+    "command": "npm run check",
+    "passed": 278,
+    "optional_sandbox_probes_skipped": 4,
+    "frontend_build_ruff": "passed",
+    "wheel": "omnilab-0.1.0-py3-none-any.whl",
+    "preset_engines_or_test_fixtures_in_wheel": []
+  },
+  "preserved_attempt": {
+    "run_id": "20261004T061600-agent-owned-scenes",
+    "status": "failed",
+    "role_calls": 5,
+    "requested_simulations": 18,
+    "reason": "Generated code returned additional per-cell samples outside the declared output contract; original failure and raw outputs preserved. The planner/experimenter now receive the complete output schema and a generic measurements field."
+  },
+  "live_run": {
+    "run_id": "20261004T061400-agent-scenes-schema",
+    "status": "research_stopped",
+    "elapsed_seconds": 272.217,
+    "role_calls": 7,
+    "requested_simulations": 18,
+    "independent_reader_literature_overlap_seconds": 32.627642,
+    "directions_considered": 3,
+    "candidate_tests": 2,
+    "visualization_options": [
+      "Spatial occupation sequence: show actual occupied directed bonds and the largest SCC on a periodic square lattice. This exposes street direction correlations and cluster mergers, but individual realizations cannot establish wrapping probabilities.",
+      "Scalar ensemble curves: show horizontal wrapping probability and mean largest-SCC fraction against occupation probability for both ensembles. These directly represent the scientific endpoints but obscure the local connectivity mechanism and require supervisor aggregation across independent replicates."
+    ],
+    "scene_title": "Directed street occupation: local spatial crop",
+    "frames_per_arm": 9,
+    "timeline": "Occupation probability p (not physical time)",
+    "scene_scope": "Actual lower-left lattice patch, with all occupied bonds whose endpoints lie inside it. The full periodic L=16 graph is analyzed. Connections leaving the crop are omitted; winding cannot be inferred from this crop. Filled vertices belong to the full-graph largest SCC; ties use smallest vertex index. Configurations are nested occupation samples, not physical motion or independent replicates.",
+    "sandbox_backend": "darwin_seatbelt",
+    "generated_code_sha256": "0ebb63a70d6f8b4f00996b6070a4fea16b4f2d8b7556d34e3a5dab856b732b82",
+    "research_source_sha256": "6265991bee6011eff3cac3d85c49f5fb6c590cd8b5fe32311e3e40515ff6c16c",
+    "matches_current_research_source": false,
+    "generated_imports": [
+      "import json",
+      "import math",
+      "import numpy as np",
+      "from scipy.sparse import csr_matrix",
+      "from scipy.sparse.csgraph import connected_components"
+    ],
+    "summary": {
+      "control_mean": 0.625,
+      "difference": 0.125,
+      "interval": [
+        -0.41078068161361514,
+        0.6607806816136151
+      ],
+      "interval_method": "Paired-seed Student t interval, 95%; exploratory, no sequential or multiple-testing correction.",
+      "meaningful_difference": 0.25,
+      "metric": "Horizontal SCC wrapping at p=0.70",
+      "proposed_mean": 0.75,
+      "replay_passed": true,
+      "samples_per_arm": 8,
+      "sanity_passed": true,
+      "units": "indicator per realization; ensemble mean is probability"
+    },
+    "decision": {
+      "action": "stop",
+      "limitations": [
+        "Eight pairs provide limited precision; the interval is exploratory and has no sequential or multiple-testing correction.",
+        "The supplied summaries report sanity and replay passes, but raw paired samples, fixture outputs and artifact contents were not independently inspected here.",
+        "Wrapping probabilities use all valid independent realizations as their denominator; largest-SCC fractions use L squared, and correlated occupation frames must not inflate sample counts.",
+        "Independent fair street signs are an agent-defined ensemble whose equivalence to seed reference 40 remains unverified; literature coverage is incomplete.",
+        "One lattice size and one primary occupation probability cannot establish critical thresholds, universality, scientific novelty or real-world validity.",
+        "The implementation specifies a local scene crop rather than the planned full-lattice display; its omitted connections prevent visual inference of full-graph winding.",
+        "No measured runtime or comparable acceleration baseline was supplied, so an acceleration improvement is unsupported.",
+        "No separate measurement_contract was supplied; interpretation follows the implemented horizontal-winding endpoint and reported paired summary."
+      ],
+      "next_experiment": "Run a prospectively budgeted study with more independent seed pairs at L=16 and p=0.70, retaining both ensembles and the 0.25 practical threshold.",
+      "next_treatment": null,
+      "rationale": "The measured treatment-minus-control difference is 0.125, below the fixed practical threshold of 0.25; its exploratory 95% paired interval [-0.411, 0.661] includes zero and substantial effects in both directions. Each arm contains eight independent realizations; occupation frames are not additional replicates. Sanity and replay passes support the reported empty-graph behavior and repeatability, not independent scientific validation. This result changes the decision from screening for a large effect to prioritizing precision at the same endpoint. No supported treatment-only parameter change can resolve that uncertainty in one remaining round: changing treatment L while retaining the L=16 baseline would confound lattice size with orientation ensemble, and changing occupation_scale would confound occupation with orientation. Source seed, page 5 states: \"one can separately find thresholds for horizontal and vertical wrapping.\" This supports distinguishing directional endpoints, not a predicted ensemble difference.",
+      "result_interpretation": "Treatment wrapped in 75% of realizations versus 62.5% for control, but the paired interval leaves the effect inconclusive despite passing sanity and replay checks."
+    },
+    "observed_decision_seconds": [
+      16.946012416970916
+    ],
+    "acceleration_multiplier": null,
+    "archive_verified": true
+  },
+  "replay": {
+    "new_model_calls": 0,
+    "round": 1,
+    "source_run": "output/research/20261004T061400-agent-scenes-schema",
+    "status": "matched"
+  },
+  "historical_archives": [
+    {
+      "run_id": "20261004T051223-523d4336",
+      "verified": true
+    },
+    {
+      "run_id": "20261004T053656-c0d39e04",
+      "verified": true
+    },
+    {
+      "run_id": "20261003T232809Z-percolation",
+      "verified": true
+    },
+    {
+      "run_id": "20261003T232809Z-astrosat-final",
+      "verified": true
+    }
+  ],
+  "scientific_limits": [
+    "Agent-generated model and scene geometry require independent numerical/domain validation.",
+    "The comparison is inconclusive; no full reproduction, novelty, universality or measured acceleration claim.",
+    "The scene shows a disclosed lower-left crop of the actually simulated graph, not full-graph winding.",
+    "Only one selected direction executes per run; all three routes and reasons remain recorded."
+  ],
+  "renderer_refinement": {
+    "changed_after_live_run": [
+      "process_player.py"
+    ],
+    "reason": "Move unchanged recorded scene geometry before expandable descriptive scope and limitations. Scientific workflow, schemas, prompts, experiment code and raw results are unchanged.",
+    "current_research_source_sha256": "2860318e86e1ddbabda1e3c9065d6ad5b69c91391038ae9724fd3f2f34f1935b"
+  },
+  "browser_checks": {
+    "url": "http://127.0.0.1:8000/overview",
+    "run_id": "20261004T061400-agent-scenes-schema",
+    "recorded_scene_visible": true,
+    "scrubbed_frame": "frame 5 of 9, occupation probability 0.70",
+    "full_stopping_reason_and_three_routes_visible": true,
+    "scene_scope_and_preregistered_limits_expandable": true,
+    "screenshot": "output/ui-validation/agent-owned-scenes.png",
+    "note": "The final browser layout draws unchanged live-run coordinates before expandable descriptive notes."
+  }
+}

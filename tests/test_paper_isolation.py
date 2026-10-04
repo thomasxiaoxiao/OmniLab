@@ -4,9 +4,9 @@ import json
 from pathlib import Path
 
 import pytest
+from legacy.adaptive import run_adaptive
+from legacy.adaptive_experiments import execute_batch
 
-from hacknation_databricks.research.adaptive import run_adaptive
-from hacknation_databricks.research.adaptive_experiments import execute_batch
 from hacknation_databricks.research.agents import RoleBackend
 from hacknation_databricks.research.artifacts import verify_artifacts
 from hacknation_databricks.research.models import RunConfig

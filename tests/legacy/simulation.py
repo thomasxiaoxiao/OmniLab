@@ -14,7 +14,7 @@ import numpy as np
 from scipy.sparse import csr_matrix
 from scipy.sparse.csgraph import connected_components
 
-from .scientific_statistics import wilson as wilson
+from hacknation_databricks.research.scientific_statistics import wilson as wilson
 
 MODELS = {"manhattan", "l_lattice", "random_diode", "random_manhattan", "resistor_diode"}
 BENCHMARKS = {"manhattan": 0.697160, "l_lattice": 0.740193, "random_diode": 1.0}

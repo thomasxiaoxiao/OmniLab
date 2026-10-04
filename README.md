@@ -7,7 +7,7 @@ directory remain compatible with saved research archives and existing absolute p
 Omnigent is the orchestration platform used by OmniLab.
 
 Reproducible research and validation workspace with a React + TypeScript UI,
-a FastAPI research service, seeded experiments and saved evidence. Run `npm ci`,
+a FastAPI research service, seed papers and saved evidence. Run `npm ci`,
 `uv sync --locked`, then `npm run dev` to open http://127.0.0.1:8000.
 See [React UI setup and architecture](docs/react-ui.md). The existing
 `/_stcore/health` deployment probe remains compatible; `/health` reports the revision.
@@ -29,7 +29,7 @@ load stops the run, without switching modes.
 The supervisor executes it in Omnigent's OS sandbox, validates a baseline sanity
 check and deterministic replay, and passes measured results to an evaluator that
 can change the next experiment's parameters. No preset scientific kernel is selected
-for this path. Explicit older configurations remain available for archive compatibility.
+for this path. Historical configurations are readable for audit but cannot launch preset experiments.
 
 **Discovery overview** combines the former overview and final synthesis. It opens
 with the simulation, then gives the result, what changed, and the next experiment.
@@ -58,109 +58,42 @@ and the [live validation record](docs/repository-execution-validation.json).
 ```
 
 The configured seed paper remains arXiv:2607.24975v1. Its extracted text has no
-GitHub URL. It can now launch from the UI as a paper-based implementation. CLI
-repository-only behavior remains compatible; set `allow_paper_implementation: true`
-in an explicit repository configuration to permit a paper-based implementation.
+GitHub URL. Both the UI and the unconfigured CLI permit a paper-based implementation.
+An explicit configuration can require a repository by disabling
+`allow_paper_implementation`.
 New papers are never silently mapped onto percolation or AstroSat demonstrations.
 
-The following sections also document retained v3/v4 workflows and historical runs.
-Their fixed kernels and AnyJev decisions describe those explicit configurations.
+## Agent-owned simulations and scenes
 
-The default frontend is now the **OmniLab scientific discovery lab**, following
-the research workflow in `docs/overall-design.md`. It records bounded choices,
-execution gates, evidence and implementations from saved research runs. See the
-[decision tracking guide](docs/decision-tracking.md) for controls, enforcement,
-Jev-style contracts and limitations. Run locally with `npm run dev`.
+Seeds supply only the pinned source papers. The reader explores up to three
+source-grounded directions; the critic records accepted, rejected and unselected
+routes. The planner compares at least two tests and two visualization options,
+then explains its choice, state variables, units, what to watch and limitations.
+The prompts favor intuitive physical or mechanistic views when the evidence
+supports them. They never require invented motion or an attractive outcome.
 
-**Omnigent & policies** centralizes the selected run's session context, reported
-usage, immutable resource limits and checkpoint enforcement evidence. The research
-pages explain the framework's contribution at each step. **Next-run controls** saves
-per-profile resource limits for this app session; select that profile in Source
-intake to apply them to a new Omnigent run. These are supervisor limits around the
-existing Omnigent runtime, not edits to native Omnigent policy configuration.
-Archived instructions are shown as instructions, not proof of sandbox enforcement.
+The experimenter writes both simulation and scene-generation code. Each sandbox
+trial can return a `scene` containing actual computed coordinates, geometry and
+frames alongside its numerical results. A trusted generic player draws those
+recorded states from the first preregistered paired seed. It contains no domain
+simulation or paper-specific reconstruction. Raw output, generated code and
+all other trials remain auditable. The evaluator sees both measurements and
+visualization availability and chooses a parameter follow-up or explains a stop.
 
-Discovery overview now leads with **What changed our next move?** Select a
-checkpoint to compare the prior plan, incoming measurements, Omnigent decision,
-and action actually executed. The shared-runtime evidence shows session identities,
-archived common request constraints, responses and supervisor-enforced gates.
-Explicit parent handoffs distinguish new work from batches already in flight.
-Saved runs are labeled; native Omnigent policy attestation is not inferred from
-a shared agent ID. See the [demo walkthrough](docs/adaptive-demo.md).
+Flat and negative results are valid. Missing or invalid scenes remain explicitly
+unavailable while valid numerical results proceed to evaluation. No fallback
+animation is manufactured. Scene validation and exact replay establish provenance
+and consistency, not correctness of the scientific model.
 
-## Scientific discovery workflow
+See the [measured live validation](docs/agent-owned-scenes-validation.json) and
+[two-minute demo](docs/agent-owned-scenes-demo.md).
 
-The retained **adaptive Omnigent workflow (v4)** runs source and citation researchers
-in parallel, consolidates up to three experimental branches, and asks a decision
-agent to reallocate work after every completed simulation batch. Standard runs
-allow eight batches per direction and six workers; extended profiles and editable
-finite budgets support longer exploration. Independent seed streams, cumulative
-controls, goal gates and final validation replace a fixed two-round demo.
+Old preset kernels, recipes and domain adapters have moved to `tests/legacy/` and
+are excluded from the wheel. Old workflow configurations are rejected by the live
+gateway. Historical archives remain inspectable without rerunning their built-in
+visual reconstruction. See [historical descriptions](docs/historical-workflows.md).
 
-Both the percolation example and an **Astrosat transit-uncertainty** example are
-implemented. See [adaptive workflow, science and reproduction commands](docs/adaptive-discovery.md).
-Run Astrosat with `--paper data/papers/2111.11268v1.pdf --config examples/astrosat/discovery.json`.
-The Astrosat experiment uses explicit synthetic error assumptions; it does not
-reproduce historical satellite forecasts. Scientific novelty remains unverified.
-
-Both examples completed live Omnigent runs with independent agent review and
-verified artifacts. See the [measured validation record](docs/adaptive-validation.json)
-and [two-minute walkthrough](docs/adaptive-demo.md). Compact results are saved in
-each example's `adaptive-results/` directory; full archives remain in `output/research/`.
-
-The following v3 description documents the retained sequential compatibility path.
-
-Every completed analysis must export `comparison/process.html`, a self-contained
-playable comparison of the original and proposed simulated worlds, and
-`comparison/process.json`, its validated states, parameters and input hashes.
-Percolation reconstructs the recorded directed lattices and animates their
-construction; Astrosat animates the saved predicted/true local transit and compares
-the nominal and expanded alert boundaries. These illustrate recorded samples;
-they do not replace aggregate evidence or improve the orbit estimator.
-
-The v3/v4 supervisor blocks completion as `visualization_incomplete` if an implemented
-experiment cannot produce valid process outputs. Missing simulations remain
-explicitly unavailable. A generic data contract and adapter registry support new
-scientific implementations without rewriting the player or completion gate;
-v3/v4 continue to use explicit domain adapters. Repository runs use generated code
-and recorded scalar trajectories; malformed samples fail their experiment stage.
-
-For v3/v4 archives, `comparison/simulation.svg` retains the numerical comparison chart,
-`comparison/summary.txt` the numerical sentence, and `comparison/comparison.json`
-the measurements, uncertainty, saved inputs and source references.
-`comparisons/NNN/` retains these outputs for every completed checkpoint.
-The consolidated **Discovery overview** displays and downloads
-these outputs; older sealed runs reconstruct a labeled view without rewriting their archives.
-**Agents & loops** opens each specialist's complete archived prompt, inputs and
-constraints when its timeline box is clicked. Returned actions and downstream work
-appear below; session identities, counts and exports are under Run details and
-exports. Shared `research-worker` names do not imply identical tasks.
-
-The primary **Discovery overview** page shows the hypothesis and source evidence,
-competing screening/precision tests, selected trial budget, measured effect and
-result-driven next action. **Agents & loops** retains the session and handoff audit.
-Older runs remain inspectable and explicitly lack the new decision records.
-See the [v3 refactor notes](docs/discovery-refactor.md) for contracts and verification.
-
-Workflow v3 uses the critic's accepted selection, then asks the planner to compare
-two bounded sampling tests. After validation and reference review, a separate
-Omnigent specialist chooses repeat, literature review or stop. The supervisor
-checks the chosen simulation budget and enforces scientific gates before another
-round. Python executes the allowlisted simulations; agents never execute generated
-code. Both tests study the same hypothesis at different sampling precision.
-Elapsed workflow time and simulation counts are recorded. A speedup multiplier
-remains unverified until a comparable baseline is measured.
-
-```bash
-.venv/bin/research run --config examples/percolation/discovery.json
-```
-
-## Live Codex subscription workflow
-
-The earlier `codex-full-paper` run verified six Codex subscription role sessions.
-Those sessions read the full seed paper, critique directions, review retrieved
-references, plan and evaluate the experiment, then compare its contribution with
-prior work. API-key support remains available; no credential is written to a bundle.
+## Live Omnigent setup
 
 ```bash
 uv sync --locked
@@ -168,73 +101,28 @@ uv sync --locked
 # In separate terminals:
 bash scripts/research-runtime.sh server
 bash scripts/research-runtime.sh host
-# Once connected, in your working terminal:
+# Once connected:
 bash scripts/research-runtime.sh status
-.venv/bin/research run --backend omnigent \
-  --config examples/percolation/codex-live.json \
-  --output output/research/my-codex-run
-.venv/bin/research verify output/research/my-codex-run
+.venv/bin/research run --paper data/papers/2607.24975v1.pdf \
+  --config examples/percolation/discovery.json \
+  --output output/research/my-agent-run
+.venv/bin/research verify output/research/my-agent-run
+.venv/bin/research replay-code output/research/my-agent-run \
+  --output output/replays/my-agent-run
 npm run dev
 ```
 
-This uses saved `codex login` authentication. `configure-agent` uses your configured
-Codex model unless `--model` or `RESEARCH_MODEL` is supplied. The helper prefers the
-current CLI bundled with ChatGPT on macOS; `OMNIGENT_CODEX_PATH` overrides it.
-Stop the two foreground services with Ctrl-C. Services bind to loopback only.
-`status` saves the server URL and host ID in ignored `.runtime/research.env`.
+This uses existing `codex login` authentication. Configuration uses the configured
+Codex model unless `--model` or `RESEARCH_MODEL` is supplied. The runtime helper
+prefers the bundled CLI on macOS; `OMNIGENT_CODEX_PATH` overrides it. Services bind
+to loopback and `status` saves connection identifiers in ignored runtime state.
+The CLI and UI use Omnigent, with no alternate decision backend or silent fallback.
 
-In the UI select **codex-full-paper**, then **Discovery overview**. The saved run
-needs no model call. It contains 4,096 trials plus eight seed replays and an
-**incremental extension** verdict. Full results, boundaries and commands are in
-[the live-run report](docs/codex-live-run.md). The evaluator completes automatically;
-there is no mandatory human-review step. A scoped agent assessment is not a claim
-of global scientific priority.
-
-## Local decision-only alternative
-
-The CLI and frontend default to **Omnigent**. The optional `--backend anyjev`
-mode uses **AnyJev 0.2.0 with a local Qwen3 4B model**. The model scores
-closed choices; it generates no prose, tool calls, or executable code. It chooses
-source evidence, critiques proposals, selects the most realistic accepted direction,
-authorizes the experiment, and judges the measurements. Python enforces the allowed
-experiments, ordered stages, numerical checks and resource limits. There is no
-scripted decision backend or automatic fallback.
-
-The local inference adapter uses MLX on an Apple Silicon Mac (verified on a 24 GiB
-machine). The pinned 4-bit model download is approximately 2.3 GB and needs no
-model account. Other platforms can inspect artifacts and run tests; local inference
-requires an appropriate adapter. See [decision runtime](docs/decision-runtime.md).
-
-```bash
-uv sync --locked
-uv run --locked research prepare-model
-uv run --locked research fetch --arxiv-id 2607.24975v1
-uv run --locked research run --backend anyjev \
-  --config examples/percolation/decisions.json \
-  --output output/research/my-decision-run
-uv run --locked research verify output/research/my-decision-run
-npm run dev
-```
-
-Use a new output directory for each run. The default input is the full seed PDF.
-Identical simulation parameters and seeds produce identical trial CSVs; model
-choices and their complete option distributions are recorded separately. A missing
-model, ambiguous choice or rejected plan stops execution and preserves the audit.
-The reader reviews retrieved exact passages across all source pages, not every
-word of the full PDF; the retrieval scope is recorded for each decision.
-
-`preferred_experiment` restricts eligibility; the model must still approve it.
-Add supplied literature with repeated `--literature /path/to/paper.pdf` flags.
-The small-lattice baseline is a consistency check, not high-precision reproduction.
-AnyJev L0 scores are **uncalibrated option weights**, not confidence in scientific
-truth. The novelty gate still requires numerical evidence and multiple sources;
-passing it advances a scoped automated candidate, never a global discovery claim. CLI exit
-code 2 denotes a blocked, rejected, ambiguous, failed or interrupted run.
-
-See the [implementation contract](docs/research-implementation.md),
-[remaining TODOs](docs/research-todos.md), and [demo walkthrough](docs/research-demo.md).
-Measured results and reproduction commands are in the
-[local validation report](docs/local-validation.md).
+**Agents & execution loops** shows separate sessions, real handoffs, route choices,
+and continuation or stop reasons. It refreshes while work is running, preserving
+inspection and form drafts. **Discovery overview** shows the final evaluated
+experiment, a guide to what to watch, full interpretation, limitations and next
+experiment. Intermediate rounds and unsuccessful routes remain available.
 
 ## Optional API-key and Databricks routes
 
@@ -362,4 +250,4 @@ followed by the measured result, what changed, and the next action. The former *
 **Generated artifacts** retains the paper, pinned source archive, generated code,
 parameters, seeds, measurements, prompts and handoffs. Inspecting a saved run makes
 no model or experiment calls. Older sealed runs retain their original provenance
-and scientific limitations; their visual reconstruction is labeled.
+and scientific limitations; the app does not rerun preset visual reconstruction.

@@ -1,11 +1,11 @@
 import json
 
 import pytest
-
-from hacknation_databricks.research.adaptive_experiments import (
+from legacy.adaptive_experiments import (
     MEASUREMENT_CONTRACTS,
     summarize_branch,
 )
+
 from hacknation_databricks.research.hybrid_roles import (
     NUMERICAL_DECISION_POLICY,
     investment_options,

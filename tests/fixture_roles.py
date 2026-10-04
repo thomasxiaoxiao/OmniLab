@@ -183,7 +183,7 @@ class FixtureRoles:
 
 
 def run_fixture(source, output, config=None, **kwargs):
-    from hacknation_databricks.research.workflow import run_research
+    from legacy.workflow import run_research
 
     kwargs.setdefault("backend", "fixture")
     if kwargs["backend"] == "fixture":

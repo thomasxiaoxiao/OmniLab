@@ -4,6 +4,7 @@ import json
 import httpx
 import pytest
 from fixture_roles import FixtureRoles
+from legacy.workflow import run_research
 
 from hacknation_databricks.research.agents import OmnigentRoles
 from hacknation_databricks.research.artifacts import RunStore
@@ -11,7 +12,6 @@ from hacknation_databricks.research.cli import fixture_source, main
 from hacknation_databricks.research.literature import cited_arxiv, retrieve_references
 from hacknation_databricks.research.models import RunConfig
 from hacknation_databricks.research.sources import read_source
-from hacknation_databricks.research.workflow import run_research
 
 
 def test_reference_retrieval_accounts_for_failures_duplicates_and_budget(tmp_path, monkeypatch):

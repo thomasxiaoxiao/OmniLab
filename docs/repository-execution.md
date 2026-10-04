@@ -1,6 +1,6 @@
 # Paper and repository execution
 
-New Source intake runs and Omnigent CLI runs without an explicit old configuration
+New Source intake runs and Omnigent CLI runs
 use workflow v5 (`workflow: repository`). The Discovery overview combines the
 former overview and final synthesis: simulation first, then result, what changed,
 and the next experiment. Evidence and audit details are expandable.
@@ -26,8 +26,8 @@ The UI labels that distinction. Repository-based runs still require observed use
 of pinned source; download failures never trigger paper-only execution.
 
 The UI prefills a unique paper repository link; clearing it selects a paper-based
-implementation. CLI configuration defaults retain repository-only behavior; the
-explicit flag permits paper-based implementation when no URL is configured.
+implementation. The unconfigured CLI also permits paper-based implementations; explicit
+configurations may require a repository by disabling that flag.
 
 A unique GitHub link found in the extracted paper can fill the repository field.
 Otherwise the user supplies it. That distinction and the paper content hash are
@@ -53,7 +53,9 @@ selects at most three directions and twelve files. Reading is limited to 80,000
 bytes, with an explicit error instead of silent truncation. The critic reads those
 files, checks feasibility and the independent literature assessment, and selects an accepted
 direction. The planner preserves the hypothesis, compares screen and precision
-tests, and defines controls, a metric, bounds, a sanity expectation, tolerance and
+tests and at least two visualization options, records the chosen representation,
+physical state variables/units, what to watch and limitations, and defines controls,
+a metric, bounds, a sanity expectation, tolerance and
 paired replicates before results exist. The experimenter generates code from the
 files actually read. The evaluator receives measurements and can change the next
 treatment or stop. No predefined percolation or Astrosat kernel is dispatched.
@@ -71,10 +73,12 @@ executed. Discovery shows full interpretation, experimental scope and limitation
 
 The player uses shared axes and a consistent cyan control / violet treatment /
 amber highlight palette, dark high-contrast cards, a grid, scrubbing and reduced-motion
-support. These are presentation changes to recorded data. v5 saves scalar samples,
-so it cannot honestly reconstruct spatial lattice frames. The earlier v4 lattice
-animations remain accessible in the run selector; previous runs are shown by default.
-No archived result or original playable export is rewritten.
+support. The experimenter generates scene data from actual computed states in its
+own code. The renderer draws those recorded coordinates; no domain adapter runs.
+The prompts prefer physical or mechanistic views where supported and permit a
+justified scalar representation or unavailable scene. They do not require movement
+or a positive result. Earlier preset exports remain in immutable archives, but
+the app no longer reconstructs them with built-in kernels.
 Malformed structured responses also get at most one correction per stage, with
 the schema errors saved and the additional session counted against the call
 budget. Failed experiments and numerical checks are never silently retried or
@@ -150,14 +154,18 @@ Deterministic algebraic checks can have zero paired uncertainty; that does not
 measure model error or observational uncertainty. No numerical threshold alone
 establishes novelty or real-world validity.
 
-The viewer builds a trusted playable comparison from the first recorded trajectory
-in each arm, on shared axes. It executes no archived HTML or generated code.
-This generic view shows recorded scalar trajectories, not an invented spatial
-reconstruction. It is separate from the all-seed numerical summary. Missing or
-invalid trajectories prevent acceptance of that experimental result.
-New runs also reject a pair of constant trajectories as a process visualization.
-The raw outputs remain saved as diagnostics. This check does not prove a scientific
-model correct: reviewers must still inspect inputs, physics and uncertainty.
+The viewer draws a trusted playable comparison from the first preregistered pair's
+agent-emitted `scene`. `SimulationScene` validates bounds, labels, finite coordinates,
+geometry and frames; frames must match recorded times. Both arms share axes and
+coordinate extent. Numerical output is validated separately. Missing/invalid scenes
+are explicitly unavailable and do not discard valid measurements. Flat scenes are
+valid under `simulation-process/v2`. No current-run scalar fallback is constructed.
+The run records `process_validation: agent_recorded_scene_v1`; older scalar v5
+archives retain their original read-only validation rules. Trusted player HTML is
+regenerated from validated data; arbitrary archived/model HTML is never executed.
+This proves traceability, not correct physics. Independent numerical and domain
+validation is still required. The recommended 32 KB scene size is a prompt preference;
+actual limits include bounded glyph/frame counts and the sandbox output-byte cap.
 Only the latest attempt per paper appears by default, even when it failed. History
 is opt-in. A sealed, evaluated terminal run highlights exactly its final experiment;
 earlier rounds appear in an audit table rather than repeated result panels.
@@ -303,4 +311,5 @@ uv run --locked python -m hacknation_databricks.research.cli replay-code output/
 Choose `20261003T232809Z-percolation` in the run selector for the earlier spatial
 lattice demonstration. Its reconstructed frames use recorded seeds and the
 archived recipe; the view is not new statistical evidence. The v5 run above
-records scalar Monte Carlo running means, not lattice geometry.
+recorded scalar Monte Carlo running means, not lattice geometry. This describes
+the historical run before agent-emitted scenes were introduced.

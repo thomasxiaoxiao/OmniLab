@@ -6,16 +6,17 @@ import json
 
 import pytest
 from fixture_roles import run_fixture
+from legacy.astrosat_experiments import ASTROSAT_RECIPES, transit_batch
+from legacy.process_adapters import PROCESS_ADAPTERS
+from legacy.process_adapters import build_legacy_process as build_process
+from legacy.simulation import simulate
 
 from hacknation_databricks.research.artifacts import verify_artifacts
-from hacknation_databricks.research.astrosat_experiments import ASTROSAT_RECIPES, transit_batch
 from hacknation_databricks.research.cli import fixture_source
 from hacknation_databricks.research.comparison import comparison_bundle
 from hacknation_databricks.research.models import RunConfig
-from hacknation_databricks.research.process_adapters import PROCESS_ADAPTERS
 from hacknation_databricks.research.process_player import process_html
-from hacknation_databricks.research.process_visualization import build_process, checked_process
-from hacknation_databricks.research.simulation import simulate
+from hacknation_databricks.research.process_visualization import checked_process
 from hacknation_databricks.research.sources import read_source
 from hacknation_databricks.tracking import load_journal
 

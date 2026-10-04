@@ -1,7 +1,6 @@
 import numpy as np
 import pytest
-
-from hacknation_databricks.research.simulation import Graph, lattice, measure, simulate, wilson
+from legacy.simulation import Graph, lattice, measure, simulate, wilson
 
 
 @pytest.mark.parametrize("model", ["manhattan", "l_lattice"])

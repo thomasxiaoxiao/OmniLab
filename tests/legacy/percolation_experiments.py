@@ -2,7 +2,8 @@
 
 from statistics import NormalDist
 
-from .scientific_statistics import seed_for, wilson
+from hacknation_databricks.research.scientific_statistics import seed_for, wilson
+
 from .simulation import simulate
 
 MEASUREMENT_CONTRACT = {

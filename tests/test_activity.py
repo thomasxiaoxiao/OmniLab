@@ -2,13 +2,13 @@ import json
 
 import pytest
 from fixture_roles import FixtureRoles, run_fixture
+from legacy.workflow import run_research
 
 from hacknation_databricks.research.activity import activity_dot, activity_export, load_activity
 from hacknation_databricks.research.agents import OmnigentRoles
 from hacknation_databricks.research.cli import fixture_source
 from hacknation_databricks.research.models import RunConfig
 from hacknation_databricks.research.sources import read_source
-from hacknation_databricks.research.workflow import run_research
 from hacknation_databricks.tracking import load_journal
 
 
@@ -61,7 +61,7 @@ def test_fixture_graph_has_no_invented_omnigent_sessions(tmp_path):
 
 
 def test_mocked_omnigent_sessions_correlate_rounds_responses_and_outputs(tmp_path, monkeypatch):
-    from hacknation_databricks.research import workflow
+    from legacy import workflow
 
     source = read_source(fixture_source())
     related = tmp_path / "related.md"

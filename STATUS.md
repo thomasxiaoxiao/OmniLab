@@ -1,3 +1,36 @@
+# Agent-owned simulations and scenes verified
+
+Updated October 03, 2026, 23:25 PDT; about 41 minutes remain to hard stop.
+Requested correction implemented and verified. Integration is tracked in
+[PR #11](https://github.com/thomasxiaoxiao/OmniLab/pull/11).
+Next step: human testing at http://127.0.0.1:8000/overview. No implementation blocker.
+
+- Preset simulation kernels, workflows and domain adapters moved to test-only
+  historical fixtures; the installable wheel excludes them. The live gateway
+  rejects preset workflows and the CLI exposes only Omnigent.
+- Agents receive complete output/scene schemas. The planner compares visualization
+  choices and prefers source-grounded physical/mechanistic views; executed agent
+  code emits the numerical measurements and scene coordinates. Static, negative,
+  missing or invalid visual outputs cannot cause manufactured motion.
+- Fresh live run `20261004T061400-agent-scenes-schema`: 7 Omnigent sessions,
+  18 sandbox jobs, 272.217 seconds; independent reader/literature work overlapped
+  for 32.628 seconds. Three directions and two visualization options were considered.
+  The first attempt's output-contract failure remains saved unchanged.
+- Actual agent-generated lattice scene and full route/stop reasoning verified in
+  the browser. Exact code replay matched all numerical and scene output with zero
+  new model calls. Four historical archives still verify unchanged.
+- Final full local checks passed: 278 tests; four optional sandbox probes skipped;
+  frontend/build/Ruff checks passed. CI and merge state are linked from PR #11.
+- The result is inconclusive. The evaluator stopped to avoid confounded parameter
+  changes and proposed a prospectively budgeted precision study. The displayed
+  3×3 crop does not establish full-graph winding. Independent numerical/domain
+  validation remains necessary; no full reproduction, novelty or speedup claim.
+
+Evidence: `docs/agent-owned-scenes-validation.json`.
+Two-minute walkthrough: `docs/agent-owned-scenes-demo.md`.
+
+---
+
 # Live agent refresh fix complete
 
 Updated October 3, 2026, 22:49 PDT; about 1 hour 18 minutes remain to hard stop.

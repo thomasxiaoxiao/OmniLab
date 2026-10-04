@@ -3,10 +3,10 @@
   "domain": "auto",
   "allow_paper_implementation": true,
   "trials": 8,
-  "max_rounds": 4,
+  "max_rounds": 2,
   "max_workers": 2,
-  "max_seconds": 900,
+  "max_seconds": 720,
   "agent_timeout_seconds": 180,
-  "max_agent_calls": 16,
+  "max_agent_calls": 12,
   "max_simulations": 1000
 }
