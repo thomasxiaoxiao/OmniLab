@@ -49,8 +49,8 @@ def render_source_progress() -> None:
 
 def render_sources() -> None:
     ui.caption(
-        "Upload your own paper. It stays separate from the two seed examples; "
-        "originals and provenance stay with its run."
+        "Drag and drop a paper to add it to the selector above. "
+        "Originals and provenance stay with its run."
     )
     for level, message in ui.session_state.pop("intake_messages", []):
         getattr(ui, level)(message)

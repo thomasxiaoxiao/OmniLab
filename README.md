@@ -17,9 +17,9 @@ brief. Omnigent must orchestrate the live discovery workflow; the earlier housin
 challenge requirements are superseded.
 
 New UI runs and unconfigured Omnigent CLI runs use the **repository workflow**.
-The built-in **Seed paper** menu contains only Percolation and AstroSat. Uploads
-and arXiv imports are selected separately under **Uploaded paper** and never expand
-that menu. In the UI, a validated paper is sufficient to enable **Start bounded run**;
+The **Paper** selector starts with exactly two seed examples: Percolation and
+AstroSat. Drag and drop a document into the visible uploader, or import from arXiv,
+to add it to that same selector. Content-identical copies of seeds appear only once. In the UI, a validated paper is sufficient to enable **Start bounded run**;
 a public GitHub repository is optional. A unique paper link is prefilled. Omnigent
 specialists read the source, critique up to three directions,
 compare two tests, and generate Python/C from the paper or supplied pinned repository.
@@ -82,7 +82,10 @@ visualization availability and chooses a parameter follow-up or explains a stop.
 
 Flat and negative results are valid. Missing or invalid scenes remain explicitly
 unavailable while valid numerical results proceed to evaluation. No fallback
-animation is manufactured. Scene validation and exact replay establish provenance
+animation is manufactured. Larger numerical systems are encouraged when they fit
+the experiment budget; the agent chooses full scenes or clearly disclosed aggregation
+for legibility. Static geometry can be shared across frames. Total sandbox output is
+bounded at 32 MB. Scene validation and exact replay establish provenance
 and consistency, not correctness of the scientific model.
 
 See the [measured live validation](docs/agent-owned-scenes-validation.json) and
@@ -240,7 +243,8 @@ Research source intake and all simulations can run independently of cloud setup.
 ## Source intake and agent visibility
 
 **Source intake** offers exactly two pinned seed examples (Percolation and AstroSat).
-Uploaded and versioned arXiv papers live in a separate selector. The UI accepts an
+Uploaded and versioned arXiv papers join the same Paper selector; the uploader is
+visible directly below it. The UI accepts an
 optional public GitHub repository and revision; a validated upload can start without one. New runs use separate Omnigent reader,
 critic/literature, planner, experimenter and evaluator sessions. Starting a run
 opens **Agents & execution loops** and follows that exact run.

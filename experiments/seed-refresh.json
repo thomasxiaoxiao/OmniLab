@@ -1,0 +1,13 @@
+{
+  "workflow": "repository",
+  "domain": "auto",
+  "allow_paper_implementation": true,
+  "trials": 16,
+  "max_rounds": 2,
+  "max_workers": 2,
+  "max_seconds": 600,
+  "agent_timeout_seconds": 180,
+  "code_timeout_seconds": 120,
+  "max_agent_calls": 12,
+  "max_simulations": 1000
+}

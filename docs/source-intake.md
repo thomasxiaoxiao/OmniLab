@@ -1,38 +1,17 @@
 # Paper-specific setup and isolation
 
-Source intake has one seed-paper selection and local run controls. Related literature
-and Extracted text & provenance have been removed from setup. Source originals and
-provenance remain in each run's evidence vault. The UI passes no manually selected
-related sources; automatic retrieval follows only citations in the selected seed.
-The CLI still accepts explicit `--literature` inputs for reproducibility.
+Source intake has one **Paper** selector, initially containing only the pinned
+Percolation and AstroSat examples. A visible drop zone accepts PDF/Markdown papers;
+arXiv imports and uploads join the same selector. Content-identical copies of a
+seed remain one entry. Related literature is retrieved from the selected paper's
+citations; the CLI also accepts explicit `--literature` inputs.
 
-The library contains explicitly imported documents and `RESEARCH_PAPER_PATH` when
-configured. Cached example PDFs are not automatically inserted. An explicit source
-change filters the run selector by the seed's content hash, so another paper's
-artifacts cannot become the selected paper's results.
-
-For automatic-context runs, a paper reader derives source-specific questions and
-up to three directions before any implementation catalog, preset metric or domain
-is supplied. Its `PaperBrief` contract contains no example identifiers. Related
-source readers receive the seed question and their own source only. Their findings
-are saved in `paper_briefs.json`, including unsupported directions.
-
-A separate capability assessment and implementation mapper then check whether an
-existing numerical implementation can answer an unchanged direction. The supervisor
-rejects changes to the direction's title, hypothesis, origin, or supporting evidence.
-If no implementation fits, the run retains its paper-specific findings and stops;
-it never substitutes an example or executes unreviewed generated code. Arbitrary
-paper-specific implementation generation remains unimplemented. Explicit historical
-CLI example configurations retain their original bounded workflow.
-
-New adaptive runs archive framework provenance under `framework/source.zip`.
-`implementation.json` binds the selected experiment files to the seed SHA-256.
-Only the selected scientific kernel and its dependencies are copied into `code/`
-and sent to the numerical validator. The percolation and transit kernels are separate;
-the transit validator no longer receives lattice code. Framework provenance is an
-optional evidence-vault view, not a paper-specific implementation claim. Historical
-sealed archives are unchanged and have no retroactively invented implementation
-manifest. Their shared code is labeled accordingly.
+Changing the paper filters runs by its content hash. Originals and provenance remain
+in each run's evidence vault. The repository workflow uses live Omnigent reader,
+literature, critic, planner, experimenter and evaluator sessions. Agents generate
+the simulation and scene code from the paper or an optional pinned repository;
+no preset scientific kernel executes. See [execution details](repository-execution.md).
+Historical workflow descriptions are retained in [historical-workflows.md](historical-workflows.md).
 
 # Source intake and execution visibility
 
@@ -42,12 +21,11 @@ Choose the seed on this page. The seed selection
 survives navigation. The sidebar contains the shared run selector, while local
 simulation budgets and the launch action live beside source selection.
 
-The default launch profile is **Standard exploration**: 128 trials per group,
-six workers, eight batches per direction, 100,000 simulation units and a one-hour
-wall-clock bound. Finite simulation budgets remain editable. Researcher and decision
-agents are fixed to **Codex + Omnigent** and **AnyJev + Omnigent** respectively.
-AnyJev is a local bounded scoring tool following an Omnigent assessment session;
-both outputs are archived. The UI cannot select another agent backend.
+The default launch profile is **Standard exploration**, with up to 32 paired
+replicates per experiment, eight experiments and a one-hour wall-clock bound.
+Budgets remain editable. Reader and literature requests can run concurrently, with
+at most two simultaneous specialist requests in this workflow. All decision-making
+and experimental roles use Codex through Omnigent.
 
 **Start bounded run** immediately opens **Agents & execution loops**. It follows
 the preallocated run ID, including preparation before the first artifact exists,

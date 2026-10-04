@@ -1,0 +1,46 @@
+{
+  "recorded_at": "2026-10-04T07:01:00Z",
+  "archive": "/Users/thomas/workspace/omnilab-archives/20261004T065338Z",
+  "archive_index": "output/archive-index.json",
+  "previous_runs_archived": 9,
+  "local_ui": "http://127.0.0.1:8000/",
+  "intake": "One Paper selector, two pinned seeds, uploaded papers, visible drop zone; content-identical uploads deduplicated",
+  "screenshot": "output/ui-validation/simplified-intake.jpg",
+  "limits": {
+    "output_bytes": 32000000,
+    "python_code_characters": 64000,
+    "c_code_characters": 64000,
+    "execution_seconds": 120
+  },
+  "attempts": [
+    {
+      "run_id": "20261004T0654-percolation",
+      "status": "failed",
+      "role_calls": 7,
+      "elapsed_seconds": 347.813,
+      "computed_simulations": 0,
+      "reason": "Repository workflow failed (ValidationError): 1 validation error for RepositoryImplementation\npython_code\n  String should have at most 16000 characters [type=string_too_long, input_value=\"import math\\nimport time...ments': measurements}\\n\", input_type=str]\n    For further information visit https://errors.pydantic.dev/2.13/v/string_too_long"
+    },
+    {
+      "run_id": "20261004T0654-astrosat",
+      "status": "failed",
+      "role_calls": 6,
+      "elapsed_seconds": 350.665,
+      "computed_simulations": 0,
+      "reason": "Repository workflow failed (ValidationError): 1 validation error for RepositoryImplementation\npython_code\n  String should have at most 16000 characters [type=string_too_long, input_value=\"import json\\nimport nump...ements':measurements}\\n\", input_type=str]\n    For further information visit https://errors.pydantic.dev/2.13/v/string_too_long"
+    }
+  ],
+  "retries": [
+    "20261004T0700-percolation",
+    "20261004T0700-astrosat"
+  ],
+  "remaining_blocker": "Test-only preset kernels remain. Automatic approval review blocked retirement of their broader dependent tests; awaiting explicit user approval.",
+  "final_local_run_state": "output/seed-refresh-final.json",
+  "pull_request": "https://github.com/thomasxiaoxiao/OmniLab/pull/12",
+  "previous_archive_verification": "All nine archived run manifests pass",
+  "local_checks": {
+    "passed": 279,
+    "skipped": 4,
+    "frontend_build_ruff": "passed"
+  }
+}

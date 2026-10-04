@@ -51,21 +51,19 @@ def run_root() -> Path:
 
 def available_sources() -> dict[str, Path]:
     registered, _ = source_library(source_root())
-    return {
-        **{f"{source.title} · {source.sha256[:8]}": Path(source.path) for source in registered},
-        **seed_examples(),
-    }
+    examples = seed_examples()
+    sources = dict(examples)
+    seen = {hashlib.sha256(path.read_bytes()).hexdigest() for path in examples.values()}
+    for source in registered:
+        if source.sha256 not in seen:
+            sources[f"{source.title} · {source.sha256[:8]}"] = Path(source.path)
+            seen.add(source.sha256)
+    return sources
 
 
 def scope_runs_to_source():
     """An explicit paper change must not leave another paper's run selected."""
-    source = available_sources().get(
-        ui.session_state.get(
-            "uploaded_source"
-            if ui.session_state.get("paper_input_mode") == "Uploaded paper"
-            else "seed_source"
-        )
-    )
+    source = available_sources().get(ui.session_state.get("paper_source"))
     if source is not None:
         ui.session_state["source_scope_sha256"] = hashlib.sha256(source.read_bytes()).hexdigest()
         ui.session_state["selected_seed_path"] = str(source.resolve())
@@ -309,12 +307,12 @@ def render_sidebar() -> Path | None:
     """Run context only; intake and launch controls live on their own page."""
     imported = ui.session_state.pop("intake_selected", None)
     if imported:
-        ui.session_state["paper_input_mode"] = "Uploaded paper"
-        ui.session_state["uploaded_source"] = next(
+        imported_hash = hashlib.sha256(Path(imported).read_bytes()).hexdigest()
+        ui.session_state["paper_source"] = next(
             (
                 label
                 for label, path in available_sources().items()
-                if str(path.resolve()) == imported
+                if hashlib.sha256(path.read_bytes()).hexdigest() == imported_hash
             ),
             None,
         )
@@ -362,42 +360,17 @@ def render_run_setup() -> None:
     source_column, budget_column = ui.columns([1.15, 1], gap="large")
     with source_column, ui.container(border=True):
         ui.markdown("**01 · Source paper**")
-        with ui.expander("Add papers · upload or arXiv", expanded=False):
-            render_sources()
         _, issues = source_library(source_root())
         for issue in issues:
             ui.warning(issue)
         sources = available_sources()
-        examples = seed_examples()
-        mode = ui.selectbox(
-            "Paper source",
-            ["Seed example", "Uploaded paper"],
-            index=0 if examples else 1,
-            key="paper_input_mode",
-            on_change=scope_runs_to_source,
+        if ui.session_state.get("paper_source") not in sources:
+            ui.session_state.pop("paper_source", None)
+        source = ui.selectbox(
+            "Paper", list(sources), key="paper_source", on_change=scope_runs_to_source
         )
-        if ui.session_state.get("seed_source") not in examples:
-            ui.session_state.pop("seed_source", None)
-        example = ui.selectbox(
-            "Seed paper",
-            list(examples),
-            key="seed_source",
-            on_change=scope_runs_to_source,
-            disabled=mode != "Seed example",
-        )
-        ui.caption("Seed examples are limited to Percolation and AstroSat. Uploads stay separate.")
-        if mode == "Uploaded paper":
-            uploads = {label: path for label, path in sources.items() if label not in examples}
-            if ui.session_state.get("uploaded_source") not in uploads:
-                ui.session_state.pop("uploaded_source", None)
-            source = ui.selectbox(
-                "Uploaded paper",
-                list(uploads),
-                key="uploaded_source",
-                on_change=scope_runs_to_source,
-            )
-        else:
-            source = example
+        ui.caption("Choose Percolation or AstroSat, or add your own paper below.")
+        render_sources()
         if source:
             ui.session_state["selected_seed_path"] = str(sources[source].resolve())
         else:

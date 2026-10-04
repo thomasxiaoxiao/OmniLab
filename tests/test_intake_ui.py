@@ -39,7 +39,7 @@ def test_source_form_import_updates_library_and_selected_seed(tmp_path, monkeypa
     assert links == ["https://arxiv.org/abs/2607.24975v1"]
     assert any("Ready:" in s.value for s in app.success)
     assert app.session_state["selected_seed_path"] == str(Path(imported.path).resolve())
-    assert sum(s.label == "Seed paper" for s in app.selectbox) == 1
+    assert sum(s.label == "Paper" for s in app.selectbox) == 1
     assert not any(e.label == "Extracted text & provenance" for e in app.expander)
     assert not any(s.label == "Related literature" for s in app.multiselect)
     assert not any(h.value == "Prepare a discovery run" for h in app.subheader)
@@ -77,7 +77,7 @@ def test_uploaded_sources_launch_with_original_identity_and_literature(tmp_path,
     )
     app = ViewTest.from_file(str(TRACKING)).run()
     app.switch_page("app_pages/sources.py").run()
-    picker = next(s for s in app.selectbox if s.label == "Uploaded paper")
+    picker = next(s for s in app.selectbox if s.label == "Paper")
     picker.select(next(s for s in picker.options if "seed.md" in s)).run()
     assert not any(s.label == "Related literature" for s in app.multiselect)
     tracking_ui.launch_run(
@@ -323,10 +323,34 @@ def test_both_examples_enable_launch_without_a_repository(tmp_path, monkeypatch)
         examples[name] = path
     monkeypatch.setattr(tracking_ui, "seed_examples", lambda: examples)
     app = ViewTest.from_file(str(TRACKING)).run()
-    picker = next(s for s in app.selectbox if s.label == "Seed paper")
+    picker = next(s for s in app.selectbox if s.label == "Paper")
     assert picker.options == ["Percolation", "AstroSat"]
     for name in picker.options:
-        next(s for s in app.selectbox if s.label == "Seed paper").select(name).run()
+        next(s for s in app.selectbox if s.label == "Paper").select(name).run()
         assert not next(b for b in app.button if b.label == "Start bounded run").node["disabled"]
         assert app.session_state["selected_seed_path"] == str(examples[name])
+    assert not app.exception
+
+
+def test_uploading_a_seed_copy_selects_its_single_existing_entry(tmp_path, monkeypatch):
+    from hacknation_databricks import source_ui, tracking_ui
+
+    root = tmp_path / "sources"
+    monkeypatch.setenv("RESEARCH_SOURCES_DIR", str(root))
+    examples = {}
+    for name in ["Percolation", "AstroSat"]:
+        path = tmp_path / (name + ".md")
+        path.write_text(f"{name} source evidence.")
+        examples[name] = path
+    monkeypatch.setattr(tracking_ui, "seed_examples", lambda: examples)
+    imported = register_upload("copy.md", examples["AstroSat"].read_bytes(), root)
+    monkeypatch.setattr(source_ui, "register_arxiv", lambda *_: imported)
+    app = ViewTest.from_file(str(TRACKING)).run()
+    next(t for t in app.text_input if t.label == "arXiv link or identifier").set_value(
+        "2111.11268v1"
+    )
+    next(b for b in app.button if b.label == "Import arXiv paper").click().run()
+    picker = next(s for s in app.selectbox if s.label == "Paper")
+    assert picker.options == ["Percolation", "AstroSat"]
+    assert app.session_state["selected_seed_path"] == str(examples["AstroSat"])
     assert not app.exception

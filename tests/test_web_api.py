@@ -96,7 +96,7 @@ def test_form_upload_preserves_original_bytes_and_clears_form(client, tmp_path):
     digest = hashlib.sha256(content).hexdigest()
     assert (tmp_path / "sources" / digest / "source.md").read_bytes() == content
     assert control(after, "PDF or Markdown")["value"] == []
-    assert digest[:8] in control(after, "Uploaded paper")["options"][0]
+    assert digest[:8] in control(after, "Paper")["options"][0]
 
 
 def test_uploads_are_session_scoped_and_type_size_bounded(client):
@@ -267,7 +267,7 @@ def test_tabs_sharing_a_cookie_have_independent_state_and_revisions(client):
     )
 
 
-def test_upload_without_code_enables_the_full_workflow_and_keeps_seed_menu(client, monkeypatch):
+def test_upload_without_code_enables_workflow_in_the_single_paper_selector(client, monkeypatch):
     from hacknation_databricks import tracking_ui
 
     submitted = []
@@ -279,7 +279,7 @@ def test_upload_without_code_enables_the_full_workflow_and_keeps_seed_menu(clien
 
     monkeypatch.setattr(tracking_ui, "background_executor", lambda: Executor())
     view = client.get("/api/view").json()
-    seeds = control(view, "Seed paper")["options"]
+    seeds = control(view, "Paper")["options"]
     content = b"Compare decay rates with a reproducible numerical model."
     token = client.post(
         "/api/upload",
@@ -293,7 +293,13 @@ def test_upload_without_code_enables_the_full_workflow_and_keeps_seed_menu(clien
         values={control(view, "PDF or Markdown")["widget"]: [token]},
         action=control(view, "Add files to library")["widget"],
     ).json()
-    assert control(view, "Seed paper")["options"] == seeds
+    options = control(view, "Paper")["options"]
+    assert options[: len(seeds)] == seeds
+    assert len(options) == len(seeds) + 1
+    assert sum(n.get("label") == "Paper" for n in nodes(view)) == 1
+    assert not any(
+        n.get("label") in {"Seed paper", "Uploaded paper", "Paper source"} for n in nodes(view)
+    )
     assert not control(view, "Start bounded run")["disabled"]
     assert control(view, "Paper's GitHub repository (optional)")["value"] == ""
     response = event(client, view, action=control(view, "Start bounded run")["widget"])
