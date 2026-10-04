@@ -446,7 +446,8 @@ def fragment(function=None, *, run_every=None):
     def decorate(fn):
         @wraps(fn)
         def wrapped(*args, **kwargs):
-            result = fn(*args, **kwargs)
+            # Decide before reading artifacts: sealing during this render must
+            # still allow one final poll to fetch the completed snapshot.
             if run_every:
                 from hacknation_databricks.tracking_ui import run_root
 
@@ -455,7 +456,7 @@ def fragment(function=None, *, run_every=None):
                 live = selected and not (run_root() / selected / "manifest.json").is_file()
                 if session.state.get("research_future") is not None or live:
                     _CURRENT.get().refresh = 5
-            return result
+            return fn(*args, **kwargs)
 
         return wrapped
 

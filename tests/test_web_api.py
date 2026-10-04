@@ -167,6 +167,7 @@ def test_policy_persists_and_exact_launch_identity_survives_redirect(
     assert response.status_code == 200
     after = response.json()
     assert after["page"] == "agents"
+    assert after["refresh"] == 5  # Includes startup before the first artifact exists.
     assert len(submitted) == 1
     assert submitted[0][0][2] == "omnigent"
     assert submitted[0][0][5]["workflow"] == "repository"
@@ -175,6 +176,7 @@ def test_policy_persists_and_exact_launch_identity_survives_redirect(
     assert event(client, after, action=action).status_code == 400
     future.set_exception(ValueError("Omnigent unavailable for this test"))
     failed = client.get("/api/view").json()
+    assert failed["refresh"] is None
     assert any(n["type"] == "error" and "Run could not start" in n["value"] for n in nodes(failed))
 
 

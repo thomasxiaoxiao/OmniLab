@@ -1,3 +1,23 @@
+# Live agent refresh fix verified locally
+
+Updated October 3, 2026, 22:45 PDT; about 1 hour 22 minutes remain to hard stop.
+Active task: integrate the requested live tracking correction and refresh the local
+testing app. Implementation and local checks are complete; CI and merge are next.
+
+- Reproduced the frozen Agents feed in a browser with an unsubmitted arXiv draft.
+  Live polling now continues every five seconds while preserving local draft values,
+  selected steps, tabs and expanders. Focus/visibility/network recovery catches up.
+- Added a live indicator and the last successful update time. Final sealing during
+  a render retains one final poll so the completed state cannot be missed.
+- Browser fixture verification showed the next recorded step appearing without
+  manual refresh. This test used isolated fixture artifacts and no model calls;
+  existing scientific runs remain unchanged.
+- Full local checks passed: 273 tests, frontend/build/Ruff checks; four optional
+  platform sandbox probes skipped. New regression cases cover startup, fresh-view
+  polling, appended steps, final sealing and backend failure. No task blocker.
+
+---
+
 # Requested workflow and visualization corrections complete
 
 Updated October 3, 2026, 22:22 PDT; about 1 hour 45 minutes remain to hard stop.

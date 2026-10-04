@@ -181,7 +181,8 @@ def render_artifact_feed(journal: Journal) -> None:
         and not any(part.startswith(".") for part in p.relative_to(journal.directory).parts)
     ]
     paths.sort(key=lambda p: p.stat().st_mtime_ns, reverse=True)
-    ui.caption(f"{len(paths)} produced artifacts · refreshed every five seconds")
+    refresh_note = "saved run" if journal.sealed else "refreshed every five seconds"
+    ui.caption(f"{len(paths)} produced artifacts · {refresh_note}")
     with ui.expander("Latest artifacts", expanded=not journal.sealed):
         if paths:
             names = [p.relative_to(journal.directory).as_posix() for p in paths]

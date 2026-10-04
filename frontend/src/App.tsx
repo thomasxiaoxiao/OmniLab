@@ -87,6 +87,7 @@ export function App() {
   const [drafts, setDrafts] = useState<Drafts>({});
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
+  const [updatedAt, setUpdatedAt] = useState<Date | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(() => innerWidth > 1200);
   const viewId = useRef(crypto.randomUUID());
   const current = useRef(snapshot);
@@ -98,6 +99,7 @@ export function App() {
     if (!mounted.current) return;
     current.current = next;
     setSnapshot(next);
+    setUpdatedAt(new Date());
     const path = next.page === "sources" ? "/" : `/${next.page}`;
     if (location.pathname !== path) history.pushState({}, "", path);
   }, []);
@@ -142,11 +144,21 @@ export function App() {
   }, [refresh]);
   useEffect(() => {
     if (!snapshot?.refresh) return;
-    const timer = setInterval(() => {
-      if (!document.hidden && !Object.keys(pending.current).length)
-        void refresh();
-    }, snapshot.refresh * 1000);
-    return () => clearInterval(timer);
+    // Snapshots leave local drafts intact. An unfinished form (even on another
+    // page) must not stop the live execution feed. The shared queue prevents races.
+    const timer = setInterval(() => void refresh(), snapshot.refresh * 1000);
+    const catchUp = () => {
+      if (!document.hidden) void refresh();
+    };
+    document.addEventListener("visibilitychange", catchUp);
+    window.addEventListener("focus", catchUp);
+    window.addEventListener("online", catchUp);
+    return () => {
+      clearInterval(timer);
+      document.removeEventListener("visibilitychange", catchUp);
+      window.removeEventListener("focus", catchUp);
+      window.removeEventListener("online", catchUp);
+    };
   }, [snapshot?.refresh, refresh]);
 
   const send = (node?: ViewNode, page?: string, explicit?: Drafts) => {
@@ -332,7 +344,18 @@ export function App() {
               </button>
             )}
             <span className="connection-status" role="status">
-              {busy ? "Updating…" : ""}
+              {busy
+                ? "Updating…"
+                : snapshot.refresh
+                  ? error
+                    ? "Reconnecting to live updates…"
+                    : `Live · updates every ${snapshot.refresh}s`
+                  : ""}
+              {snapshot.refresh && updatedAt && (
+                <time dateTime={updatedAt.toISOString()} aria-live="off">
+                  {` · Updated ${updatedAt.toLocaleTimeString()}`}
+                </time>
+              )}
             </span>
           </header>
           <main id="main" className="block-container" tabIndex={-1}>

@@ -53,8 +53,14 @@ source identity and artifact verification are checked in Python. Forms submit th
 fields together. Launch uses the Omnigent specialist workflow with either supplied repository code
 or an explicitly recorded paper-based implementation, and redirects to the
 preallocated run ID. Only the two pinned seed examples appear under Seed paper;
-uploads/imports have their own selector and can launch without a repository. Live views poll every five seconds; viewing
-artifacts makes no model calls.
+uploads/imports have their own selector and can launch without a repository. Live
+views poll every five seconds until the final artifacts are sealed, including runs
+opened in a fresh tab. Unsubmitted form drafts do not pause the feed and remain
+intact. The toolbar shows the live interval and last successful update; returning
+to the tab or reconnecting requests an immediate catch-up. Browsers may throttle
+background timers. Selected steps, tabs and expanders survive polling; turning off
+**Follow newest step** only stops automatic step selection. Viewing artifacts makes
+no model calls.
 
 The local service uses port-specific HttpOnly, SameSite cookies, a per-view action
 token, same-origin mutation checks and a host allowlist. Session state is in memory;
