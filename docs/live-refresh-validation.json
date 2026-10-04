@@ -1,6 +1,16 @@
 {
   "recorded_at": "2026-10-04T05:46:00Z",
   "scope": "Live browser refresh regression; isolated UI fixtures, no model calls or new scientific experiments",
+  "integration": {
+    "pull_request": "https://github.com/thomasxiaoxiao/OmniLab/pull/9",
+    "ci_run": "https://github.com/thomasxiaoxiao/OmniLab/actions/runs/37180880346",
+    "ci_result": "success",
+    "merged_revision": "40dec72679874b9abb16c42ceea3a5b4520135e0",
+    "testing_url": "http://127.0.0.1:8000/agents",
+    "health_verified_at": "2026-10-04T05:49:06Z",
+    "health_status": "ok",
+    "health_revision": "40dec72679874b9abb16c42ceea3a5b4520135e0"
+  },
   "browser_checks": {
     "original_bug_reproduced": "An unsubmitted arXiv draft on Source intake suppressed polling after navigation to Agents; an appended critic step remained absent.",
     "automatic_step_update": "With the fix and the same unsubmitted draft, reader completion and the new running critic appeared without clicking Refresh or navigating.",
