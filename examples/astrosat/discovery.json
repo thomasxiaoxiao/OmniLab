@@ -1,5 +1,6 @@
 {
   "workflow": "repository",
+  "decision_backend": "anyjev",
   "domain": "auto",
   "allow_paper_implementation": true,
   "trials": 8,

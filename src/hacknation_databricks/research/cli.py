@@ -156,6 +156,7 @@ def main(argv: list[str] | None = None) -> int:
             if args.config
             else RunConfig(
                 workflow="repository",
+                decision_backend="anyjev",
                 domain="auto",
                 allow_paper_implementation=True,
             )

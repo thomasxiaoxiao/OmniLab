@@ -1,3 +1,91 @@
+# Consolidated evaluation updates
+
+Updated October 04, 2026, 00:33 PDT. This is the user's post-deadline request
+to consolidate the latest updates onto main, publish them and provide a local
+evaluation endpoint. Original event time remaining: zero.
+Active task: consolidation verified for integration. Next step: evaluate the UI
+and retained evidence at http://127.0.0.1:8000/; `/health` identifies the served revision.
+
+- Includes both post-deadline corrections below: deterministic simulation preflight
+  and saved-failure inspection, plus AnyJev evaluation and the example-paper picker.
+- Every older local/remote feature branch is already contained in origin/main;
+  the pending working-tree corrections are the only new consolidation content.
+- Fresh `RUN_SANDBOX_TESTS=1 npm run check` passed: 298 tests, no skips, including
+  real OS sandbox probes; frontend types/format/build, Ruff and process configuration
+  checks passed. Existing bundler and test-client deprecation warnings remain.
+- All 13 active/archived research manifests and handoffs verify unchanged. The
+  challenge PDF retains its recorded SHA-256. The local UI returned HTTP 200 and
+  exposed the corrected example collection and AnyJev evaluator controls.
+- No new scientific run was performed. The enforced October 04 00:07 PDT deadline
+  still prevents new live research runs; this endpoint supports UI/artifact evaluation.
+  A complete revised live loop remains unverified, and Percolation's saved workload
+  still exceeds its execution budget. Scientific conclusions require independent
+  numerical/domain validation before real-world use.
+
+---
+
+# AnyJev evaluator and example-paper picker corrected
+
+Updated October 04, 2026, 00:29 PDT. The original project hard stop has passed;
+this is the user's subsequent targeted correction, with zero event time remaining.
+Active task: complete locally. Next step: refresh http://127.0.0.1:8000/.
+No implementation blocker; a complete revised live research loop remains unverified.
+
+- Research and experiment implementation still use Codex through Omnigent.
+  Omnigent's researcher proposes the next test; the decision-only AnyJev evaluator
+  owns continuation or stop. UI, CLI defaults and both example configurations use
+  AnyJev. Live Codex-only evaluator configurations are rejected without fallback.
+- Each round retains the researcher assessment, measured decision inputs, bounded
+  options, weights, selected action and handoff. Audits bind the executed follow-up
+  to that selection. Ambiguity, missing runtime and exhausted budgets stop cleanly.
+- Browser verified: “Choose an example paper or add your own.” Example papers
+  contains only Percolation and AstroSat. PCBI and Sulzer remain exclusively in
+  Your papers; originals and historical archives were preserved.
+- 292 tests passed; six optional sandbox probes skipped. Frontend checks/build and
+  Ruff passed. All 13 current/archived run manifests and handoffs still verify.
+- Real pinned AnyJev/Qwen3 local inference on synthetic test evidence completed
+  in 4.704 seconds: two prefills, 1,082 input tokens, zero generated tokens; the
+  selected follow-up and handoff verified. The sandbox-restricted failed probe is
+  also retained. This is runtime verification, not a new scientific experiment.
+- Local app restarted and browser controls verified. The full revised Omnigent
+  discovery loop was not rerun after the deadline. MLX still requires Apple Silicon;
+  scientific conclusions need independent validation before real-world use.
+
+Evidence: `docs/evaluator-picker-validation.json`.
+
+---
+
+# Saved-artifact regression repair and local simulation checks
+
+Updated October 04, 2026, 00:22 PDT. The original hard stop has passed;
+this is the user's subsequent targeted repair request, not a restarted event window.
+Active task: repair complete locally; Percolation feasibility remains blocked.
+Next step: revise and locally validate its workload before any new agent run.
+No new agent calls, deployment, or mutation of historical run artifacts.
+
+- Initial ValidationErrors came from generated Python exceeding the old 16,000-character
+  contract; the existing 64,000-character limit now has regression coverage.
+- Saved errors show the failed field/constraint; the inspector reads generated code
+  provenance correctly instead of claiming a source mismatch.
+- Simulation execution checks Python syntax and baseline/replay before treatment.
+  Exact comparison includes measurements and scenes; rejected partial outputs remain
+  recorded. Prompts exclude wall-clock timing and explain whole-batch budgets.
+- AstroSat's only replay difference was elapsed wall-clock time. A separately saved
+  copy replacing that field with an execution-metadata reference passed all 18 jobs,
+  sanity and exact replay in 1.76 seconds. Numerical code/parameters were unchanged;
+  control and treatment both measured zero missed crossings. No discovery claim.
+- Percolation originally had only 19.3 seconds left after agent work. Its unchanged
+  batch also timed out in a separate 120-second test. It is not a validated simulation;
+  no new agent run was started. Smaller/optimized work needs explicit local validation.
+- Verification: 288 tests passed including real Python/C, paper-only and sandbox
+  denial probes; final targeted suite 48 passed. Frontend/build/Ruff checks passed.
+  All four original run manifests and both new local check manifests verify.
+- Evidence: `docs/saved-artifact-regression-validation.json`; local outputs and exact
+  checked code: `output/simulation-regression/seatbelt/`. Original failed runs remain
+  failed and immutable. Scientific/domain review is still required before real-world use.
+
+---
+
 # Fresh seed runs and simplified intake
 
 Updated October 04, 2026, 00:03 PDT; about four minutes remain to hard stop.

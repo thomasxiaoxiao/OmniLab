@@ -378,6 +378,8 @@ def parallel_activity(journal, events):
                 if role in {"baseline", "experiment"}
                 else "source"
                 if role == "repository"
+                else "anyjev"
+                if role == "decision" and journal.report.get("evaluator_backend") == "anyjev"
                 else journal.report["backend"],
                 event["time"],
                 parents=data.get("parents", []),

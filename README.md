@@ -17,9 +17,11 @@ brief. Omnigent must orchestrate the live discovery workflow; the earlier housin
 challenge requirements are superseded.
 
 New UI runs and unconfigured Omnigent CLI runs use the **repository workflow**.
-The **Paper** selector starts with exactly two seed examples: Percolation and
-AstroSat. Drag and drop a document into the visible uploader, or import from arXiv,
-to add it to that same selector. Content-identical copies of seeds appear only once. In the UI, a validated paper is sufficient to enable **Start bounded run**;
+The **Example papers** picker contains exactly two seeds: Percolation and AstroSat.
+Drag and drop a document into the visible uploader, or import from arXiv,
+to add it to **Your papers**. Uploads never extend the example catalog; PCBI and
+Sulzer are not examples. Content-identical copies of seeds select the existing
+example. In the UI, a validated paper is sufficient to enable **Start bounded run**;
 a public GitHub repository is optional. A unique paper link is prefilled. Omnigent
 specialists read the source, critique up to three directions,
 compare two tests, and generate Python/C from the paper or supplied pinned repository.
@@ -27,8 +29,11 @@ Without a repository, the run explicitly records a new paper-based implementatio
 it never claims to have executed author code. A supplied repository that fails to
 load stops the run, without switching modes.
 The supervisor executes it in Omnigent's OS sandbox, validates a baseline sanity
-check and deterministic replay, and passes measured results to an evaluator that
-can change the next experiment's parameters. No preset scientific kernel is selected
+check and deterministic replay. An Omnigent researcher interprets the measurements
+and proposes a parameter follow-up; a separate **AnyJev decision-only evaluator**
+selects continuation or stop from bounded options. It uses pinned local Qwen3/MLX
+logits with zero generated tokens. Its scores are uncalibrated option weights.
+No preset scientific kernel is selected
 for this path. Historical configurations are readable for audit but cannot launch preset experiments.
 
 **Discovery overview** combines the former overview and final synthesis. It opens
@@ -100,6 +105,7 @@ visual reconstruction. See [historical descriptions](docs/historical-workflows.m
 
 ```bash
 uv sync --locked
+.venv/bin/research prepare-model  # One-time pinned AnyJev model setup on Apple Silicon
 .venv/bin/research configure-agent --auth subscription
 # In separate terminals:
 bash scripts/research-runtime.sh server
@@ -119,7 +125,12 @@ This uses existing `codex login` authentication. Configuration uses the configur
 Codex model unless `--model` or `RESEARCH_MODEL` is supplied. The runtime helper
 prefers the bundled CLI on macOS; `OMNIGENT_CODEX_PATH` overrides it. Services bind
 to loopback and `status` saves connection identifiers in ignored runtime state.
-The CLI and UI use Omnigent, with no alternate decision backend or silent fallback.
+The CLI and UI use Omnigent for research and experiments, and local AnyJev for
+evaluation. New live repository configurations require `decision_backend: anyjev`.
+Missing inference support, ambiguous choices or exhausted decision budgets stop
+cleanly with retained evidence; there is no Codex evaluator fallback. Existing
+archives retain their original evaluator provenance. The current local evaluator
+requires Apple Silicon and the pinned MLX model.
 
 **Agents & execution loops** shows separate sessions, real handoffs, route choices,
 and continuation or stop reasons. It refreshes while work is running, preserving
@@ -243,10 +254,12 @@ Research source intake and all simulations can run independently of cloud setup.
 ## Source intake and agent visibility
 
 **Source intake** offers exactly two pinned seed examples (Percolation and AstroSat).
-Uploaded and versioned arXiv papers join the same Paper selector; the uploader is
+Uploaded and versioned arXiv papers appear separately under **Your papers**; the uploader is
 visible directly below it. The UI accepts an
 optional public GitHub repository and revision; a validated upload can start without one. New runs use separate Omnigent reader,
-critic/literature, planner, experimenter and evaluator sessions. Starting a run
+critic/literature, planner, experimenter and result-assessment sessions. A separate
+AnyJev evaluator selects the final next action and saves its inputs, options,
+weights and handoff in the same run. Starting a run
 opens **Agents & execution loops** and follows that exact run.
 
 **Discovery overview** explains what to watch before the recorded simulation,

@@ -118,3 +118,66 @@ def test_launch_error_survives_monitor_rerun():
     app = ViewTest.from_function(page).run()
     assert not app.exception
     assert any("Your uploaded paper is saved" in e.value for e in app.error)
+
+
+def test_generated_simulation_inspector_uses_provenance(tmp_path):
+    import json
+
+    (tmp_path / "code").mkdir()
+    (tmp_path / "code/experiment.py").write_text("# agent-generated implementation\nx = 1\n")
+    (tmp_path / "implementation.json").write_text(json.dumps({"python_code": "x = 1"}))
+    (tmp_path / "code/provenance.json").write_text(
+        json.dumps({"source_sha256": "paper-hash", "files": ["code/experiment.py"]})
+    )
+
+    def page(directory):
+        from pathlib import Path
+        from types import SimpleNamespace
+
+        from hacknation_databricks.activity_ui import render_simulation
+        from hacknation_databricks.tracking import Journal
+
+        render_simulation(
+            Journal(
+                "test", Path(directory), sources=[{"source_id": "seed", "sha256": "paper-hash"}]
+            ),
+            SimpleNamespace(artifacts=[]),
+        )
+
+    app = ViewTest.from_function(page, args=(str(tmp_path),)).run()
+    assert not app.exception
+    assert not app.error
+    assert any("agent-generated implementation" in c.value for c in app.code)
+    # Still fail closed when the actual provenance has the wrong paper.
+    (tmp_path / "code/provenance.json").write_text(
+        json.dumps({"source_sha256": "other-paper", "files": ["code/experiment.py"]})
+    )
+    app = ViewTest.from_function(page, args=(str(tmp_path),)).run()
+    assert any("does not match" in e.value for e in app.error)
+
+
+def test_saved_validation_error_explains_contract_and_recovery(tmp_path):
+    import json
+    from types import SimpleNamespace
+
+    from hacknation_databricks.activity_ui import recorded_failure
+    from hacknation_databricks.tracking import Journal
+
+    (tmp_path / "implementation_contract_failure.json").write_text(
+        json.dumps(
+            {
+                "errors": [
+                    {"loc": ["python_code"], "msg": "String should have at most 16000 characters"}
+                ]
+            }
+        )
+    )
+    journal = Journal("test", tmp_path)
+    node = SimpleNamespace(
+        stage="implementation", error_type="ValidationError", stage_status="failed"
+    )
+    message = recorded_failure(journal, node)
+    assert "python_code" in message and "16000 characters" in message
+    assert "does not rerun saved failures" in message
+    node.stage_status = "completed"
+    assert "later correction completed" in recorded_failure(journal, node)

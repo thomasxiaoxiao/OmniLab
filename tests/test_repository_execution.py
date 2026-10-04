@@ -843,3 +843,61 @@ def test_product_package_has_no_preset_simulation_modules():
         "adaptive",
     ):
         assert find_spec("hacknation_databricks.research." + module) is None
+
+
+def test_generated_code_contract_accepts_scene_sized_code_and_retains_bound():
+    from pydantic import ValidationError
+
+    code = DRIVER + "# scene code\n" * 2000
+    assert 16000 < len(code) < 64000
+    RepositoryImplementation(python_code=code, repository_files=[], explanation="Scene-sized code.")
+    with pytest.raises(ValidationError):
+        RepositoryImplementation(
+            python_code="x" * 64001, repository_files=[], explanation="Too large."
+        )
+
+
+@pytest.mark.skipif(os.environ.get("RUN_SANDBOX_TESTS") != "1", reason="Requires real OS sandbox")
+@pytest.mark.parametrize("unstable", [False, True])
+def test_real_simulation_replay_preflight(tmp_path, unstable):
+    import json
+
+    store = RunStore(tmp_path / "preflight")
+    manifest = {
+        "origin": "paper_implementation",
+        "url": "",
+        "commit": "",
+        "files": [],
+        "source_sha256": "a" * 64,
+    }
+    code = """import time
+calls = 0
+def simulate(parameters, seed, library):
+    global calls
+    calls += 1
+    if parameters['treatment']:
+        print('TREATMENT_EXECUTED')
+    return {'metric': 1., 'times': [0., 1.], 'values': [1., 1.],
+            'measurements': {'elapsed_seconds': CLOCK}}
+""".replace("CLOCK", "time.perf_counter()" if unstable else "0.")
+    implementation = RepositoryImplementation(
+        python_code=code + "# scene\n" * 2500, repository_files=[], explanation="Preflight fixture."
+    )
+    jobs = [
+        {"arm": arm, "seed": 42, "parameters": {"treatment": arm == "proposed"}}
+        for arm in ("control", "proposed", "replay")
+    ]
+    if unstable:
+        with pytest.raises(RuntimeError):
+            execute_code(store, implementation, manifest, jobs, stage="test", timeout=10)
+        audit = json.loads((store.directory / "test/execution.json").read_text())
+        assert "Baseline preflight failed" in audit["stderr"]
+        assert "TREATMENT_EXECUTED" not in audit["stderr"]
+        assert [t["arm"] for t in json.loads(audit["stdout"])["partial_trials"]] == [
+            "control",
+            "replay",
+        ]
+    else:
+        result = execute_code(store, implementation, manifest, jobs, stage="test", timeout=10)
+        assert [t["arm"] for t in result["trials"]] == ["control", "proposed", "replay"]
+        assert result["trials"][0]["output"] == result["trials"][2]["output"]

@@ -10,8 +10,10 @@ from .code_sandbox import SimulationSample, paper_implementation
 from .legacy_audit import process_from_trials, validate_process_variation
 from .models import RunConfig
 from .process_visualization import checked_process
+from .repository_decisions import decision_state, verify_handoff
 from .repository_models import (
     RepositoryBrief,
+    RepositoryDecision,
     RepositoryLiterature,
     RepositoryPlan,
     RepositoryReview,
@@ -39,6 +41,12 @@ def verify_repository_outputs(directory, report, artifacts):
                 raise ValueError("Repository workflow exceeded declared budget")
         if len(report["rounds"]) > config.max_rounds:
             raise ValueError("Iteration budget exceeded")
+        if report.get("evaluator_backend") == "anyjev" and (
+            config.decision_backend != "anyjev"
+            or type(report.get("decision_calls")) is not int
+            or not 0 <= report["decision_calls"] <= config.max_decision_calls
+        ):
+            raise ValueError("AnyJev evaluator configuration or budget is invalid")
         if "final_experiment" in report:
             expected_final = None
             if report["status"] in {"research_stopped", "budget_exhausted"} and report["rounds"]:
@@ -86,6 +94,7 @@ def verify_repository_outputs(directory, report, artifacts):
             ):
                 raise ValueError("Repository source inventory does not match sealed code")
         plan = RepositoryPlan.model_validate(read("planner.json"))
+        computed_jobs = 0
         if any(test.replicates > min(config.trials, 32) for test in plan.tests):
             raise ValueError("Plan exceeds the paired-replicate budget")
         for row in report["rounds"]:
@@ -112,6 +121,37 @@ def verify_repository_outputs(directory, report, artifacts):
                 {"arm": "sanity", "seed": expected_seeds[0], "parameters": plan.sanity},
                 {"arm": "replay", "seed": expected_seeds[0], "parameters": plan.baseline},
             ]
+            computed_jobs += len(expected_jobs)
+            if row.get("next_decision") and report.get("evaluator_backend") == "anyjev":
+                assessment = RepositoryDecision.model_validate(read(prefix + "/assessment.json"))
+                state = decision_state(
+                    plan,
+                    row["treatment"],
+                    row["summary"],
+                    assessment,
+                    {
+                        "rounds": config.max_rounds - row["round"],
+                        "simulations": config.max_simulations - computed_jobs,
+                        "jobs_per_round": len(expected_jobs),
+                    },
+                )
+                if state != read(prefix + "/evaluation-input.json"):
+                    raise ValueError("Evaluator input changed measured evidence or budget")
+                decision = read(prefix + "/decision.json")
+                if decision != row["next_decision"]:
+                    raise ValueError("Reported decision differs from the evaluator output")
+                handoff = read(prefix + "/anyjev-handoff.json")
+                record = read(handoff["decision_artifact"])
+                if record["stage"] != prefix + "/decision":
+                    raise ValueError("AnyJev evaluation attached to another round")
+                verify_handoff(state, decision, handoff, record)
+            expected_treatment = (
+                plan.treatment
+                if row["round"] == 1
+                else (report["rounds"][row["round"] - 2]["next_decision"]["next_treatment"])
+            )
+            if row["treatment"] != expected_treatment:
+                raise ValueError("Executed treatment differs from the preceding decision")
             if len(result["trials"]) != len(expected_jobs):
                 raise ValueError("Missing or additional trials")
             for trial, job in zip(result["trials"], expected_jobs, strict=True):
@@ -231,7 +271,7 @@ def load_repository_journal(directory):
                     finished
                     or stage in states
                     or not re.fullmatch(
-                        r"repository|reader|reader_repair|literature|literature_repair|critic|critic_repair|planner|implementation|rounds/\d+/(experiment|decision)",
+                        r"repository|reader|reader_repair|literature|literature_repair|critic|critic_repair|planner|implementation|rounds/\d+/(experiment|assessment|decision)",
                         stage,
                     )
                 ):

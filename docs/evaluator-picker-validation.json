@@ -1,0 +1,52 @@
+{
+  "recorded_at": "2026-10-04T00:29:14.134970-07:00",
+  "scope": "User-requested post-deadline evaluator routing and example-picker correction; no new discovery run",
+  "evaluator": {
+    "research_and_experimenter": "Codex through Omnigent",
+    "result_assessment": "Omnigent researcher proposal",
+    "final_action": "AnyJev local decision-only model",
+    "no_codex_fallback": true
+  },
+  "ui": {
+    "url": "http://127.0.0.1:8000/",
+    "caption": "Choose an example paper or add your own.",
+    "example_papers": [
+      "Percolation \u00b7 arXiv:2607.24975v1",
+      "AstroSat \u00b7 arXiv:2111.11268v1"
+    ],
+    "uploads": "PCBI and Sulzer retained only under Your papers, outside example catalog",
+    "browser_verified": true,
+    "screenshot": "output/ui-validation/anyjev-example-picker.png"
+  },
+  "checks": {
+    "pytest_passed": 292,
+    "pytest_skipped": 6,
+    "ruff": "passed",
+    "frontend_types_and_format": "passed",
+    "build": "passed",
+    "prior_run_archives_verified": 13
+  },
+  "local_inference": {
+    "directory": "output/validation/anyjev-evaluator-smoke-20261004T072659Z",
+    "evidence": "Synthetic test measurements, not a scientific experiment or live Omnigent loop",
+    "status": "completed",
+    "selected_action": "followup",
+    "model": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+    "anyjev": "0.2.0",
+    "mlx_lm": "0.32.0",
+    "prefills": 2,
+    "input_tokens": 1082,
+    "generated_tokens": 0,
+    "elapsed_seconds": 4.70353158301441,
+    "handoff_verified": true
+  },
+  "preserved_failed_probe": {
+    "directory": "output/validation/anyjev-evaluator-smoke-20261004T072624Z",
+    "status": "local worker exited without a JSON result in the Codex execution sandbox; successful retry used host MLX access"
+  },
+  "limitations": [
+    "Full revised Omnigent discovery loop not rerun after original project deadline",
+    "AnyJev/MLX evaluator requires the pinned local model on Apple Silicon",
+    "No new scientific result, validity or acceleration claim"
+  ]
+}

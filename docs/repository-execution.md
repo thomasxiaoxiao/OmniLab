@@ -7,17 +7,18 @@ and the next experiment. Evidence and audit details are expandable.
 
 ## Inputs and specialist handoffs
 
-Supply a PDF/Markdown paper. The Paper selector starts with Percolation and AstroSat;
-other uploads/imports join the same selector through the visible drag-and-drop intake.
+Supply a PDF/Markdown paper. **Example papers** contains only Percolation and AstroSat;
+uploads/imports appear separately under **Your papers** through the visible intake.
 Content-identical seed uploads are deduplicated by SHA-256. A validated
 paper enables Start bounded run even with no repository URL.
 
 A public `https://github.com/owner/repository` URL is optional in the UI. Without one,
 `allow_paper_implementation: true` explicitly authorizes the same Omnigent reader,
-literature researcher, critic, planner, experimenter and evaluator loop to implement a scoped
+literature researcher, critic, planner, experimenter and result-assessment sessions to implement a scoped
 numerical test from the paper's equations or algorithm. Unsupported evidence,
 missing data, invalid contracts and failed experiments still stop honestly. No
-preset kernel or alternate decision backend replaces that process.
+preset kernel replaces that process. A separate AnyJev decision-only evaluator
+selects the next action from the measurements and researcher's proposal.
 
 Paper-based runs record `code_origin: paper_implementation`, an empty repository
 identity/inventory, original paper evidence, generated code, all sandbox trials,
@@ -58,11 +59,30 @@ tests and at least two visualization options, records the chosen representation,
 physical state variables/units, what to watch and limitations, and defines controls,
 a metric, bounds, a sanity expectation, tolerance and
 paired replicates before results exist. The experimenter generates code from the
-files actually read. The evaluator receives measurements and can change the next
-treatment or stop. No predefined percolation or Astrosat kernel is dispatched.
+files actually read. The researcher assesses the results and proposes a complete
+changed treatment or a stop. AnyJev receives the current measured summary,
+hypothesis, controls, parameter sets, researcher assessment and remaining budgets.
+It selects the proposed follow-up or stop; when no executable follow-up is
+available it chooses stop or independent review. It cannot generate code, prose
+or parameters. No predefined percolation or Astrosat kernel is dispatched.
 Reader/critic quotations must match the cited source page exactly; one recorded
 correction attempt is allowed within the same call/time budget. Repeated invalid
 evidence stops the run and remains available for inspection.
+
+Live runs require `decision_backend: anyjev`. The existing pinned local
+Qwen3-4B-Instruct-2507 model uses AnyJev L0 logits via MLX, cyclic option rotations
+and zero generated tokens. The scorer retains its call, time and context limits,
+including a 0.05 minimum option-weight margin. These weights are uncalibrated.
+Missing runtime support, timeout, exhausted budgets or ambiguity stop with no
+Codex fallback. This runtime currently requires Apple Silicon. Use
+`research prepare-model` for its explicit one-time model download.
+
+Each round saves `assessment.json`, `evaluation-input.json`, `anyjev-handoff.json`
+and `decision.json`; `decisions/` records the exact question, choices, scores and
+usage. Audit checks bind the action to those measurements and its recorded
+selection, then bind the next executed treatment to that action. The execution
+view distinguishes an Omnigent assessment session from local AnyJev inference.
+Existing sealed runs remain immutable, including older Codex evaluator records.
 
 The Agents page shows observed request concurrency (including runtime waits), a
 dependency graph, and a Routes & decisions tab. Every proposed direction remains

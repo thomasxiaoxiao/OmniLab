@@ -11,6 +11,14 @@ player draws recorded geometry without preset scientific kernels or domain adapt
 Flat or missing visual output is allowed and reported honestly. Numerical checks,
 provenance, finite budgets and exact replay remain enforced.
 
+The current evaluator is a local decision-only model through AnyJev. Omnigent's
+researcher result-assessment session supplies interpretation and a proposed test;
+AnyJev scores bounded continuation/stop choices with zero generated tokens.
+The supervisor only executes the selected action. Both outputs, measured inputs,
+option weights and budgets are archived and checked. AnyJev failure or ambiguity
+does not fall back to a Codex evaluator. Existing v5 Codex-evaluated archives remain
+readable with their original provenance; see [repository-execution.md](repository-execution.md).
+
 The sections below are historical v3/v4 implementation documentation. Their fixed
 kernels, recipes and adapters moved to `tests/legacy/`; they do not ship with the
 application or run through its gateway. Their old launch commands are unsupported.
