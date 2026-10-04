@@ -1,3 +1,30 @@
+# README purpose and percolation demo refactor verified
+
+Updated October 04, 2026, 03:43 PDT. Active task: publish the requested README refactor.
+Original event time remaining: zero; renewed documentation/publication request.
+Next: push the documentation commit to the existing draft PR and inspect its CI.
+No local validation blocker. Merging the draft PR into main remains a separate step.
+
+- Replaced the long README with the project purpose, human validation bottleneck,
+  grounding and control for AI scientists, and Omnigent's concrete orchestration role.
+- Kept the recorded 21-frame percolation animation and linked it to the verified
+  public interactive player. The demo remains read-only; no research was started.
+- Preserved the measured outcome, result-driven follow-ups, exploratory uncertainty,
+  setup commands and links to detailed execution and deployment documentation.
+- Validation: `npm run check` passed against the unchanged application revision:
+  frontend types/format/build, Ruff, 317 tests, 8 optional sandbox tests skipped,
+  and process configuration syntax. No application code changed in this commit.
+- GitHub Markdown rendering preserves the linked GIF and setup disclosure; all
+  14 local README links resolve. Figure/renderer/source hashes and the retained
+  run verify; numerical claims match provenance. Public player shows the saved
+  final comparison, 21 frames and disabled execution.
+- Scientific conclusions remain unchanged: no full-paper reproduction, established
+  novelty, independent scientific validation or measured acceleration multiplier.
+  Independent scientific validation is still required before real-world use.
+- Work is isolated from the primary checkout's unrelated deployment documentation.
+
+---
+
 # Final publication candidate verified
 
 Updated October 04, 2026, 02:37 PDT. Active task: push the user's final local version through the
