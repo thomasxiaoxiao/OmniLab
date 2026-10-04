@@ -29,7 +29,7 @@ def render_repository_result(journal):
         envelope = saved_json(journal, row["artifact_prefix"] + "/process.json")
         if envelope and envelope.get("status") == "ready":
             process = checked_process(envelope["process"])
-            process["title"] = process["title"].partition(":")[0]
+            agent_scene = report.get("process_validation") == "agent_recorded_scene_v1"
             plan = saved_json(journal, "planner.json") or {}
             baseline = plan.get("baseline", {})
             treatment = row.get("treatment", {})
@@ -39,21 +39,24 @@ def render_repository_result(journal):
                 "proposed": treatment,
             }
             process["provenance"]["pre_experiment_limitations"] = process["limitations"]
-            for arm, parameters in [("original", baseline), ("proposed", treatment)]:
-                process[arm]["description"] = brief(
-                    " · ".join(f"{key.replace('_', ' ')}: {parameters.get(key)}" for key in changed)
-                    or "Recorded experiment samples",
-                    limit=180,
-                )
-            process["limitations"] = (
-                "Recorded scalar samples from one seed per arm. This is a scoped code check; "
-                "full paper reproduction and physical validation remain unverified."
-            )
-            graphic = process_html(process, scalar_axes=True)
+            if not agent_scene:
+                for arm, parameters in [("original", baseline), ("proposed", treatment)]:
+                    process[arm]["description"] = brief(
+                        " · ".join(
+                            f"{key.replace('_', ' ')}: {parameters.get(key)}" for key in changed
+                        )
+                        or "Recorded experiment samples",
+                        limit=180,
+                    )
+            graphic = process_html(process, scalar_axes=not agent_scene)
             ui.iframe(
                 graphic,
                 height="content",
-                alt="Recorded original and proposed repository simulation trajectories",
+                alt="Recorded control and proposed simulation scenes",
+            )
+        else:
+            ui.warning(
+                (envelope or {}).get("reason", "The agent has not produced a visualization.")
             )
         summary = row["summary"]
         ui.markdown("**Result**")
@@ -103,6 +106,11 @@ def render_repository_result(journal):
         ui.write(plan.get("hypothesis", ""))
         ui.write(plan.get("baseline_scope", ""))
         ui.write(plan.get("controls", ""))
+        if plan.get("visualization_plan"):
+            ui.markdown("**Why this visualization**")
+            ui.write(plan["visualization_plan"])
+            for option in plan.get("visualization_options", []):
+                ui.write(option)
         ui.markdown("**What remains uncertain**")
         for limitation in decision.get("limitations", plan.get("limitations", [])):
             ui.write(limitation)

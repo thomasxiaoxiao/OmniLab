@@ -203,7 +203,7 @@ def test_other_followup_recipes_execute_without_model_code(tmp_path, source, con
 
 
 def test_candidate_loop_is_bounded_even_when_effect_fails(tmp_path, source, config, monkeypatch):
-    from hacknation_databricks.research import workflow
+    from legacy import workflow
 
     related_path = tmp_path / "related.txt"
     related_path.write_text("Synthetic related-work fixture: randomly-oriented Manhattan lattice.")
@@ -240,7 +240,7 @@ def test_candidate_loop_is_bounded_even_when_effect_fails(tmp_path, source, conf
 
 
 def test_gate_stops_on_candidate_but_never_claims_discovery(tmp_path, source, config, monkeypatch):
-    from hacknation_databricks.research import workflow
+    from legacy import workflow
 
     related_path = tmp_path / "related.txt"
     related_path.write_text("Synthetic related-work fixture: randomly-oriented Manhattan lattice.")
@@ -319,7 +319,7 @@ def test_repeated_source_is_not_independent_literature(tmp_path, source, config)
 
 
 def test_baseline_failure_prevents_followup(tmp_path, source, config, monkeypatch):
-    from hacknation_databricks.research import workflow
+    from legacy import workflow
 
     monkeypatch.setattr(workflow, "baseline_validation", lambda *args: {"passed": False})
     report = run_research(source, tmp_path / "run", config)

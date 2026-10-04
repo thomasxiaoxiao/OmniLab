@@ -30,6 +30,10 @@ def test_main_entry_shows_empty_control_room(monkeypatch, tmp_path):
 
 
 def test_run_button_journal_filter_and_reload(monkeypatch, tmp_path):
+    # Exercise historical archive rendering with an explicitly test-only engine.
+    from legacy.workflow import run_research as historical_fixture
+
+    monkeypatch.setattr("hacknation_databricks.tracking_ui.run_research", historical_fixture)
     from fixture_roles import DecisionWorkerFixture
 
     from hacknation_databricks.research import decision_roles

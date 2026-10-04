@@ -52,6 +52,8 @@ class RepositoryPlan(Contract):
     tests: list[RepositoryTest] = Field(min_length=2, max_length=2)
     selected_test_id: Literal["screen", "precision"]
     rationale: str = Field(min_length=10, max_length=1500)
+    visualization_options: list[str] = Field(default_factory=list, max_length=3)
+    visualization_plan: str = Field(default="", max_length=2000)
     primary_module: str = Field(pattern=r"^[a-zA-Z_][a-zA-Z0-9_]*$")
     # PyPI wheel names only; no URLs, shell, editable installs or build scripts.
     dependencies: list[
@@ -105,6 +107,13 @@ class RepositoryPlan(Contract):
                 "prose-only inherited configurations are not executable"
             )
         return self
+
+
+class AgentRepositoryPlan(RepositoryPlan):
+    """New runs must explain representation choices; old plans remain readable."""
+
+    visualization_options: list[str] = Field(min_length=2, max_length=3)
+    visualization_plan: str = Field(min_length=30, max_length=2000)
 
 
 class RepositoryImplementation(Contract):

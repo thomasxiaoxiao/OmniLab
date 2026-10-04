@@ -11,6 +11,7 @@ from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Any
 
+from hacknation_databricks.research.legacy_audit import discovery_transition, novelty_gate
 from hacknation_databricks.research.models import (
     CritiqueBatch,
     DiscoveryPlan,
@@ -22,7 +23,6 @@ from hacknation_databricks.research.models import (
     ValidationReview,
 )
 from hacknation_databricks.research.sources import Source, check_evidence
-from hacknation_databricks.research.workflow import discovery_transition, novelty_gate
 
 POLICY_VERSION = "decision-ledger-v1"
 MAX_ARTIFACT_BYTES = 20 * 1024 * 1024

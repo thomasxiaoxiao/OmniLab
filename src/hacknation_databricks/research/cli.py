@@ -33,7 +33,7 @@ def parser() -> argparse.ArgumentParser:
     fetch.add_argument("--arxiv-id", default="2607.24975v1")
     fetch.add_argument("--destination", type=Path, default=Path("data/papers"))
     run = commands.add_parser("run", help="Execute the strict research workflow")
-    run.add_argument("--backend", choices=["omnigent", "anyjev"], default="omnigent")
+    run.add_argument("--backend", choices=["omnigent"], default="omnigent")
     run.add_argument("--paper", type=Path, default=default_source())
     run.add_argument("--literature", type=Path, action="append", default=[])
     run.add_argument("--config", type=Path)
@@ -155,8 +155,9 @@ def main(argv: list[str] | None = None) -> int:
             RunConfig.model_validate_json(args.config.read_text())
             if args.config
             else RunConfig(
-                workflow="repository" if args.backend == "omnigent" else "sequential",
-                domain="auto" if args.backend == "omnigent" else "percolation",
+                workflow="repository",
+                domain="auto",
+                allow_paper_implementation=True,
             )
         )
         if args.repository:
@@ -203,6 +204,8 @@ def main(argv: list[str] | None = None) -> int:
             "automated_candidate",
             "review_complete",
             "round_budget_exhausted",
+            "research_stopped",
+            "budget_exhausted",
         }
         return 0 if report["status"] in successful else 2
     except Exception as exc:

@@ -222,7 +222,7 @@ def comparison_svg(bundle: dict) -> str:
     )
 
 
-def save_comparisons(store, report, config, sources):
+def save_comparisons(store, report, config, sources, *, process_builder=None):
     """Enforce and seal process + numerical comparisons at every terminal path."""
     from .process_player import process_html
     from .process_visualization import build_process, enforce_process_output
@@ -238,7 +238,7 @@ def save_comparisons(store, report, config, sources):
         bundle = comparison_bundle(report, config, sources, read_json, dataset)
         checkpoint = bundle["checkpoint"]
         if checkpoint not in processes:
-            processes[checkpoint] = build_process(
+            processes[checkpoint] = (process_builder or build_process)(
                 bundle,
                 lambda name: (store.directory / name).read_bytes(),
                 run_id=store.directory.name,

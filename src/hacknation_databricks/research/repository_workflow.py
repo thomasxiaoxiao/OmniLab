@@ -11,18 +11,18 @@ import numpy as np
 from pydantic import ValidationError
 from scipy.stats import t
 
+from .agent_visualization import SimulationScene, agent_process
 from .agents import AgentBudgetExceeded, AgentUnavailable, OmnigentRoles
 from .artifacts import RunStore, canonical, environment
 from .code_archive import archive_framework
-from .code_sandbox import code_capability, execute_code
+from .code_sandbox import SimulationSample, code_capability, execute_code
 from .process_player import process_html
-from .process_visualization import checked_process
 from .repository_models import (
+    AgentRepositoryPlan,
     RepositoryBrief,
     RepositoryDecision,
     RepositoryImplementation,
     RepositoryLiterature,
-    RepositoryPlan,
     RepositoryReview,
 )
 from .repository_source import fetch_repository, read_repository_files, repository_links
@@ -64,80 +64,6 @@ def summarize_trials(result, plan):
         "or multiple-testing correction.",
         "meaningful_difference": plan.meaningful_difference,
     }
-
-
-def validate_process_variation(result):
-    """Prevent scalar identities from being promoted as simulated processes."""
-    displayed = [
-        next(r for r in result["trials"] if r["arm"] == arm) for arm in ("control", "proposed")
-    ]
-    if all(
-        np.allclose(row["output"]["values"], row["output"]["values"][0], rtol=1e-10, atol=1e-12)
-        for row in displayed
-    ):
-        raise ValueError(
-            "Both displayed trajectories are constant; "
-            "retain as a diagnostic, not a process simulation"
-        )
-
-
-def process_from_trials(result, plan, *, provenance, artifact):
-    """Map actual scalar trajectories to the shared player without a domain-specific model."""
-    control = next(r for r in result["trials"] if r["arm"] == "control")
-    proposed = next(r for r in result["trials"] if r["arm"] == "proposed")
-    times = control["output"]["times"]
-    if proposed["output"]["times"] != times:
-        raise ValueError("Control and proposed trajectories must share recorded sample times")
-    values = control["output"]["values"] + proposed["output"]["values"]
-    trajectory_units = plan.trajectory_units or plan.units
-    lo, hi = min(values), max(values)
-    margin = max((hi - lo) * 0.08, 0.01)
-
-    def world(row, label, color):
-        values = row["output"]["values"]
-        return {
-            "label": label,
-            "description": f"Recorded seed {row['seed']}: {row['parameters']}",
-            "geometry": [
-                {
-                    "kind": "line",
-                    "x": times[i - 1],
-                    "y": values[i - 1],
-                    "x2": times[i],
-                    "y2": values[i],
-                    "color": color,
-                    "start": i,
-                }
-                for i in range(1, len(times))
-            ],
-            "frames": [
-                {"caption": f"Step {step:g}: {value:g} {trajectory_units}", "glyphs": []}
-                for step, value in zip(times, values, strict=True)
-            ],
-        }
-
-    return checked_process(
-        {
-            "title": plan.trajectory_label or plan.metric,
-            "description": "Recorded process samples from a paper-based implementation."
-            if not provenance["repository_url"]
-            else "Recorded process samples from the pinned repository experiment.",
-            "x_label": "Recorded time / simulation step",
-            "y_label": trajectory_units,
-            "timeline_label": "Recorded time / simulation step",
-            "times": times,
-            "bounds": [times[0], times[-1], lo - margin, hi + margin],
-            "original": world(control, "Original / control", "control"),
-            "proposed": world(proposed, "Proposed", "proposed"),
-            "selection": "First preregistered seed in each arm; all seeds are retained in "
-            "raw trials.",
-            "limitations": "A recorded scalar trajectory, not a spatial reconstruction. "
-            + " ".join(plan.limitations),
-            "replayed_trials": 0,
-            "inputs": [{"artifact": artifact, "seed": control["seed"]}],
-            "provenance": provenance,
-        }
-    )
 
 
 def run_repository(
@@ -182,7 +108,7 @@ def run_repository(
         "proposals": [],
         "computed_simulations": 0,
         "scientific_novelty": "unverified",
-        "process_validation": "changing_recorded_states_v1",
+        "process_validation": "agent_recorded_scene_v1",
         "final_experiment": None,
         "goal": {"achieved": False},
         "acceptance": {
@@ -405,9 +331,23 @@ def run_repository(
                 "proposal": proposal.model_dump(),
                 "review": review.model_dump(),
                 "code": code,
-                "budget": config.model_dump(),
+                "scene_schema": SimulationScene.model_json_schema(),
+                "output_schema": SimulationSample.model_json_schema(),
+                "budget": {
+                    key: getattr(config, key)
+                    for key in (
+                        "trials",
+                        "max_rounds",
+                        "max_workers",
+                        "max_seconds",
+                        "max_agent_calls",
+                        "max_simulations",
+                        "code_timeout_seconds",
+                        "seed",
+                    )
+                },
             },
-            RepositoryPlan,
+            AgentRepositoryPlan,
             [critic_stage],
         )
         if plan.proposal_id != proposal.id or plan.hypothesis != proposal.hypothesis:
@@ -435,6 +375,8 @@ def run_repository(
                 **common,
                 "plan": plan.model_dump(),
                 "code": code,
+                "scene_schema": SimulationScene.model_json_schema(),
+                "output_schema": SimulationSample.model_json_schema(),
                 "execution_contract": {
                     "seed": "Use the seed argument for all randomness. Accept every integer "
                     "from 0 through 2**32-1, including sanity/replay seeds. Never hardcode or "
@@ -510,9 +452,8 @@ def run_repository(
                 )
                 summary = summarize_trials(result, plan)
                 store.write(prefix + "/summary.json", summary)
-                validate_process_variation(result)
                 raw_name = prefix + "/trials.json"
-                process = process_from_trials(
+                envelope = agent_process(
                     result,
                     plan,
                     artifact=raw_name,
@@ -531,15 +472,19 @@ def run_repository(
                         ],
                     },
                 )
-                envelope = {"status": "ready", "process": process}
                 store.write(prefix + "/process.json", envelope)
-                store.write_text(prefix + "/process.html", process_html(process, scalar_axes=True))
                 store.write("comparison/process.json", envelope)
-                store.write_text("comparison/process.html", process_html(process, scalar_axes=True))
+                if envelope["status"] == "ready":
+                    graphic = process_html(envelope["process"])
+                    store.write_text(prefix + "/process.html", graphic)
+                    store.write_text("comparison/process.html", graphic)
+                else:
+                    (output / "comparison/process.html").unlink(missing_ok=True)
+                report["visualization_status"] = envelope["status"]
                 report["acceptance"].update(
                     baseline_simulations=True,
                     followup_implemented=True,
-                    simulated_world_comparison=True,
+                    simulated_world_comparison=envelope["status"] == "ready",
                 )
                 report["rounds"].append(
                     {
@@ -558,6 +503,12 @@ def run_repository(
                     "plan": plan.model_dump(),
                     "current_treatment": treatment,
                     "summary": summary,
+                    "visualization": {
+                        "status": envelope["status"],
+                        "reason": envelope.get("reason"),
+                        "plan": plan.visualization_plan,
+                        "artifact": prefix + "/process.json",
+                    },
                     "prior_results": report["rounds"],
                     "remaining_rounds": config.max_rounds - number,
                     "limitations": review.missing_evidence,

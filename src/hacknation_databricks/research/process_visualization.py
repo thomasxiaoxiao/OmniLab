@@ -52,7 +52,9 @@ class World(DataContract):
 
 
 class ProcessComparison(DataContract):
-    schema_version: Literal["simulation-process/v1"] = "simulation-process/v1"
+    schema_version: Literal["simulation-process/v1", "simulation-process/v2"] = (
+        "simulation-process/v1"
+    )
     title: str = Field(min_length=1, max_length=300)
     description: str = Field(min_length=1, max_length=3000)
     x_label: str = Field(min_length=1, max_length=100)
@@ -89,7 +91,7 @@ class ProcessComparison(DataContract):
             changed |= any(g.start > 0 for g in world.geometry) or any(
                 f.glyphs != world.frames[0].glyphs for f in world.frames[1:]
             )
-        if not changed:
+        if not changed and self.schema_version == "simulation-process/v1":
             raise ValueError("A static summary is not a simulated process")
         return self
 
@@ -103,16 +105,19 @@ def checked_process(value):
     return process.model_dump()
 
 
-def build_process(bundle, read_bytes, *, run_id):
-    """Bind an allowlisted adapter's states to the exact selected checkpoint inputs."""
+def build_process(bundle, read_bytes, *, run_id, adapters=None):
+    """Legacy test hook. The application installs no reconstruction adapters."""
     from .artifacts import code_digest
-    from .process_adapters import PROCESS_ADAPTERS
 
     if not bundle.get("recipe_artifact"):
         return {"status": "unavailable", "reason": "No completed simulation inputs are available."}
-    adapter = PROCESS_ADAPTERS.get(bundle.get("domain"))
+    adapter = (adapters or {}).get(bundle.get("domain"))
     if adapter is None:
-        return {"status": "unavailable", "reason": "No process adapter for this implementation."}
+        return {
+            "status": "unavailable",
+            "reason": "Built-in simulation reconstruction has been retired. Start a new agent-"
+            "generated experiment.",
+        }
     evidence = {}
 
     def read(name):

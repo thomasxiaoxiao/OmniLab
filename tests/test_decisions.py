@@ -4,6 +4,7 @@ import json
 
 import pytest
 from fixture_roles import DecisionWorkerFixture
+from legacy.workflow import run_research as run_workflow
 
 from hacknation_databricks.research import decision_roles
 from hacknation_databricks.research.agents import AgentUnavailable
@@ -12,7 +13,6 @@ from hacknation_databricks.research.cli import fixture_source, parser
 from hacknation_databricks.research.decision_roles import passages
 from hacknation_databricks.research.models import RunConfig
 from hacknation_databricks.research.sources import read_source
-from hacknation_databricks.research.workflow import run_research as run_workflow
 from hacknation_databricks.tracking import decision_contract, load_journal
 
 

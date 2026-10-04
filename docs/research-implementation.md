@@ -3,14 +3,18 @@
 ## Repository execution (current UI and default CLI)
 
 The current source-based path is documented in [repository-execution.md](repository-execution.md).
-It generates Python/C experiments from a pinned public GitHub repository through
-Omnigent specialist sessions and executes them with the actual Omnigent OS sandbox.
-Discovery overview now combines overview and final synthesis, placing the simulation
-before the result and next experiment. Exact code, prompts and immutable inputs are
-retained; unsupported dependencies and failed checks stop the run without fallback.
+Omnigent specialists generate Python/C experiments from the supplied paper or a
+pinned public repository and execute them in the actual Omnigent OS sandbox.
+The planner compares source-grounded research directions and visualization options;
+the experimenter writes the simulation and its scene-generation code. The generic
+player draws recorded geometry without preset scientific kernels or domain adapters.
+Flat or missing visual output is allowed and reported honestly. Numerical checks,
+provenance, finite budgets and exact replay remain enforced.
 
-The sections below document the retained v3/v4 configurations and their historical
-results. Their fixed kernels and hybrid AnyJev decisions are not the current UI default.
+The sections below are historical v3/v4 implementation documentation. Their fixed
+kernels, recipes and adapters moved to `tests/legacy/`; they do not ship with the
+application or run through its gateway. Their old launch commands are unsupported.
+Historical source and result artifacts remain unchanged for read-only auditing.
 
 ## Paper-first automatic context (v4)
 

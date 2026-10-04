@@ -1,3 +1,14 @@
+# Agent-owned experiments and visualization correction in progress
+
+Updated October 3, 2026, 23:11 PDT; about 56 minutes remain to hard stop.
+Active task: remove preset experiment kernels from the shipped app; let the live
+planner choose source-grounded simulations and visual comparisons, with recorded
+scene data produced by agent-written code. Historical archives remain unchanged.
+Next: regression checks, a fresh live Omnigent run, CI integration and local testing.
+No external blocker. Prior checkpoints below describe historical behavior.
+
+---
+
 # Live agent refresh fix complete
 
 Updated October 3, 2026, 22:49 PDT; about 1 hour 18 minutes remain to hard stop.

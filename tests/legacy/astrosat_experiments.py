@@ -5,7 +5,7 @@ from statistics import NormalDist
 
 import numpy as np
 
-from .scientific_statistics import seed_for, wilson
+from hacknation_databricks.research.scientific_statistics import seed_for, wilson
 
 MEASUREMENT_CONTRACT = {
     "primary_endpoint": "Missed-transit rate: missed true crossings / positive_transits.",

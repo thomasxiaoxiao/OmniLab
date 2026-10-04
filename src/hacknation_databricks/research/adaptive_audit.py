@@ -6,7 +6,7 @@ import json
 import re
 from pathlib import Path
 
-from .adaptive_experiments import summarize_branch
+from .legacy_audit import summarize_branch
 from .models import (
     InvestmentDecision,
     PaperBrief,

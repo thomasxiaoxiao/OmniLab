@@ -62,7 +62,13 @@ Deliver in this order:
 5. A measured discovery bottleneck, reproducible artifacts and a two-minute demo.
 
 Avoid unrelated domains, broad platform rewrites and production infrastructure.
-Use the existing local computational experiments where scientifically useful.
+Current user correction: seed examples supply papers, not preset experiments or
+precompiled scientific outputs. New live runs must have Omnigent agents design and
+write both simulation code and scene data from the supplied evidence. Prefer
+intuitive physical or mechanistic comparisons where justified; flat, negative and
+missing outputs remain valid. Never manufacture motion for presentation. Preset
+engines in `tests/legacy/` exist only to verify historical archives and must never
+be reintroduced into the live workflow or shipped package.
 Wet-lab validation is not required by the challenge.
 
 ## Omnigent must be central

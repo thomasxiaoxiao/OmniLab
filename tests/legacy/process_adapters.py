@@ -247,3 +247,9 @@ def astrosat_process(bundle, read):
 # Register a reviewed scientific adapter here. No UI, export, or gate changes are
 # needed for another paper/scenario: return the same ProcessComparison contract.
 PROCESS_ADAPTERS = {"percolation": percolation_process, "astrosat": astrosat_process}
+
+
+def build_legacy_process(bundle, read, *, run_id):
+    from hacknation_databricks.research.process_visualization import build_process
+
+    return build_process(bundle, read, run_id=run_id, adapters=PROCESS_ADAPTERS)

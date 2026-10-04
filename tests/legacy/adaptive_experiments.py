@@ -1,11 +1,12 @@
 """Dispatch explicit implementations; never substitute an unknown experiment family."""
 
+from hacknation_databricks.research.scientific_statistics import seed_for as seed_for
+
 from . import astrosat_experiments, percolation_experiments
 from .astrosat_experiments import ASTROSAT_RECIPES as ASTROSAT_RECIPES
 from .astrosat_experiments import astrosat_baseline as astrosat_baseline
 from .astrosat_experiments import transit_batch as transit_batch
 from .astrosat_experiments import transit_geometry as transit_geometry
-from .scientific_statistics import seed_for as seed_for
 
 IMPLEMENTATIONS = {
     "astrosat": astrosat_experiments,
