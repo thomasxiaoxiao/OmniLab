@@ -7,8 +7,10 @@ from hacknation_databricks.web import components as ui
 from .research.process_player import process_html
 from .research.process_visualization import checked_process
 from .research_routes_ui import render_research_routes
-from .research_views import saved_json
+from .research_views import next_experiment_summary, saved_json
 from .run_feedback_ui import render_run_outcome
+from .seed_catalog import source_display_name
+from .tracking import MAX_ARTIFACT_DOWNLOAD_BYTES, read_artifact
 
 
 def brief(text, limit=360):
@@ -20,12 +22,16 @@ def brief(text, limit=360):
 def render_repository_result(journal):
     report = journal.report
     rounds = report.get("rounds", [])
+    sources = saved_json(journal, "sources.json") or []
+    seed = next((s for s in sources if s.get("source_id") == "seed"), {})
+    ui.caption(source_display_name(seed))
     if report.get("code_origin") == "paper_implementation":
         ui.caption(
             "This run builds its experiment from the paper. No author repository is supplied."
         )
     row = final_experiment(report) if journal.sealed else None
     if row:
+        ui.caption(f"Final experiment · {len(rounds)} completed comparisons in this run")
         envelope = saved_json(journal, row["artifact_prefix"] + "/process.json")
         if envelope and envelope.get("status") == "ready":
             process = checked_process(envelope["process"])
@@ -34,6 +40,7 @@ def render_repository_result(journal):
             baseline = plan.get("baseline", {})
             treatment = row.get("treatment", {})
             changed = [key for key in treatment if treatment[key] != baseline.get(key)]
+            render_scenario_comparison(plan, treatment, process)
             process["provenance"]["recorded_parameters"] = {
                 "control": baseline,
                 "proposed": treatment,
@@ -67,9 +74,14 @@ def render_repository_result(journal):
             f"{metric}: {summary['control_mean']:.4g} → {summary['proposed_mean']:.4g} "
             f"{summary['units']}. Difference: {summary['difference']:+.4g}."
         )
-        raw = saved_json(journal, row["artifact_prefix"] + "/trials.json")
         plan = saved_json(journal, "planner.json") or {}
-        if raw and plan.get("trajectory_units") and plan["trajectory_units"] != summary["units"]:
+        raw = None
+        if plan.get("trajectory_units") and plan["trajectory_units"] != summary["units"]:
+            try:
+                raw = saved_json(journal, row["artifact_prefix"] + "/trials.json")
+            except ValueError:
+                ui.caption("Large trajectory details remain available in the raw-trials download.")
+        if raw:
             values = next(r["output"]["values"] for r in raw["trials"] if r["arm"] == "proposed")
             ui.write(
                 f"{plan.get('trajectory_label') or 'Recorded proposed trajectory'}: "
@@ -106,7 +118,11 @@ def render_repository_result(journal):
             ui.caption("Final action · decision-only AnyJev evaluator")
         ui.write(decision.get("rationale", "Awaiting the evaluator."))
         ui.markdown("**Next experiment**")
-        ui.write(decision.get("next_experiment", "Awaiting the evaluator."))
+        next_experiment = decision.get("next_experiment", "Awaiting the evaluator.")
+        ui.write(next_experiment_summary(next_experiment))
+        if next_experiment_summary(next_experiment) != next_experiment:
+            with ui.expander("Full recorded next experiment"):
+                ui.write(next_experiment)
         ui.markdown("**Research question & experimental design**")
         reader = saved_json(journal, "approved_reader.json") or {}
         ui.write(reader.get("research_question", plan.get("hypothesis", "")))
@@ -137,12 +153,26 @@ def render_repository_result(journal):
                     mime="text/html",
                 )
             ui.write(numerical_summary)
-            ui.download_button(
-                "Download raw trials",
-                json.dumps(raw, indent=2),
-                file_name=f"{journal.run_id}-trials.json",
-                mime="application/json",
-            )
+            try:
+                # Downloads retain exact sealed bytes. Large evidence need not be parsed
+                # or squeezed into the separate 20 MiB structured-preview budget.
+                trial_bytes = read_artifact(
+                    journal.directory,
+                    row["artifact_prefix"] + "/trials.json",
+                    max_bytes=MAX_ARTIFACT_DOWNLOAD_BYTES,
+                )
+            except (OSError, ValueError):
+                ui.warning(
+                    "Raw trials exceed the download limit or are unavailable; "
+                    "inspect the saved run directory."
+                )
+            else:
+                ui.download_button(
+                    "Download raw trials",
+                    trial_bytes,
+                    file_name=f"{journal.run_id}-trials.json",
+                    mime="application/json",
+                )
             ui.write(summary["interval_method"])
     else:
         ui.info(
@@ -200,6 +230,11 @@ def render_repository_result(journal):
                         "Experiment": r["round"],
                         "Metric": r["summary"]["metric"],
                         "Difference": r["summary"]["difference"],
+                        "Changed parameters": "; ".join(
+                            f"{k.replace('_', ' ')}={v}"
+                            for k, v in r.get("treatment", {}).items()
+                            if v != plan.get("baseline", {}).get(k)
+                        ),
                         "Decision": r.get("next_decision", {}).get("action", "Pending"),
                     }
                     for r in earlier
@@ -224,3 +259,31 @@ def final_experiment(report):
     if report.get("final_experiment", last["round"]) != last["round"]:
         return None
     return last
+
+
+def render_scenario_comparison(plan, treatment, process):
+    baseline = plan.get("baseline", {})
+    comparison = plan.get("comparison") or {}
+    ui.markdown("**How the scenarios differ**")
+    if comparison:
+        ui.write(comparison["difference"])
+        ui.caption("Held constant: " + comparison["held_constant"])
+    changed = [
+        {
+            "Parameter": key.replace("_", " "),
+            "Baseline": json.dumps(baseline.get(key), ensure_ascii=False),
+            "Proposed": json.dumps(value, ensure_ascii=False),
+        }
+        for key, value in treatment.items()
+        if value != baseline.get(key)
+    ]
+    if changed:
+        ui.dataframe(changed, hide_index=True, alt="Actual changed simulation parameters")
+    times = process["times"]
+    ui.caption(
+        f"Recorded range · {process['timeline_label']}: {times[0]:g} to {times[-1]:g} · "
+        f"{len(times)} computed frames. Press Play or move the slider to inspect the sweep."
+    )
+    if plan.get("history_difference"):
+        with ui.expander("Why this experiment was selected"):
+            ui.write(plan["history_difference"])

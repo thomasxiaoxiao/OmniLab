@@ -1,0 +1,115 @@
+{
+  "run_id": "20261004T085900Z-demo-percolation",
+  "source_run": "output/research/20261004T085900Z-demo-percolation",
+  "renderer": "scripts/render_percolation_highlight.py",
+  "renderer_sha256": "160d7c04c74cb1275c0b0a69cf0cedf330a9c90c35c895cd35403d0c231ce85e",
+  "pillow_version": "12.3.0",
+  "selection": "First preregistered paired seed. Every other trial remains in the raw results.",
+  "scene_inputs": [
+    {
+      "artifact": "rounds/03/trials.json",
+      "seed": 20264030
+    }
+  ],
+  "frame_values": [
+    0.0,
+    0.05,
+    0.1,
+    0.15,
+    0.2,
+    0.25,
+    0.3,
+    0.35,
+    0.4,
+    0.45,
+    0.5,
+    0.55,
+    0.6,
+    0.65,
+    0.7,
+    0.75,
+    0.8,
+    0.85,
+    0.9,
+    0.95,
+    1.0
+  ],
+  "poster_frame_value": 0.75,
+  "limitations": "Recorded simulation states, not physical motion or independent validation. The poster is p=0.75 for the first paired seed; it is not an aggregate result. The GIF displays every recorded frame without interpolation. The initial direction is recorded as user_suggestion; agents implement and extend it.",
+  "input_sha256": {
+    "manifest.json": "88b94439c265eb9274b87b8ce20b39151691b2d5db352dd0efec1fce5fac0e0d",
+    "comparison/process.json": "69b5429207165d6388264ac0db5012cd270d6c1580e75b8e95d6da535eef40b0",
+    "report.json": "2148b715acff69c0ee7070247fb848b06b9242aeb2b62972b312bcf883752a9a",
+    "code/experiment.py": "ed8093506fa6f03ffc27534c34d2cc4ea1c639eff31f4584ccdb4e85f5792843",
+    "rounds/03/trials.json": "10ab72bc9fe3d7c61f2d73cf91bf1d0742e80a0190104eec48f10ae2bdf33111"
+  },
+  "figure_sha256": {
+    "percolation-exploration.gif": "9a373580d7d20fc803b2daaf11fb62caa83312ce0757791b15bc8fc543801596",
+    "percolation-exploration.png": "1caad4f3a650eba736d597129cd3f2e42792b1d29f774d86b57ae74b20c0202f"
+  },
+  "rounds": [
+    {
+      "round": 1,
+      "summary": {
+        "control_mean": 0.31730143229166663,
+        "difference": -0.004080636160714288,
+        "interval": [
+          -0.025460460955319338,
+          0.017299188633890763
+        ],
+        "interval_method": "Paired-seed Student t interval, 95%; exploratory, no sequential or multiple-testing correction.",
+        "meaningful_difference": 0.02,
+        "metric": "Mean full-sweep largest-SCC fraction",
+        "proposed_mean": 0.31322079613095233,
+        "replay_passed": true,
+        "samples_per_arm": 4,
+        "sanity_passed": true,
+        "units": "dimensionless"
+      },
+      "action": "precision",
+      "next_experiment": "Run eight fresh paired realizations with unchanged arms to improve precision of the full-sweep contrast."
+    },
+    {
+      "round": 2,
+      "summary": {
+        "control_mean": 0.3039463588169643,
+        "difference": 0.011090959821428575,
+        "interval": [
+          0.0008968646414814051,
+          0.021285055001375744
+        ],
+        "interval_method": "Paired-seed Student t interval, 95%; exploratory, no sequential or multiple-testing correction.",
+        "meaningful_difference": 0.02,
+        "metric": "Mean full-sweep largest-SCC fraction",
+        "proposed_mean": 0.3150373186383929,
+        "replay_passed": true,
+        "samples_per_arm": 8,
+        "sanity_passed": true,
+        "units": "dimensionless"
+      },
+      "action": "followup",
+      "next_experiment": "Test direction probability 0.75 against alternating streets using eight fresh pairs, retaining the grid, sizes and endpoint."
+    },
+    {
+      "round": 3,
+      "summary": {
+        "control_mean": 0.31029692150297616,
+        "difference": 0.003749302455357144,
+        "interval": [
+          -0.006001451482727342,
+          0.01350005639344163
+        ],
+        "interval_method": "Paired-seed Student t interval, 95%; exploratory, no sequential or multiple-testing correction.",
+        "meaningful_difference": 0.02,
+        "metric": "Mean full-sweep largest-SCC fraction",
+        "proposed_mean": 0.31404622395833337,
+        "replay_passed": true,
+        "samples_per_arm": 8,
+        "sanity_passed": true,
+        "units": "dimensionless"
+      },
+      "action": "stop",
+      "next_experiment": "Later, directly pair random streets at direction probabilities 0.75 and 0.5, retaining sizes, grid and endpoint."
+    }
+  ]
+}

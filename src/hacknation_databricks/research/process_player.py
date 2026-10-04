@@ -14,7 +14,6 @@ let index = 0, timer = null;
 const slider = root.querySelector('input');
 const play = root.querySelector('[data-play]');
 const step = root.querySelector('[data-step]');
-const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 root.querySelector('h1').textContent = data.title;
 root.querySelector('[data-description]').textContent = data.description;
 root.querySelector('[data-selection]').textContent = data.selection;
@@ -94,7 +93,7 @@ function pause() {
 function start() {
   if(index===data.times.length-1) index=0;
   play.textContent='Pause';render();
-  timer=setInterval(()=>{index++;render();if(index===data.times.length-1)pause();},160);
+  timer=setInterval(()=>{index++;render();if(index===data.times.length-1)pause();},500);
 }
 play.addEventListener('click',()=>timer ? pause() : start());
 root.querySelector('[data-reset]').addEventListener('click',()=>{pause();index=0;render();play.textContent='Play';});
@@ -108,7 +107,7 @@ const sizeObserver=new ResizeObserver(()=>{
 });
 sizeObserver.observe(root);
 window.addEventListener('pagehide',()=>sizeObserver.disconnect());
-render();if(!reduced)start();
+render();
 """
 
 

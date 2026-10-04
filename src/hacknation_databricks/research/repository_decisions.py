@@ -10,8 +10,8 @@ from .repository_models import RepositoryDecision
 QUESTION = "Which next action is justified by these measurements, limitations and remaining budget?"
 
 
-def decision_state(plan, treatment, summary, assessment, remaining):
-    return {
+def decision_state(plan, treatment, summary, assessment, remaining, *, diagnostics=None):
+    state = {
         "evidence_scope": "Current round measurements and researcher interpretation; no code or "
         "earlier raw trials are supplied to this closed-option evaluator.",
         "hypothesis": plan.hypothesis,
@@ -27,6 +27,34 @@ def decision_state(plan, treatment, summary, assessment, remaining):
         "Stop for exhausted budget, unresolvable uncertainty or a flawed experiment. "
         "Option weights are uncalibrated, not probabilities of scientific truth.",
     }
+    if "precision_replicates" in remaining:
+        state["policy"] += (
+            " Precision repeats the same arms with the preregistered larger paired-seed count "
+            "and fresh seeds; it can resolve sampling uncertainty without changing the metric."
+        )
+    if plan.learning_design is not None:
+        state["learning_design"] = plan.learning_design.model_dump()
+        if diagnostics is not None:
+            state["learning_design"]["followups"] = [
+                {"question": f.question, "expected_learning": f.expected_learning}
+                for f in plan.learning_design.followups
+            ]
+        state["policy"] += (
+            " Consider the planned follow-ups when they resolve an unanswered question. "
+            "A routine bounded simulation needs no further human approval. Do not repeat a "
+            "solved identity or increase replication when seeds add no scientific information."
+        )
+    if diagnostics is not None:
+        state["researcher_diagnostics"] = {
+            "artifact": diagnostics["artifact"],
+            "sha256": hashlib.sha256(canonical(diagnostics).encode()).hexdigest(),
+            "trial_count": len(diagnostics["trials"]),
+            "omitted_field_count": sum(t["omitted_field_count"] for t in diagnostics["trials"]),
+            "scope": "The researcher received measured per-trial diagnostics under a bounded "
+            "projection, archived with this hash. This evaluator receives the researcher's "
+            "assessment, not the full diagnostics. Do not assume unreported quality gates passed.",
+        }
+    return state
 
 
 def decision_options(state):
@@ -44,6 +72,17 @@ def decision_options(state):
         budget = state["remaining_budget"]
         if budget["rounds"] > 0 and budget["simulations"] >= budget["jobs_per_round"]:
             options["followup"] = assessment.model_dump()
+    if assessment.action == "precision":
+        if treatment is not None:
+            raise ValueError("Precision must preserve both arms; next_treatment must be null")
+        budget = state["remaining_budget"]
+        n = budget.get("precision_replicates", 0)
+        if (
+            n > budget.get("current_replicates", n)
+            and budget["rounds"] > 0
+            and budget["simulations"] >= 2 * n + 2
+        ):
+            options["precision"] = assessment.model_dump()
     options["stop"] = {
         **assessment.model_dump(),
         "action": "stop",
@@ -53,13 +92,21 @@ def decision_options(state):
         else "Stop this run and review the retained measurements and proposed follow-up before "
         "starting another bounded experiment.",
     }
+    if "learning_design" in state and assessment.action != "stop":
+        options["stop"]["next_experiment"] = (
+            "Stop and review the measurements before the proposed follow-up."
+        )
     # Keep an explicit evidence-review choice when no executable follow-up is available.
-    if not options.get("followup"):
+    if not options.get("followup") and not options.get("precision"):
         options["review"] = {
             **options["stop"],
             "next_experiment": "Stop for independent review of the evidence, assumptions and "
             "implementation before authorizing a new experiment.",
         }
+        if "learning_design" in state:
+            options["review"]["next_experiment"] = (
+                "Review the evidence and assumptions before another experiment."
+            )
     return options
 
 

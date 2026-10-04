@@ -47,6 +47,12 @@ def agent_process(result, plan, *, provenance, artifact):
             min(s["bounds"][2] for s in scenes),
             max(s["bounds"][3] for s in scenes),
         ]
+        labels = ("Control", "Proposed")
+        if getattr(plan, "comparison", None):
+            labels = (
+                "Baseline · " + plan.comparison.baseline_label,
+                "Proposed · " + plan.comparison.proposed_label,
+            )
         worlds = {
             name: {
                 "label": label,
@@ -54,9 +60,7 @@ def agent_process(result, plan, *, provenance, artifact):
                 "geometry": scene["geometry"],
                 "frames": scene["frames"],
             }
-            for name, label, scene in zip(
-                ("original", "proposed"), ("Control", "Proposed"), scenes, strict=True
-            )
+            for name, label, scene in zip(("original", "proposed"), labels, scenes, strict=True)
         }
         process = checked_process(
             {

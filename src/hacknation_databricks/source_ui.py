@@ -12,6 +12,67 @@ from hacknation_databricks.tracking import load_journal
 from hacknation_databricks.web import components as ui
 
 
+def render_paper_selection() -> Path | None:
+    """Offer examples or direct intake, never auto-select an old uploaded paper."""
+    from hacknation_databricks.source_cache import source_library
+    from hacknation_databricks.tracking_ui import (
+        available_sources,
+        scope_runs_to_source,
+        seed_examples,
+        switch_paper_collection,
+    )
+
+    _, issues = source_library(source_root())
+    for issue in issues:
+        ui.warning(issue)
+    examples = seed_examples()
+    all_sources = available_sources()
+    ui.caption("Choose an example paper or add your own.")
+    collection = ui.segmented_control(
+        "Paper collection",
+        ["Example papers", "Your papers"],
+        default="Example papers" if examples else "Your papers",
+        key="paper_collection",
+        on_change=switch_paper_collection,
+    )
+    # Imports may select an existing example by content hash. Keep feedback visible
+    # even when successful intake moves the user out of the custom-paper collection.
+    render_intake_messages()
+    sources = (
+        examples
+        if collection == "Example papers"
+        else {label: path for label, path in all_sources.items() if label not in examples}
+    )
+    if collection == "Your papers":
+        selected = ui.session_state.get("uploaded_paper_source")
+        selected = selected if selected in sources else None
+        ui.session_state["paper_source"] = selected
+        render_sources(show_messages=False)
+        if selected:
+            ui.caption(f"Ready to use: {selected.rsplit(' · ', 1)[0]}")
+    else:
+        if ui.session_state.get("paper_source") not in sources:
+            remembered = ui.session_state.get("paper_selections", {}).get(collection)
+            ui.session_state["paper_source"] = (
+                remembered if remembered in sources else next(iter(sources), None)
+            )
+        selected = None
+        if sources:
+            selected = ui.selectbox(
+                "Paper", list(sources), key="paper_source", on_change=scope_runs_to_source
+            )
+            ui.session_state.setdefault("paper_selections", {})[collection] = selected
+        else:
+            ui.info("No example papers are available. Open Your papers to add a source.")
+    source = sources.get(selected)
+    if source:
+        ui.session_state["selected_seed_path"] = str(source.resolve())
+    else:
+        ui.session_state.pop("selected_seed_path", None)
+        ui.session_state.pop("source_scope_sha256", None)
+    return source
+
+
 def render_source_progress() -> None:
     """Show progress only when the run's seed bytes match the prepared source."""
     from hacknation_databricks.activity_ui import render_activity
@@ -47,27 +108,32 @@ def render_source_progress() -> None:
         render_activity(journal)
 
 
-def render_sources() -> None:
-    ui.caption(
-        "Drag and drop a paper to add it to Your papers. "
-        "Originals and provenance stay with its run."
-    )
+def render_intake_messages() -> None:
     for level, message in ui.session_state.pop("intake_messages", []):
         getattr(ui, level)(message)
-    upload, arxiv = ui.tabs(["Upload documents", "Import from arXiv"])
+
+
+def render_sources(*, show_messages: bool = True) -> None:
+    ui.caption(
+        "Upload a PDF or Markdown document, or import a paper from arXiv. "
+        "Your original document and source details are preserved."
+    )
+    if show_messages:
+        render_intake_messages()
+    upload, arxiv = ui.tabs(["Upload paper", "Import from arXiv"])
     with upload:
         with ui.form("source_upload", clear_on_submit=True):
-            files = ui.file_uploader(
+            file = ui.file_uploader(
                 "PDF or Markdown",
                 type=["pdf", "md"],
-                accept_multiple_files=True,
+                accept_multiple_files=False,
                 max_upload_size=10,
             )
             ui.caption("10 MiB per file · up to 100 PDF pages · text-based PDFs and UTF-8 Markdown")
-            submitted = ui.form_submit_button("Add files to library", width="stretch")
+            submitted = ui.form_submit_button("Use uploaded paper", width="stretch")
         if submitted:
             messages = []
-            for file in files or []:
+            if file is not None:
                 try:
                     item = register_upload(file.name, file.getvalue(), source_root())
                     ui.session_state["intake_selected"] = str(Path(item.path).resolve())
@@ -85,7 +151,7 @@ def render_sources() -> None:
                         )
                     )
             ui.session_state["intake_messages"] = messages or [
-                ("warning", "Choose files to add first.")
+                ("warning", "Choose a paper to upload first.")
             ]
             ui.rerun()
     with arxiv:

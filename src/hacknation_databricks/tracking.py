@@ -26,6 +26,7 @@ from hacknation_databricks.research.sources import Source, check_evidence
 
 POLICY_VERSION = "decision-ledger-v1"
 MAX_ARTIFACT_BYTES = 20 * 1024 * 1024
+MAX_ARTIFACT_DOWNLOAD_BYTES = 128 * 1024 * 1024
 
 
 @dataclass(frozen=True)
@@ -256,10 +257,10 @@ def artifact_path(directory: Path, name: str) -> Path:
     return path
 
 
-def read_artifact(directory: Path, name: str) -> bytes:
+def read_artifact(directory: Path, name: str, *, max_bytes: int = MAX_ARTIFACT_BYTES) -> bytes:
     path = artifact_path(directory, name)
-    if path.stat().st_size > MAX_ARTIFACT_BYTES:
-        raise ValueError("Artifact exceeds the viewer's 20 MiB limit")
+    if path.stat().st_size > max_bytes:
+        raise ValueError(f"Artifact exceeds the viewer's {max_bytes // (1024 * 1024)} MiB limit")
     return path.read_bytes()
 
 

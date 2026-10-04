@@ -39,7 +39,7 @@ def test_source_form_import_updates_library_and_selected_seed(tmp_path, monkeypa
     assert links == ["https://arxiv.org/abs/2607.24975v1"]
     assert any("Ready:" in s.value for s in app.success)
     assert app.session_state["selected_seed_path"] == str(Path(imported.path).resolve())
-    assert sum(s.label == "Paper" for s in app.selectbox) == 1
+    assert not any(s.label == "Paper" for s in app.selectbox)
     assert not any(e.label == "Extracted text & provenance" for e in app.expander)
     assert not any(s.label == "Related literature" for s in app.multiselect)
     assert not any(h.value == "Prepare a discovery run" for h in app.subheader)
@@ -77,8 +77,8 @@ def test_uploaded_sources_launch_with_original_identity_and_literature(tmp_path,
     )
     app = ViewTest.from_file(str(TRACKING)).run()
     app.switch_page("app_pages/sources.py").run()
-    picker = next(s for s in app.selectbox if s.label == "Paper")
-    picker.select(next(s for s in picker.options if "seed.md" in s)).run()
+    app.session_state["intake_selected"] = seed.path
+    app.run()
     assert not any(s.label == "Related literature" for s in app.multiselect)
     tracking_ui.launch_run(
         Path(seed.path), "Quick verification", "anyjev", lambda _: None, [Path(related.path)]
@@ -346,6 +346,9 @@ def test_uploading_a_seed_copy_selects_its_single_existing_entry(tmp_path, monke
     imported = register_upload("copy.md", examples["AstroSat"].read_bytes(), root)
     monkeypatch.setattr(source_ui, "register_arxiv", lambda *_: imported)
     app = ViewTest.from_file(str(TRACKING)).run()
+    next(s for s in app.segmented_control if s.label == "Paper collection").select(
+        "Your papers"
+    ).run()
     next(t for t in app.text_input if t.label == "arXiv link or identifier").set_value(
         "2111.11268v1"
     )
@@ -353,6 +356,8 @@ def test_uploading_a_seed_copy_selects_its_single_existing_entry(tmp_path, monke
     picker = next(s for s in app.selectbox if s.label == "Paper")
     assert picker.options == ["Percolation", "AstroSat"]
     assert app.session_state["selected_seed_path"] == str(examples["AstroSat"])
+    assert any("Ready:" in s.value for s in app.success)
+    assert not app.file_uploader
     assert not app.exception
 
 
@@ -376,12 +381,75 @@ def test_example_picker_excludes_pcbi_and_sulzer_and_preserves_uploads(tmp_path,
     next(s for s in app.segmented_control if s.label == "Paper collection").select(
         "Your papers"
     ).run()
-    uploads = next(s for s in app.selectbox if s.label == "Paper").options
-    assert len(uploads) == 2
-    assert all(any(name in title for title in uploads) for name in ["pcbi", "Sulzer"])
+    assert not any(s.label == "Paper" for s in app.selectbox)
+    assert not app.session_state.get("selected_seed_path")
+    assert len(app.file_uploader) == 1
+    assert not any(e.label == "Add another paper" for e in app.expander)
+    assert next(b for b in app.button if b.label == "Start bounded run").node["disabled"]
     next(s for s in app.segmented_control if s.label == "Paper collection").select(
         "Example papers"
     ).run()
     assert next(s for s in app.selectbox if s.label == "Paper").options == list(examples)
     assert app.session_state["selected_seed_path"] == str(examples["Percolation"])
     assert len(list(root.glob("*/source.md"))) == 2
+
+
+def test_paper_collections_remember_selection_and_keep_intake_with_your_papers(
+    tmp_path, monkeypatch
+):
+    from hacknation_databricks import tracking_ui
+
+    root = tmp_path / "sources"
+    monkeypatch.setenv("RESEARCH_SOURCES_DIR", str(root))
+    examples = {}
+    for name in ["Percolation", "AstroSat"]:
+        path = tmp_path / f"{name}.md"
+        path.write_text(f"{name} evidence.")
+        examples[name] = path
+    monkeypatch.setattr(tracking_ui, "seed_examples", lambda: examples)
+    imported = register_upload("new.md", b"Evidence for a newly uploaded paper.", root)
+    app = ViewTest.from_file(str(TRACKING)).run()
+    assert not app.file_uploader
+    next(s for s in app.selectbox if s.label == "Paper").select("AstroSat").run()
+    next(s for s in app.segmented_control if s.label == "Paper collection").select(
+        "Your papers"
+    ).run()
+    assert not app.session_state.get("selected_seed_path")
+    app.session_state["intake_selected"] = imported.path
+    app.run()
+    custom_path = app.session_state["selected_seed_path"]
+    custom_scope = app.session_state["source_scope_sha256"]
+    assert not any(s.label == "Paper" for s in app.selectbox)
+    assert not any(e.label == "Add another paper" for e in app.expander)
+    assert len(app.file_uploader) == 1
+    next(s for s in app.segmented_control if s.label == "Paper collection").select(
+        "Example papers"
+    ).run()
+    assert app.session_state["selected_seed_path"] == str(examples["AstroSat"])
+    assert not app.file_uploader
+    next(s for s in app.segmented_control if s.label == "Paper collection").select(
+        "Your papers"
+    ).run()
+    assert app.session_state["selected_seed_path"] == custom_path
+    assert app.session_state["source_scope_sha256"] == custom_scope
+    assert not app.exception
+
+
+def test_empty_paper_collection_clears_selection_and_blocks_launch(tmp_path, monkeypatch):
+    from hacknation_databricks import tracking_ui
+
+    monkeypatch.setenv("RESEARCH_SOURCES_DIR", str(tmp_path / "sources"))
+    paper = tmp_path / "example.md"
+    paper.write_text("Example source evidence.")
+    monkeypatch.setattr(tracking_ui, "seed_examples", lambda: {"Example": paper})
+    app = ViewTest.from_file(str(TRACKING)).run()
+    assert app.session_state["selected_seed_path"] == str(paper)
+    next(s for s in app.segmented_control if s.label == "Paper collection").select(
+        "Your papers"
+    ).run()
+    assert app.session_state.get("selected_seed_path") is None
+    assert app.session_state.get("source_scope_sha256") is None
+    assert not any(s.label == "Paper" for s in app.selectbox)
+    assert len(app.file_uploader) == 1
+    assert next(b for b in app.button if b.label == "Start bounded run").node["disabled"]
+    assert not app.exception

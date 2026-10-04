@@ -1,3 +1,299 @@
+# README purpose and percolation demo refactor verified
+
+Updated October 04, 2026, 03:43 PDT. Active task: publish the requested README refactor.
+Original event time remaining: zero; renewed documentation/publication request.
+Next: push the documentation commit to the existing draft PR and inspect its CI.
+No local validation blocker. Merging the draft PR into main remains a separate step.
+
+- Replaced the long README with the project purpose, human validation bottleneck,
+  grounding and control for AI scientists, and Omnigent's concrete orchestration role.
+- Kept the recorded 21-frame percolation animation and linked it to the verified
+  public interactive player. The demo remains read-only; no research was started.
+- Preserved the measured outcome, result-driven follow-ups, exploratory uncertainty,
+  setup commands and links to detailed execution and deployment documentation.
+- Validation: `npm run check` passed against the unchanged application revision:
+  frontend types/format/build, Ruff, 317 tests, 8 optional sandbox tests skipped,
+  and process configuration syntax. No application code changed in this commit.
+- GitHub Markdown rendering preserves the linked GIF and setup disclosure; all
+  14 local README links resolve. Figure/renderer/source hashes and the retained
+  run verify; numerical claims match provenance. Public player shows the saved
+  final comparison, 21 frames and disabled execution.
+- Scientific conclusions remain unchanged: no full-paper reproduction, established
+  novelty, independent scientific validation or measured acceleration multiplier.
+  Independent scientific validation is still required before real-world use.
+- Work is isolated from the primary checkout's unrelated deployment documentation.
+
+---
+
+# Final publication candidate verified
+
+Updated October 04, 2026, 02:37 PDT. Active task: push the user's final local version through the
+repository's feature-branch/PR workflow. Original event time remaining: zero;
+renewed publication request. Branch: codex/final-percolation-exploration.
+Next: publish the commit and draft PR, then inspect CI for that commit. No blocker.
+
+- Full `npm run check` passed: frontend types/format/build, Python lint/format,
+  317 tests, and process configuration syntax. The eight opt-in OS sandbox tests
+  were then enabled and all passed separately: 325 passing tests across both checks.
+- README figure and renderer hashes match the committed provenance. JSON artifacts
+  parse, local documentation links resolve, and diff whitespace checks pass.
+- Publication includes the current direct paper intake, measured feasibility/repair
+  loop, precision continuation, diagnostic handoffs, same-paper exploration history,
+  sweep contracts, saved-artifact fixes, regression coverage and percolation README.
+  Private runtime/authentication state and local full research runs remain ignored.
+- The separately started Sulzer run is outside this publication change. No new
+  scientific conclusion or completed research run is claimed by these code checks.
+  Scientific limits and independent validation requirements remain as recorded below.
+
+---
+
+# Replit release upload and configuration in progress
+
+Updated October 04, 2026, 02:37 PDT. Active task: deploy the latest working-tree
+snapshot and saved Percolation demonstration to the existing Replit app. This is
+an explicitly renewed post-event deployment request; original event time remaining: zero.
+The user confirmed Public visibility and requested no research-agent execution.
+
+- Verified retained Percolation archive: all integrity checks pass. The immutable
+  manifest is 88b94439c265eb9274b87b8ce20b39151691b2d5db352dd0efec1fce5fac0e0d.
+- Uploaded a 407-file snapshot including the current source, seed papers, and all
+  three saved Percolation comparisons. Bundle and checksums are retained under
+  output/replit-deployment. Credentials, model weights, dependencies, historical
+  test kernels, unrelated runs and the active local Sulzer run are excluded.
+- Local production frontend build and 27 targeted offline tests pass. No research
+  model calls or new simulations were started by this deployment task.
+- Replit is applying the snapshot and configuring all specialists, including the
+  evaluator, for managed API access through Omnigent, with execution disabled.
+  This hosted configuration must remain distinct from saved AnyJev provenance.
+- Next: verify the prepared Replit preview, republish, and verify public viewing,
+  provider configuration and disabled launch. No new deployment is claimed yet.
+
+---
+
+# Percolation highlight and README summary complete
+
+Updated October 04, 2026, 02:33 PDT. Active task: requested README and saved-run cleanup complete.
+Original event time remaining: zero; this is the user's renewed documentation task.
+Next: review README.md and the embedded recorded percolation sweep. No blocker.
+
+- Retained `20261004T085900Z-demo-percolation` as the only pre-existing exploration
+  run. Moved the older Percolation and AstroSat runs unchanged into
+  `output/archived-research/20261004T092925Z-percolation-only/`.
+  Every file hash matches before/after; docs/exploration-retention.json records
+  both destinations. Earlier checkpoints below retain their historical locations.
+- A new Sulzer run, `20261004T093126-1f75c0c8`, started after cleanup at 02:31 PDT.
+  It remains active and untouched. Browser verification showed exactly that new
+  run and the retained Percolation run in the exploration selector.
+- README now leads with the human validation bottleneck, paper-grounded directions,
+  executable evidence and AnyJev's bounded decision-only role. Existing operational
+  detail remains available in a disclosure below the summary.
+- Added a 21-frame GIF, static PNG and source/output checksums under docs/assets.
+  The export draws the final experiment's recorded states without model calls,
+  new simulations, interpolation or selection of favorable seeds. A reusable export
+  script is at scripts/render_percolation_highlight.py. Updated the historical
+  two-paper demo with the archive locations.
+- Verification: retained-run `research verify` passed; all provenance and figure
+  hashes match; GIF frame count and local documentation links pass; scoped Ruff,
+  formatting and diff checks pass. Visually inspected the static figure.
+- Scientific conclusions are unchanged: small computational experiments, exploratory
+  intervals, no full paper reproduction, established novelty or acceleration multiplier.
+  Domain review and independent validation remain necessary before real-world use.
+
+---
+
+# Two-paper demonstration and saved-artifact repair verified
+
+Updated October 04, 2026, 02:14 PDT. Renewed post-event task complete locally.
+Original event time remaining: zero. Next: review http://127.0.0.1:8000/overview
+using the two-paper demo below. No blocker. No push, public deployment or submission.
+
+- Fresh Percolation and AstroSat runs each completed three comparisons through live
+  Omnigent specialists and AnyJev decisions: 17 specialist calls, six evaluations,
+  84 simulation jobs including eight initial pilot jobs. All six comparisons
+  independently replayed exactly, including scenes, with zero model calls.
+- Percolation now computes 21 samples from p=0 to p=1. Its old p=0.60–0.80 plan,
+  followed by five-frame autoplay, caused the apparent cutoff. The player now
+  starts paused, labels the actual range and names both methods. The UI states
+  the changed mechanism and actual parameters beside each comparison.
+- Percolation ran four fair-street pairs, eight fresh precision pairs, then eight
+  pairs with direction probability 0.75. Final means: 0.310297 versus 0.314046;
+  exploratory difference interval [-0.006001, +0.013500] lies inside ±0.02.
+  This supports only the preregistered aggregate's exploratory equivalence, not
+  curve equivalence, threshold reproduction or a direct fair-versus-biased effect.
+- AstroSat selection previously lacked same-paper history. Reader, critic and
+  planner now receive hash-matched prior scenarios, including local archives;
+  exact repeats are rejected in new-direction mode and substantive overlap is
+  reviewed. This run selected cross-track-uncertainty screening, then executed
+  global 0.25 km, altitude-specific 0.25 km and altitude-specific 0.5 km padding.
+  Final missed crossings fell from 10.28% to zero under the assumed error bound,
+  adding 213.75 false alerts per seed on average. Containment explains recovery;
+  alert burden is the measured trade-off. The proposed next direct comparison is
+  concise, with no claim of real-world orbital performance.
+- Independent raw checks certified all 1,680 Percolation graph partitions and
+  13,932 AstroSat case pairs, including paired physical inputs, primary metrics,
+  and Percolation endpoints/monotonicity. Saved raw-download bytes match their seal.
+- A failed full-range Percolation attempt remains unchanged under
+  output/demo-validation/failed-runs: its sanity grid omitted p=0.55 and two code
+  repairs did not resolve it. The worker now identifies the failing arm/seed and
+  preserves completed partial trials. Corrected run uses all 21 sanity values.
+- Another saved-artifact regression was confirmed: the viewer quarantined valid
+  50 MB trial files using its 20 MiB preview cap. Integrity verification now streams
+  hashes independently of preview size. Large-artifact previews are omitted with
+  complete downloads available up to 128 MiB; raw downloads use exact sealed bytes.
+- Full checks passed: 325 tests, no skips, including real OS sandbox probes,
+  frontend/build/Ruff/process checks. Focused viewer/download checks passed after
+  the final inspector adjustment. Browser verified both results and Percolation
+  playback from p=0 to p=1. The local evaluation process was reloaded.
+- Original postevent-percolation-01 and previous failed/accepted archives remain
+  intact. Latest-only UI selection shows the two new paper results. Omnigent worker
+  models are unchanged; Astra extra-high applies only to this Codex chat.
+- Scientific limits: small synthetic tests, exploratory intervals and incomplete
+  domain/observational validation. No comparable manual baseline verifies a discovery
+  acceleration multiplier. Human review and independent validation precede real use.
+
+Demo: docs/two-paper-demo.md. Evidence: docs/two-paper-validation.json.
+Runs: output/research/20261004T085900Z-demo-percolation and
+output/research/20261004T084900Z-demo-astrosat.
+Validation logs, replays, raw checks and screenshots: output/demo-validation/.
+
+---
+
+# Your papers now opens direct upload
+
+Updated October 04, 2026, 02:03 PDT. User's correction supersedes the library-picker
+design below. Active task: complete. Original event time remaining: zero.
+Next: review http://127.0.0.1:8012; the main app still needs a safe restart after
+its active research work. No preview blocker.
+
+- Your papers has no Paper dropdown, saved-document list or Add another paper
+  disclosure. It opens single-paper upload directly, with arXiv import as an alternative.
+- Existing saved documents remain intact but are never automatically selected.
+  Only explicit upload/import prepares a custom source; the current source survives
+  navigation and collection changes. Example-paper selection and deduplication remain.
+- Browser verified the upload surface and disabled launch before intake.
+  72 relevant tests, frontend types/format/build, scoped Ruff/format and diff checks passed.
+- No research/model calls or new scientific claims were made; scientific limitations
+  and independent validation requirements remain unchanged.
+
+---
+
+# Your papers selector refactored
+
+Updated October 04, 2026, 01:57 PDT. Targeted post-event UI request complete locally.
+Active task: source selector verification complete. Original event time remaining:
+zero. Next: review the isolated preview at http://127.0.0.1:8012; load these Python
+changes into the port-8000 app after its active research run finishes. No blocker
+for preview; the active app was deliberately not restarted.
+
+- Upload/arXiv intake now belongs to Your papers. Empty libraries show intake
+  directly; saved libraries expose Add another paper below the paper selector.
+- Each collection restores its last selection. Empty collections clear stale
+  paper state and disable launch; content-identical seeds still select their
+  existing example, with import feedback visible outside the intake disclosure.
+- 64 relevant intake, HTTP, source-isolation and frontend-view tests passed;
+  scoped Ruff and format checks plus diff whitespace checks passed.
+- Browser verified the saved-paper picker, both intake tabs, collapsed controls
+  and selection restoration. No scientific runs, model calls or publication were
+  performed for this change; existing scientific validation limits still apply.
+- Separate ongoing demonstration work is recorded in the preserved checkpoint below.
+
+---
+
+# Two-paper demonstration repair in progress
+
+Updated October 04, 2026. Active task: add same-paper scenario history, explicit
+comparison labels and validated full-range sweeps; validate fresh Percolation and
+AstroSat runs for the final demo. Original event time remaining: zero; renewed
+post-event request. Percolation cutoff was its planned p=0.60–0.80 grid, amplified
+by five-frame autoplay. AstroSat selection lacked cross-run experiment history.
+Next: complete local checks before bounded live specialist calls. No model change,
+push or public deployment.
+
+---
+
+# Result cleanup and informative AstroSat experiments verified
+
+Updated October 04, 2026, 01:26 PDT. Requested post-event repair complete locally.
+Active task: complete. Next step: review http://127.0.0.1:8000/overview.
+Original event time remaining: zero. No push or public deployment was performed.
+
+- Only `20261004-postevent-percolation-01` remains in the visible results list.
+  Six other runs moved unchanged to `output/archived-research/20261004T080907Z-cleanup`;
+  their hashes and handoffs verify. `cleanup.json` records all retained locations.
+- The old AstroSat outcome was fixed by `-2.5*log10(q)`, with the proposed q derived
+  from its target. The planner treated a consistency check as the main experiment
+  and deferred the unresolved consequence outside its executable contract.
+- New plans must identify an unresolved outcome and complete parameter follow-ups;
+  declared verification-only primary endpoints receive bounded correction. Scientific
+  informativeness still requires specialist and independent domain judgment.
+- A second root cause was missing secondary measurements in the assessor's input.
+  The new bounded diagnostic handoff supplies each trial's small endpoints and
+  quality checks, explicitly discloses omissions, and is reconstructed by the audit.
+- Two fresh live AstroSat validations completed six comparisons: 17 Omnigent calls,
+  six AnyJev decisions, 84 simulation jobs including eight pilot jobs. Every comparison
+  independently replayed exactly. Both live manifests and handoffs verify.
+- The final three experiments changed adaptive search settings after each result.
+  Both arms retained timely transit recall. Adaptive evaluation counts changed from
+  10,313 to 5,602 to 3,937, versus baseline 4,008, 4,008 and 4,007 on fresh paired seeds.
+  The final 1.75% saving misses the preregistered 20% target; the hypothesis remains
+  unsupported. These are synthetic algorithm tests, not operational astronomy validation.
+- New “Next experiment” responses enforce one sentence, 20 words and 140 characters.
+  A live overlength response was rejected and corrected. Historical overview summaries
+  are shortened with their original text expandable; sealed records remain unchanged.
+- Full project checks: 315 passed, no skips, including real sandbox probes;
+  frontend/build/Ruff/process checks passed. Browser verified the single retained run
+  and concise summary display. The port-8000 PM2-managed local app loaded current files;
+  its displayed health revision still identifies the base Git commit.
+- Validation runs are outside the visible results root in `output/learning-validation/`.
+  Omnigent worker models are unchanged. No execution blocker remains. Independent
+  domain/data validation is needed before real-world use; novelty and any discovery
+  acceleration multiplier remain unverified.
+
+Evidence: `docs/learning-validation.json`.
+Full checks: `output/learning-validation/final-checks.log`.
+
+---
+
+# Baseline/proposed comparisons and live precision loop verified
+
+Updated October 04, 2026, 00:59 PDT. Requested post-event repair complete locally.
+Original event time remaining: zero; the user's renewed request authorized these
+explicitly bounded validation runs. Next step: review http://127.0.0.1:8000/overview.
+No execution blocker. No push, public deployment or submission was performed.
+
+- The old error messages belonged to preserved failed attempts. An expired global
+  deadline prevented new runs; execution failures lacked a code-repair path; and
+  the decision contract could not execute its already-planned precision test.
+- New runs enforce per-run budgets. Four sandbox feasibility jobs check control,
+  proposed, sanity and replay before the full batch. At most two code repairs receive
+  actual diagnostics, preserving the approved parameters and every failed artifact.
+- Three fresh live runs completed four baseline/proposed comparisons: 20 Omnigent
+  specialist calls, four AnyJev evaluations, 60 reserved/executed simulation jobs
+  including 12 pilot jobs. Every comparison produced a valid recorded scene.
+- AstroSat: 0.3872549 versus 1.3 mag dimming. This is a limited equation-consistency
+  check; it does not validate satellite forecasting or threshold classifications.
+- Final Percolation: the four-pair result triggered AnyJev-selected precision,
+  executing eight fresh pairs with both arms unchanged. Largest-SCC fractions were
+  0.3472595 versus 0.4811707; difference interval [-0.0231594, 0.2909817] remains
+  inconclusive. The agent stopped and proposed a larger prospectively budgeted test.
+- All four completed comparisons independently replayed exactly, with zero new
+  model calls. All new and original active archive hashes and handoffs verify.
+- Full project checks: 304 passed, no skips, including real sandbox tests;
+  frontend/build/Ruff/process checks passed. Final route-UI tests also passed.
+- Browser verified the numerical results, scenes and four-to-eight-pair continuation.
+  Local evaluation server was reloaded. Astra extra-high applies only to this
+  Codex chat; the Omnigent worker configuration was not changed.
+- These checks establish execution, provenance and scoped consistency, not full
+  reproduction, novelty or real-world validity. Independent domain validation is
+  still required. No comparable manual baseline exists for an acceleration claim.
+
+Evidence: `docs/comparison-loop-validation.json`.
+Final live run: `output/research/20261004-postevent-percolation-02`.
+AstroSat: `output/research/20261004-postevent-astrosat-01`.
+Replay and verification outputs: `output/comparison-validation/`.
+
+---
+
 # Consolidated evaluation updates
 
 Updated October 04, 2026, 00:33 PDT. This is the user's post-deadline request

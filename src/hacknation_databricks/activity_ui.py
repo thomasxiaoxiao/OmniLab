@@ -158,6 +158,21 @@ def render_artifacts(journal, artifacts):
 
 def render_simulation(journal, node):
     ui.caption("Experiment implementation bound to this run's source paper.")
+    if getattr(node, "stage", "").startswith("preflight/"):
+        prefix = node.stage.rsplit("/", 1)[0]
+        implementation = saved_json(journal, prefix + "/implementation.json")
+        manifest = saved_json(journal, "repository/manifest.json")
+        seed = next((s for s in journal.sources if s.get("source_id") == "seed"), {})
+        if not manifest or manifest.get("source_sha256") != seed.get("sha256"):
+            ui.error("Implementation source does not match this paper.")
+            return
+        ui.caption("Feasibility check only; this attempt is not an accepted research comparison.")
+        if implementation:
+            for key, language in [("python_code", "python"), ("c_code", "c")]:
+                if implementation.get(key):
+                    ui.code(implementation[key], language=language, height=360)
+        render_artifacts(journal, node.artifacts)
+        return
     manifest_name = (
         "code/provenance.json"
         if (journal.directory / "code/provenance.json").is_file()

@@ -2,11 +2,26 @@
 
 from typing import Literal
 
-from pydantic import BaseModel, ConfigDict, Field, field_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
 
 class Contract(BaseModel):
     model_config = ConfigDict(extra="forbid", strict=True)
+
+
+class ParameterSweep(Contract):
+    parameter: str = Field(min_length=1, max_length=80)
+    label: str = Field(min_length=1, max_length=100)
+    lower: float
+    upper: float
+
+    @model_validator(mode="after")
+    def ordered(self):
+        import math
+
+        if not all(math.isfinite(v) for v in (self.lower, self.upper)) or self.lower >= self.upper:
+            raise ValueError("Sweep endpoints must be finite and ordered")
+        return self
 
 
 class RunConfig(Contract):
@@ -16,7 +31,12 @@ class RunConfig(Contract):
     allow_paper_implementation: bool = False
     repository_ref: str = Field(default="HEAD", max_length=100)
     research_areas: list[str] = Field(default_factory=list, max_length=3)
+    exploration_mode: Literal["new_direction", "replicate"] = "new_direction"
+    history_roots: list[str] = Field(default_factory=lambda: ["output"], max_length=4)
+    required_sweep: ParameterSweep | None = None
     code_timeout_seconds: int = Field(default=60, ge=1, le=180)
+    max_code_repairs: int = Field(default=2, ge=0, le=2)
+    code_preflight_seconds: int = Field(default=15, ge=1, le=60)
     domain: Literal["auto", "percolation", "astrosat"] = "percolation"
     seed: int = Field(default=20261003, ge=0, le=2**32 - 1)
     sizes: list[int] = Field(default_factory=lambda: [16, 32], min_length=2, max_length=4)

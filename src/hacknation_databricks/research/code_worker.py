@@ -87,11 +87,25 @@ def main():
         trials = [None] * len(jobs)
         for index in order:
             job = jobs[index]
-            value = module.simulate(
-                job["parameters"], job["seed"], str(library) if library else None
-            )
-            # Snapshot mutable outputs; a later call must not change an earlier trial.
-            value = json.loads(json.dumps(value, allow_nan=False))
+            try:
+                value = module.simulate(
+                    job["parameters"], job["seed"], str(library) if library else None
+                )
+                # Snapshot mutable outputs; later calls must not change an earlier trial.
+                value = json.loads(json.dumps(value, allow_nan=False))
+            except Exception as exc:
+                exc.add_note(f"Failed simulation job {index}: arm={job['arm']}, seed={job['seed']}")
+                print(
+                    json.dumps(
+                        {
+                            "failed_job": {"index": index, "arm": job["arm"], "seed": job["seed"]},
+                            "partial_trials": [t for t in trials if t is not None],
+                        }
+                    ),
+                    file=sys.__stdout__,
+                    flush=True,
+                )
+                raise
             trials[index] = {**job, "output": value}
             if paired and index == replay and value != trials[control]["output"]:
                 print(

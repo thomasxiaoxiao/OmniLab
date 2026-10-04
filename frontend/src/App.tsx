@@ -221,6 +221,8 @@ export function App() {
     setBusy(true);
     inFlight.current = true;
     try {
+      if (!node.multiple && files.length > 1)
+        throw new Error("Choose one paper at a time.");
       const tokens: string[] = [];
       const names: { token: string; name: string }[] = [];
       for (const file of Array.from(files)) {
@@ -493,7 +495,11 @@ function Control({ node }: { node: ViewNode }) {
         >
           <Upload size={24} />
           <div>
-            <div>Drag and drop files here</div>
+            <div>
+              {node.multiple
+                ? "Drag and drop files here"
+                : "Drag and drop your paper here"}
+            </div>
             <small>Limit 10 MiB per file · PDF, MD</small>
           </div>
           <label className="button browse">
@@ -502,7 +508,7 @@ function Control({ node }: { node: ViewNode }) {
               id={node.widget}
               type="file"
               accept=".pdf,.md"
-              multiple
+              multiple={Boolean(node.multiple)}
               disabled={disabled}
               onChange={(e) => {
                 if (e.target.files) void upload(node, e.target.files);
