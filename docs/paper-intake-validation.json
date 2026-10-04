@@ -111,5 +111,11 @@
     "Valid uploads start the workflow, but unavailable inputs, rejected plans, failed checks or exhausted budgets may stop an experiment.",
     "This run stopped after its first evaluated experiment; a new measurement is not forced when no valid treatment-only follow-up is justified.",
     "No scientific novelty, observational accuracy or acceleration multiplier is established."
-  ]
+  ],
+  "integration": {
+    "pull_request": "https://github.com/thomasxiaoxiao/OmniLab/pull/7",
+    "merge_commit": "4f7e4359fe83c4408f3715c538436f9ba68d59e2",
+    "ci": "https://github.com/thomasxiaoxiao/OmniLab/actions/runs/37178304089",
+    "ci_result": "passed: 265 standard tests; four optional real sandbox checks passed separately"
+  }
 }

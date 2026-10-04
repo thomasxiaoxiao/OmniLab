@@ -1,8 +1,9 @@
 # Seed intake and full uploaded-paper launch verified
 
-Updated October 3, 2026, 21:53 PDT; about 2 hours 14 minutes to hard stop
-and 14 minutes to feature freeze. Implementation and live validation are complete;
-final GitHub integration and preview restart are next.
+Updated October 3, 2026, 21:56 PDT; about 2 hours 11 minutes to hard stop
+and 11 minutes to feature freeze. All requested changes and live validation are complete.
+PR #7 merged into main at 4f7e435 after CI passed. Test at http://127.0.0.1:8000.
+Next human step: review the two seed options, upload launch, and Discovery overview.
 
 - Seed paper contains only pinned Percolation and AstroSat examples. Uploaded and
   imported papers use a separate selector; selecting a valid upload enables launch.
@@ -17,9 +18,9 @@ final GitHub integration and preview restart are next.
 - The measured contrast was inconclusive (0.04260; exploratory 95% interval
   -0.08166 to 0.16686). The evaluator stopped and recommended more independent
   paired samples. This is a scoped implementation check, not full reproduction.
-- Build, TypeScript/Prettier, Ruff, 264 standard tests and 4 real sandbox checks
-  passed. An additional repository-link-clearing case passed afterward (265 total
-  standard cases). Existing AstroSat/percolation archives still verify.
+- GitHub CI passed build, TypeScript/Prettier, Ruff and 265 standard tests. All
+  4 optional real sandbox checks passed separately on this host. Existing AstroSat
+  and percolation archives still verify.
 - Discovery overview now explains what to watch: original/proposed trajectories,
   measured result, changed reasoning and the next test. Viewing uses saved evidence.
 - Evidence: docs/paper-intake-validation.json. No task blocker; independent scientific
