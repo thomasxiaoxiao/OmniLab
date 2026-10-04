@@ -50,8 +50,10 @@ drafts in a browser-view session. Separate tabs/views have independent state and
 revisions. Clients submit registered control IDs and typed values,
 not arbitrary session keys or file paths. Numeric limits, choices, disabled actions,
 source identity and artifact verification are checked in Python. Forms submit their
-fields together. Launch remains the existing Omnigent repository workflow and
-redirects to the preallocated run ID. Live views poll every five seconds; viewing
+fields together. Launch uses the Omnigent specialist workflow with either supplied repository code
+or an explicitly recorded paper-based implementation, and redirects to the
+preallocated run ID. Only the two pinned seed examples appear under Seed paper;
+uploads/imports have their own selector and can launch without a repository. Live views poll every five seconds; viewing
 artifacts makes no model calls.
 
 The local service uses port-specific HttpOnly, SameSite cookies, a per-view action

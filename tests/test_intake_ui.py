@@ -73,7 +73,7 @@ def test_uploaded_sources_launch_with_original_identity_and_literature(tmp_path,
     )
     app = ViewTest.from_file(str(TRACKING)).run()
     app.switch_page("app_pages/sources.py").run()
-    picker = next(s for s in app.selectbox if s.label == "Seed paper")
+    picker = next(s for s in app.selectbox if s.label == "Uploaded paper")
     picker.select(next(s for s in picker.options if "seed.md" in s)).run()
     assert not any(s.label == "Related literature" for s in app.multiselect)
     tracking_ui.launch_run(
@@ -279,3 +279,50 @@ def test_runtime_failure_is_distinct_from_unsupported_paper():
     assert "agent runtime" in app.warning[0].value
     assert app.expander[0].text[0].value == "ConnectError"
     assert not app.expander[0].expanded
+
+
+def test_seed_catalog_accepts_only_the_two_pinned_hashes(tmp_path, monkeypatch):
+    from hacknation_databricks import seed_catalog
+    from hacknation_databricks.research.sources import Source
+
+    monkeypatch.chdir(tmp_path)
+    sources = [
+        Source(
+            source_id="seed",
+            url="",
+            title=label,
+            path=str(tmp_path / name),
+            sha256=digest,
+            pages=["Paper text"],
+            kind="full_text",
+        )
+        for label, name, digest in seed_catalog.SEED_PAPERS
+    ]
+    # A matching title/filename is not sufficient to become a built-in seed.
+    from dataclasses import replace
+
+    sources.append(replace(sources[0], sha256="f" * 64, path="other.pdf"))
+    monkeypatch.setattr(seed_catalog, "source_library", lambda _: (sources, []))
+    examples = seed_catalog.seed_examples()
+    assert list(examples) == [row[0] for row in seed_catalog.SEED_PAPERS]
+    assert "other.pdf" not in {str(path) for path in examples.values()}
+
+
+def test_both_examples_enable_launch_without_a_repository(tmp_path, monkeypatch):
+    from hacknation_databricks import tracking_ui
+
+    monkeypatch.setenv("RESEARCH_SOURCES_DIR", str(tmp_path / "sources"))
+    examples = {}
+    for name in ["Percolation", "AstroSat"]:
+        path = tmp_path / (name + ".md")
+        path.write_text(f"{name} evidence without a code URL.")
+        examples[name] = path
+    monkeypatch.setattr(tracking_ui, "seed_examples", lambda: examples)
+    app = ViewTest.from_file(str(TRACKING)).run()
+    picker = next(s for s in app.selectbox if s.label == "Seed paper")
+    assert picker.options == ["Percolation", "AstroSat"]
+    for name in picker.options:
+        next(s for s in app.selectbox if s.label == "Seed paper").select(name).run()
+        assert not next(b for b in app.button if b.label == "Start bounded run").node["disabled"]
+        assert app.session_state["selected_seed_path"] == str(examples[name])
+    assert not app.exception

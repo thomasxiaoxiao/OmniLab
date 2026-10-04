@@ -17,9 +17,15 @@ brief. Omnigent must orchestrate the live discovery workflow; the earlier housin
 challenge requirements are superseded.
 
 New UI runs and unconfigured Omnigent CLI runs use the **repository workflow**.
-Supply the paper and its public GitHub repository (or use a link found in the
-paper). Omnigent specialists read the source, critique up to three directions,
-compare two tests, and generate Python/C that calls the pinned repository code.
+The built-in **Seed paper** menu contains only Percolation and AstroSat. Uploads
+and arXiv imports are selected separately under **Uploaded paper** and never expand
+that menu. In the UI, a validated paper is sufficient to enable **Start bounded run**;
+a public GitHub repository is optional. A unique paper link is prefilled. Omnigent
+specialists read the source, critique up to three directions,
+compare two tests, and generate Python/C from the paper or supplied pinned repository.
+Without a repository, the run explicitly records a new paper-based implementation;
+it never claims to have executed author code. A supplied repository that fails to
+load stops the run, without switching modes.
 The supervisor executes it in Omnigent's OS sandbox, validates a baseline sanity
 check and deterministic replay, and passes measured results to an evaluator that
 can change the next experiment's parameters. No preset scientific kernel is selected
@@ -52,8 +58,10 @@ and the [live validation record](docs/repository-execution-validation.json).
 ```
 
 The configured seed paper remains arXiv:2607.24975v1. Its extracted text has no
-GitHub URL, so repository execution requires an explicit code source. New papers
-are never silently mapped onto percolation or Astrosat demonstrations.
+GitHub URL. It can now launch from the UI as a paper-based implementation. CLI
+repository-only behavior remains compatible; set `allow_paper_implementation: true`
+in an explicit repository configuration to permit a paper-based implementation.
+New papers are never silently mapped onto percolation or AstroSat demonstrations.
 
 The following sections also document retained v3/v4 workflows and historical runs.
 Their fixed kernels and AnyJev decisions describe those explicit configurations.
@@ -343,13 +351,14 @@ Research source intake and all simulations can run independently of cloud setup.
 
 ## Source intake and agent visibility
 
-**Source intake** accepts saved papers, uploads and versioned arXiv inputs, plus a
-public GitHub repository and revision. New runs use separate Omnigent reader,
+**Source intake** offers exactly two pinned seed examples (Percolation and AstroSat).
+Uploaded and versioned arXiv papers live in a separate selector. The UI accepts an
+optional public GitHub repository and revision; a validated upload can start without one. New runs use separate Omnigent reader,
 critic/literature, planner, experimenter and evaluator sessions. Starting a run
 opens **Agents & execution loops** and follows that exact run.
 
-**Discovery overview** presents the recorded simulation first, followed by a plain
-result and next action. The former **Final synthesis** entry has been removed.
+**Discovery overview** explains what to watch before the recorded simulation,
+followed by the measured result, what changed, and the next action. The former **Final synthesis** entry has been removed.
 **Generated artifacts** retains the paper, pinned source archive, generated code,
 parameters, seeds, measurements, prompts and handoffs. Inspecting a saved run makes
 no model or experiment calls. Older sealed runs retain their original provenance

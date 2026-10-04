@@ -1,0 +1,115 @@
+{
+  "recorded_at": "2026-10-04T04:52:52.031178+00:00",
+  "task": "Limit built-in seeds, enable uploaded-paper workflow, explain Discovery overview",
+  "run": "output/research/20261004T044804-332ed05f",
+  "base_revision": "432c5d0a36e09a3aef12ac7eb78c440cefd741d3",
+  "code_sha256": "6e5d6eb0385b849c1ccd42e273b561b1a027b8aacd700b975caefb00a207645d",
+  "workspace_state": "Feature changes uncommitted during the run; exact code is in the sealed framework snapshot",
+  "http_validation": {
+    "seed_options": [
+      "Percolation \u00b7 arXiv:2607.24975v1",
+      "AstroSat \u00b7 arXiv:2111.11268v1"
+    ],
+    "uploaded_paper": "data/papers/2607.24975v1.pdf",
+    "repository_url": "",
+    "launch_enabled": true,
+    "redirect_page": "agents",
+    "limits": {
+      "Maximum experiments": 2,
+      "Maximum paired replicates": 8,
+      "Wall-clock limit (seconds)": 600,
+      "Agent request budget": 8,
+      "Simulation budget including replays": 1000
+    }
+  },
+  "live_validation": {
+    "status": "research_stopped",
+    "backend": "omnigent",
+    "code_origin": "paper_implementation",
+    "role_calls": 5,
+    "computed_simulations": 18,
+    "elapsed_seconds": 222.636,
+    "acceptance": {
+      "baseline_simulations": true,
+      "followup_implemented": true,
+      "full_paper_reproduction": false,
+      "live_agents_executed": true,
+      "simulated_world_comparison": true
+    },
+    "final_experiment": 1
+  },
+  "sessions": [
+    {
+      "role": "repository_reader",
+      "session_id": "20bee70cbd914819a3110b540afcf39a"
+    },
+    {
+      "role": "repository_critic",
+      "session_id": "d2f83192146c44f286d84e5392cff7f4"
+    },
+    {
+      "role": "repository_planner",
+      "session_id": "272e6f60be96474c91867c0ca47042e3"
+    },
+    {
+      "role": "repository_experimenter",
+      "session_id": "86d1f8ab559b460e9bc8aae13458dfc1"
+    },
+    {
+      "role": "repository_evaluator",
+      "session_id": "a73d4fac84c246e7bb99ac7743169e7a"
+    }
+  ],
+  "summary": {
+    "control_mean": 0.3898925781250001,
+    "difference": 0.04260253906249999,
+    "interval": [
+      -0.08165702517854789,
+      0.16686210330354787
+    ],
+    "interval_method": "Paired-seed Student t interval, 95%; exploratory, no sequential or multiple-testing correction.",
+    "meaningful_difference": 0.05,
+    "metric": "Mean largest-SCC fraction over occupation window",
+    "proposed_mean": 0.4324951171875001,
+    "replay_passed": true,
+    "samples_per_arm": 8,
+    "sanity_passed": true,
+    "units": "dimensionless fraction"
+  },
+  "next_decision": {
+    "action": "stop",
+    "limitations": [
+      "The Student t interval is exploratory, with no sequential or multiple-testing correction and only eight independent pairs.",
+      "The endpoint is normalized trapezoidal area of largest-SCC size divided by all L^2 sites over occupation probabilities 0.6\u20130.8; it does not measure onset, physical time or a critical threshold.",
+      "A positive integrated contrast does not establish pointwise ordering of the trajectories.",
+      "Sanity and replay pass flags are supplied by the supervisor; raw trajectories and detailed validation artifacts are not supplied here.",
+      "One finite lattice size cannot establish asymptotic scaling or universality.",
+      "Literature coverage is limited, and insufficient evidence exists for scientific novelty.",
+      "Directional bias was not tested, and this result provides no support for that secondary hypothesis.",
+      "Discovery acceleration and real-world validity have not been established."
+    ],
+    "next_experiment": "In a separately budgeted experiment, retain both L=16 arms and the same probability grid, and prespecify more independent seed pairs to narrow uncertainty.",
+    "next_treatment": null,
+    "rationale": "The treatment mean was 0.432495 and the control mean was 0.389893 across eight paired realizations; the difference interval was [-0.081657, 0.166862]. The point estimate falls below the prespecified meaningful difference, and the interval supports neither achievement nor exclusion of that target. Reported sanity and replay checks passed, supporting endpoint consistency and repeatability without validating every implementation detail. This result changes the decision from testing a predicted positive contrast to prioritizing greater precision for the existing comparison. With one round remaining, no supported treatment-only parameter change would resolve its sampling uncertainty while retaining the matched-size, shared-grid comparison and fixed baseline; changing size would confound lattice geometry with size. Stop this run and plan additional independent paired realizations. Source support supplied for the denominator is seed, page 2: \"Isolated sites are components of size 1.\"",
+    "result_interpretation": "The measured Manhattan-minus-L-lattice contrast was 0.0426, but its exploratory 95% paired interval spans zero and the 0.05 target, leaving the comparison inconclusive."
+  },
+  "verification": {
+    "artifact_failures": [],
+    "standard_tests": 265,
+    "optional_sandbox_tests_passed": 4,
+    "build_lint_typecheck_format": "passed",
+    "prior_astrosat_and_percolation_archives": "passed"
+  },
+  "replay": {
+    "new_model_calls": 0,
+    "round": 1,
+    "source_run": "output/research/20261004T044804-332ed05f",
+    "status": "matched"
+  },
+  "limitations": [
+    "Scientific result is inconclusive; this is workflow validation, not full paper reproduction.",
+    "Valid uploads start the workflow, but unavailable inputs, rejected plans, failed checks or exhausted budgets may stop an experiment.",
+    "This run stopped after its first evaluated experiment; a new measurement is not forced when no valid treatment-only follow-up is justified.",
+    "No scientific novelty, observational accuracy or acceleration multiplier is established."
+  ]
+}

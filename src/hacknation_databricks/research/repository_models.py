@@ -20,7 +20,7 @@ class RepositoryBrief(Contract):
     directions: list[RepositoryDirection] = Field(min_length=1, max_length=3)
     repository_fit: str = Field(min_length=10, max_length=2000)
     version_limitations: list[str] = Field(min_length=1, max_length=8)
-    repository_files: list[str] = Field(min_length=1, max_length=12)
+    repository_files: list[str] = Field(max_length=12)
 
 
 class RepositoryReview(Contract):
@@ -105,7 +105,7 @@ class RepositoryImplementation(Contract):
     c_code: str = Field(default="", max_length=16000)
     c_repository_files: list[str] = Field(default_factory=list, max_length=8)
     explanation: str = Field(min_length=10, max_length=4000)
-    repository_files: list[str] = Field(min_length=1, max_length=12)
+    repository_files: list[str] = Field(max_length=12)
 
 
 class RepositoryDecision(Contract):

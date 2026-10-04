@@ -48,7 +48,10 @@ def render_source_progress() -> None:
 
 
 def render_sources() -> None:
-    ui.caption("Add a seed paper. Originals and provenance stay with its run.")
+    ui.caption(
+        "Upload your own paper. It stays separate from the two seed examples; "
+        "originals and provenance stay with its run."
+    )
     for level, message in ui.session_state.pop("intake_messages", []):
         getattr(ui, level)(message)
     upload, arxiv = ui.tabs(["Upload documents", "Import from arXiv"])

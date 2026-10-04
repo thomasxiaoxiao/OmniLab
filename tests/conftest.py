@@ -14,3 +14,9 @@ def launch_source(monkeypatch, tmp_path):
         fixture_source().read_bytes() + b"\nCode: https://github.com/example/science\n",
         root,
     )
+
+
+@pytest.fixture(autouse=True)
+def isolate_seed_examples(monkeypatch):
+    # UI tests must not depend on ignored papers on the developer's machine.
+    monkeypatch.setattr("hacknation_databricks.tracking_ui.seed_examples", lambda: {})

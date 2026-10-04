@@ -96,7 +96,7 @@ def test_form_upload_preserves_original_bytes_and_clears_form(client, tmp_path):
     digest = hashlib.sha256(content).hexdigest()
     assert (tmp_path / "sources" / digest / "source.md").read_bytes() == content
     assert control(after, "PDF or Markdown")["value"] == []
-    assert digest[:8] in control(after, "Seed paper")["options"][0]
+    assert digest[:8] in control(after, "Uploaded paper")["options"][0]
 
 
 def test_uploads_are_session_scoped_and_type_size_bounded(client):
@@ -263,3 +263,48 @@ def test_tabs_sharing_a_cookie_have_independent_state_and_revisions(client):
         ).status_code
         == 403
     )
+
+
+def test_upload_without_code_enables_the_full_workflow_and_keeps_seed_menu(client, monkeypatch):
+    from hacknation_databricks import tracking_ui
+
+    submitted = []
+
+    class Executor:
+        def submit(self, fn, *args, **kwargs):
+            submitted.append((fn, args, kwargs))
+            return Future()
+
+    monkeypatch.setattr(tracking_ui, "background_executor", lambda: Executor())
+    view = client.get("/api/view").json()
+    seeds = control(view, "Seed paper")["options"]
+    content = b"Compare decay rates with a reproducible numerical model."
+    token = client.post(
+        "/api/upload",
+        params={"widget": control(view, "PDF or Markdown")["widget"], "name": "new-paper.md"},
+        content=content,
+        headers={"X-CSRF-Token": view["csrf"]},
+    ).json()["token"]
+    view = event(
+        client,
+        view,
+        values={control(view, "PDF or Markdown")["widget"]: [token]},
+        action=control(view, "Add files to library")["widget"],
+    ).json()
+    assert control(view, "Seed paper")["options"] == seeds
+    assert not control(view, "Start bounded run")["disabled"]
+    assert control(view, "Paper's GitHub repository (optional)")["value"] == ""
+    response = event(client, view, action=control(view, "Start bounded run")["widget"])
+    assert response.status_code == 200
+    assert response.json()["page"] == "agents"
+    fn, args, kwargs = submitted[0]
+    assert fn is tracking_ui.launch_run
+    assert args[0].read_bytes() == content
+    assert args[2] == "omnigent"
+    assert args[5]["workflow"] == "repository"
+    assert args[5]["allow_paper_implementation"] is True
+    assert args[5]["repository_url"] == ""
+    assert kwargs["run_name"]
+    # Refresh/navigation cannot dispatch the same launch a second time.
+    client.get("/api/view")
+    assert len(submitted) == 1
