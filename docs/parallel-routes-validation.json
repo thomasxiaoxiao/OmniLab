@@ -304,5 +304,11 @@
     "Spatial lattice displays use prior recorded configurations. The new generated workflow records scalar trajectories.",
     "Results are small finite-size numerical checks with exploratory uncertainty, not full reproduction or proof of novelty."
   ],
-  "pull_request": "https://github.com/thomasxiaoxiao/OmniLab/pull/8"
+  "pull_request": "https://github.com/thomasxiaoxiao/OmniLab/pull/8",
+  "integration": {
+    "merge_commit": "7f12821922b99b0e325850a142e57764ed8883e5",
+    "pull_request": "https://github.com/thomasxiaoxiao/OmniLab/pull/8",
+    "ci": "https://github.com/thomasxiaoxiao/OmniLab/actions/runs/37179531024",
+    "result": "270 passed; 4 optional sandbox probes skipped; frontend/build/Ruff passed"
+  }
 }

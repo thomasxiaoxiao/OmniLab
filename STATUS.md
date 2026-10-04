@@ -1,3 +1,26 @@
+# Requested workflow and visualization corrections complete
+
+Updated October 3, 2026, 22:22 PDT; about 1 hour 45 minutes remain to hard stop.
+PR #8 merged into main at 7f12821 after final CI passed. The task is complete;
+next step is human testing at http://127.0.0.1:8000/agents or /overview.
+
+- Real live validation: 7 Omnigent sessions, 2 experiments, 36 sandbox jobs,
+  181.558 seconds; independent reader/literature requests overlapped for 30.875
+  seconds. The first result triggered a larger-lattice follow-up, then an explicit stop.
+- Full route decisions, rejected/deferred/unselected ideas, test-selection reasons,
+  long-form results and the redesigned player are available. Earlier lattice runs
+  remain selectable; new generated runs save scalar trajectories.
+- CI passed 270 standard tests plus frontend/build/Ruff checks. Four optional probes
+  were skipped in CI; the live workflow and exact archived-code replay exercised
+  the macOS sandbox. The current and four historical archives verify unchanged.
+- Browser checks confirmed the lattice reconstruction, scalar comparison, complete
+  decision narratives, measured overlap and automatic player height. No task blocker.
+- One reviewed experimental direction executes per v5 run. Results remain limited
+  finite-size numerical checks requiring independent numerical/domain validation
+  before real-world use. No full reproduction, novelty or measured speedup is claimed.
+
+---
+
 # Parallel specialists and complete route decisions verified
 
 Updated October 3, 2026, 22:16 PDT; approximately 1 hour 51 minutes to hard stop.
